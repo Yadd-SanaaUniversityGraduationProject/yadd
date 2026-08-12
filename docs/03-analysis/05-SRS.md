@@ -1,27 +1,39 @@
 # Software Requirements Specification — YADD MVP
 
-> **الإصدار:** v0.1
+> **الإصدار:** v0.2
 >
-> **الحالة:** `PROPOSED — NOT APPROVED`
+> **الحالة:** `PARTIALLY ANALYZED — NOT BASELINED`
 >
-> هذه الوثيقة Working SRS لتسريع التحليل. لا يعد أي FR أدناه `ANALYZED_APPROVED` قبل مراجعة الفريق وربطه بأدلة/قرارات.
+> تم إغلاق BUS-Q01 فقط. بقية المتطلبات تبقى مقترحة حتى مراجعتها وربطها بأدلة/قرارات.
 
 ## 1. Scope
 
 مرجع النطاق: `00-project-baseline.md` وDecision Register.
 
-## 2. Actors
+## 2. Account / Portal Model — Approved
 
-Actors النهائية `BLOCKED` جزئيًا بـBUS-Q01/BUS-Q02. مؤقتًا نستخدم:
-- Customer.
-- Service Provider.
-- Home Producer/Seller.
-- Platform Administrator.
+مرجع القرار: `DEC-008..DEC-011` و`14-account-portal-model.md`.
 
-## 3. User Requirements — Proposed
+- يوجد حساب `User` واحد للشخص.
+- اختيار «مستفيد» أو «مقدم» في بداية الاستخدام يحدد بوابة البداية وليس نوع الحساب الدائم.
+- يستطيع الحساب استخدام بوابة المستفيد.
+- يحتاج استخدام بوابة المقدم إلى `Provider Profile` مفعل داخل الحساب نفسه.
+- يمكن الانتقال بين البوابتين بالحساب نفسه.
+- تفاصيل نوع Provider ومتطلبات التحقق ليست جزءًا من قرار BUS-Q01.
+
+## 3. Actors
+
+- `Beneficiary`: Capability/interaction role للحساب عند استخدام بوابة المستفيد — `ANALYZED_APPROVED`.
+- `Provider`: Interaction role متاح عند وجود Provider Profile مفعل — أصل النموذج `ANALYZED_APPROVED`، أما أنواعه وعملياته التفصيلية فتنتظر BUS-Q02.
+- `Platform Administrator`: `PROPOSED` حتى تحليل مسؤوليات الإدارة.
+
+## 4. User Requirements
 
 | ID | User Requirement | Status | Source/Reason |
 |---|---|---|---|
+| UR-ACC-01 | يحتاج الشخص إلى استخدام YADD من حساب واحد بدل إنشاء حسابات منفصلة للاستفادة والتقديم. | `ANALYZED_APPROVED` | DEC-008 |
+| UR-ACC-02 | يحتاج المستخدم إلى اختيار تجربة البداية كمستفيد أو مقدم دون أن يمنعه ذلك من استخدام البوابة الأخرى لاحقًا. | `ANALYZED_APPROVED` | DEC-009/011 |
+| UR-ACC-03 | يحتاج المستخدم المستفيد إلى إمكانية إنشاء Provider Profile من حسابه نفسه إذا أراد لاحقًا تقديم خدمة/منتج. | `ANALYZED_APPROVED` | DEC-010/011 |
 | UR-01 | يحتاج المستخدم إلى اكتشاف الخدمات/المنتجات ذات الصلة بموقعه وتصنيفه. | `PROPOSED` | Project concept + DEC-002/003 |
 | UR-02 | يحتاج طالب الخدمة إلى وصف حاجته وإرسالها لمقدمي خدمة مناسبين. | `PROPOSED` | PROP-001 |
 | UR-03 | يحتاج طالب الخدمة إلى مقارنة عروض مقدمي الخدمة. | `PROPOSED` | PROP-004 |
@@ -31,11 +43,17 @@ Actors النهائية `BLOCKED` جزئيًا بـBUS-Q01/BUS-Q02. مؤقتًا
 | UR-07 | يحتاج مقدم الخدمة/الأسرة المنتجة إلى عرض أعمال/منتجات ومعلوماته المهنية. | `PROPOSED` | PROP-003 |
 | UR-08 | تحتاج الإدارة إلى إدارة المستخدمين والمحتوى والحالات المخالفة وفق قواعد معلنة. | `PROPOSED` | Stakeholder draft |
 
-## 4. Functional Requirements — Candidate Set
+## 5. Functional Requirements
 
-### Account/Profile
-- `FR-001` `PROPOSED`: يجب أن يسمح النظام بإنشاء/إدارة حساب مستخدم وفق Role Model الذي سيعتمد في BUS-Q01/BUS-Q02.
-- `FR-002` `PROPOSED`: يجب أن يسمح النظام بإدارة ملف مقدم الخدمة/الأسرة المنتجة وبيانات العرض العامة المسموح بها.
+### Account / Portal — Analyzed & Approved
+
+- `FR-001` `ANALYZED_APPROVED`: يجب أن يدير النظام حساب `User` واحدًا للشخص، وألا يتطلب إنشاء حساب مستقل عند الانتقال بين الاستفادة والتقديم.
+- `FR-001A` `ANALYZED_APPROVED`: عند الـOnboarding يجب أن يسمح النظام للمستخدم باختيار بوابة البداية: مستفيد أو مقدم، دون تثبيت نوع الحساب بصورة دائمة.
+- `FR-001B` `ANALYZED_APPROVED`: يجب أن يسمح النظام للمستخدم بالانتقال بين بوابة المستفيد وبوابة المقدم بالحساب نفسه متى كانت شروط البوابة المقصودة مستوفاة.
+- `FR-002` `ANALYZED_APPROVED` في أصل السلوك فقط: يجب أن يسمح النظام للمستخدم بإنشاء وإدارة `Provider Profile` مرتبط بحسابه نفسه لتفعيل صلاحيات التقديم.
+- `FR-002A` `PROPOSED/BLOCKED BY VER-Q01`: يجب ألا تتاح وظائف التقديم الكاملة قبل استيفاء متطلبات Provider Verification المعتمدة.
+
+> لا تحدد FR-002A ما إذا كان التحقق يتطلب صورة هوية أو selfie أو OCR أو Face Matching؛ هذه تفاصيل لم تعتمد.
 
 ### Discovery
 - `FR-003` `PROPOSED`: يجب أن يسمح النظام بالبحث/التصفية حسب التصنيف والمنطقة المعتمدة.
@@ -64,11 +82,9 @@ Actors النهائية `BLOCKED` جزئيًا بـBUS-Q01/BUS-Q02. مؤقتًا
 - `FR-016` `PROPOSED`: يجب أن يتيح للمسؤول التعامل مع بلاغات/محتوى مخالف وفق قواعد سيتم تحليلها.
 
 ### AI/Verification
-- `FR-AI-01` `PROPOSED/BLOCKED`: أي تحقق آلي من الهوية أو OCR أو مطابقة وجه لا يدخل Baseline المعتمد حتى حسم `AI-Q01` ودراسة الخصوصية والجدوى.
+- `FR-AI-01` `PROPOSED/BLOCKED`: أي تحقق آلي من الهوية أو OCR أو مطابقة وجه لا يدخل Baseline المعتمد حتى حسم `AI-Q01` و`VER-Q01` ودراسة الخصوصية والجدوى.
 
-## 5. Non-Functional Requirements — Draft Categories
-
-لا نضع أرقام أداء مختلقة. يجب تحويل البنود إلى معايير قابلة للقياس بعد Technical Feasibility.
+## 6. Non-Functional Requirements — Draft Categories
 
 - `NFR-SEC-01` `PROPOSED`: حماية بيانات الاعتماد والاتصالات والبيانات الحساسة وفق تصميم أمني موثق.
 - `NFR-PRV-01` `PROPOSED`: تقليل جمع البيانات الشخصية إلى ما يلزم للوظائف المعتمدة.
@@ -78,17 +94,17 @@ Actors النهائية `BLOCKED` جزئيًا بـBUS-Q01/BUS-Q02. مؤقتًا
 - `NFR-AVL-01` `NEEDS_VERIFICATION`: متطلبات التوفر تحدد بما يلائم نطاق مشروع التخرج والبنية المختارة.
 - `NFR-MNT-01` `PROPOSED`: فصل مكونات النظام بصورة تسمح بالتطوير والاختبار والصيانة.
 
-## 6. Requirements خارج النطاق
+## 7. Requirements خارج النطاق
 
 - `OOS-01`: الدفع الدولي Visa/MasterCard.
 - `OOS-02`: التوسع خارج أمانة العاصمة في MVP.
 - `OOS-03`: النقل والتوصيل والسيارات/الورش الثقيلة.
 - `OOS-04`: حسابات الشركات والمتاجر الكبرى.
 
-## 7. Approval Gate
+## 8. Approval Gate
 
 قبل v1.0:
-- إغلاق BUS-Q01..06 وAI-Q01/LOC-Q01 الضرورية.
-- ربط FRs بأدلة Data Gathering/Research.
+- إغلاق BUS-Q02..06 وVER-Q01 وAI-Q01/LOC-Q01 الضرورية.
+- ربط بقية FRs بأدلة Data Gathering/Research.
 - صياغة Acceptance Criteria للـFRs الحرجة.
 - مراجعة QA لقابلية الاختبار.
