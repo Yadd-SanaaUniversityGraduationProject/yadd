@@ -30,6 +30,8 @@
 | BR-020 | يبدأ توزيع الطلب في حي الطلب ويمكن توسيعه إلى أحياء مجاورة مُدارة داخل YADD، ولا يعتمد GPS Radius كأساس للأهلية في MVP. | `ANALYZED_APPROVED` | DEC-031..033 |
 | BR-021 | لا يمارس Provider Profile وظائف التقديم قبل التحقق الرسمي والمراجعة البشرية النهائية من YADD. | `ANALYZED_APPROVED` | DEC-034/035 |
 | BR-022 | AI يساعد في Provider Verification وTrust & Safety Moderation، لكنه لا يصدر وحده قرار تحقق نهائيًا أو عقوبة نهائية عالية الأثر. | `ANALYZED_APPROVED` | DEC-037..040 |
+| BR-023 | يدير YADD حالة وفترة اشتراك Provider Profile، بينما يتم تحصيل الاشتراك خارج النظام ويؤكده موظف مخول يدويًا. | `ANALYZED_APPROVED` | DEC-042 |
+| BR-024 | لا يستطيع المقدم إرسال عروض جديدة إلا إذا كان Provider Profile متحققًا والاشتراك `Active`; يمنع الاشتراك المنتهي إرسال عروض جديدة حتى التجديد. | `ANALYZED_APPROVED` | DEC-043 |
 
 ## قواعد مفتوحة تحتاج قرارًا
 
@@ -38,18 +40,21 @@
 | BR-OPEN-01 | القائمة النهائية للمديريات/الأحياء وعلاقات الجوار | `PROPOSED` | LOC-DATA-Q01 |
 | BR-OPEN-02 | عتبة/زمن التوسع إلى الأحياء المجاورة | `PROPOSED` | LOC-OPS-Q01 |
 | BR-OPEN-03 | عرض التعليقات النصية السابقة لتقييم المستفيد | `PROPOSED` | RAT-VIS-Q01 |
-| BR-OPEN-04 | تنفيذ تحصيل اشتراك المقدم داخل MVP | `PROPOSED` | SUB-Q02 |
-| BR-OPEN-05 | أنواع وثائق الهوية المقبولة وتفاصيلها | `PROPOSED` | VER-DOC-Q01 |
-| BR-OPEN-06 | مدة الاحتفاظ ببيانات التحقق | `NEEDS_LEGAL_VERIFICATION` | VER-RET-Q01 |
-| BR-OPEN-07 | الفئات التي تتطلب ترخيصًا مهنيًا إضافيًا | `NEEDS_VERIFICATION` | VER-LIC-Q01 |
-| BR-OPEN-08 | سياسة المحتوى والأنشطة التفصيلية | `PROPOSED` | AI-MOD-Q01 |
-| BR-OPEN-09 | عتبات AI Moderation/Verification | `PROPOSED` | AI-MOD-Q02 |
-| BR-OPEN-10 | مزود/مزودو AI | `PROPOSED` | AI-PROV-Q01 |
-| BR-OPEN-11 | الاحتفاظ بنتائج AI وFlags | `NEEDS_VERIFICATION` | AI-RET-Q01 |
-| BR-OPEN-12 | مسار الاعتراض على moderation عالية الأثر | `PROPOSED` | AI-APPEAL-Q01 |
+| BR-OPEN-04 | الباقات/الأسعار/المدد الفعلية للاشتراك | `PROPOSED` | SUB-PLAN-Q01 |
+| BR-OPEN-05 | وسيلة الدفع الخارجي وإثباته | `PROPOSED` | SUB-PAY-Q01 |
+| BR-OPEN-06 | أثر انتهاء الاشتراك على البحث والمعاملات الجارية | `PROPOSED` | SUB-OPS-Q01 |
+| BR-OPEN-07 | أنواع وثائق الهوية المقبولة وتفاصيلها | `PROPOSED` | VER-DOC-Q01 |
+| BR-OPEN-08 | مدة الاحتفاظ ببيانات التحقق | `NEEDS_LEGAL_VERIFICATION` | VER-RET-Q01 |
+| BR-OPEN-09 | الفئات التي تتطلب ترخيصًا مهنيًا إضافيًا | `NEEDS_VERIFICATION` | VER-LIC-Q01 |
+| BR-OPEN-10 | سياسة المحتوى والأنشطة التفصيلية | `PROPOSED` | AI-MOD-Q01 |
+| BR-OPEN-11 | عتبات AI Moderation/Verification | `PROPOSED` | AI-MOD-Q02 |
+| BR-OPEN-12 | مزود/مزودو AI | `PROPOSED` | AI-PROV-Q01 |
+| BR-OPEN-13 | الاحتفاظ بنتائج AI وFlags | `NEEDS_VERIFICATION` | AI-RET-Q01 |
+| BR-OPEN-14 | مسار الاعتراض على moderation عالية الأثر | `PROPOSED` | AI-APPEAL-Q01 |
 
 ## ملاحظات نطاق
 
 - لا تستخدم عبارة «YADD يضمن الحقوق» في الوثائق الرسمية دون مراجعة قانونية؛ النظام يوثق فقط ما تم إدخاله واعتماده داخله.
 - لا توجد `Payment Transaction` أو `Escrow` أو `Deposit Transaction` أو `Delivery Driver` أو `Delivery Tracking` في MVP الحالي.
+- لا يوجد Payment Gateway لتحصيل اشتراك المقدم في MVP؛ التفعيل/التجديد يؤكد يدويًا بعد الدفع الخارجي.
 - الفاتورة في YADD سجل اتفاق/إغلاق معاملة، وليست إثباتًا صادرًا من بوابة دفع.
