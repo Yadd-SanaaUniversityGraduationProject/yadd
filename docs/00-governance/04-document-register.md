@@ -20,6 +20,8 @@
 | SRS | User/FR/NFR | `PROPOSED_BASELINE` | مراجعة واعتماد الفريق |
 | Business Rules | قواعد النظام | `DRAFT_BLOCKED` | إغلاق BUS-Q03..06 |
 | Lifecycles | حالات الكيانات والمعاملات | `DRAFT_BLOCKED` | Business Rules |
+| User Roles, States & Permissions | توضيح نموذج الحساب الواحد، حالات Provider Profile، وبوابات الأهلية والصلاحيات | `ANALYZED_APPROVED` مع نقاط مفتوحة موسومة | مراجعة الفريق وتحديثه عند إغلاق أسئلة الاشتراك/التحقق المفتوحة |
+| End-to-End System Workflow | توثيق الدورة التشغيلية/المستندية من الحساب حتى الإغلاق والتقييم | `PARTIALLY_ANALYZED` | إغلاق فجوات التسجيل، البحث المباشر، وTrigger الانتقال إلى InProgress |
 | Use Cases | سيناريوهات الاستخدام | `DRAFT` | SRS v1 |
 | DFD | تدفقات البيانات | `DRAFT` | GOV-Q02 + SRS v1 |
 | UML | Activity/Sequence/Class | `DRAFT` | GOV-Q02 + SRS v1 |
