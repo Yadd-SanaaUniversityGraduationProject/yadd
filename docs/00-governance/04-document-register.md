@@ -12,8 +12,8 @@
 | Feasibility Study | اقتصادي/تقني/تشغيلي | `SKELETON` | بيانات ومبررات موثقة |
 | Work Plan | Schedule/Gantt/PERT | `DRAFT` | موافقة الفريق على التواريخ |
 | Research Plan | خطة الدراسات السابقة | `READY_FOR_USE` | — |
-| Similar Systems Matrix | مقارنة الأنظمة | `EMPTY_RESEARCH_REQUIRED` | ≥3 أنظمة موثقة |
-| Source Register | سجل المصادر IEEE | `ACTIVE_EMPTY` | إدخال كل مصدر مستخدم |
+| Similar Systems Matrix | مقارنة الأنظمة | `ACTIVE_BASELINE_POPULATED` | مراجعة/استكمال التوثيق الأكاديمي |
+| Source Register | سجل المصادر IEEE | `ACTIVE` | إدخال كل مصدر مستخدم |
 | Stakeholders | تحديد الأطراف | `DRAFT` | إغلاق BUS-Q01/02 |
 | Data Gathering | أدوات وأدلة جمع البيانات | `DRAFT` | تنفيذ المقابلات/الملاحظة |
 | Current System Analysis | وصف الواقع والمشكلة | `DRAFT` | أدلة جمع البيانات |
