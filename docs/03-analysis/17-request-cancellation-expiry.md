@@ -1,76 +1,90 @@
-# Request Cancellation & Expiry Model
+# Request Closure, Cancellation & Expiry Model
 
-> **الحالة:** `ANALYZED_APPROVED`
+> **الحالة:** `ANALYZED_APPROVED / PARTIAL POLICY`
 >
-> **القرار المرجعي:** `BUS-Q03` — قرار الفريق 2026-08-12.
+> **القرارات المرجعية:** DEC-047..050/054 — تحديث 2026-08-26.
 
-## 1. مدة الطلب
+## 1. الطلب المفتوح
 
-عند نشر طلب خدمة أو منتج، يحدد صاحب الطلب مدة صلاحيته. يبقى الطلب `Open` حتى أحد الأحداث التالية:
+بعد نشر طلب خدمة أو منتج يكون `Open`. يبقى مفتوحًا حتى:
 
-- اختيار مقدم.
-- إلغاء صاحب الطلب.
-- انتهاء المدة التي حددها صاحب الطلب.
+- يختار المستفيد مقدمًا → `Matched` ويبدأ Transaction.
+- يقرر المستفيد أنه لم يعد يحتاج الطلب → `ClosedByBeneficiary`.
+- يصل إلى سياسة عدم النشاط → `Expired`.
 
-إذا انتهت المدة دون اختيار مقدم، يتحول الطلب إلى `Expired` ولا يقبل استجابات جديدة.
+لا يطلب من المستخدم حاليًا تحديد مدة صلاحية رقمية عند النشر كقرار معتمد. مدة عدم النشاط وتذكيرات استمرار الحاجة تحتاج `REQ-EXP-Q01`.
 
-## 2. الإلغاء قبل اختيار مقدم
+## 2. Request Closure قبل اختيار مقدم
 
-- يستطيع صاحب الطلب إلغاء الطلب المفتوح بصورة عادية.
-- سبب الإلغاء **اختياري** وليس شرطًا لتنفيذ الإلغاء.
-- يستطيع المقدم سحب استجابته/عرضه قبل أن يختاره صاحب الطلب.
+إذا لم يختر المستفيد مقدمًا بعد، فإغلاق الطلب ليس إلغاء معاملة لأن Transaction لم تبدأ أصلًا.
 
-## 3. الإلغاء بعد اختيار مقدم
+- يغلق الطلب أمام الاستجابات الجديدة.
+- لا يسجل Transaction Cancellation على أي طرف.
+- يمكن تسجيل حدث الإغلاق وسببه/سياقه التشغيلي وفق التصميم النهائي.
 
-بعد اختيار مقدم وبدء المعاملة، يسمح النظام بإلغاء المعاملة قبل إرسال الفاتورة النهائية.
+## 3. اختيار مقدم
 
-- لا يشترط إدخال سبب للإلغاء.
-- يمكن توفير حقل سبب/ملاحظة بصورة اختيارية.
-- يجب تسجيل حدث الإلغاء نفسه وتوقيته والطرف الذي نفذه، حتى لو لم يكتب سببًا، للحفاظ على اتساق سجل المعاملة.
+في الطلب المنشور، اختيار المستفيد لمقدم من الاستجابات:
 
-## 4. ما بعد إرسال الفاتورة
+1. يوقف استقبال استجابات جديدة.
+2. يجعل الاستجابات الأخرى `NotSelected`.
+3. يحول الطلب إلى `Matched`.
+4. يبدأ المعاملة الرسمية مع المقدم المختار.
 
-بعد أن يرسل المقدم الفاتورة النهائية لا يستخدم `Cancel Transaction` كمسار عادي لإغلاق المعاملة.
+لا توجد خطوة اتفاق/نموذج إضافي إلزامي في هذا المسار.
 
-من هذه النقطة تطبق دورة الفاتورة المعتمدة:
+## 4. Transaction Cancellation بعد بدء المعاملة
 
-- اعتماد الفاتورة.
-- طلب تعديل.
-- شكوى عند استمرار الخلاف.
+بعد بدء Transaction، إذا أراد أحد الطرفين الإلغاء قبل دخول مسار الفاتورة النهائي:
 
-مرجع ذلك: `15-invoice-approval-and-dispute.md`.
+- يسجل سبب الإلغاء إلزاميًا.
+- يظهر السبب للطرف الآخر.
+- يسجل النظام الطرف الذي ألغى والتوقيت.
+- يمكن للإدارة مراجعة الإلغاءات المتكررة أو المشبوهة.
 
-## 5. حالات الطلب/المعاملة
+التكرار وحده لا ينتج عقوبة آلية.
+
+## 5. Expiry وعدم النشاط
+
+YADD لا يترك الطلب المفتوح ظاهرًا إلى أجل غير محدد. يرسل تذكيرًا بسيطًا لصاحب الطلب لتأكيد أنه ما زال يحتاجه. إذا استمر عدم النشاط وفق السياسة المعتمدة لاحقًا يصبح `Expired` ويتوقف عن الظهور للمقدمين.
+
+**Needs Verification:** مدة عدم النشاط وعدد/توقيت التذكيرات (`REQ-EXP-Q01`).
+
+## 6. إساءة استخدام إنشاء/إغلاق الطلبات
+
+يمكن للنظام تسجيل نمط النشاط ورفع Flag للمراجعة عند وجود نمط غير طبيعي. لا يعني الـFlag أن المستخدم مسيء للاستخدام، ولا يطبق حظر آلي لمجرد عدد الإغلاقات.
+
+Thresholds: `SAFE-REQ-Q01`.
+
+## 7. ما بعد إرسال الفاتورة
+
+بعد إرسال الفاتورة لا يستخدم الإلغاء العادي كمسار افتراضي. تطبق دورة الفاتورة: اعتماد، طلب تعديل، شكوى عند استمرار المشكلة، مع بقاء عدم الرد غير مساوي للموافقة.
+
+## 8. الحالات
 
 ```mermaid
 stateDiagram-v2
     [*] --> Draft
-    Draft --> Open: publish + set expiry
-    Open --> ProviderSelected: select provider
-    Open --> Cancelled: owner cancels
-    Open --> Expired: chosen duration ends
-    ProviderSelected --> InProgress: transaction proceeds
-    ProviderSelected --> Cancelled: either party cancels before invoice
-    InProgress --> Cancelled: either party cancels before invoice
-    InProgress --> AwaitingInvoice: provider sends invoice
-    AwaitingInvoice --> Closed: invoice approved
-    AwaitingInvoice --> RevisionRequested: beneficiary requests revision
-    RevisionRequested --> AwaitingInvoice: provider sends revised invoice
-    RevisionRequested --> Disputed: unresolved complaint
-    Closed --> ReviewAvailable
-    Cancelled --> [*]
-    Expired --> [*]
-    Disputed --> [*]
-    ReviewAvailable --> [*]
+    Draft --> Open: publish
+    Open --> Matched: select provider
+    Open --> ClosedByBeneficiary: no longer needed
+    Open --> Expired: inactivity policy
+    Matched --> ActiveTransaction
+    ActiveTransaction --> Cancelled: recorded reason
+    ActiveTransaction --> AwaitingInvoice
+    AwaitingInvoice --> RevisionRequested
+    RevisionRequested --> AwaitingInvoice
+    RevisionRequested --> Disputed
+    AwaitingInvoice --> Completed: invoice approved
+    Completed --> RatingRequired
+    RatingRequired --> Closed: provider rated
 ```
 
-## 6. قواعد معتمدة
+## 9. قواعد معتمدة
 
-- `REQ-BR-01`: يحدد صاحب الطلب مدة الصلاحية عند النشر.
-- `REQ-BR-02`: انتهاء المدة دون اختيار مقدم يحول الطلب إلى `Expired`.
-- `REQ-BR-03`: يستطيع صاحب الطلب إلغاء الطلب المفتوح قبل اختيار مقدم.
-- `REQ-BR-04`: يستطيع المقدم سحب عرضه قبل اختياره.
-- `REQ-BR-05`: بعد اختيار مقدم يمكن إلغاء المعاملة قبل إرسال الفاتورة.
-- `REQ-BR-06`: سبب الإلغاء اختياري وغير مطلوب لتنفيذ الإلغاء.
-- `REQ-BR-07`: يسجل النظام من ألغى ومتى، حتى إذا لم يسجل سببًا.
-- `REQ-BR-08`: بعد إرسال الفاتورة لا يستخدم الإلغاء العادي؛ تطبق دورة الفاتورة والنزاع.
+- `REQ-BR-01`: Request Closure قبل الاختيار ليس Transaction Cancellation.
+- `REQ-BR-02`: اختيار مقدم في الطلب المنشور يغلق الطلب ويبدأ المعاملة.
+- `REQ-BR-03`: Transaction Cancellation يحتاج سببًا مسجلًا.
+- `REQ-BR-04`: الطلب المفتوح يخضع لتذكير/Expiry بسبب عدم النشاط.
+- `REQ-BR-05`: لا عقوبة آلية لمجرد تكرار إغلاق الطلبات؛ يمكن Flag + Admin Review.
+- `REQ-BR-06`: بعد إرسال الفاتورة يسري مسار الفاتورة بدل الإلغاء العادي.
