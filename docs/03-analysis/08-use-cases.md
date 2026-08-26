@@ -1,87 +1,133 @@
 # Use Cases & Specifications
 
-> **الحالة:** `DRAFT`
+> **الحالة:** `PARTIALLY ANALYZED`
+>
+> يعكس السيناريوهات المعتمدة حتى 2026-08-26، مع إبقاء السياسات الرقمية المفتوحة خارج الافتراض.
 
-## Use Case Map — Proposed
+## Actor Model
 
-```mermaid
-flowchart LR
-    C[Customer]
-    P[Service Provider]
-    H[Home Producer/Seller]
-    A[Administrator]
+- `Beneficiary`
+- `Service Provider`
+- `Product Provider`
+- `Platform/Content Administrator`
+- `Verification Reviewer`
 
-    UC1((Manage profile))
-    UC2((Discover services/products))
-    UC3((Create service request))
-    UC4((Submit offer))
-    UC5((Negotiate / record agreement))
-    UC6((Create / approve invoice))
-    UC7((Review transaction participant))
-    UC8((Manage portfolio/catalog))
-    UC9((Administer categories/users/content))
+الشخص يستخدم حساب User واحدًا وقد يستخدم بوابة المستفيد وبوابة المقدم حسب صلاحيات Provider Profile.
 
-    C --- UC1
-    C --- UC2
-    C --- UC3
-    C --- UC5
-    C --- UC6
-    C --- UC7
-    P --- UC1
-    P --- UC2
-    P --- UC4
-    P --- UC5
-    P --- UC6
-    P --- UC7
-    P --- UC8
-    H --- UC1
-    H --- UC8
-    A --- UC9
-```
+## UC-01 — Search and Inquire Directly
 
-Actor model ينتظر BUS-Q01/BUS-Q02.
-
-## UC-03 — Create Service Request
-
-- **Status:** `PROPOSED`.
-- **Primary actor:** Customer.
-- **Preconditions:** حساب صالح؛ بيانات الموقع/المنطقة المطلوبة متوفرة حسب LOC-Q01.
-- **Trigger:** المستخدم يقرر نشر طلب خدمة.
+- **Status:** `ANALYZED_APPROVED`.
+- **Primary actor:** Beneficiary.
 - **Main flow:**
-  1. يحدد التصنيف.
-  2. يدخل وصف الطلب.
-  3. يحدد المنطقة/الموقع المطلوب.
-  4. يضيف وسائط إن كانت ضمن المتطلبات المعتمدة.
-  5. يراجع البيانات.
-  6. ينشر الطلب.
-  7. يغير النظام الحالة إلى Open ويربطه بآلية الاكتشاف.
-- **Alternatives:** بيانات ناقصة؛ تصنيف غير متاح؛ إلغاء قبل النشر.
-- **Related:** FR-005, FR-006.
+  1. يحدد التصنيف والمنطقة/الفلاتر المتاحة.
+  2. يعرض النظام المقدمين المؤهلين.
+  3. يفتح المستفيد ملف مقدم.
+  4. يستطيع بدء محادثة استفسار خاصة.
+  5. المحادثة لا تنشئ Transaction.
+  6. إذا اتفق الطرفان على بدء العمل تنشأ Active Transaction.
+- **Related:** DEC-012/046/047.
 
-## UC-04 — Submit Offer
+## UC-02 — Create Request
 
-- **Status:** `PROPOSED`.
-- **Actor:** Service Provider.
-- **Preconditions:** الطلب Open والمقدم Eligible.
-- **Main flow:** عرض → مراجعة → إرسال → تسجيل Submitted.
-- **Open points:** بنية السعر، المدة، التعديل.
-- **Related:** FR-007, BR-001.
+- **Status:** `ANALYZED_APPROVED`.
+- **Primary actor:** Beneficiary.
+- **Main flow:**
+  1. يحدد خدمة أو منتج والفئة.
+  2. يحدد المديرية والحي.
+  3. يضيف وصفًا حرًا.
+  4. يضيف صورًا ومعلومات إضافية اختيارية.
+  5. يمكن إضافة سعر استرشادي اختياري.
+  6. ينشر الطلب ويصبح Open.
+- **Alternative:** يغلقه قبل اختيار مقدم إذا لم يعد يحتاجه.
+- **Open:** Expiry/reminder timing في REQ-EXP-Q01.
 
-## UC-05 — Accept Offer / Record Agreement
+## UC-03 — Respond to Request
 
-- **Status:** `PROPOSED`.
-- **Main goal:** توثيق الاختيار والاتفاق النهائي.
-- **Open points:** التفاوض، التعديل بعد القبول، الإلغاء.
-- **Related:** FR-008, FR-009, BR-002, BR-003.
+- **Status:** `ANALYZED_APPROVED`.
+- **Actor:** Eligible Provider.
+- **Preconditions:** Provider Verified + subscription Active + request Open.
+- **Main flow:**
+  1. يراجع الطلب.
+  2. يرسل استجابة/عرضًا.
+  3. يمكن اقتراح سعر مختلف وإضافة ملاحظة.
+  4. يمكن للمستفيد والمقدم الاستفسار عبر المحادثة قبل الاختيار.
 
-## UC-06 — Invoice Approval
+## UC-04 — Select Provider from Request
 
-- **Status:** `PROPOSED`.
-- **Open points:** creator, revision, rejection, closure event.
-- **Related:** FR-010..012, BUS-Q05.
+- **Status:** `ANALYZED_APPROVED`.
+- **Actor:** Beneficiary.
+- **Main flow:**
+  1. يقارن المستفيد الاستجابات والمحادثات ذات الصلة.
+  2. يختار مقدمًا واحدًا.
+  3. يغلق النظام الطلب أمام الاستجابات الجديدة.
+  4. تصبح بقية الاستجابات NotSelected.
+  5. تبدأ Active Transaction مع المختار.
+- لا يتطلب المسار نموذج اتفاق/سعر إضافيًا عند الاختيار.
 
-## UC-07 — Review
+## UC-05 — Cancel Active Transaction
 
-- **Status:** `PROPOSED`.
-- **Precondition:** معاملة مؤهلة مغلقة.
-- **Related:** FR-013, FR-014, BR-005/006.
+- **Status:** `ANALYZED_APPROVED`.
+- **Actor:** Beneficiary or Provider.
+- **Precondition:** Transaction Active ولم تدخل مسار الفاتورة النهائي.
+- **Main flow:**
+  1. يختار الطرف إلغاء المعاملة.
+  2. يدخل سببًا إلزاميًا.
+  3. يسجل النظام السبب والطرف والتوقيت.
+  4. يظهر السبب للطرف الآخر.
+  5. يمكن للإدارة مراجعة النمط عند الحاجة.
+- **Note:** إغلاق Request قبل اختيار مقدم ليس هذا Use Case.
+
+## UC-06 — Create and Approve Invoice
+
+- **Status:** `ANALYZED_APPROVED`.
+- **Primary actors:** Provider, Beneficiary.
+- **Main flow:**
+  1. بعد التنفيذ/التجهيز واستقرار الاتفاق ينشئ المقدم الفاتورة النهائية.
+  2. يضيف البنود والأسعار والإجمالي وصورًا اختيارية.
+  3. يرسل الفاتورة.
+  4. تصبح Pending Customer Approval.
+  5. يختار المستفيد Approve أو Request Revision مع ملاحظة.
+  6. عند Approve تصبح Transaction Completed وتحفظ الفاتورة.
+- **Alternative:** تعديل وإعادة إرسال؛ شكوى إذا استمرت المشكلة.
+- **No response:** تبقى Pending وتصل تذكيرات؛ لا Auto-Approval.
+- **Open:** التصعيد الطويل INV-PENDING-Q01.
+
+## UC-07 — Rate Provider
+
+- **Status:** `ANALYZED_APPROVED`.
+- **Actor:** Beneficiary.
+- **Precondition:** Transaction Completed بفاتورة معتمدة.
+- **Main flow:**
+  1. يطلب النظام تقييم المقدم.
+  2. يختار المستفيد 1–5 نجوم إلزاميًا.
+  3. يمكن إضافة تعليق اختياري.
+  4. يرسل التقييم.
+- لا يوجد تقييم مقابل للمستفيد في النموذج الحالي.
+
+## UC-08 — Block and Report User
+
+- **Status:** `ANALYZED_APPROVED`.
+- **Actor:** User.
+- **Main flow:**
+  1. يحظر المستخدم الطرف الآخر لإيقاف التواصل المباشر.
+  2. يستطيع تقديم بلاغ مرتبط بالمستخدم/المحادثة/السلوك.
+  3. يذهب البلاغ للمراجعة الإدارية.
+  4. يقرر الموظف المخول الإجراء وفق السياسة والأدلة.
+- البلاغ وحده لا يساوي إدانة أو حظرًا نهائيًا.
+
+## UC-09 — Provider Verification / Portal Activation
+
+- **Status:** `ANALYZED_APPROVED` في الجوهر.
+- المستخدم الذي يبدأ كمستفيد يستطيع لاحقًا إنشاء Provider Profile بالحساب نفسه.
+- يستكمل نوع النشاط والمجال ومناطق الخدمة ومتطلبات التحقق.
+- يرفع وثيقة الهوية والصورة المطلوبة وفق السياسة التي ستحدد أنواعها تفصيليًا.
+- ينتظر المراجعة اليدوية النهائية قبل صلاحيات التقديم.
+
+## Open Use-Case Policies
+
+- `DEP-Q02`: العربون/الدفع المقدم.
+- `REQ-EXP-Q01`: Expiry/reminders.
+- `INV-PENDING-Q01`: فاتورة معلقة مدة طويلة.
+- `SAFE-REQ-Q01`: Thresholds إساءة استخدام الطلبات.
+- `TX-CONC-Q01`: حد المعاملات المتوازية إن لزم.
+- `UX-VAL-Q01`: التحقق الميداني من قابلية الاستخدام والاتصال.
