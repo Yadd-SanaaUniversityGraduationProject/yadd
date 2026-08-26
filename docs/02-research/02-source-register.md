@@ -20,6 +20,9 @@
 | PST-YEM-06 | Previous graduation-project lead | On Service Platform | غير مسجل بعد | بحث الفريق | Previous Studies Inventory | غير مكتمل — يلزم المصدر الأصلي |
 | PST-YEM-07 | Previous graduation-project lead | سويلي | غير مسجل بعد | بحث الفريق | Previous Studies Inventory | غير مكتمل — يلزم المصدر الأصلي |
 | PST-YEM-08 | Local system material | دليل اليمن | غير مسجل بعد | وصف/مقارنة قدمها الفريق | Previous Studies / Local Context | جزئي — يلزم تحديد النسخة والمصدر |
+| PST-OPS-01 | Official operational-platform guide | inDrive — Passengers 101: How To Use Our App | current page | https://blog.indrive.com/en-in/article/passengers-101-how-to-use-our-app | Operational Reference: request, location, proposed fare, driver responses, counteroffers, user selection | نعم — 2026-08-26 |
+| PST-OPS-02 | Official operational-platform guide | inDrive — Drivers 101: How To Use Our App | current page | https://blog.indrive.com/uk-ua/article/drivers-101-how-to-use-our-app | Operational Reference: counteroffers, selection, arrival/start/complete lifecycle, cancellation/non-arrival behavior | نعم — 2026-08-26 |
+| PST-OPS-03 | Official app-store listing | inDrive — Google Play | current listing | https://play.google.com/store/apps/details?hl=en_US&id=sinet.startup.inDriver | Operational Reference: driver choice by fare/ETA/rating/completed trips; safety information | نعم — 2026-08-26 |
 | PST-EXT-01 | Similar international system | Booksy | — | وصف دراسة قدمه الفريق؛ المصدر الرسمي سيضاف | International Overview | بانتظار التحقق الرسمي |
 | PST-EXT-02 | Similar international system | Setmore | — | وصف دراسة قدمه الفريق؛ المصدر الرسمي سيضاف | International Overview | بانتظار التحقق الرسمي |
 | PST-EXT-03 | Similar international system | TaskRabbit | — | وصف دراسة قدمه الفريق؛ المصدر الرسمي سيضاف | International Overview | بانتظار التحقق الرسمي |
@@ -40,6 +43,9 @@
 - معرفات `PST-YEM-*` تحفظ **ما راجعه الفريق فعليًا** حتى لا تضيع سلسلة الأدلة، لكنها لا تعوض البيانات الببليوغرافية الأصلية.
 - عند توفر تقرير أي مشروع، تسجل الجامعة، القسم، سنة المشروع، المؤلفون، عنوان التقرير الكامل والصفحات المستخدمة.
 - لا تنسب خاصية أو عيبًا إلى مشروع سابق اعتمادًا على استنتاج الفريق فقط؛ سجل الاستنتاج منفصلًا كـ`RESEARCH_FINDING`.
+- **قاعدة منهجية:** عدم العثور على مشروع تخرج في المتاجر أو عدم وجود دليل على تشغيله التجاري بعد التخرج لا يثبت أنه «فشل». يوصف بأنه `ACADEMIC PROJECT / COMMERCIALIZATION NOT VERIFIED` ما لم يثبت المصدر الأصلي هدف النشر التجاري أو توجد أدلة مباشرة على محاولة تشغيلية فاشلة.
+- تفسير الفريق الحالي بأن كثيرًا من المشاريع الجامعية أُنجزت أساسًا ضمن سياق أكاديمي لا يحول تلقائيًا إلى حقيقة عامة عن جميع مشاريع التخرج؛ يطبق على كل مشروع فقط بقدر ما يثبته تقريره الأصلي.
+- `PST-OPS-*` مراجع تشغيلية لمنصات موجودة فعليًا؛ استخدامها يهدف إلى تحليل **أنماط تشغيل قابلة للنقل** إلى YADD، وليس افتراض أنها منافس مباشر أو أنها تعمل في اليمن ما لم يوجد مصدر مستقل يثبت ذلك.
 
 ## قواعد
 
