@@ -8,7 +8,7 @@
 
 ## نقطة البدء
 
-ابدأ من [`docs/00-governance/README.md`](docs/00-governance/README.md). يحتوي على خريطة الوثائق، حالات الاعتماد، الأسئلة المفتوحة، وخطة الأسبوعين.
+ابدأ من [`docs/00-governance/README.md`](docs/00-governance/README.md). يحتوي على خريطة الوثائق، حالات الاعتماد، الأسئلة المفتوحة، وحالة التخطيط الحالية. خطة الأسبوعين السابقة أصبحت `LEGACY / SUPERSEDED` ولا تستخدم للتنفيذ.
 
 ## هيكل التوثيق
 
@@ -62,5 +62,7 @@ Readiness Audit
         ↓
 Academic Chapters 1–4
 ```
+
+الجدول الزمني الجديد لم يُعتمد بعد؛ مرجعه [`docs/01-pm/05-work-plan.md`](docs/01-pm/05-work-plan.md) وحالته `RESET — AWAITING REAL DEADLINES AND TEAM CAPACITY`.
 
 لا تبدأ صياغة الفصول النهائية قبل إغلاق بوابة الجاهزية المحددة في [`docs/00-governance/06-readiness-checklist.md`](docs/00-governance/06-readiness-checklist.md).
