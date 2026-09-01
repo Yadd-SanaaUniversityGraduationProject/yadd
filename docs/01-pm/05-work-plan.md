@@ -1,42 +1,34 @@
 # Project Work Plan — Task Schedule, Gantt, PERT
 
-> **الحالة:** `DRAFT`
+> **الحالة:** `RESET — AWAITING REAL DEADLINES AND TEAM CAPACITY`
+>
+> الخطة السابقة المبنية على نافذة أسبوعين لم تعد تستخدم للتنفيذ أو توزيع العمل. لا توجد مدد أو تواريخ معتمدة في هذا الملف حتى يحدد الفريق المواعيد الرسمية وقدرة الأعضاء الفعلية.
 
-خطة الأسبوعين التفصيلية موجودة في `docs/00-governance/05-two-week-plan.md`.
+## 1. لماذا أُعيد ضبط الخطة؟
 
-## Task Schedule
+- المواعيد القديمة لم تعد تمثل الواقع الحالي.
+- GitHub Issues القديمة أغلقت لأنها كانت مبنية على تقسيم ومفاهيم سابقة.
+- الفريق يحتاج خارطة زمنية جديدة تبدأ من مواعيد التسليم الرسمية، ثم تبنى بالرجوع للخلف وفق الاعتماديات.
+- توزيع العمل سيبنى بعد معرفة وقت كل عضو ومهاراته والتزاماته.
 
-| ID | المهمة | المدة | Dependency |
-|---|---|---:|---|
-| T01 | حسم الأسئلة الجامعية P0 | 2 يوم | — |
-| T02 | Data Gathering | 3 أيام | T01 جزئيًا |
-| T03 | Similar Systems/Literature | 4 أيام | — |
-| T04 | SRS v0.1 | يومان | T02 + مدخلات T03 |
-| T05 | Business Rules + SRS Review | يومان | T04 |
-| T06 | Use Cases/DFD/UML | يومان | T05 + GOV-Q02 |
-| T07 | ERD + Data/Process Specs | يوم | T05 |
-| T08 | DB + Interface Design | يومان | T06 + T07 |
-| T09 | Consistency/Traceability Audit | يوم | T08 |
-| T10 | Readiness Gate/Baseline | يوم | T09 |
+## 2. المدخلات المطلوبة قبل بناء الجدول الجديد
 
-## PERT / Dependency Network
+1. موعد/مواعيد التسليم الرسمية القادمة بالتاريخ، وما المطلوب في كل موعد.
+2. موعد المناقشة الأولية إن وجد.
+3. موعد التسليم النهائي/المناقشة النهائية إن كان معروفًا.
+4. عدد الساعات الواقعية التي يستطيع كل عضو تخصيصها في أيام الدراسة والعطلة.
+5. الأيام التي يكون فيها كل عضو غير متاح.
+6. مهارات/أفضلية كل عضو: بحث وكتابة، تحليل ومتطلبات، UML/DFD، قاعدة بيانات، UI/UX، برمجة، توثيق ومراجع.
+7. أي أعمال خارجية ثابتة لا يملك الفريق التحكم في زمنها، مثل انتظار قرار المشرف أو القسم.
 
-```mermaid
-flowchart LR
-    T01["T01 University decisions"] --> T02["T02 Data gathering"]
-    T03["T03 Literature review"] --> T04["T04 SRS v0.1"]
-    T02 --> T04
-    T04 --> T05["T05 Business rules + review"]
-    T05 --> T06["T06 Use Cases / DFD / UML"]
-    T05 --> T07["T07 ERD + process/data specs"]
-    T06 --> T08["T08 Design"]
-    T07 --> T08
-    T08 --> T09["T09 Traceability audit"]
-    T09 --> T10["T10 Readiness baseline"]
-```
+## 3. الاعتماديات الثابتة التي ستبقى في الجدول الجديد
 
-## Critical Path
+`Governance decisions → Evidence/Research → SRS/Business Rules → Modeling → ERD/Design → Traceability/Feasibility → Academic writing/finalization`
 
-المسار المرشح حاليًا: `T01/T02 → T04 → T05 → T06/T07 → T08 → T09 → T10`.
+يمكن تنفيذ بعض المسارات بالتوازي عندما لا توجد Dependency مباشرة، مثل Research Sources بالتوازي مع بعض أعمال Governance.
 
-هذه الخطة داخلية وليست إثباتًا لجدول معتمد حتى يراجع الفريق التواريخ والموارد.
+## 4. Gantt / PERT
+
+`PENDING NEW SCHEDULE`
+
+لا ينشأ Gantt أو PERT جديد قبل تثبيت المدخلات في القسم 2 حتى لا نكرر خطة غير واقعية.
