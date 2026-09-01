@@ -1,10 +1,10 @@
 # WBS ومنهج إدارة مشروع يَد | YADD
 
-> **الحالة:** `UPDATED_FOR_ANALYSIS_DEADLINE`
+> **الحالة:** `ALIGNED WITH PRELIMINARY DEFENSE ROADMAP v2`
 
 ## فصل إدارة المشروع عن منهج تحليل النظام
 
-- **إدارة العمل:** GitHub + Markdown + مراجعات قصيرة + تخطيط تكراري.
+- **إدارة العمل:** GitHub + Markdown + Closure Tracker + مراجعات قصيرة + تخطيط بالمخرجات.
 - **منهج تحليل/نمذجة النظام:** `NEEDS_VERIFICATION` عبر GOV-Q02 بسبب تعارض ظاهر بين دليل المشاريع وهيكل 1447.
 
 لا تستخدم عبارة Hybrid Agile-PMP لحل تعارض مخططات التحليل؛ إدارة المشروع ومنهج نمذجة النظام مستويان مختلفان.
@@ -19,11 +19,11 @@
 │   └── 1.3 Open questions / status register
 ├── 2.0 Project Management
 │   ├── 2.1 Charter / Scope
-│   ├── 2.2 Work plan, Gantt, PERT
+│   ├── 2.2 Work plan, Gantt, PERT, Closure Tracker
 │   ├── 2.3 Feasibility
 │   └── 2.4 Risks and change control
 ├── 3.0 Research & Discovery
-│   ├── 3.1 Data gathering
+│   ├── 3.1 Data gathering — SUR-01 + document analysis + similar systems
 │   ├── 3.2 Current system / problem analysis
 │   ├── 3.3 Literature & similar systems
 │   └── 3.4 Research source register
@@ -48,8 +48,14 @@
 └── 7.0 Readiness Audit
     ├── 7.1 Traceability
     ├── 7.2 Consistency review
-    └── 7.3 Baseline tag for chapter extraction
+    └── 7.3 Preliminary Defense Snapshot / later Baseline
 ```
+
+## علاقة WBS بالخطة الزمنية
+
+- `docs/01-pm/05-work-plan.md` هو المرجع الحالي للمواعيد والمسؤوليات والتسلسل التنفيذي.
+- WBS يحدد **هيكل المخرجات** ولا يعيد توزيع العمل أو المواعيد داخله.
+- المخرجات المنجزة قبل المناقشة الأولية يمكن أن تكون `DRAFT FOR PRELIMINARY DEFENSE` ولا تصبح Baseline نهائيًا تلقائيًا.
 
 ## Definition of Done
 
@@ -57,6 +63,7 @@
 
 1. يحتوي محتوى قابلًا للمراجعة.
 2. لا يعتمد على سؤال P0 مفتوح دون تمييز.
-3. حالته واضحة.
+3. حالته واضحة: Draft/Preliminary/Approved/Baselined حسب الواقع.
 4. روابطه بالمتطلبات/القرارات موثقة.
 5. تمت مراجعته من عضو آخر على الأقل قبل `APPROVED`.
+6. إذا كان تصميمًا قبل Baseline، يوسم صراحة بأنه أولي ولا يستخدم كالتزام تنفيذ نهائي.
