@@ -9,9 +9,12 @@
 | Decision Register | فصل القرار عن المقترح وحفظ superseded history | `ACTIVE — CURRENT` | يبقى حيًا طوال المشروع؛ لا يضاف إليه قرار محمي دون موافقة صريحة |
 | Open Questions | منع الافتراضات الصامتة | `ACTIVE — CURRENT` | إغلاق P0 حسب Closure Tracker؛ GOV-Q04 وPM-SCHED-Q01 يعكسان إعادة ضبط المنهج والجدول |
 | Project Baseline (`docs/03-analysis`) | تعريف المشكلة والنطاق الحالي | `DRAFT — TEAM REVIEW REQUIRED` | دعم Problem Hypothesis بالأدلة الفعلية ومراجعة الفريق |
-| Legacy Project Baseline (`docs/2-analysis`) | نسخة تاريخية مكررة | `LEGACY — NON-CANONICAL` | لا تستخدم كمصدر حقيقة ولا تحذف أثناء Stabilization دون قرار |
+| Legacy PM Path (`docs/1-pm/`) | إدارة مشروع تاريخية قبل البنية الحالية | `LEGACY — NON-CANONICAL` | محتواه يختلف تاريخيًا عن `docs/01-pm/`؛ لا يستخدم كمصدر حقيقة ولا يحذف أثناء Stabilization |
+| Legacy Project Baseline (`docs/2-analysis/00-project-baseline.md`) | نسخة تاريخية لخط الأساس | `LEGACY — NON-CANONICAL` | يحتوي تاريخًا/صياغات قديمة مختلفة؛ لا يستخدم كمصدر حقيقة ولا يحذف أثناء Stabilization |
+| Legacy SRS Placeholder (`docs/2-analysis/01-SRS.md`) | Placeholder قديم قبل إنشاء SRS الحالي | `LEGACY — CLEANUP CANDIDATE AFTER STABILIZATION` | لا يحتوي متطلبات فعلية ولا توجد إحالات حالية معروفة إليه؛ مرشح للحذف بعد Stabilization ضمن Cleanup قرار واضح |
+| Legacy Tech ERD Redirect (`docs/3-tech/01-ERD.md`) | Redirect تاريخي إلى ERD الحالي | `LEGACY — CLEANUP CANDIDATE AFTER STABILIZATION` | لا يحتوي نموذجًا مستقلًا؛ المرجع الحالي `docs/03-analysis/11-ERD.md`; يحذف فقط بعد Stabilization وفحص الروابط |
 | Charter | تأسيس إداري | `SYNCHRONIZED — TEAM REVIEW STILL REQUIRED` | مزامن مع نموذج التقييم الحالي والخارطة الزمنية؛ لا يعتمد التقنية أو المتطلبات بذاته |
-| WBS | تجزئة العمل | `STRUCTURALLY ALIGNED / NEEDS SCHEDULE LABEL SYNC` | بنية العمل متوافقة مع Governance → Research → SRS → Modeling → Design → Audit؛ يحتاج فقط تحديث وصف الحالة عند المراجعة القادمة |
+| WBS | تجزئة العمل | `ALIGNED WITH PRELIMINARY DEFENSE ROADMAP v2` | بنية العمل متوافقة مع Governance → Research → SRS → Modeling → Design → Audit |
 | Risk Register | المخاطر والتغيير | `ACTIVE — SYNCHRONIZED WITH ROADMAP v2` | مرجعه الزمني Work Plan الحالي؛ يراجع دوريًا مع تغير المخاطر |
 | Feasibility Study | اقتصادي/تقني/تشغيلي | `SKELETON` | بيانات ومبررات موثقة؛ لا إعلان Feasible قبل التحليل |
 | Work Plan | Schedule/Gantt/PERT + Closure Tracker | `ACTIVE — PRELIMINARY DEFENSE ROADMAP v2` | 11 سبتمبر موعد جاهزية داخلي؛ اليوم الفعلي للمناقشة النهائية ما يزال TBD |
@@ -47,6 +50,12 @@
 | Data Dictionary | الحقول والقيود | `DRAFT-BLOCKED BY DATABASE DESIGN` | مسودة للمناقشة فقط حتى اعتماد التصميم لاحقًا |
 | Interface Design | hierarchy/wireframes/forms | `DRAFT FOR PRELIMINARY DEFENSE` | يرتبط بالUse Cases الحالية؛ اعتماد UX النهائي يحتاج اختبارًا لاحقًا |
 | Queries & Reports | متطلبات الاستعلام والتقارير | `DRAFT-BLOCKED BY SRS/DESIGN` | يجهز بالقدر الأكاديمي المطلوب دون اختراع وظائف جديدة |
+
+## Cleanup Policy — Stabilization
+
+- لا يحذف أي `LEGACY` أثناء Stabilization لمجرد أنه يشبه ملفًا حاليًا؛ يجب التأكد أولًا من عدم وجود معلومات تاريخية أو روابط لازمة للتتبع.
+- الملفات التي لا تحمل محتوى فريدًا تسجل `CLEANUP CANDIDATE AFTER STABILIZATION` ثم يحذفها الفريق في Cleanup منفصل بعد مراجعة الروابط والـGit history.
+- لا يوجد في الشجرة الحالية Duplicate حرفي مؤكد (نفس Blob/SHA) بين ملفين مختلفين.
 
 `CURRENT` تعني أن الوثيقة مزامنة مع القرارات الحالية في نطاقها، ولا تعني أن المشروع أو SRS أصبح Baselined.  
 `DRAFT FOR PRELIMINARY DEFENSE` يعني صالحًا للمراجعة/العرض الأولي فقط، وليس تصميمًا نهائيًا أو التزام تنفيذ.  
