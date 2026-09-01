@@ -39,8 +39,9 @@
 | Rating & Provider Reputation | التقييم وسمعة المقدم | `ANALYZED_APPROVED — CURRENT` | التقييم الحالي أحادي من المستفيد للمقدم بعد Completed |
 | Location & Neighborhood Model | المطابقة والموقع | `ANALYZED_APPROVED / PARTIAL DATA` | LOC-DATA-Q01 وLOC-OPS-TIME-Q01 |
 | AI Trust & Safety Model | التحقق والمراقبة المدعومة بالAI | `ANALYZED_APPROVED / PARTIAL POLICY` | سياسة المحتوى/العتبات/المزود/الاحتفاظ مفتوحة |
-| Chapter One Draft (`docs/05-report-drafts/01-chapter-one-draft.md`) | مسودة الفصل الأول للعرض والنقاش | `DRAFT v0.1 — NEEDS SYNCHRONIZATION` | ما زالت تحوي إشارات تاريخية للمقابلات/خطة الأسبوعين ويجب تنظيفها قبل النسخة الرسمية |
-| Chapter Two Draft (`docs/05-report-drafts/02-chapter-two-draft.md`) | مسودة الخلفية والدراسات السابقة للعرض والنقاش | `DRAFT v0.1 — NEEDS RESEARCH SYNC` | يجب إدخال حِرفة وتحديث أشغال وGap والمراجع قبل النسخة الرسمية |
+| Chapter One v1 (`docs/05-report-drafts/01-chapter-one-v1.md`) | الإصدار الأول من الفصل الأول للمراجعة | `VERSION 1 — NOT BASELINED` | تم مزامنته مع قرار عدم تنفيذ المقابلات والخطة الزمنية الحالية؛ ما تزال GOV-Q01/Q02/Q04 والجدوى وبعض المصادر مفتوحة |
+| Chapter Two v1 (`docs/05-report-drafts/02-chapter-two-v1.md`) | الإصدار الأول من الفصل الثاني للمراجعة | `VERSION 1 — NEEDS RESEARCH SYNC` | يحتاج إدخال/مزامنة حِرفة وتحديث أشغال وGap والمراجع قبل النسخة النهائية |
+| Chapter Three v1 (`docs/05-report-drafts/03-chapter-three-v1.md`) | الإصدار الأول من فصل التحليل والنمذجة | `VERSION 1 — NOT BASELINED` | مشتق من التحليل الحالي؛ GOV-Q02/GOV-Q04/DEP-Q02 والمخططات/ERD تحتاج إغلاق أو تحديث قبل النسخة النهائية |
 | Academic Progress Report 2026-08-16 | لقطة مرحلية مؤرخة | `LEGACY SNAPSHOT` | لا يستخدم للحالة الحالية عند تعارضه مع القرارات الأحدث |
 | DFD | تدفقات البيانات | `DRAFT FOR PRELIMINARY DEFENSE` | GOV-Q02 + SRS sufficiently stable؛ لا يعد Baseline نهائيًا |
 | UML | Activity/Sequence/Class | `DRAFT FOR PRELIMINARY DEFENSE` | GOV-Q02 + SRS sufficiently stable؛ لا يعد Baseline نهائيًا |
@@ -58,6 +59,7 @@
 - لا يوجد في الشجرة الحالية Duplicate حرفي مؤكد (نفس Blob/SHA) بين ملفين مختلفين.
 
 `CURRENT` تعني أن الوثيقة مزامنة مع القرارات الحالية في نطاقها، ولا تعني أن المشروع أو SRS أصبح Baselined.  
+`VERSION 1` تعني أول نسخة أكاديمية مجمعة للمراجعة، ولا تعني الاعتماد النهائي أو Baseline.  
 `DRAFT FOR PRELIMINARY DEFENSE` يعني صالحًا للمراجعة/العرض الأولي فقط، وليس تصميمًا نهائيًا أو التزام تنفيذ.  
 `READY` لا تعني جاهزًا للفصل الأكاديمي إلا بعد اجتياز Readiness Checklist.  
-مسودات الفصول في `docs/05-report-drafts/` وثائق مشتقة للعرض والمراجعة فقط، ولا تتغلب على Sources of Truth الأعلى عند أي تعارض.
+إصدارات الفصول في `docs/05-report-drafts/` وثائق مشتقة للعرض والمراجعة فقط، ولا تتغلب على Sources of Truth الأعلى عند أي تعارض.
