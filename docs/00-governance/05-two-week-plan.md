@@ -1,89 +1,24 @@
-# خطة إغلاق التحليل والمخططات خلال أسبوعين
+# خطة الأسبوعين السابقة — Legacy Schedule Snapshot
 
-> **النافذة:** 12–25 أغسطس 2026 تقريبًا. اليوم الأخير مخصص للـReadiness Audit لا لبدء تحليل جديد.
+> **الحالة:** `LEGACY / SUPERSEDED — DO NOT USE FOR CURRENT PLANNING`
+>
+> هذه الوثيقة تمثل خطة داخلية قديمة كانت مبنية على نافذة زمنية تقريبية في أغسطس 2026. لم تعد تستخدم لتحديد المواعيد أو توزيع المهام أو تقييم التأخر.
 
-## مبادئ التنفيذ
+## سبب الإيقاف
 
-- أولوية المتطلبات قبل التصميم.
-- لا يرسم مخطط نهائي من README مباشرة.
-- كل يوم ينتهي بتحديث Decision Register وDocument Register.
-- العمل المتوازي مسموح فقط عندما لا توجد Dependency مباشرة.
+- المواعيد التي بُنيت عليها الخطة لم تعد تمثل الواقع الحالي.
+- توزيع المهام السابق وGitHub Issues المرتبطة به لم يعد معتمدًا.
+- قرر الفريق إعادة بناء خارطة زمنية من الصفر انطلاقًا من مواعيد التسليم الرسمية وقدرة أعضاء الفريق الفعلية.
+- خطة جمع البيانات الحالية لا تتضمن تنفيذ مقابلات؛ ويظل أثر ذلك على توافق منهجية الفصل الثالث مع هيكل 1447 بحاجة إلى تثبيت مع المشرف.
 
-## الأسبوع الأول — تثبيت الأساس والتحليل
+## ما يحل محل هذه الخطة؟
 
-### يوم 1–2: Governance + Discovery
-- حسم GOV-Q01/Q02/Q03 مع المشرف.
-- حسم BUS-Q01/Q02 مبدئيًا مع الفريق.
-- مراجعة Project Baseline وCharter.
-- تجهيز أسئلة المقابلات وخطة الملاحظة.
-- بدء اختيار الأنظمة المشابهة.
+المرجع الحالي للتخطيط هو:
 
-### يوم 3–4: Data Gathering + Research
-- تنفيذ مقابلات/ملاحظة فعلية وتوثيق الأدلة.
-- تحليل الوضع الحالي والمشكلات والفرص.
-- توثيق ثلاثة أنظمة مشابهة على الأقل ومصادرها.
-- بناء Comparison Matrix أولية.
+`docs/01-pm/05-work-plan.md`
 
-### يوم 5: SRS Draft v0.1
-- تثبيت Actors/Stakeholders.
-- صياغة User Requirements.
-- صياغة FR/NFR بحالات `PROPOSED`.
-- ربط كل متطلب بمصدر/قرار.
+وحالته `RESET — AWAITING REAL DEADLINES AND TEAM CAPACITY` حتى تثبت المواعيد والموارد.
 
-### يوم 6–7: Business Rules + Review
-- حسم طلب الخدمة، العرض، التفاوض، السعر، الفاتورة، التقييم، الإلغاء.
-- تحديث SRS إلى v0.2.
-- جلسة مراجعة فريق واعتماد ما يمكن اعتماده.
+## ملاحظة حوكمة
 
-## الأسبوع الثاني — النمذجة والتصميم
-
-### يوم 8–9: Use Cases + DFD/UML
-- Use Case Diagram + Specifications.
-- Activity/Sequence للعمليات الأساسية.
-- DFD وفق قرار GOV-Q02.
-
-### يوم 10: ERD + Process/Data Specs
-- ERD conceptual.
-- Data stores/flows/process descriptions.
-- مراجعة Traceability.
-
-### يوم 11–12: Design
-- Relational Schema + Data Dictionary.
-- Interface Hierarchy + Wireframes الأساسية.
-- Query/Report definitions.
-
-### يوم 13: Consistency Audit
-- SRS ↔ Use Cases ↔ DFD/UML ↔ ERD ↔ Design.
-- إزالة العناصر غير المتتبعة.
-- مراجعة AI scope والخصوصية.
-
-### يوم 14: Readiness Gate
-- إغلاق قائمة الجاهزية.
-- تثبيت نسخ الوثائق (`v1.0-analysis-baseline`).
-- عندها فقط يبدأ استخراج الفصول الأربعة.
-
-## Gantt مبدئي
-
-```mermaid
-gantt
-    title YADD Analysis & Design - Two Week Closure Plan
-    dateFormat  YYYY-MM-DD
-    axisFormat  %d %b
-    section Governance
-    University/team decisions     :crit, g1, 2026-08-12, 2d
-    section Discovery
-    Data gathering                :crit, d1, 2026-08-13, 3d
-    Literature/similar systems    :r1, 2026-08-13, 4d
-    section Requirements
-    SRS draft                     :crit, s1, 2026-08-16, 2d
-    Business rules + review       :crit, b1, 2026-08-17, 2d
-    section Modeling
-    Use cases / DFD / UML         :crit, m1, 2026-08-19, 2d
-    ERD + data/process specs      :crit, m2, 2026-08-21, 1d
-    section Design
-    DB + Interface design         :crit, x1, 2026-08-22, 2d
-    section Audit
-    Consistency + readiness       :crit, a1, 2026-08-24, 2d
-```
-
-> التواريخ تخطيط داخلي قابل للتعديل عند معرفة موعد التسليم الرسمي باليوم والساعة.
+لا تحذف هذه الوثيقة خلال مرحلة Stabilization لأنها تمثل أثرًا تاريخيًا لخطة سابقة، لكنها ليست Source of Truth للحالة الحالية.
