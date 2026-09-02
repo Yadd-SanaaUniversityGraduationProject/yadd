@@ -1,10 +1,10 @@
 # Software Requirements Specification — YADD MVP
 
-> **الإصدار:** v0.9.1
+> **الإصدار:** v0.9.2
 >
 > **الحالة:** `PARTIALLY ANALYZED — NOT BASELINED`
 >
-> هذه النسخة تزامن المتطلبات مع قرارات الفريق حتى 2026-08-26. البنود المفتوحة صريحة ولا تعتبر متطلبات نهائية.
+> هذه النسخة تزامن المتطلبات مع القرارات حتى 2026-09-02، بما في ذلك إعادة فتح `RAT-CUST-Q01`. البنود المفتوحة صريحة ولا تعتبر متطلبات نهائية.
 
 ## 1. Scope
 
@@ -81,7 +81,8 @@
 | UR-TX-01 | بدء المعاملة عند اختيار مقدم في مسار الطلب أو اتفاق الطرفين في البحث المباشر. | `ANALYZED_APPROVED` | DEC-046/047 |
 | UR-TX-02 | امتلاك عدة معاملات جارية بالتوازي. | `ANALYZED_APPROVED` | DEC-056 |
 | UR-INV-01 | فاتورة نهائية موثقة لإغلاق المعاملة. | `ANALYZED_APPROVED` | DEC-015/025/050 |
-| UR-REV-01 | تقييم مقدم الخدمة/المنتج بعد اكتمال المعاملة. | `ANALYZED_APPROVED` | DEC-051 |
+| UR-REV-01 | تقييم مقدم الخدمة/المنتج بعد اكتمال المعاملة بواسطة المستفيد. | `ANALYZED_APPROVED` | DEC-051 |
+| UR-REV-02 | إمكانية تقييم مقدم الخدمة/المنتج للمستفيد بعد المعاملة، إذا اعتمد هذا الاتجاه. | `PROPOSED/BLOCKED BY RAT-CUST-Q01` | DEC-058 / RAT-CUST-Q01 |
 | UR-SAFE-01 | حظر مستخدم مسيء والإبلاغ عنه ومراجعة البلاغ إداريًا. | `ANALYZED_APPROVED` | DEC-053 |
 | UR-PAY-01 | معرفة وسائل الدفع المقبولة دون تنفيذ YADD للدفع وفق baseline الحالي. | `ANALYZED_APPROVED_PENDING_DEP_Q02` | DEC-018/041 |
 | UR-SUB-01 | معرفة حالة اشتراك المقدم وفترة صلاحيته. | `ANALYZED_APPROVED` | DEC-042/043 |
@@ -141,7 +142,7 @@
 - `FR-EXT-02` `ANALYZED_APPROVED`: يسمح بعرض وسائل الدفع المقبولة كمعلومة.
 - `FR-EXT-03` `ANALYZED_APPROVED`: في المنتجات يسمح بالاستلام أو توصيل يرتبه المقدم خارج YADD.
 - `FR-EXT-04` `ANALYZED_APPROVED`: يمكن إدراج تكلفة التوصيل في الفاتورة.
-- `FR-EXT-05` `BLOCKED BY DEP-Q02`: دور YADD النهائي في العربون/الدفعة المقدمة لم يحسم بعد؛ لا يضاف Deposit/Escrow lifecycle حتى قرار المشرف.
+- `FR-EXT-05` `BLOCKED BY DEP-Q02`: دور YADD النهائي في العربون/الدفعة المقدمة لم يحسم بعد؛ لا يضاف Deposit/Escrow lifecycle حتى قرار جديد.
 
 ### Invoice / Transaction Closure
 - `FR-010` `ANALYZED_APPROVED`: يسمح للمقدم بإنشاء الفاتورة النهائية بعد التنفيذ/التجهيز واستقرار الاتفاق.
@@ -154,12 +155,12 @@
 - `FR-011E` `PROPOSED/BLOCKED BY INV-PENDING-Q01`: سياسة التصعيد بعد عدم الاستجابة الطويلة لم تعتمد.
 - `FR-012` `ANALYZED_APPROVED`: عند اعتماد الفاتورة تحفظ في سجل الطرفين وتصبح Transaction Completed.
 
-### Reviews / Provider Reputation
-- `FR-013` `ANALYZED_APPROVED`: لا يسمح بالتقييم إلا للمستفيد المرتبط بمعاملة Completed مع ذلك المقدم.
+### Reviews / Reputation
+- `FR-013` `ANALYZED_APPROVED`: لا يسمح بتقييم المستفيد للمقدم إلا إذا كان مرتبطًا بمعاملة Completed مع ذلك المقدم.
 - `FR-014` `ANALYZED_APPROVED`: بعد اعتماد الفاتورة يصبح تقييم المقدم خطوة إلزامية على المستفيد.
-- `FR-014A` `ANALYZED_APPROVED`: التقييم 1–5 نجوم إلزامي والتعليق النصي اختياري.
-- `FR-014B` `ANALYZED_APPROVED`: لا يوجد تقييم للمستفيد من المقدم في النموذج الحالي.
-- `FR-014C` `ANALYZED_APPROVED`: لا Double-Blind ولا مهلة 14 يومًا في النموذج الحالي.
+- `FR-014A` `ANALYZED_APPROVED`: تقييم المستفيد للمقدم = 1–5 نجوم إلزامية والتعليق النصي اختياري.
+- `FR-014B` `PROPOSED/BLOCKED BY RAT-CUST-Q01`: إذا اعتمد التقييم المقابل، يسمح النظام لمقدم الخدمة/المنتج بتقييم المستفيد وفق السياسة التي يعتمدها القرار.
+- `FR-014C` `PROPOSED/BLOCKED BY RAT-CUST-Q01`: توقيت/إلزامية/حقول/رؤية التقييم المقابل ووجود Double-Blind أو مهلة وأثره على سمعة المستفيد غير معتمدة.
 - `FR-014D` `ANALYZED_APPROVED`: يعرض ملف المقدم عدد المعاملات المكتملة داخل YADD كمؤشر «عدد الأعمال».
 
 ### Trust & Safety / Abuse
@@ -212,10 +213,9 @@
 - `OOS-08`: AI يصدر حظرًا نهائيًا عالي الأثر أو Verification نهائيًا دون إشراف بشري.
 - `OOS-09`: Payment Gateway لتحصيل اشتراك المقدم في MVP.
 - `OOS-10`: Change Order System مستقل.
-- `OOS-11`: تقييم مقدم الخدمة/المنتج للمستفيد في النموذج الحالي.
 
-> **ملاحظة:** معالجة العربون/Deposit ليست مثبتة Out of Scope نهائيًا الآن؛ هي `BLOCKED BY DEP-Q02` حتى قرار المشرف.
+> **ملاحظة:** تقييم مقدم الخدمة/المنتج للمستفيد ليس Out of Scope ولا Approved حاليًا؛ هو `BLOCKED BY RAT-CUST-Q01`. معالجة العربون/Deposit كذلك ليست مثبتة Out of Scope نهائيًا وهي `BLOCKED BY DEP-Q02`.
 
 ## 13. Open Decisions Before v1.0
 
-`DEP-Q02`, `REQ-EXP-Q01`, `INV-PENDING-Q01`, `SAFE-REQ-Q01`, `TX-CONC-Q01`, `UX-VAL-Q01`, `LOC-DATA-Q01`, `LOC-OPS-TIME-Q01`, `VER-DOC-Q01`, `VER-RET-Q01`, `VER-LIC-Q01`, `AI-MOD-Q01`, `AI-MOD-Q02`, `AI-PROV-Q01`, `AI-RET-Q01`, `AI-APPEAL-Q01`, `SUB-PLAN-Q01`, `SUB-PAY-Q01`, `SUB-OPS-Q01`.
+`RAT-CUST-Q01`, `DEP-Q02`, `REQ-EXP-Q01`, `INV-PENDING-Q01`, `SAFE-REQ-Q01`, `TX-CONC-Q01`, `UX-VAL-Q01`, `LOC-DATA-Q01`, `LOC-OPS-TIME-Q01`, `VER-DOC-Q01`, `VER-RET-Q01`, `VER-LIC-Q01`, `AI-MOD-Q01`, `AI-MOD-Q02`, `AI-PROV-Q01`, `AI-RET-Q01`, `AI-APPEAL-Q01`, `SUB-PLAN-Q01`, `SUB-PAY-Q01`, `SUB-OPS-Q01`.
