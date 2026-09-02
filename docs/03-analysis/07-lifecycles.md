@@ -2,7 +2,7 @@
 
 > **الحالة:** `PARTIALLY ANALYZED`
 >
-> يعكس هذا الملف القرارات حتى 2026-08-26. القيم الزمنية والـthresholds المفتوحة لا تفترض.
+> يعكس هذا الملف القرارات الحالية مع إبقاء القيم الزمنية والـthresholds والسياسات المفتوحة دون افتراض.
 
 ## 1. Published Request Lifecycle
 
@@ -66,16 +66,17 @@ stateDiagram-v2
     RevisionRequested --> AwaitingInvoice: provider sends revised invoice
     RevisionRequested --> Disputed: unresolved issue reported
     AwaitingInvoice --> Completed: beneficiary approves invoice
-    Completed --> RatingRequired
-    RatingRequired --> Closed: beneficiary submits provider rating
+    Completed --> ProviderRatingRequired
+    ProviderRatingRequired --> ProviderRatingSubmitted: beneficiary rates provider
+    ProviderRatingSubmitted --> RatingClosurePending: RAT-CUST-Q01 unresolved
     Cancelled --> [*]
     Disputed --> [*]
-    Closed --> [*]
 ```
 
 - لا يوجد Auto-Approval للفاتورة.
 - بعد بدء المعاملة، الإلغاء يحتاج سببًا مسجلًا.
 - عدة Transactions قد تكون Active للمستخدم بالتوازي؛ الحد الرقمي غير معتمد.
+- لا يثبت الانتقال النهائي بعد تقييم المستفيد للمقدم حتى حسم `RAT-CUST-Q01`: قد يغلق التدفق مباشرة أو يفتح تقييمًا مقابلًا وفق القرار.
 
 ## 5. Invoice Lifecycle
 
@@ -96,19 +97,22 @@ stateDiagram-v2
 
 ## 6. Rating Lifecycle
 
+### الجزء المعتمد
+
 ```mermaid
 stateDiagram-v2
     [*] --> Locked
-    Locked --> Required: invoice approved / transaction completed
-    Required --> Submitted: beneficiary rates provider 1-5 stars
-    Submitted --> Final
-    Final --> [*]
+    Locked --> ProviderRatingRequired: invoice approved / transaction completed
+    ProviderRatingRequired --> ProviderRatingSubmitted: beneficiary rates provider 1-5 stars
+    ProviderRatingSubmitted --> ReciprocalRatingDecisionPending
 ```
 
-- النجوم إلزامية؛ التعليق النصي اختياري.
-- لا تقييم للمستفيد من المقدم في النموذج الحالي.
-- لا Double-Blind ولا مهلة 14 يومًا في القرار الحالي.
-- لا يفتح التقييم لمعاملة ملغاة أو غير مكتملة.
+- تقييم المستفيد للمقدم إلزامي، والنجوم 1–5 إلزامية والتعليق اختياري.
+- لا يفتح تقييم المستفيد للمقدم لمعاملة ملغاة أو غير مكتملة.
+
+### الجزء المفتوح
+
+`RAT-CUST-Q01` يحدد ما إذا كان مقدم الخدمة/المنتج سيقيم المستفيد. لذلك لا يوجد حاليًا Lifecycle معتمد للتقييم المقابل، ولا Double-Blind/مهلة/سمعة مستفيد معتمدة قبل الحسم.
 
 ## 7. Product-specific Fulfillment Note
 
@@ -122,4 +126,4 @@ flowchart LR
     E --> F
 ```
 
-YADD لا يدير مندوب توصيل أو تتبع شحنة. موضوع العربون يبقى مفتوحًا في `DEP-Q02` ولا يضاف له lifecycle مالي حتى قرار المشرف.
+YADD لا يدير مندوب توصيل أو تتبع شحنة. موضوع العربون يبقى مفتوحًا في `DEP-Q02` ولا يضاف له lifecycle مالي حتى قرار جديد.
