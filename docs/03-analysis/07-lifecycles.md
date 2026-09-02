@@ -36,20 +36,24 @@ stateDiagram-v2
     Withdrawn --> [*]
 ```
 
+- Provider Response قد تتضمن سعرًا مقترحًا وملاحظة و`RequiresDeposit` نعم/لا.
+- لا توجد حالة Payment/Deposit مالية مرتبطة بالاستجابة.
+
 ## 3. Communication and Transaction Start
 
 ### Request route
 
 ```text
-Open Request → Responses → Inquiry/Chat → Beneficiary Selects Provider → Active Transaction
+Open Request → Provider Responses → Inquiry/Chat → Beneficiary Selects Provider → Active Transaction
 ```
 
-اختيار المقدم يغلق الطلب أمام عروض جديدة ويجعل الاستجابات الأخرى `NotSelected`.
+اختيار المقدم يغلق الطلب أمام استجابات جديدة ويجعل الاستجابات الأخرى `NotSelected`.
+لا يوجد Agreement entity مستقل في هذا المسار.
 
 ### Direct-search route
 
 ```text
-Search → Provider Profile → Inquiry/Chat → Both Agree to Start → Active Transaction
+Search → Provider Profile/Portfolio → Inquiry/Chat → Both Agree to Start → Active Transaction
 ```
 
 المحادثة وحدها ليست Transaction.
@@ -68,7 +72,11 @@ stateDiagram-v2
     AwaitingInvoice --> Completed: beneficiary approves invoice
     Completed --> ProviderRatingRequired
     ProviderRatingRequired --> ProviderRatingSubmitted: beneficiary rates provider
-    ProviderRatingSubmitted --> RatingClosurePending: RAT-CUST-Q01 unresolved
+    ProviderRatingSubmitted --> BeneficiaryRatingOffered
+    BeneficiaryRatingOffered --> BeneficiaryRatingSubmitted: provider chooses to rate
+    BeneficiaryRatingOffered --> Closed: provider skips optional rating
+    BeneficiaryRatingSubmitted --> Closed
+    Closed --> [*]
     Cancelled --> [*]
     Disputed --> [*]
 ```
@@ -76,7 +84,8 @@ stateDiagram-v2
 - لا يوجد Auto-Approval للفاتورة.
 - بعد بدء المعاملة، الإلغاء يحتاج سببًا مسجلًا.
 - عدة Transactions قد تكون Active للمستخدم بالتوازي؛ الحد الرقمي غير معتمد.
-- لا يثبت الانتقال النهائي بعد تقييم المستفيد للمقدم حتى حسم `RAT-CUST-Q01`: قد يغلق التدفق مباشرة أو يفتح تقييمًا مقابلًا وفق القرار.
+- تقييم المستفيد للمقدم إلزامي؛ تقييم المقدم للمستفيد اختياري.
+- لا Payment/Refund lifecycle داخل Transaction.
 
 ## 5. Invoice Lifecycle
 
@@ -97,22 +106,36 @@ stateDiagram-v2
 
 ## 6. Rating Lifecycle
 
-### الجزء المعتمد
+### Beneficiary rates Provider — mandatory
 
 ```mermaid
 stateDiagram-v2
     [*] --> Locked
     Locked --> ProviderRatingRequired: invoice approved / transaction completed
     ProviderRatingRequired --> ProviderRatingSubmitted: beneficiary rates provider 1-5 stars
-    ProviderRatingSubmitted --> ReciprocalRatingDecisionPending
+    ProviderRatingSubmitted --> [*]
 ```
 
-- تقييم المستفيد للمقدم إلزامي، والنجوم 1–5 إلزامية والتعليق اختياري.
-- لا يفتح تقييم المستفيد للمقدم لمعاملة ملغاة أو غير مكتملة.
+- النجوم 1–5 إلزامية والتعليق اختياري.
+- لا يفتح التقييم لمعاملة ملغاة أو غير مكتملة.
 
-### الجزء المفتوح
+### Provider rates Beneficiary — optional
 
-`RAT-CUST-Q01` يحدد ما إذا كان مقدم الخدمة/المنتج سيقيم المستفيد. لذلك لا يوجد حاليًا Lifecycle معتمد للتقييم المقابل، ولا Double-Blind/مهلة/سمعة مستفيد معتمدة قبل الحسم.
+```mermaid
+stateDiagram-v2
+    [*] --> Locked
+    Locked --> BeneficiaryRatingOffered: transaction completed
+    BeneficiaryRatingOffered --> Submitted: provider rates beneficiary
+    BeneficiaryRatingOffered --> Skipped: provider skips
+    Submitted --> [*]
+    Skipped --> [*]
+```
+
+- التقييم اختياري ويظهر Prompt بارزًا.
+- المؤشرات: وضوح الطلب والتواصل، الالتزام بالاتفاق، حسن التعامل والتعاون؛ كل مؤشر 1–5.
+- التعليق اختياري.
+- النتائج تدخل سجل تعامل المستفيد الذي يظهر فقط لمقدمي الخدمات/المنتجات في سياق تعامل مشروع.
+- لا ينتج عنه منع أو عقوبة آلية في MVP.
 
 ## 7. Product-specific Fulfillment Note
 
@@ -126,4 +149,4 @@ flowchart LR
     E --> F
 ```
 
-YADD لا يدير مندوب توصيل أو تتبع شحنة. موضوع العربون يبقى مفتوحًا في `DEP-Q02` ولا يضاف له lifecycle مالي حتى قرار جديد.
+YADD لا يدير مندوب توصيل أو تتبع شحنة. إذا كان Provider Response يتطلب عربونًا، يعرض النظام الدلالة فقط؛ مبلغ العربون والدفع والاسترداد خارج YADD ولا يملكان lifecycle داخل النظام.
