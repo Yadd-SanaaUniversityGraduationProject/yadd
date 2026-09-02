@@ -1,14 +1,20 @@
 # Software Requirements Specification — YADD MVP
 
-> **الإصدار:** v0.9.2
+> **الإصدار:** v0.9.3
 >
 > **الحالة:** `PARTIALLY ANALYZED — NOT BASELINED`
 >
-> هذه النسخة تزامن المتطلبات مع القرارات حتى 2026-09-02، بما في ذلك إعادة فتح `RAT-CUST-Q01`. البنود المفتوحة صريحة ولا تعتبر متطلبات نهائية.
+> هذه النسخة تزامن المتطلبات مع قرارات الإغلاق حتى 2026-09-03. البنود المفتوحة صريحة ولا تعتبر متطلبات نهائية.
 
 ## 1. Scope
 
 مرجع النطاق: `00-project-baseline.md` و`docs/00-governance/02-decision-register.md`.
+
+- YADD نظام Client–Server مركزي.
+- الـBackend/API هو المرجع النهائي لمعالجة البيانات والصلاحيات وBusiness Rules والتعامل مع قاعدة البيانات.
+- واجهة الويب هي واجهة الاستخدام الأساسية الحالية.
+- Flutter اتجاه معتمد كعميل Mobile لاحق يتصل بالـAPI نفسه؛ لا يعد مرجعًا نهائيًا للصلاحيات أو قواعد العمل.
+- لا يعتمد حاليًا Guest/Visitor Actor مستقل أو Web browsing anonymous policy؛ إن احتاج لاحقًا يفتح قرار منفصل.
 
 ## 2. Account / Portal Model — Approved
 
@@ -51,17 +57,23 @@
 
 - نموذج الإيراد اشتراك دوري من المقدمين دون عمولة من المعاملات.
 - يدير YADD حالة وفترة الاشتراك؛ التحصيل خارجي والتأكيد يدوي.
-- إرسال عروض جديدة يحتاج Provider Verified واشتراك Active.
+- إرسال استجابات جديدة للطلبات يحتاج Provider Verified واشتراك Active.
 
 ## 8. Actors
 
+### Actors العامة للمخطط الرئيسي
 - `Beneficiary` — `ANALYZED_APPROVED`.
-- `Service Provider` — `ANALYZED_APPROVED`.
-- `Product Provider` — `ANALYZED_APPROVED`.
+- `Provider` — `ANALYZED_APPROVED` كActor عام.
+  - `Service Provider` — تخصص من Provider عند الحاجة.
+  - `Product Provider` — تخصص من Provider عند الحاجة.
+- `YADD Administrator` — `ANALYZED_APPROVED_AS_MODELING_ACTOR` للمخطط الرئيسي.
+
+### أدوار إدارية متخصصة للصلاحيات والتفاصيل
 - `Verification Reviewer` — `ANALYZED_APPROVED` في أصل الدور.
 - `Content Moderator` — `ANALYZED_APPROVED` في أصل الدور.
 - `Subscription Administrator` — `ANALYZED_APPROVED` في أصل الدور.
-- `Platform Administrator` — `PARTIALLY_ANALYZED`.
+
+> استخدام `YADD Administrator` في المخطط الرئيسي لا يعني أن موظفًا واحدًا يجب أن يمتلك كل الصلاحيات؛ التفصيل يبقى داخل Authorization/Administration model.
 
 ## 9. User Requirements
 
@@ -72,19 +84,21 @@
 | UR-PROV-01 | تفعيل نشاط خدمة أو منتج أو كليهما من Provider Profile نفسه. | `ANALYZED_APPROVED` | DEC-029/030 |
 | UR-VER-01 | تقديم متطلبات تحقق وانتظار اعتماد YADD قبل العمل كمقدم. | `ANALYZED_APPROVED` | DEC-034/035 |
 | UR-DIS-01 | البحث المباشر عن مقدم حسب التصنيف والمنطقة. | `ANALYZED_APPROVED` | DEC-012/031..033 |
+| UR-PORT-01 | استعراض معرض أعمال/كتالوج المقدم داخل Provider Profile. | `ANALYZED_APPROVED` | DEC-064 |
 | UR-REQ-01 | إنشاء طلب خدمة/منتج ونشره للمقدمين المناسبين. | `ANALYZED_APPROVED` | DEC-012 |
 | UR-REQ-02 | إضافة وصف وصور اختيارية وسعر استرشادي اختياري. | `ANALYZED_APPROVED` | DEC-013 |
 | UR-COM-01 | الاستفسار من مقدم قبل بدء المعاملة دون أن تعتبر المحادثة وحدها Transaction. | `ANALYZED_APPROVED` | DEC-046 |
-| UR-OFF-01 | استجابة المقدم للطلب واقتراح سعر عند الحاجة. | `ANALYZED_APPROVED` | DEC-013 |
+| UR-OFF-01 | استجابة المقدم للطلب واقتراح سعر عند الحاجة وتحديد ما إذا كان يتطلب عربونًا. | `ANALYZED_APPROVED` | DEC-013/041 |
 | UR-OFF-02 | مقارنة الاستجابات واختيار مقدم واحد. | `ANALYZED_APPROVED` | DEC-014/047 |
 | UR-REQ-03 | إغلاق الطلب إذا لم يعد مطلوبًا دون اعتباره إلغاء معاملة. | `ANALYZED_APPROVED` | DEC-048 |
-| UR-TX-01 | بدء المعاملة عند اختيار مقدم في مسار الطلب أو اتفاق الطرفين في البحث المباشر. | `ANALYZED_APPROVED` | DEC-046/047 |
+| UR-TX-01 | بدء المعاملة عند اختيار مقدم في مسار الطلب أو اتفاق الطرفين في البحث المباشر. | `ANALYZED_APPROVED` | DEC-046/047/066 |
 | UR-TX-02 | امتلاك عدة معاملات جارية بالتوازي. | `ANALYZED_APPROVED` | DEC-056 |
 | UR-INV-01 | فاتورة نهائية موثقة لإغلاق المعاملة. | `ANALYZED_APPROVED` | DEC-015/025/050 |
 | UR-REV-01 | تقييم مقدم الخدمة/المنتج بعد اكتمال المعاملة بواسطة المستفيد. | `ANALYZED_APPROVED` | DEC-051 |
-| UR-REV-02 | إمكانية تقييم مقدم الخدمة/المنتج للمستفيد بعد المعاملة، إذا اعتمد هذا الاتجاه. | `PROPOSED/BLOCKED BY RAT-CUST-Q01` | DEC-058 / RAT-CUST-Q01 |
+| UR-REV-02 | إمكانية تقييم المقدم للمستفيد اختياريًا بعد اكتمال المعاملة وفق مؤشرات سلوكية محددة. | `ANALYZED_APPROVED` | DEC-063 |
+| UR-REP-01 | عرض سجل تعامل المستفيد للمقدمين فقط في سياق تعامل مشروع معه دون عقوبات آلية. | `ANALYZED_APPROVED` | DEC-063 |
 | UR-SAFE-01 | حظر مستخدم مسيء والإبلاغ عنه ومراجعة البلاغ إداريًا. | `ANALYZED_APPROVED` | DEC-053 |
-| UR-PAY-01 | معرفة وسائل الدفع المقبولة دون تنفيذ YADD للدفع وفق baseline الحالي. | `ANALYZED_APPROVED_PENDING_DEP_Q02` | DEC-018/041 |
+| UR-PAY-01 | لا ينفذ YADD أي دفع بين المستفيد والمقدم؛ يوضح فقط إذا كانت استجابة المقدم تتطلب عربونًا دون قيمة أو حالة دفع. | `ANALYZED_APPROVED` | DEC-018/041 |
 | UR-SUB-01 | معرفة حالة اشتراك المقدم وفترة صلاحيته. | `ANALYZED_APPROVED` | DEC-042/043 |
 
 ## 10. Functional Requirements
@@ -96,6 +110,13 @@
 - `FR-002` `ANALYZED_APPROVED`: يسمح بإنشاء وإدارة Provider Profile.
 - `FR-002A` `ANALYZED_APPROVED`: لا تتاح وظائف التقديم قبل Provider Verified.
 - `FR-002B` `ANALYZED_APPROVED`: يسمح بتفعيل Service Activity أو Product Activity أو كليهما.
+
+### Provider Portfolio / Catalog
+- `FR-PORT-01` `ANALYZED_APPROVED`: يسمح للمقدم بإضافة عناصر صور لأعماله أو منتجاته داخل Provider Profile مع وصف اختياري.
+- `FR-PORT-02` `ANALYZED_APPROVED`: ينشئ النظام نسخة عرض من الصورة بعلامة مائية تعريفية مرتبطة بـYADD وحساب المقدم، مع عدم جعل الأصل عامًا.
+- `FR-PORT-03` `ANALYZED_APPROVED`: يتطلب رفع المحتوى إقرار المقدم بحقه في نشره.
+- `FR-PORT-04` `ANALYZED_APPROVED`: يسمح بالإبلاغ عن صورة/عنصر يشتبه في انتحاله أو عدم أحقية نشره للمراجعة الإدارية.
+- `FR-PORT-05` `ANALYZED_APPROVED`: لا تقدم العلامة المائية إثباتًا قانونيًا لملكية العمل؛ هي وسيلة تعريف وردع لإعادة الاستخدام المباشر.
 
 ### Provider Verification
 - `FR-VER-01` `ANALYZED_APPROVED`: يسمح بإرسال طلب Provider Verification.
@@ -116,20 +137,22 @@
 - `FR-005` `ANALYZED_APPROVED`: يسمح بإنشاء طلب خدمة أو منتج مع الفئة والوصف والمديرية والحي.
 - `FR-005A` `ANALYZED_APPROVED`: الصور والمعلومات الإضافية اختيارية.
 - `FR-005B` `ANALYZED_APPROVED`: السعر الاسترشادي اختياري وغير ملزم.
-- `FR-005C` `ANALYZED_APPROVED`: يسمح للمستفيد بإغلاق طلب Open قبل اختيار مقدم دون إنشاء Transaction Cancellation.
+- `FR-005C` `ANALYZED_APPROVED`: يسمح للمستفيد بإغلاق Request Open قبل اختيار مقدم دون إنشاء Transaction Cancellation.
 - `FR-005D` `ANALYZED_APPROVED` في المبدأ: يذكّر النظام صاحب الطلب المفتوح لتأكيد استمرار الحاجة ويمكن أن يحوله إلى Expired بعد عدم النشاط.
 - `FR-005E` `PROPOSED/BLOCKED BY REQ-EXP-Q01`: مدة عدم النشاط وعدد/توقيت التذكيرات لم تعتمد.
 - `FR-006` `ANALYZED_APPROVED`: يعرض الطلب للمقدمين المؤهلين حسب النشاط والمنطقة.
 
 ### Provider Response / Selection / Communication
-- `FR-007` `ANALYZED_APPROVED`: يسمح للمقدم المؤهل ذي الاشتراك Active بالاستجابة لطلب Open.
+- `FR-007` `ANALYZED_APPROVED`: يسمح للمقدم المؤهل ذي الاشتراك Active بإرسال `Provider Response` لطلب Open.
 - `FR-007A` `ANALYZED_APPROVED`: يسمح بقبول السعر الاسترشادي أو اقتراح سعر آخر.
-- `FR-008` `ANALYZED_APPROVED`: يسمح بمحادثة/استفسار خاص قبل بدء المعاملة من البحث المباشر أو استجابة الطلب.
+- `FR-007B` `ANALYZED_APPROVED`: تسمح Provider Response بتحديد `RequiresDeposit = Yes/No` فقط؛ لا يسجل النظام قيمة العربون أو نسبته أو طريقة دفعه أو حالته.
+- `FR-008` `ANALYZED_APPROVED`: يسمح بمحادثة/استفسار خاص قبل بدء المعاملة من البحث المباشر أو Provider Response.
 - `FR-008A` `ANALYZED_APPROVED`: المحادثة وحدها لا تنشئ Transaction.
 - `FR-008B` `ANALYZED_APPROVED`: يحتفظ النظام بسجل المحادثة وفق سياسة الخصوصية والاحتفاظ.
 - `FR-008C` `ANALYZED_APPROVED`: يسمح بمشاركة موقع أدق في التواصل الخاص عند الحاجة دون عرضه للعامة.
-- `FR-009` `ANALYZED_APPROVED`: عند اختيار المستفيد مقدمًا من استجابات الطلب يغلق النظام الطلب أمام استجابات جديدة، يجعل البقية NotSelected، ويبدأ Transaction مع المختار.
+- `FR-009` `ANALYZED_APPROVED`: عند اختيار المستفيد مقدمًا من Provider Responses يغلق النظام الطلب أمام استجابات جديدة، يجعل البقية NotSelected، ويبدأ Transaction مع المختار.
 - `FR-009A` `ANALYZED_APPROVED`: في البحث المباشر لا تبدأ Transaction حتى يتفق الطرفان على بدء التعامل.
+- `FR-009B` `ANALYZED_APPROVED`: لا يستخدم MVP كيان/نموذج `Agreement` مستقل؛ مصدر بدء Transaction هو Selection في مسار الطلب أو اتفاق الطرفين على بدء التعامل في البحث المباشر.
 
 ### Transaction / Cancellation
 - `FR-TX-01` `ANALYZED_APPROVED`: يدعم النظام عدة معاملات Active للمستخدم بالتوازي.
@@ -138,11 +161,11 @@
 - `FR-TX-04` `PROPOSED/BLOCKED BY TX-CONC-Q01`: لا يوجد حد أقصى رقمي معتمد للمعاملات المتوازية.
 
 ### External Payment / Fulfillment Boundaries
-- `FR-EXT-01` `ANALYZED_APPROVED_PENDING_DEP_Q02`: لا ينفذ النظام Payment Transaction بين المستفيد والمقدم وفق baseline الحالي.
-- `FR-EXT-02` `ANALYZED_APPROVED`: يسمح بعرض وسائل الدفع المقبولة كمعلومة.
+- `FR-EXT-01` `ANALYZED_APPROVED`: لا ينفذ النظام Payment Transaction بين المستفيد والمقدم.
+- `FR-EXT-02` `ANALYZED_APPROVED`: يمكن عرض وسائل الدفع المقبولة كمعلومة عند الحاجة دون تنفيذ الدفع داخل YADD.
 - `FR-EXT-03` `ANALYZED_APPROVED`: في المنتجات يسمح بالاستلام أو توصيل يرتبه المقدم خارج YADD.
 - `FR-EXT-04` `ANALYZED_APPROVED`: يمكن إدراج تكلفة التوصيل في الفاتورة.
-- `FR-EXT-05` `BLOCKED BY DEP-Q02`: دور YADD النهائي في العربون/الدفعة المقدمة لم يحسم بعد؛ لا يضاف Deposit/Escrow lifecycle حتى قرار جديد.
+- `FR-EXT-05` `ANALYZED_APPROVED`: `RequiresDeposit` معلومة في Provider Response فقط؛ لا Deposit/Escrow/Refund lifecycle ولا DepositAmount داخل YADD.
 
 ### Invoice / Transaction Closure
 - `FR-010` `ANALYZED_APPROVED`: يسمح للمقدم بإنشاء الفاتورة النهائية بعد التنفيذ/التجهيز واستقرار الاتفاق.
@@ -159,13 +182,15 @@
 - `FR-013` `ANALYZED_APPROVED`: لا يسمح بتقييم المستفيد للمقدم إلا إذا كان مرتبطًا بمعاملة Completed مع ذلك المقدم.
 - `FR-014` `ANALYZED_APPROVED`: بعد اعتماد الفاتورة يصبح تقييم المقدم خطوة إلزامية على المستفيد.
 - `FR-014A` `ANALYZED_APPROVED`: تقييم المستفيد للمقدم = 1–5 نجوم إلزامية والتعليق النصي اختياري.
-- `FR-014B` `PROPOSED/BLOCKED BY RAT-CUST-Q01`: إذا اعتمد التقييم المقابل، يسمح النظام لمقدم الخدمة/المنتج بتقييم المستفيد وفق السياسة التي يعتمدها القرار.
-- `FR-014C` `PROPOSED/BLOCKED BY RAT-CUST-Q01`: توقيت/إلزامية/حقول/رؤية التقييم المقابل ووجود Double-Blind أو مهلة وأثره على سمعة المستفيد غير معتمدة.
+- `FR-014B` `ANALYZED_APPROVED`: بعد Transaction Completed يعرض النظام للمقدم Prompt بارزًا لتقييم المستفيد، والتقييم اختياري ويمكن تخطيه.
+- `FR-014C` `ANALYZED_APPROVED`: تقييم المقدم للمستفيد يتكون من ثلاثة مؤشرات 1–5: وضوح الطلب والتواصل، الالتزام بالاتفاق، حسن التعامل والتعاون؛ التعليق النصي اختياري.
 - `FR-014D` `ANALYZED_APPROVED`: يعرض ملف المقدم عدد المعاملات المكتملة داخل YADD كمؤشر «عدد الأعمال».
+- `FR-014E` `ANALYZED_APPROVED`: تجمع تقييمات المستفيد في سجل تعامل/سمعة محدود يظهر لمقدمي الخدمات والمنتجات فقط في سياق تعامل مشروع مع المستفيد.
+- `FR-014F` `ANALYZED_APPROVED`: لا ينتج عن انخفاض تقييم المستفيد في MVP منع أو تعليق أو تخفيض ظهور أو أي عقوبة آلية.
 
 ### Trust & Safety / Abuse
 - `FR-SAFE-01` `ANALYZED_APPROVED`: يسمح للمستخدم بحظر مستخدم آخر لإيقاف التواصل المباشر.
-- `FR-SAFE-02` `ANALYZED_APPROVED`: يسمح بالإبلاغ عن مستخدم/محادثة أو سلوك لإدارة YADD.
+- `FR-SAFE-02` `ANALYZED_APPROVED`: يسمح بالإبلاغ عن مستخدم/محادثة أو سلوك أو Portfolio/Catalog Item لإدارة YADD.
 - `FR-SAFE-03` `ANALYZED_APPROVED`: البلاغ لا يؤدي وحده إلى عقوبة نهائية؛ يخضع للمراجعة.
 - `FR-SAFE-04` `ANALYZED_APPROVED`: يمكن للنظام رفع Flag لأنماط إنشاء/إغلاق الطلبات غير الطبيعية للمراجعة دون عقوبة آلية لمجرد التكرار.
 - `FR-SAFE-05` `PROPOSED/BLOCKED BY SAFE-REQ-Q01`: Thresholds الرصد لم تعتمد.
@@ -181,7 +206,7 @@
 - `FR-SUB-02` `ANALYZED_APPROVED`: يدير النظام Status/StartDate/EndDate للاشتراك.
 - `FR-SUB-03` `ANALYZED_APPROVED`: التحصيل خارجي ولا Payment Gateway للاشتراك في MVP.
 - `FR-SUB-04` `ANALYZED_APPROVED`: موظف مخول يؤكد التفعيل/التجديد يدويًا.
-- `FR-SUB-05` `ANALYZED_APPROVED`: الاشتراك Expired يمنع عروضًا جديدة حتى التجديد.
+- `FR-SUB-05` `ANALYZED_APPROVED`: الاشتراك Expired يمنع استجابات جديدة حتى التجديد.
 
 ### Administration
 - `FR-015` `PARTIALLY_ANALYZED`: يدير موظفو YADD الوظائف الإدارية وفق الصلاحيات.
@@ -192,6 +217,7 @@
 
 - `NFR-SEC-01` `ANALYZED_APPROVED` في المبدأ: حماية الحساب والمحادثات والمرفقات وبيانات التحقق.
 - `NFR-SEC-02` `ANALYZED_APPROVED`: وصول بيانات التحقق الحساسة مقيد ومسجل.
+- `NFR-SEC-03` `ANALYZED_APPROVED_AS_ARCH_PRINCIPLE`: لا يعتمد Client/Browser/Mobile كمرجع نهائي للصلاحيات أو Business Rules؛ يطبق Backend/API التحقق النهائي من Authorization والمدخلات الحساسة.
 - `NFR-PRV-01` `ANALYZED_APPROVED`: تقليل جمع/إظهار البيانات الشخصية وعدم جعل الموقع الدقيق عامًا.
 - `NFR-AI-01` `ANALYZED_APPROVED`: AI Flags ليست إثباتًا قطعيًا.
 - `NFR-USA-01` `ANALYZED_APPROVED` في المبدأ: يجب أن تعرض الواجهة خطوات ومصطلحات بسيطة للفئة المستهدفة، مع التحقق الميداني قبل الادعاء بالملاءمة.
@@ -213,9 +239,11 @@
 - `OOS-08`: AI يصدر حظرًا نهائيًا عالي الأثر أو Verification نهائيًا دون إشراف بشري.
 - `OOS-09`: Payment Gateway لتحصيل اشتراك المقدم في MVP.
 - `OOS-10`: Change Order System مستقل.
-
-> **ملاحظة:** تقييم مقدم الخدمة/المنتج للمستفيد ليس Out of Scope ولا Approved حاليًا؛ هو `BLOCKED BY RAT-CUST-Q01`. معالجة العربون/Deposit كذلك ليست مثبتة Out of Scope نهائيًا وهي `BLOCKED BY DEP-Q02`.
+- `OOS-11`: Payment/Wallet/Escrow/Refund أو تسجيل مبلغ العربون بين المستفيد والمقدم.
+- `OOS-12`: Agreement entity مستقل في Core Transaction Model.
 
 ## 13. Open Decisions Before v1.0
 
-`RAT-CUST-Q01`, `DEP-Q02`, `REQ-EXP-Q01`, `INV-PENDING-Q01`, `SAFE-REQ-Q01`, `TX-CONC-Q01`, `UX-VAL-Q01`, `LOC-DATA-Q01`, `LOC-OPS-TIME-Q01`, `VER-DOC-Q01`, `VER-RET-Q01`, `VER-LIC-Q01`, `AI-MOD-Q01`, `AI-MOD-Q02`, `AI-PROV-Q01`, `AI-RET-Q01`, `AI-APPEAL-Q01`, `SUB-PLAN-Q01`, `SUB-PAY-Q01`, `SUB-OPS-Q01`.
+`REQ-EXP-Q01`, `INV-PENDING-Q01`, `SAFE-REQ-Q01`, `TX-CONC-Q01`, `UX-VAL-Q01`, `LOC-DATA-Q01`, `LOC-OPS-TIME-Q01`, `VER-DOC-Q01`, `VER-RET-Q01`, `VER-LIC-Q01`, `AI-MOD-Q01`, `AI-MOD-Q02`, `AI-PROV-Q01`, `AI-RET-Q01`, `AI-APPEAL-Q01`, `SUB-PLAN-Q01`, `SUB-PAY-Q01`, `SUB-OPS-Q01`.
+
+> **Baseline note:** إغلاق P0 الحالي يجعل Core Flow قابلًا للنمذجة، لكنه لا يحول هذه النسخة إلى Baselined SRS تلقائيًا؛ ما تزال مراجعة الاتساق والتتبع والاعتماد النهائي مطلوبة.
