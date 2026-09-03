@@ -1,29 +1,33 @@
 # Conceptual ERD — YADD Preliminary Defense
 
-> **الحالة:** `DRAFT FOR PRELIMINARY DEFENSE — SYNCHRONIZED 2026-09-03`
+> **الحالة:** `DRAFT FOR PRELIMINARY DEFENSE — CORE SYNCHRONIZED 2026-09-04`
 >
-> هذا ERD **مفاهيمي للفصل الثالث** ولا يعد Relation Schema أو Database Design نهائيًا. الأنواع الفيزيائية، PK/FK التفصيلية، الفهارس، القيود التنفيذية وأسماء الجداول النهائية تنتقل إلى Chapter Four بعد مراجعة هذا النموذج.
+> هذا ERD **مفاهيمي للفصل الثالث** وليس Relation Schema أو Database Design نهائيًا. الأنواع الفيزيائية، PK/FK التفصيلية، الفهارس، القيود التنفيذية وأسماء الجداول النهائية تنتقل إلى Chapter Four.
 >
-> **المراجع الحاكمة:** DEC-008..011/012/029/030/031..036/041/042/043/046..056/063/064/066/068 + `05-SRS.md` + `06-business-rules.md` + `07-lifecycles.md` + `08-use-cases.md`.
+> **المراجع الحاكمة:** DEC-008..016/018/019/021/023..025/029..043/046..056/063..072 + `05-SRS.md` + `06-business-rules.md` + `07-lifecycles.md` + `08-use-cases.md`.
+>
+> جميع التسميات داخل الرسم النهائي تكون باللغة الإنجليزية وفق DEC-072.
 
 ---
 
 ## 1. مبادئ النمذجة الحالية
 
-1. يوجد `USER` واحد للشخص؛ المستفيد والمقدم ليسا حسابين منفصلين.
-2. يصبح المستخدم مقدمًا عندما يمتلك `PROVIDER_PROFILE` مستوفيًا شروط التفعيل.
-3. يمكن لـProvider Profile تشغيل نشاط خدمة أو منتج أو كليهما.
-4. يستخدم النظام `REQUEST → PROVIDER_RESPONSE → SELECTION → TRANSACTION` ولا يوجد `AGREEMENT` مستقل.
-5. البحث المباشر قد ينشئ `TRANSACTION` دون `REQUEST` أو `PROVIDER_RESPONSE`.
+1. يوجد `USER` واحد للشخص؛ Beneficiary وProvider ليسا حسابين منفصلين.
+2. يصبح المستخدم Provider عندما يمتلك `PROVIDER_PROFILE` مستوفيًا شروط التفعيل.
+3. يمكن لـProvider Profile تشغيل Service Activity أو Product Activity أو كليهما.
+4. يستخدم مسار الطلب النموذج `REQUEST → PROVIDER_RESPONSE → SELECTION → TRANSACTION` ولا يوجد `AGREEMENT` مستقل.
+5. البحث المباشر يمكن أن ينشئ `TRANSACTION` دون `REQUEST` أو `PROVIDER_RESPONSE`، لكن فقط بعد `Request Transaction Start` وتأكيد الطرف الآخر.
 6. الخدمة والمنتج يستخدمان Core Transaction واحدًا؛ الاختلاف يمثل عبر نوع النشاط/الطلب والبيانات المرتبطة به.
 7. العربون لا يمثل كيانًا ماليًا؛ يوجد فقط `requires_deposit` ضمن Provider Response.
-8. تقييم المستفيد للمقدم وتقييم المقدم للمستفيد نموذجان مختلفان في الحقول، لذلك يمثَّلان ككيانين منفصلين مفاهيميًا.
-9. Portfolio/Catalog يمثلان مفهوم عرض واحدًا مع `item_type` يحدد نوع العنصر.
-10. لا يساوي ERD هذا تصميم قاعدة البيانات النهائي؛ بعض كيانات الدعم قد تتوسع في Chapter Four.
+8. تقييم Beneficiary للمقدم وتقييم Provider للمستفيد نموذجان مختلفان في الحقول والقواعد، لذلك يمثَّلان ككيانين منفصلين مفاهيميًا.
+9. Portfolio/Catalog يمثلان مفهوم عرض موحدًا عبر `SHOWCASE_ITEM` مع `item_type`.
+10. `Completed` هي النهاية الناجحة للTransaction ولا توجد حالة Transaction باسم `Closed`.
+11. لكل Provider استجابة فعالة واحدة فقط لكل Request؛ يمكن تعديلها أو سحبها قبل الاختيار وفق DEC-070.
+12. Request واحد يمكن أن ينتج **صفر أو Transaction واحدة فقط**؛ لأن اختيار Provider واحد يغلق Request أمام الاستجابات الجديدة.
 
 ---
 
-## 2. Core Conceptual ERD — الرسم الرئيسي
+## 2. Core Conceptual ERD
 
 ```mermaid
 erDiagram
@@ -52,7 +56,7 @@ erDiagram
 
     USER ||--o{ TRANSACTION : beneficiary_party
     PROVIDER_PROFILE ||--o{ TRANSACTION : provider_party
-    REQUEST o|--o{ TRANSACTION : may_origin
+    REQUEST o|--o| TRANSACTION : may_origin
     PROVIDER_RESPONSE o|--o| TRANSACTION : may_start
     CONVERSATION o|--o| TRANSACTION : may_link
 
@@ -207,131 +211,86 @@ erDiagram
 
 ---
 
-## 3. شرح الكيانات الأساسية
+## 3. Core Entity Semantics
 
 ### USER
-
-يمثل حساب الشخص الواحد في YADD. لا يوجد `Customer Account` و`Provider Account` منفصلان.
-
-- يمكن أن يعمل المستخدم كمستفيد مباشرة.
-- يمكن أن يمتلك `PROVIDER_PROFILE` واحدًا لتفعيل بوابة المقدم.
-- الاسم الكامل ورقم الهاتف ظاهران هنا كمفاهيم بيانات مطلوبة؛ تفاصيل العرض والخصوصية تحدد في التصميم.
+يمثل حساب الشخص الواحد في YADD. يمكن أن يعمل الشخص كمستفيد مباشرة، ويمكنه امتلاك Provider Profile واحد كحد أقصى.
 
 ### PROVIDER_PROFILE
-
-يمثل هوية المقدم داخل الحساب نفسه.
-
-- واحد كحد أقصى لكل USER وفق النموذج الحالي.
-- حالة التحقق والتفعيل ترتبط به.
-- الأنشطة والمناطق وPortfolio/Catalog ترتبط به.
+يمثل هوية Provider داخل الحساب نفسه. ترتبط به Verification، الأنشطة، مناطق الخدمة، Portfolio/Catalog والاشتراك.
 
 ### PROVIDER_ACTIVITY
+يمثل نشاط Provider بدل `provider_type` مفرد يمنع الجمع بين Service وProduct. الشكل الفيزيائي النهائي لعدد السجلات يحسم في Chapter Four.
 
-يمثل نشاط المقدم بدل وضع `provider_type` واحد قد يمنع الجمع بين خدمة ومنتج.
-
-- `activity_type = SERVICE | PRODUCT` مفاهيميًا.
-- Provider Profile يمكنه امتلاك نشاط خدمة أو منتج أو كليهما.
-- التصنيف يرتبط بالنشاط.
-
-> **ملاحظة:** هل يحتاج المقدم عدة Activities من النوع نفسه أو نموذجًا أبسط في التنفيذ هو قرار Database Design لاحق؛ وجود النشاط نفسه مبرر بالـSRS، أما البنية الفيزيائية النهائية فلا تثبت هنا.
-
-### AREA و PROVIDER_SERVICE_AREA
-
-- `AREA` يمثل المديرية/الحي وعلاقة parent-child مفاهيميًا.
-- `PROVIDER_SERVICE_AREA` يمثل المناطق التي يخدمها المقدم.
+### CATEGORY / AREA / PROVIDER_SERVICE_AREA
+- `CATEGORY` تصنيف النشاط/الطلب.
+- `AREA` تمثل District/Neighborhood بصورة مفاهيمية parent-child.
+- `PROVIDER_SERVICE_AREA` تمثل المناطق التي يخدمها Provider.
 - الموقع الدقيق/GPS ليس بيانات عامة في هذا النموذج.
 
 ### SHOWCASE_ITEM
-
-يوحد مفهومي:
-
-- Portfolio لمقدم الخدمة.
-- Catalog لمقدم المنتج.
-
-ويستخدم `item_type` للتمييز. يحتفظ النظام بمفهوم مرجع للأصل غير العام ومرجع لنسخة العرض ذات العلامة المائية. العلامة المائية تعريف/ردع وليست إثبات ملكية.
+يوحد Portfolio وCatalog مفاهيميًا. يحتوي مرجعًا للأصل غير العام ومرجعًا لنسخة العرض ذات العلامة المائية. العلامة المائية تعريف/ردع وليست إثبات ملكية.
 
 ### REQUEST
-
-يمثل طلب المستفيد سواء كان لخدمة أو منتج.
-
-- `request_type` يحدد Service/Product.
-- يرتبط بتصنيف ومنطقة.
-- `indicative_price` اختياري وغير ملزم.
-- الصور/المرفقات الاختيارية موجودة في المتطلبات، لكن تفاصيل Media Entity لم تثبت في Core ERD الحالي حتى لا نكرر تصميم التخزين قبل Chapter Four.
+يمثل طلب Service أو Product. يحتوي التصنيف والمنطقة والوصف والسعر الاسترشادي الاختياري. الصور/المرفقات مطلوبة وظيفيًا، لكن نموذج Media الفيزيائي يؤجل إلى Chapter Four.
 
 ### PROVIDER_RESPONSE
+المصطلح القياسي بدل `OFFER`.
 
-هو المصطلح القياسي بدل `OFFER`.
+- يرتبط بـRequest واحد وProvider Profile واحد.
+- يمكن أن يحتوي proposed price وملاحظة و`requires_deposit`.
+- لا يوجد DepositAmount أو PaymentStatus أو Refund Entity.
+- لكل Provider Response فعالة واحدة لكل Request.
+- يجوز تعديلها أو سحبها فقط ما دام Request Open ولم يتم اختيار Provider.
 
-يحتوي مفاهيميًا على:
-
-- السعر المقترح عند الحاجة.
-- ملاحظة.
-- `requires_deposit` نعم/لا.
-- حالة الاستجابة.
-
-لا يوجد `deposit_amount`, `deposit_percentage`, `payment_status` أو Refund Entity.
-
-### CONVERSATION و MESSAGE
-
-المحادثة قد تبدأ قبل Transaction من:
-
-- البحث المباشر.
-- سياق Request/Provider Response.
-
-المحادثة وحدها لا تنشئ Transaction. ربطها بـRequest/Transaction اختياري حسب المسار.
+### CONVERSATION / MESSAGE
+المحادثة يمكن أن تبدأ قبل Transaction من Direct Search أو Request context. Chat وحدها لا تنشئ Transaction. في Direct Search يبدأ Transaction فقط بعد طلب بدء صريح وتأكيد الطرف الآخر.
 
 ### TRANSACTION
-
 هو الكيان المركزي بعد بدء التعامل الرسمي.
 
-يمكن أن ينشأ بطريقتين:
+يمكن أن ينشأ:
 
-1. من `selected Provider Response` لمسار الطلب.
-2. مباشرة بعد اتفاق الطرفين على بدء التعامل في مسار البحث المباشر.
+1. من Provider Response مختارة في Request Route.
+2. مباشرة في Direct Search Route بعد Mutual Start Confirmation.
 
-لذلك `request_id` و`selected_response_id` اختياريان في المستوى المفاهيمي، بينما Beneficiary وProvider إلزاميان.
+لذلك `request_id` و`selected_response_id` اختياريان مفاهيميًا، بينما Beneficiary وProvider إلزاميان.
 
-الإلغاء بعد البداية يسجل على Transaction مع السبب والطرف/التوقيت في التصميم التفصيلي.
+الحالات النهائية بحسب المسار تشمل:
 
-### INVOICE_VERSION و INVOICE_ITEM
+- `Completed` للنجاح بعد اعتماد الفاتورة.
+- `Cancelled` عند الإلغاء وفق القواعد.
+- `Disputed` بحسب مسار النزاع الحالي.
 
-لم نستخدم كيان `INVOICE` واحدًا قابلًا للكتابة فوقه لأن المتطلبات تنص على الاحتفاظ بتاريخ النسخ والتعديلات.
+لا توجد حالة Transaction باسم `Closed`.
 
-- Transaction يمكن أن يملك عدة `INVOICE_VERSION`.
-- كل نسخة لها بنودها.
-- النسخة النهائية المعتمدة هي السجل النهائي للمعاملة داخل YADD.
+### INVOICE_VERSION / INVOICE_ITEM
+يمثلان الاحتفاظ بتاريخ نسخ الفاتورة بدل الكتابة فوق نسخة واحدة.
+
+- Transaction قد تحتوي عدة Invoice Versions.
+- كل Invoice Version تحتوي بندًا واحدًا على الأقل.
+- النسخة المعتمدة هي السجل النهائي للبنود والأسعار داخل YADD.
 - عدم الرد لا يعد موافقة.
 
-> اسم `INVOICE_VERSION` مفاهيمي قابل للتغيير في Database Design إلى Invoice + InvoiceRevision إذا ظهر نموذج فيزيائي أنسب؛ المهم هو **عدم فقدان تاريخ النسخ**.
+> الشكل الفيزيائي النهائي قد يكون `Invoice + InvoiceRevision` بدل `InvoiceVersion`; هذا Design Decision في Chapter Four، مع الحفاظ على المتطلب الأساسي: عدم فقدان تاريخ النسخ.
 
 ### PROVIDER_RATING
-
-تقييم المستفيد للمقدم:
-
-- مرتبط بمعاملة Completed.
-- 1–5 نجوم إلزامية عند التقييم المطلوب.
-- تعليق اختياري.
-- معاملة واحدة تسمح بتقييم مقدم واحد بحد أقصى.
+تقييم Beneficiary للمقدم بعد Transaction Completed:
+- 1–5 stars.
+- comment optional.
+- بحد أقصى تقييم واحد للمقدم لكل Transaction.
 
 ### BENEFICIARY_RATING
-
-تقييم المقدم للمستفيد:
-
-- مرتبط بمعاملة Completed.
-- اختياري.
-- ثلاثة مؤشرات 1–5:
-  - وضوح الطلب والتواصل.
-  - الالتزام بالاتفاق.
-  - حسن التعامل والتعاون.
-- تعليق اختياري.
-- لا يؤدي تلقائيًا إلى عقوبة أو منع.
+تقييم Provider للمستفيد بعد Transaction Completed:
+- optional.
+- ثلاثة مؤشرات 1–5.
+- comment optional.
+- بحد أقصى تقييم واحد للمستفيد لكل Transaction.
+- لا ينتج عقوبة آلية في MVP.
 
 ---
 
 ## 4. Supporting Trust / Administration ERD
-
-هذه الكيانات معتمدة من حيث **الحاجة الوظيفية**، لكنها ليست محور Core Transaction Diagram. تفصل هنا لتقليل ازدحام الرسم الرئيسي.
 
 ```mermaid
 erDiagram
@@ -383,63 +342,66 @@ erDiagram
     }
 ```
 
-### ملاحظات دعم الإدارة
+### Supporting-model notes
 
 - أنواع وثائق الهوية الدقيقة: `VER-DOC-Q01 — Needs Verification`.
 - مدة الاحتفاظ ببيانات التحقق: `VER-RET-Q01 — Needs Legal Verification`.
-- تفاصيل إثبات دفع الاشتراك وأسعاره: `SUB-PAY-Q01 / SUB-PLAN-Q01` مفتوحة.
-- AI Flags/Audit tables لم تثبت ككيانات في ERD قبل حسم سياسة المزود والاحتفاظ والعتبات؛ وجود AI الوظيفي معتمد لكن تصميم بياناته التفصيلي ما يزال جزئيًا.
-- `REPORT.target_reference` هنا تمثيل مفاهيمي polymorphic لتوضيح أن البلاغ قد يرتبط بمستخدم/مقدم/محتوى/محادثة/معاملة. التنفيذ الفيزيائي قد يفصله إلى علاقات/جداول أو قيود أكثر صرامة.
+- تفاصيل باقات/أسعار/إثبات دفع الاشتراك: `SUB-PLAN-Q01 / SUB-PAY-Q01` مفتوحة.
+- AI Flags/Audit physical tables لا تثبت قبل حسم provider/retention/threshold policies.
+- `REPORT.target_reference` تمثيل مفاهيمي polymorphic؛ التنفيذ الفيزيائي قد يفصله إلى علاقات أكثر صرامة.
 
 ---
 
-## 5. كيانات أزيلت من النموذج القديم ولماذا
+## 5. Removed Legacy Concepts
 
-| الكيان القديم | القرار الحالي |
+| Legacy Concept | Current Model |
 |---|---|
-| `ROLE / USER_ROLE` لتمييز Beneficiary/Provider | لا يستخدم لهذا الغرض؛ الحساب واحد وProvider Profile يفعّل بوابة المقدم. أدوار الإدارة/الصلاحيات ستصمم منفصلة عند الحاجة. |
-| `SERVICE_REQUEST` | استبدل بـ`REQUEST` لأنه يغطي Service وProduct. |
-| `OFFER` | استبدل بـ`PROVIDER_RESPONSE` كمصطلح قياسي. |
-| `AGREEMENT` | أزيل؛ لا يوجد Agreement Entity مستقل في MVP. |
-| `INVOICE` واحد قابل للتعديل | استبدل مفاهيميًا بـ`INVOICE_VERSION + INVOICE_ITEM` لحفظ تاريخ النسخ. |
-| `REVIEW` عام بخصائص واحدة | فصل إلى `PROVIDER_RATING` و`BENEFICIARY_RATING` لأن حقولهما وقواعدهما مختلفة. |
-| `PORTFOLIO_ITEM` فقط | استبدل بـ`SHOWCASE_ITEM` لدعم Portfolio وCatalog معًا. |
+| `ROLE / USER_ROLE` لتمييز Beneficiary/Provider | لا يستخدم لهذا الغرض؛ User واحد + optional Provider Profile. أدوار الإدارة/الصلاحيات تصمم منفصلة عند الحاجة. |
+| `SERVICE_REQUEST` | `REQUEST` يغطي Service وProduct. |
+| `OFFER` | `PROVIDER_RESPONSE`. |
+| `AGREEMENT` | غير موجود كEntity مستقل في MVP. |
+| Single mutable `INVOICE` | Invoice history محفوظ مفاهيميًا عبر versions/revisions. |
+| Generic `REVIEW` | `PROVIDER_RATING` + `BENEFICIARY_RATING`. |
+| `PORTFOLIO_ITEM` فقط | `SHOWCASE_ITEM` يدعم Portfolio/Catalog. |
 
 ---
 
-## 6. Cardinality / Constraint Notes
+## 6. Cardinality / Constraint Decisions for Chapter Four
 
-هذه قواعد يجب أن تتحول إلى Constraints عند Relation Schema:
+هذه القواعد مستقرة بما يكفي لتتحول إلى Constraints عند Relation Schema:
 
-1. USER ↔ PROVIDER_PROFILE: المستخدم يمتلك صفر أو Provider Profile واحدًا حاليًا.
-2. REQUEST: كل Request ينشئه Beneficiary واحد وينتمي لتصنيف ومنطقة عامة واحدة.
-3. PROVIDER_RESPONSE: استجابة واحدة مرتبطة بـRequest واحد وProvider Profile واحد.
-4. كل Provider Profile لا يرسل أكثر من استجابة فعالة لنفس Request إلا إذا اعتمد لاحقًا نموذج Revision للاستجابة؛ لم يعتمد حاليًا نموذج تعدد الاستجابات من نفس المقدم.
-5. في مسار الطلب، Provider Response واحدة فقط تصبح Selected وتبدأ Transaction واحدة.
-6. TRANSACTION لها Beneficiary واحد وProvider واحد.
-7. البحث المباشر يسمح Transaction بلا Request/Provider Response.
-8. كل Invoice Version تنتمي إلى Transaction واحدة وتحتوي بندًا واحدًا على الأقل.
-9. Transaction مكتملة تسمح بـProvider Rating واحدة بحد أقصى من المستفيد.
-10. Transaction مكتملة تسمح بـBeneficiary Rating واحدة بحد أقصى من المقدم، وهي اختيارية.
-11. لا توجد علاقة مالية للعربون داخل ERD.
-
-> البند 4 أعلاه **Derived Design Constraint** منطقي لتجنب استجابات مكررة من المقدم نفسه، لكنه لم يسجل بعد Team Decision مستقلًا. لذلك لا يحول إلى قاعدة نهائية قبل المراجعة؛ يمكن الاكتفاء بقيد uniqueness كاقتراح في Chapter Four أو إزالته إذا قرر الفريق السماح بتعديل/إعادة إرسال الاستجابة.
+1. `USER ↔ PROVIDER_PROFILE`: User يمتلك صفر أو Provider Profile واحدًا.
+2. كل `REQUEST` ينشئه Beneficiary واحد ويرتبط بتصنيف ومنطقة عامة واحدة.
+3. كل `PROVIDER_RESPONSE` ترتبط بـRequest واحد وProvider Profile واحد.
+4. **لكل Provider استجابة فعالة واحدة فقط لكل Request** — Team Decision DEC-070.
+5. يمكن تعديل/سحب Provider Response قبل Selection فقط — DEC-070.
+6. في Request Route تصبح Provider Response واحدة فقط `Selected`.
+7. **Request واحد ينتج صفر أو Transaction واحدة فقط**؛ اختيار Provider واحد يغلق Request — DEC-047/066/070.
+8. كل `TRANSACTION` لها Beneficiary واحد وProvider واحد.
+9. Direct Search Transaction قد تكون بلا Request/Provider Response — DEC-066/069.
+10. Transaction الناتجة من Direct Search لا تنشأ إلا بعد Mutual Start Confirmation — DEC-069.
+11. كل Invoice Version تنتمي إلى Transaction واحدة وتحتوي بندًا واحدًا على الأقل.
+12. Transaction `Completed` تسمح Provider Rating واحدة بحد أقصى من Beneficiary.
+13. Transaction `Completed` تسمح Beneficiary Rating واحدة بحد أقصى من Provider، وهي اختيارية.
+14. Ratings لا تغير Transaction status بعد Completed — DEC-071.
+15. لا توجد علاقة مالية للعربون داخل ERD — DEC-041.
 
 ---
 
-## 7. عناصر ما تزال Needs Verification / Design Decision
+## 7. Remaining Design Decisions / Needs Verification
 
-لا نملأها بتخمين داخل ERD:
+هذه لا تمنع اعتماد Core Conceptual ERD، لكنها تمنع اعتبار Database Design الفيزيائي نهائيًا دون تحليل:
 
-- أنواع الوثائق المقبولة وتفاصيل Verification Artifact.
-- مدة الاحتفاظ ببيانات التحقق والمحادثات وAI Flags.
-- الباقات/أسعار/إثبات دفع الاشتراك.
+- Accepted identity document types / Verification Artifact details.
+- Retention period for verification data, conversations and AI flags.
+- Subscription plans/prices/payment-proof details.
 - AI provider/threshold/storage model.
-- القيم الرقمية لExpiry والتذكيرات.
-- الشكل الفيزيائي النهائي لإدارة الصلاحيات الإدارية.
-- هل نستخدم Media table مشتركة لكل الصور/المرفقات أم References داخل الكيانات.
-- الشكل النهائي لحفظ Invoice history: `InvoiceVersion` أو `Invoice + Revision`.
-- هل Provider Activity يحتاج عدة سجلات لكل مقدم أم تمثيل أبسط؛ يحسم عند Database Design وفق حالات الاستخدام الفعلية.
+- Numeric request-expiry/reminder timing.
+- Physical administrative authorization model.
+- Shared `Media` table vs entity-specific media relations/references.
+- Physical invoice-history implementation: `InvoiceVersion` vs `Invoice + InvoiceRevision`.
+- Physical normalization of ProviderActivity.
+- Physical implementation of polymorphic Reports.
 
 ---
 
@@ -449,14 +411,14 @@ erDiagram
 |---|---|
 | USER + optional ProviderProfile | DEC-008..011 |
 | Service/Product Activity | DEC-029/030 |
-| Category/Area/Service Areas | DEC-031..033 |
+| Category/Area/Service Areas | DEC-031..033/045 |
 | Request | DEC-012/013/048/049 |
-| Provider Response | DEC-013/014/041/047/066 |
-| Conversation/Message | DEC-023/024/046 |
-| Transaction | DEC-047/048/056/066/068 |
-| Invoice versions/items | DEC-015/016/025/050/055 |
-| Provider Rating | DEC-051/052 |
-| Beneficiary Rating | DEC-063 |
+| Provider Response | DEC-013/014/041/047/066/070 |
+| Conversation/Message | DEC-023/024/046/069 |
+| Transaction | DEC-047/048/056/066/068/069/071 |
+| Invoice versions/items | DEC-015/016/025/050/055/071 |
+| Provider Rating | DEC-051/052/071 |
+| Beneficiary Rating | DEC-063/071 |
 | Showcase Item | DEC-064 |
 | Verification Case | DEC-034..036 |
 | Subscription | DEC-021/042/043 |
@@ -464,20 +426,24 @@ erDiagram
 
 ---
 
-## 9. Review Checklist Before Supervisor Delivery
+## 9. Core Analysis Gate Status
 
-- [x] لا يوجد `Agreement` Entity.
+- [x] No `Agreement` entity.
 - [x] Request موحد للخدمة والمنتج.
 - [x] Provider Response هو المصطلح القياسي.
-- [x] الحساب الواحد وProvider Profile ممثلان دون حساب Provider مستقل.
-- [x] Service/Product Activity يدعمان تفعيل النوعين معًا.
-- [x] Direct Search يمكن أن يبدأ Transaction دون Request.
-- [x] RequiresDeposit ممثل Boolean فقط دون Payment entities.
-- [x] Invoice history ممثل مفاهيميًا.
-- [x] اتجاهَا التقييم ممثلان بحقولهما المختلفة.
-- [x] Portfolio/Catalog موحدان دون ادعاء أن Watermark يثبت الملكية.
-- [x] Verification/Subscription/Report موجودة كSupporting Model.
-- [ ] مراجعة Cardinalities مع الفريق/المشرف قبل اعتبار ERD Stable.
-- [ ] تحويل الرسم إلى إخراج ERD واضح عالي الدقة لتسليم 5 سبتمبر.
-- [ ] اشتقاق Class Diagram من هذا النموذج بعد المراجعة.
-- [ ] اشتقاق Relation Schema/Data Dictionary في Chapter Four بعد تثبيت ERD.
+- [x] حساب User واحد + optional Provider Profile.
+- [x] Service/Product Activity يمكن الجمع بينهما.
+- [x] Direct Search can start Transaction without Request only after mutual confirmation.
+- [x] RequiresDeposit Boolean only; no payment entities.
+- [x] Invoice history represented conceptually.
+- [x] Both rating directions represented separately.
+- [x] `Completed` is terminal successful Transaction state; no `Closed` state.
+- [x] One active Provider Response per Provider/Request is now approved.
+- [x] Request produces at most one Transaction.
+- [x] Portfolio/Catalog unified concept represented.
+- [x] Verification/Subscription/Report represented as supporting model.
+- [ ] Final visual ERD redraw in standard notation for supervisor delivery.
+- [ ] Class Diagram derivation from this synchronized ERD.
+- [ ] Relation Schema/Data Dictionary derivation in Chapter Four.
+
+> **الحكم:** Core Conceptual ERD أصبح مستقرًا بما يكفي لاشتقاق Class Diagram والبدء في Relation Schema، مع إبقاء Design Decisions الفيزيائية المحددة في القسم 7 صريحة وغير مخمّنة.
