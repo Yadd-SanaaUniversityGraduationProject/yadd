@@ -1,53 +1,102 @@
 # Stakeholder & Actor Analysis
 
-> **الحالة:** `DRAFT — BUS-Q01 CLOSED, BUS-Q02 OPEN`
+> **الحالة:** `ANALYZED — SYNCHRONIZED 2026-09-04`
+>
+> هذه الوثيقة مشتقة من Decision Register وSRS الحاليين. تحديد Stakeholder أو Actor هنا لا ينشئ Requirement جديدًا بذاته.
 
-## Stakeholders
+## 1. Stakeholders
 
-| ID | الطرف | الاهتمام | الحالة |
+| ID | الطرف | الاهتمام داخل YADD | الحالة / المرجع |
 |---|---|---|---|
-| STK-01 | المستخدم المستفيد | اكتشاف/طلب خدمات أو منتجات والتعامل مع المقدمين | `ANALYZED_APPROVED` من حيث كونه Capability للحساب الواحد |
-| STK-02 | مقدم الخدمة المهني | تقديم خدمة وإدارة ما يرتبط بها | `PROPOSED` من حيث تفاصيل الـworkflow |
-| STK-03 | مقدم المنتجات/الأسرة المنتجة | عرض منتجات والتعامل مع المستفيدين | `PROPOSED` من حيث تفاصيل الـworkflow |
-| STK-04 | إدارة المنصة | إدارة المستخدمين/المحتوى/الحالات الإدارية | `PROPOSED` |
-| STK-05 | فريق المشروع | بناء وتشغيل MVP | `APPROVED` كصاحب مصلحة |
-| STK-06 | المشرف/القسم | المتطلبات الأكاديمية واعتماد المخرجات | `APPROVED` كصاحب مصلحة |
+| STK-01 | Beneficiary / المستخدم المستفيد | اكتشاف مقدمي الخدمات/المنتجات، إنشاء الطلبات، المقارنة والاختيار، التواصل، المعاملات، اعتماد الفاتورة، تقييم المقدم، الحظر/الإبلاغ | `ANALYZED_APPROVED` — DEC-008..014/046..053/066..071 |
+| STK-02 | Service Provider / مقدم الخدمة | إدارة Provider Profile والنشاط ومناطق الخدمة، الاستجابة للطلبات، التواصل، بدء/تنفيذ المعاملات، الفاتورة، Portfolio، تقييم المستفيد | `ANALYZED_APPROVED` — DEC-029/030/034/043/046/063/064/066..070 |
+| STK-03 | Product Provider / مقدم المنتج/المشروع المنزلي | إدارة Provider Profile والنشاط وCatalog، الاستجابة لطلبات المنتجات، التواصل، تجهيز المنتج، الفاتورة، تقييم المستفيد | `ANALYZED_APPROVED` — DEC-003/019/029/030/063/064/066..070 |
+| STK-04 | YADD Administration / إدارة المنصة | Provider Verification، Trust & Safety، البلاغات، الاشتراكات، الإجراءات الإدارية والسجل المرتبط بها | `ANALYZED_APPROVED` في الوظائف الأساسية — DEC-035/036/039/042/053/067 |
+| STK-05 | Project Team / فريق المشروع | تحليل وتصميم وتنفيذ وتوثيق MVP ضمن نطاق ووقت مشروع التخرج | `APPROVED` كصاحب مصلحة تشغيلي/أكاديمي |
+| STK-06 | Supervisor / Department / المشرف والقسم | مراجعة الالتزام الأكاديمي والمنهجي ومخرجات المشروع | `APPROVED` كصاحب مصلحة أكاديمي |
 
-## Account & Portal Model — معتمد في BUS-Q01
+## 2. Account & Portal Model
 
-المفهوم الأساسي ليس ثلاثة أنواع حسابات منفصلة. يوجد `User Account` واحد للشخص، ويمكنه استخدام بوابة المستفيد، كما يمكنه إنشاء `Provider Profile` داخل الحساب نفسه واستخدام بوابة المقدم بعد استيفاء شروط التفعيل.
+المفهوم الأساسي هو **User Account واحد للشخص**. لا يوجد Customer Account وProvider Account منفصلان.
+
+- يستطيع الحساب استخدام Beneficiary Portal.
+- يستطيع الشخص إنشاء Provider Profile داخل الحساب نفسه.
+- لا تتاح وظائف التقديم قبل استكمال شروط Provider Verification والتفعيل.
+- يمكن للحساب الانتقال بين Beneficiary Portal وProvider Portal عند استيفاء الشروط.
+- اختيار البوابة عند البداية يحدد Onboarding فقط ولا يحول الحساب إلى نوع دائم.
 
 ```mermaid
 flowchart TD
     U[User Account]
     U --> B[Beneficiary Portal]
-    U --> PP{Provider Profile activated?}
+    U --> PP{Provider Profile active?}
     PP -- No --> CP[Create / Complete Provider Profile]
-    CP --> V[Provider Verification - details TBD]
+    CP --> V[Provider Verification]
     V --> PP
     PP -- Yes --> P[Provider Portal]
-    B <-->|Switch portal| P
+    B <-->|Switch Portal| P
 ```
 
-### قاعدة البداية
+**المرجع:** DEC-008..011.
 
-عند أول استخدام يختار الشخص المسار الذي يريد البدء منه:
+## 3. Provider Activity Model
 
-- مستفيد من الخدمات/المنتجات.
-- مقدم خدمة/منتج.
+`Provider` هو Actor العام في المخطط الرئيسي. عند الحاجة إلى التفصيل يتخصص إلى:
 
-هذا الاختيار **لا يغير نوع الحساب**؛ بل يحدد الـOnboarding والبوابة الابتدائية.
+- `Service Provider`
+- `Product Provider`
 
-## ما يزال مفتوحًا
+Provider Profile واحد يمكنه تفعيل:
 
-- `BUS-Q02`: العلاقة الدقيقة بين Service Provider وProduct Provider/Home Producer.
-- هل يسمح Provider Profile واحد بالنشاطين معًا؟
-- `VER-Q01`: تفاصيل التحقق قبل تفعيل Provider Profile.
-- هل AI service Actor خارجي أم Implementation Detail؟ يعتمد على AI-Q01.
+- Service Activity فقط، أو
+- Product Activity فقط، أو
+- النشاطين معًا.
 
-## أثر القرار على النمذجة
+الهوية والتحقق مشتركان على مستوى Provider Profile، بينما بيانات النشاط والتصنيفات ذات الصلة قد تختلف.
 
-- لا ننشئ `Customer Account` و`Provider Account` كحسابين منفصلين.
-- Actor «Beneficiary» يمثل سلوكًا/صلاحيات ضمن User Account.
-- Actor «Provider» يعتمد على Provider Profile مفعل.
-- الـUse Cases النهائية للخدمات والمنتجات تنتظر BUS-Q02 وبقية قواعد العمل.
+**الحالة:** `ANALYZED_APPROVED` — DEC-029/030/067.
+
+## 4. Main UML Actor Model
+
+وفق DEC-067، Actors العامة في Main Use Case Diagram هي:
+
+1. `Beneficiary`
+2. `Provider`
+3. `YADD Administrator`
+
+وعند الحاجة إلى مخططات تفصيلية:
+
+- `Provider` يمكن تخصصه إلى `Service Provider` و`Product Provider`.
+- الصلاحيات الإدارية يمكن تفصيلها إلى `Verification Reviewer`, `Content Moderator`, `Subscription Administrator`.
+
+لا يضاف `Guest` حاليًا لأن anonymous public browsing لم يعتمد.
+
+لا تعد Web Interface أو Backend/API أو Database أو Flutter Actors؛ هي أجزاء من الحل التقني وليست جهات خارجية تتفاعل مع النظام في Main Use Case Diagram.
+
+## 5. AI / External Service Boundary
+
+وظائف AI المساعدة في Verification وTrust & Safety معتمدة، لكن مزود AI النهائي ما يزال `AI-PROV-Q01 — Needs Verification`.
+
+لذلك:
+
+- لا يظهر AI كActor في **Main Use Case Diagram**.
+- إذا اعتمد لاحقًا مزود API خارجي، يمكن تمثيله كـExternal System في مخطط تكامل/معمارية تفصيلي عند الحاجة.
+- القرار البشري النهائي يبقى مطلوبًا في Verification والعقوبات عالية الأثر وفق DEC-035/039.
+
+## 6. Stakeholder-to-Capability Summary
+
+| Actor / Stakeholder | Core Capabilities |
+|---|---|
+| Beneficiary | Search, View Provider Profile, Create Request, Compare Responses, Chat, Select Provider, Start Transaction, Review Invoice, Rate Provider, Block/Report |
+| Provider | Manage Provider Profile, Manage Portfolio/Catalog, View Matching Requests, Respond/Edit/Withdraw Response, Chat, Start Transaction, Manage Transaction, Create/Revise Invoice, Rate Beneficiary, Block/Report |
+| YADD Administrator | Review Verification, Review Reports/Flags, Manage Subscription Records, Authorized Administrative Actions |
+
+## 7. ما يزال مفتوحًا ولا يغيّر Actor Model الأساسي
+
+- تفاصيل أنواع وثائق الهوية: `VER-DOC-Q01`.
+- مدة الاحتفاظ ببيانات التحقق: `VER-RET-Q01`.
+- بعض الفئات التي قد تحتاج ترخيصًا إضافيًا: `VER-LIC-Q01`.
+- مزود AI وسياساته التفصيلية: `AI-PROV-Q01` وما يرتبط به.
+- تفاصيل الباقات/الدفع الخارجي للاشتراك: `SUB-PLAN-Q01` و`SUB-PAY-Q01`.
+
+هذه النقاط لا تمنع اعتماد Actors الرئيسية للمخططات الحالية.
