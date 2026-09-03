@@ -1,10 +1,10 @@
 # UML Models — YADD Preliminary Defense
 
-> **الحالة:** `DRAFT FOR PRELIMINARY DEFENSE — SYNCHRONIZED 2026-09-03`
+> **الحالة:** `DRAFT FOR PRELIMINARY DEFENSE — SYNCHRONIZED 2026-09-04`
 >
-> **المراجع الحاكمة:** DEC-046/047/048/050/051/063/064/066/067/068 + `05-SRS.md` + `06-business-rules.md` + `07-lifecycles.md` + `08-use-cases.md`.
+> **المراجع الحاكمة:** DEC-046/047/048/050/051/063/064/066/067/068/069/070/071/072 + `05-SRS.md` + `06-business-rules.md` + `07-lifecycles.md` + `08-use-cases.md`.
 >
-> يستخدم المشروع DFD وUML معًا وفق DEC-060. هذه النماذج تمثل الحالة الحالية للمراجعة مع المشرف وليست Baseline نهائيًا.
+> يستخدم المشروع DFD وUML معًا وفق DEC-060. جميع التسميات داخل المخططات باللغة الإنجليزية وفق DEC-072. هذه النماذج تمثل الحالة الحالية للمراجعة مع المشرف وليست Baseline نهائيًا.
 
 ## 1. Actor Model
 
@@ -102,52 +102,54 @@ flowchart LR
 3. `Agreement` ليس Use Case أو Entity مستقلًا في MVP الحالي؛ المسار المعتمد هو `Request → Provider Response → Selection → Transaction`.
 4. `Indicate Deposit Required` يعني فقط `RequiresDeposit = Yes/No` ولا يتضمن مبلغًا أو دفعًا أو Refund داخل YADD.
 5. تقييم المستفيد للمقدم إلزامي بعد اكتمال المعاملة، وتقييم المقدم للمستفيد اختياري.
+6. في البحث المباشر يمكن لأي طرف طلب بدء المعاملة، والطرف الآخر يجب أن يؤكد قبل إنشاء Active Transaction.
 
 ---
 
-## 3. Activity Diagram — Published Request to Transaction Closure
+## 3. Activity Diagram — Published Request to Post-Transaction Ratings
 
 ```mermaid
 flowchart TD
-    S([Start]) --> A[Beneficiary creates request]
-    A --> B{Request data valid?}
+    S([Start]) --> A[Beneficiary Creates Request]
+    A --> B{Request Data Valid?}
     B -- No --> A
     B -- Yes --> C[Publish Open Request]
-    C --> D[Eligible Providers view request]
-    D --> E[Provider submits Provider Response]
-    E --> E1[Optional proposed price / note]
+    C --> D[Eligible Providers View Request]
+    D --> E[Provider Submits Provider Response]
+    E --> E1[Optional Proposed Price / Note]
     E1 --> E2[Set RequiresDeposit Yes or No]
-    E2 --> F[Beneficiary views and compares responses]
-    F --> G{Needs inquiry before selection?}
-    G -- Yes --> H[Private chat / inquiry]
+    E2 --> F[Beneficiary Views and Compares Responses]
+    F --> G{Needs Inquiry Before Selection?}
+    G -- Yes --> H[Private Chat / Inquiry]
     H --> F
-    G -- No --> I{Select provider?}
+    G -- No --> I{Select Provider?}
     I -- No --> F
-    I -- Yes --> J[Close request to new responses]
-    J --> K[Mark other responses NotSelected]
+    I -- Yes --> J[Close Request to New Responses]
+    J --> K[Mark Other Responses NotSelected]
     K --> L[Create Active Transaction]
-    L --> M{Transaction cancelled?}
-    M -- Yes --> N[Record cancellation actor, reason and time]
+    L --> M{Transaction Cancelled?}
+    M -- Yes --> N[Record Cancellation Actor, Reason and Time]
     N --> Z([End — Cancelled])
-    M -- No --> O[Provider performs service / prepares product]
-    O --> P[Provider creates final invoice]
+    M -- No --> O[Provider Performs Service / Prepares Product]
+    O --> P[Provider Creates Final Invoice]
     P --> Q[Invoice Pending Customer Approval]
-    Q --> R{Beneficiary decision}
-    R -- Request Revision --> T[Record revision note]
-    T --> U[Provider revises invoice]
+    Q --> R{Beneficiary Decision}
+    R -- Request Revision --> T[Record Revision Note]
+    T --> U[Provider Revises Invoice]
     U --> Q
-    R -- Dispute --> V[Raise complaint for administrative review]
+    R -- Dispute --> V[Raise Complaint for Administrative Review]
     V --> Z2([End — Disputed])
-    R -- Approve --> W[Invoice becomes Final / Transaction Completed]
-    W --> X[Beneficiary rates Provider — required]
-    X --> Y{Provider wants to rate Beneficiary?}
-    Y -- Yes --> Y1[Rate 3 behavioral indicators + optional comment]
-    Y1 --> ZE([End — Closed])
+    R -- Approve --> W[Invoice Approved / Transaction Completed]
+    W --> X[Beneficiary Rates Provider — Required]
+    X --> Y{Provider Wants to Rate Beneficiary?}
+    Y -- Yes --> Y1[Rate 3 Behavioral Indicators + Optional Comment]
+    Y1 --> ZE([End — Post-Transaction Flow Complete])
     Y -- No --> ZE
 ```
 
 ### حدود النشاط
 
+- `Completed` هي الحالة النهائية الناجحة للـTransaction؛ عقد التقييمات هنا يمثل Post-Transaction workflow ولا يغيّر Transaction Status إلى `Closed`.
 - أي دفع أو عربون أو استرداد يتم خارج YADD.
 - عدم الرد على الفاتورة لا يعد موافقة ولا يوجد Auto-Approval.
 - لا يوجد `Agreement` مستقل ولا Change Order مستقل في MVP.
@@ -159,19 +161,20 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-    S([Start]) --> A[Beneficiary searches by category and area]
+    S([Start]) --> A[Beneficiary Searches by Category and Area]
     A --> B[View Provider Profile and Portfolio/Catalog]
-    B --> C{Start inquiry?}
+    B --> C{Start Inquiry?}
     C -- No --> Z([End])
-    C -- Yes --> D[Private chat / inquiry]
-    D --> E{Both agree to start dealing?}
-    E -- No --> D
-    E -- Yes --> F[Create Active Transaction]
-    F --> G[Continue through common Transaction / Invoice / Rating flow]
-    G --> Z2([End])
+    C -- Yes --> D[Private Chat / Inquiry]
+    D --> E[Either Party Requests Transaction Start]
+    E --> F{Other Party Confirms?}
+    F -- No --> D
+    F -- Yes --> G[Create Active Transaction]
+    G --> H[Continue Through Common Transaction / Invoice Flow]
+    H --> Z2([End])
 ```
 
-المحادثة وحدها لا تنشئ Transaction؛ يلزم اتفاق الطرفين على بدء التعامل في مسار البحث المباشر.
+المحادثة وحدها لا تنشئ Transaction؛ يلزم `Request Transaction Start` من أحد الطرفين ثم تأكيد الطرف الآخر وفق DEC-069.
 
 ---
 
@@ -191,8 +194,14 @@ sequenceDiagram
     P->>Y: Submit Provider Response
     Note over P,Y: Proposed price/note optional
 RequiresDeposit = Yes/No only
-    Y->>DB: Save response
+    Y->>DB: Save active response
     Y-->>B: Show response for comparison
+
+    opt Provider edits or withdraws before selection
+        P->>Y: Edit / withdraw active response
+        Y->>DB: Update active response state
+        Y-->>B: Refresh response information
+    end
 
     opt Inquiry before selection
         B->>Y: Send message
@@ -234,6 +243,7 @@ Transaction = Completed
                 P->>Y: Submit 3 behavioral scores + optional comment
                 Y->>DB: Save beneficiary interaction rating
             end
+            Note over B,P: Transaction remains Completed
         end
     end
 ```
@@ -264,14 +274,22 @@ sequenceDiagram
     P->>Y: Reply
     Y-->>B: Deliver reply
 
-    alt Both agree to start
-        B->>Y: Confirm start / agreement to begin dealing
-        P->>Y: Confirm start / agreement to begin dealing
+    alt Beneficiary requests transaction start
+        B->>Y: Request Transaction Start
+        Y-->>P: Request Start Confirmation
+        P->>Y: Confirm Transaction Start
         Y->>DB: Create Active Transaction
         Y-->>B: Transaction active
         Y-->>P: Transaction active
-    else No agreement to start
-        Note over B,P: Chat may end without Transaction
+    else Provider requests transaction start
+        P->>Y: Request Transaction Start
+        Y-->>B: Request Start Confirmation
+        B->>Y: Confirm Transaction Start
+        Y->>DB: Create Active Transaction
+        Y-->>B: Transaction active
+        Y-->>P: Transaction active
+    else No confirmation
+        Note over B,P: Chat continues or ends without Transaction
     end
 ```
 
@@ -281,9 +299,9 @@ sequenceDiagram
 
 الـClass Diagram القديم كان يعتمد `Offer → Agreement → Invoice/Review` ولذلك لم يعد صالحًا بعد DEC-066.
 
-**الحالة:** `BLOCKED BY ERD SYNCHRONIZATION`.
+**الحالة:** `READY TO REBUILD FROM SYNCHRONIZED ERD`.
 
-سيشتق Class Diagram الجديد بعد مراجعة `11-ERD.md` حتى نتجنب إنشاء Classes وعلاقات لا تتفق مع نموذج البيانات المعتمد. الحد الأدنى المتوقع للمراجعة يشمل:
+سيشتق Class Diagram الجديد من `11-ERD.md` مع مراعاة DEC-069/070/071. الحد الأدنى المتوقع للمراجعة يشمل:
 
 - User / roles or permissions.
 - ProviderProfile and provider activities.
@@ -296,8 +314,6 @@ sequenceDiagram
 - Category / Area.
 - Verification / Subscription / Report entities بالقدر المثبت في SRS.
 
-لا تعتبر هذه القائمة Cardinalities نهائية قبل ERD.
-
 ---
 
 ## 8. Review Checklist Before Supervisor Delivery
@@ -306,12 +322,15 @@ sequenceDiagram
 - [x] لا يستخدم `Offer` كالمصطلح الرئيسي؛ المصطلح القياسي `Provider Response`.
 - [x] لا يوجد `Agreement` مستقل.
 - [x] اختيار Provider Response يبدأ Transaction في مسار الطلب.
-- [x] البحث المباشر يحتاج اتفاق الطرفين قبل Transaction.
+- [x] Provider Response واحدة فعالة لكل Provider/Request ويمكن تعديلها أو سحبها قبل الاختيار.
+- [x] البحث المباشر يستخدم Request Start + Other Party Confirmation قبل Transaction.
 - [x] العربون معلومة Yes/No فقط والدفع خارجي.
 - [x] Invoice approval يؤدي إلى Transaction Completed.
-- [x] Beneficiary → Provider rating إلزامي.
-- [x] Provider → Beneficiary rating اختياري بثلاثة مؤشرات.
+- [x] `Completed` هي النهاية الناجحة للـTransaction ولا توجد Transaction state باسم `Closed`.
+- [x] Beneficiary → Provider rating إلزامي بعد Completed.
+- [x] Provider → Beneficiary rating اختياري بثلاثة مؤشرات بعد Completed.
 - [x] Portfolio/Catalog ظاهر ضمن وظائف Provider.
 - [x] Actors متوافقة مع DEC-067.
-- [ ] Class Diagram ينتظر ERD الجديد.
+- [x] تسميات المخططات داخل الرسم بالإنجليزية وفق DEC-072.
+- [ ] Class Diagram يحتاج إعادة بناء من ERD الحالي.
 - [ ] مراجعة بصرية نهائية وإخراج UML قياسي للطباعة قبل تسليم 5 سبتمبر.
