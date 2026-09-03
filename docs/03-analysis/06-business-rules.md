@@ -14,16 +14,16 @@
 | BR-004 | يستطيع المستفيد مقارنة عدة Provider Responses واختيار مقدم واحد. | `ANALYZED_APPROVED` | DEC-014/066 |
 | BR-005 | يسمح YADD بمحادثة/استفسار خاص قبل بدء المعاملة؛ المحادثة وحدها لا تنشئ Transaction. | `ANALYZED_APPROVED` | DEC-046 |
 | BR-006 | في الطلب المنشور، اختيار مقدم يغلق الطلب أمام الاستجابات الجديدة ويجعل البقية NotSelected ويبدأ المعاملة الرسمية معه. | `ANALYZED_APPROVED` | DEC-047/066 |
-| BR-007 | في البحث المباشر، يبدأ التواصل كاستفسار، ولا تبدأ المعاملة الرسمية حتى يتفق الطرفان على بدء التعامل. | `ANALYZED_APPROVED` | DEC-046/047 |
+| BR-007 | في البحث المباشر، يمكن لأي طرف طلب بدء المعاملة من المحادثة، ولا تصبح Transaction `Active` إلا بعد تأكيد الطرف الآخر. | `ANALYZED_APPROVED` | DEC-069 |
 | BR-008 | المحادثة تسمح بالتفاوض والتفاصيل والمرفقات ويمكن الرجوع إليها عند الشكوى، لكنها لا تستبدل الفاتورة النهائية. | `ANALYZED_APPROVED` | DEC-023/055 |
 | BR-009 | الفاتورة الرقمية النهائية ينشئها المقدم بعد التنفيذ/التجهيز وبعد استقرار الاتفاق النهائي. | `ANALYZED_APPROVED` | DEC-015/055 |
-| BR-010 | لا تغلق المعاملة داخل YADD إلا بعد اعتماد المستفيد للفاتورة النهائية. | `ANALYZED_APPROVED` | DEC-015/025/050 |
+| BR-010 | تصبح Transaction `Completed` عند اعتماد المستفيد للفاتورة النهائية؛ `Completed` هي النهاية الناجحة للمعاملة ولا توجد حالة Transaction لاحقة باسم `Closed`. | `ANALYZED_APPROVED` | DEC-071 |
 | BR-011 | الاتفاقات أو المبالغ غير الموجودة في الفاتورة المعتمدة لا تعد جزءًا من السجل الرسمي النهائي للمعاملة. | `ANALYZED_APPROVED` | DEC-016/024 |
 | BR-012 | عند إرسال الفاتورة تبقى Pending Customer Approval؛ عدم الرد لا يعد موافقة ولا يوجد Auto-Approval، وتصل تذكيرات للمستفيد. | `ANALYZED_APPROVED` | DEC-050 |
 | BR-013 | قبل الاعتماد يستطيع المستفيد طلب تعديل مع ملاحظة؛ وعند استمرار المشكلة يستطيع رفع شكوى للإدارة. | `ANALYZED_APPROVED` | DEC-025 |
 | BR-014 | بعد اعتماد الفاتورة وإكمال المعاملة يجب على المستفيد تقييم المقدم 1–5 نجوم؛ التعليق اختياري. | `ANALYZED_APPROVED` | DEC-051 |
 | BR-015 | بعد Transaction Completed يعرض النظام للمقدم تقييم المستفيد اختياريًا عبر ثلاثة مؤشرات 1–5: وضوح الطلب والتواصل، الالتزام بالاتفاق، حسن التعامل والتعاون؛ التعليق اختياري. | `ANALYZED_APPROVED` | DEC-063 |
-| BR-016 | لا يسمح بأي Rating إلا إذا كان مرتبطًا بمعاملة Completed بين الطرفين. | `ANALYZED_APPROVED` | DEC-051/063 |
+| BR-016 | لا يسمح بأي Rating إلا إذا كان مرتبطًا بمعاملة Completed بين الطرفين؛ Ratings عمليات Post-Transaction ولا تغير Transaction Status. | `ANALYZED_APPROVED` | DEC-051/063/071 |
 | BR-017 | يعرض ملف المقدم عدد الأعمال/المعاملات المكتملة داخل YADD، ولا تحتسب العروض أو المحادثات أو الطلبات/المعاملات غير المكتملة. | `ANALYZED_APPROVED` | DEC-052 |
 | BR-018 | إغلاق طلب مفتوح قبل اختيار مقدم هو Request Closure وليس Transaction Cancellation. | `ANALYZED_APPROVED` | DEC-048 |
 | BR-019 | بعد بدء المعاملة، الإلغاء Transaction Cancellation ويتطلب سببًا مسجلًا يظهر للطرف الآخر ويمكن مراجعته إداريًا. | `ANALYZED_APPROVED` | DEC-048 |
@@ -46,6 +46,7 @@
 | BR-036 | يقر المقدم بحقه في نشر محتوى Portfolio/Catalog، ويمكن الإبلاغ عن الانتحال للمراجعة الإدارية. | `ANALYZED_APPROVED` | DEC-064 |
 | BR-037 | Core Transaction Model لا يستخدم Agreement entity مستقل؛ `Request → Provider Response → Selection → Transaction` في مسار الطلب. | `ANALYZED_APPROVED` | DEC-066 |
 | BR-038 | Backend/API هو المرجع النهائي للصلاحيات وقواعد العمل؛ لا يعتمد Web/Mobile Client كمرجع Authorization نهائي. | `APPROVED_AS_ARCH_PRINCIPLE` | DEC-065 |
+| BR-039 | لكل Provider استجابة فعالة واحدة فقط لكل Request؛ يجوز تعديلها أو سحبها قبل الاختيار ما دام Request مفتوحًا. | `ANALYZED_APPROVED` | DEC-070 |
 
 ## قواعد مفتوحة تحتاج قرارًا/تحققًا
 
