@@ -1,19 +1,21 @@
 # Lifecycles & State Machines
 
-> **الحالة:** `PARTIALLY ANALYZED`
+> **الحالة:** `PARTIALLY ANALYZED — SYNCHRONIZED 2026-09-04`
 >
 > يعكس هذا الملف القرارات الحالية مع إبقاء القيم الزمنية والـthresholds والسياسات المفتوحة دون افتراض.
+>
+> **Modeling convention:** جميع أسماء الحالات والأفعال داخل المخططات باللغة الإنجليزية وفق DEC-072.
 
 ## 1. Published Request Lifecycle
 
 ```mermaid
 stateDiagram-v2
     [*] --> Draft
-    Draft --> Open: publish request
-    Open --> Open: beneficiary confirms still needed
-    Open --> Matched: beneficiary selects provider response
-    Open --> ClosedByBeneficiary: no longer needed
-    Open --> Expired: inactivity policy reached
+    Draft --> Open: Publish request
+    Open --> Open: Beneficiary confirms still needed
+    Open --> Matched: Beneficiary selects provider response
+    Open --> ClosedByBeneficiary: No longer needed
+    Open --> Expired: Inactivity policy reached
     Matched --> [*]
     ClosedByBeneficiary --> [*]
     Expired --> [*]
@@ -28,14 +30,17 @@ stateDiagram-v2
 ```mermaid
 stateDiagram-v2
     [*] --> Submitted
-    Submitted --> Selected: beneficiary selects provider
-    Submitted --> NotSelected: another provider selected / request closed
-    Submitted --> Withdrawn: provider withdraws before selection
+    Submitted --> Submitted: Edit response while request is Open
+    Submitted --> Selected: Beneficiary selects provider
+    Submitted --> NotSelected: Another provider selected / request closed
+    Submitted --> Withdrawn: Provider withdraws before selection
     Selected --> [*]
     NotSelected --> [*]
     Withdrawn --> [*]
 ```
 
+- لكل Provider **استجابة فعالة واحدة فقط لكل Request** وفق DEC-070.
+- يمكن تعديل الاستجابة أو سحبها ما دام Request في حالة `Open` ولم يتم اختيار المقدم.
 - Provider Response قد تتضمن سعرًا مقترحًا وملاحظة و`RequiresDeposit` نعم/لا.
 - لا توجد حالة Payment/Deposit مالية مرتبطة بالاستجابة.
 
@@ -53,38 +58,37 @@ Open Request → Provider Responses → Inquiry/Chat → Beneficiary Selects Pro
 ### Direct-search route
 
 ```text
-Search → Provider Profile/Portfolio → Inquiry/Chat → Both Agree to Start → Active Transaction
+Search → Provider Profile/Portfolio → Inquiry/Chat → Request Transaction Start → Other Party Confirms → Active Transaction
 ```
 
-المحادثة وحدها ليست Transaction.
+- يمكن لأي طرف إرسال `Request Transaction Start` من المحادثة.
+- لا تصبح Transaction `Active` إلا بعد تأكيد الطرف الآخر.
+- عدم التأكيد أو الرفض يبقي المحادثة دون Transaction.
+- المحادثة وحدها ليست Transaction.
 
 ## 4. Transaction Lifecycle
 
 ```mermaid
 stateDiagram-v2
     [*] --> Active
-    Active --> Cancelled: cancellation with recorded reason
-    Active --> AwaitingInvoice: provider sends final invoice
-    AwaitingInvoice --> AwaitingInvoice: no response / reminders
-    AwaitingInvoice --> RevisionRequested: beneficiary requests revision
-    RevisionRequested --> AwaitingInvoice: provider sends revised invoice
-    RevisionRequested --> Disputed: unresolved issue reported
-    AwaitingInvoice --> Completed: beneficiary approves invoice
-    Completed --> ProviderRatingRequired
-    ProviderRatingRequired --> ProviderRatingSubmitted: beneficiary rates provider
-    ProviderRatingSubmitted --> BeneficiaryRatingOffered
-    BeneficiaryRatingOffered --> BeneficiaryRatingSubmitted: provider chooses to rate
-    BeneficiaryRatingOffered --> Closed: provider skips optional rating
-    BeneficiaryRatingSubmitted --> Closed
-    Closed --> [*]
+    Active --> Cancelled: Cancel with recorded reason
+    Active --> AwaitingInvoice: Provider sends final invoice
+    AwaitingInvoice --> AwaitingInvoice: No response / reminders
+    AwaitingInvoice --> RevisionRequested: Beneficiary requests revision
+    RevisionRequested --> AwaitingInvoice: Provider sends revised invoice
+    RevisionRequested --> Disputed: Unresolved issue reported
+    AwaitingInvoice --> Completed: Beneficiary approves invoice
+    Completed --> [*]
     Cancelled --> [*]
     Disputed --> [*]
 ```
 
+- `Completed` هي **النهاية الناجحة للـTransaction** وفق DEC-071.
+- لا توجد حالة Transaction باسم `Closed` بعد التقييمات.
 - لا يوجد Auto-Approval للفاتورة.
 - بعد بدء المعاملة، الإلغاء يحتاج سببًا مسجلًا.
 - عدة Transactions قد تكون Active للمستخدم بالتوازي؛ الحد الرقمي غير معتمد.
-- تقييم المستفيد للمقدم إلزامي؛ تقييم المقدم للمستفيد اختياري.
+- Ratings تحدث بعد `Completed` كعمليات Post-Transaction مستقلة ولا تغير Transaction Status.
 - لا Payment/Refund lifecycle داخل Transaction.
 
 ## 5. Invoice Lifecycle
@@ -92,41 +96,42 @@ stateDiagram-v2
 ```mermaid
 stateDiagram-v2
     [*] --> Draft
-    Draft --> PendingCustomerApproval: provider sends invoice
-    PendingCustomerApproval --> Approved: beneficiary approves
-    PendingCustomerApproval --> PendingCustomerApproval: reminder / no response
-    PendingCustomerApproval --> RevisionRequested: beneficiary requests revision + note
-    RevisionRequested --> Draft: provider revises
-    RevisionRequested --> Disputed: unresolved complaint
+    Draft --> PendingCustomerApproval: Provider sends invoice
+    PendingCustomerApproval --> Approved: Beneficiary approves
+    PendingCustomerApproval --> PendingCustomerApproval: Reminder / no response
+    PendingCustomerApproval --> RevisionRequested: Beneficiary requests revision + note
+    RevisionRequested --> Draft: Provider revises
+    RevisionRequested --> Disputed: Unresolved complaint
     Approved --> Archived
     Archived --> [*]
 ```
 
-`Approved` يغلق العمل المالي التوثيقي للمعاملة داخل YADD، لكنه لا يثبت دفعًا إلكترونيًا. سياسة التصعيد عند عدم الاستجابة الطويلة: `INV-PENDING-Q01`.
+`Approved` يغلق العمل التوثيقي للفاتورة داخل YADD ويؤدي إلى `Transaction = Completed`، لكنه لا يثبت دفعًا إلكترونيًا. سياسة التصعيد عند عدم الاستجابة الطويلة: `INV-PENDING-Q01`.
 
-## 6. Rating Lifecycle
+## 6. Rating Lifecycles — Post-Transaction
 
 ### Beneficiary rates Provider — mandatory
 
 ```mermaid
 stateDiagram-v2
     [*] --> Locked
-    Locked --> ProviderRatingRequired: invoice approved / transaction completed
-    ProviderRatingRequired --> ProviderRatingSubmitted: beneficiary rates provider 1-5 stars
+    Locked --> ProviderRatingRequired: Transaction completed
+    ProviderRatingRequired --> ProviderRatingSubmitted: Beneficiary rates provider 1-5 stars
     ProviderRatingSubmitted --> [*]
 ```
 
 - النجوم 1–5 إلزامية والتعليق اختياري.
 - لا يفتح التقييم لمعاملة ملغاة أو غير مكتملة.
+- اكتمال هذا التقييم لا يغير Transaction من `Completed` إلى حالة أخرى.
 
 ### Provider rates Beneficiary — optional
 
 ```mermaid
 stateDiagram-v2
     [*] --> Locked
-    Locked --> BeneficiaryRatingOffered: transaction completed
-    BeneficiaryRatingOffered --> Submitted: provider rates beneficiary
-    BeneficiaryRatingOffered --> Skipped: provider skips
+    Locked --> BeneficiaryRatingOffered: Transaction completed
+    BeneficiaryRatingOffered --> Submitted: Provider rates beneficiary
+    BeneficiaryRatingOffered --> Skipped: Provider skips
     Submitted --> [*]
     Skipped --> [*]
 ```
@@ -136,16 +141,17 @@ stateDiagram-v2
 - التعليق اختياري.
 - النتائج تدخل سجل تعامل المستفيد الذي يظهر فقط لمقدمي الخدمات/المنتجات في سياق تعامل مشروع.
 - لا ينتج عنه منع أو عقوبة آلية في MVP.
+- `Submitted` أو `Skipped` لا يغيران Transaction Status؛ تبقى `Completed`.
 
 ## 7. Product-specific Fulfillment Note
 
 ```mermaid
 flowchart LR
-    A[Active transaction] --> B{Fulfillment method}
+    A[Active Transaction] --> B{Fulfillment Method}
     B --> C[Pickup]
-    B --> D[Provider-arranged delivery]
-    D --> E[Handled outside YADD]
-    C --> F[Final invoice]
+    B --> D[Provider-arranged Delivery]
+    D --> E[Handled Outside YADD]
+    C --> F[Final Invoice]
     E --> F
 ```
 
