@@ -1,10 +1,10 @@
 # Software Requirements Specification — YADD MVP
 
-> **الإصدار:** v0.9.3
+> **الإصدار:** v0.9.4
 >
 > **الحالة:** `PARTIALLY ANALYZED — NOT BASELINED`
 >
-> هذه النسخة تزامن المتطلبات مع قرارات الإغلاق حتى 2026-09-03. البنود المفتوحة صريحة ولا تعتبر متطلبات نهائية.
+> هذه النسخة تزامن المتطلبات مع قرارات الإغلاق حتى 2026-09-04. البنود المفتوحة صريحة ولا تعتبر متطلبات نهائية.
 
 ## 1. Scope
 
@@ -15,6 +15,7 @@
 - واجهة الويب هي واجهة الاستخدام الأساسية الحالية.
 - Flutter اتجاه معتمد كعميل Mobile لاحق يتصل بالـAPI نفسه؛ لا يعد مرجعًا نهائيًا للصلاحيات أو قواعد العمل.
 - لا يعتمد حاليًا Guest/Visitor Actor مستقل أو Web browsing anonymous policy؛ إن احتاج لاحقًا يفتح قرار منفصل.
+- جميع المخططات الأكاديمية تستخدم تسميات داخل الرسم باللغة الإنجليزية وفق DEC-072؛ لغة التقرير النصية تبقى العربية وفق DEC-061.
 
 ## 2. Account / Portal Model — Approved
 
@@ -90,10 +91,12 @@
 | UR-COM-01 | الاستفسار من مقدم قبل بدء المعاملة دون أن تعتبر المحادثة وحدها Transaction. | `ANALYZED_APPROVED` | DEC-046 |
 | UR-OFF-01 | استجابة المقدم للطلب واقتراح سعر عند الحاجة وتحديد ما إذا كان يتطلب عربونًا. | `ANALYZED_APPROVED` | DEC-013/041 |
 | UR-OFF-02 | مقارنة الاستجابات واختيار مقدم واحد. | `ANALYZED_APPROVED` | DEC-014/047 |
+| UR-OFF-03 | تعديل أو سحب الاستجابة قبل الاختيار مع بقاء استجابة فعالة واحدة للمقدم لكل طلب. | `ANALYZED_APPROVED` | DEC-070 |
 | UR-REQ-03 | إغلاق الطلب إذا لم يعد مطلوبًا دون اعتباره إلغاء معاملة. | `ANALYZED_APPROVED` | DEC-048 |
-| UR-TX-01 | بدء المعاملة عند اختيار مقدم في مسار الطلب أو اتفاق الطرفين في البحث المباشر. | `ANALYZED_APPROVED` | DEC-046/047/066 |
+| UR-TX-01 | بدء المعاملة عند اختيار مقدم في مسار الطلب، أو بعد طلب أحد الطرفين بدء المعاملة وتأكيد الطرف الآخر في البحث المباشر. | `ANALYZED_APPROVED` | DEC-046/047/066/069 |
 | UR-TX-02 | امتلاك عدة معاملات جارية بالتوازي. | `ANALYZED_APPROVED` | DEC-056 |
-| UR-INV-01 | فاتورة نهائية موثقة لإغلاق المعاملة. | `ANALYZED_APPROVED` | DEC-015/025/050 |
+| UR-TX-03 | اعتبار `Completed` الحالة النهائية للمعاملة الناجحة بعد اعتماد الفاتورة؛ التقييمات لاحقة ولا تنشئ حالة `Closed`. | `ANALYZED_APPROVED` | DEC-071 |
+| UR-INV-01 | فاتورة نهائية موثقة لإغلاق المعاملة. | `ANALYZED_APPROVED` | DEC-015/025/050/071 |
 | UR-REV-01 | تقييم مقدم الخدمة/المنتج بعد اكتمال المعاملة بواسطة المستفيد. | `ANALYZED_APPROVED` | DEC-051 |
 | UR-REV-02 | إمكانية تقييم المقدم للمستفيد اختياريًا بعد اكتمال المعاملة وفق مؤشرات سلوكية محددة. | `ANALYZED_APPROVED` | DEC-063 |
 | UR-REP-01 | عرض سجل تعامل المستفيد للمقدمين فقط في سياق تعامل مشروع معه دون عقوبات آلية. | `ANALYZED_APPROVED` | DEC-063 |
@@ -146,13 +149,16 @@
 - `FR-007` `ANALYZED_APPROVED`: يسمح للمقدم المؤهل ذي الاشتراك Active بإرسال `Provider Response` لطلب Open.
 - `FR-007A` `ANALYZED_APPROVED`: يسمح بقبول السعر الاسترشادي أو اقتراح سعر آخر.
 - `FR-007B` `ANALYZED_APPROVED`: تسمح Provider Response بتحديد `RequiresDeposit = Yes/No` فقط؛ لا يسجل النظام قيمة العربون أو نسبته أو طريقة دفعه أو حالته.
+- `FR-007C` `ANALYZED_APPROVED`: يسمح للمقدم بتعديل Provider Response أو سحبها ما دام Request في حالة Open ولم يتم اختياره.
+- `FR-007D` `ANALYZED_APPROVED`: يحتفظ النظام باستجابة فعالة واحدة فقط لكل Provider لكل Request؛ لا يحسم هذا المتطلب طريقة حفظ تاريخ التعديلات في قاعدة البيانات.
 - `FR-008` `ANALYZED_APPROVED`: يسمح بمحادثة/استفسار خاص قبل بدء المعاملة من البحث المباشر أو Provider Response.
 - `FR-008A` `ANALYZED_APPROVED`: المحادثة وحدها لا تنشئ Transaction.
 - `FR-008B` `ANALYZED_APPROVED`: يحتفظ النظام بسجل المحادثة وفق سياسة الخصوصية والاحتفاظ.
 - `FR-008C` `ANALYZED_APPROVED`: يسمح بمشاركة موقع أدق في التواصل الخاص عند الحاجة دون عرضه للعامة.
 - `FR-009` `ANALYZED_APPROVED`: عند اختيار المستفيد مقدمًا من Provider Responses يغلق النظام الطلب أمام استجابات جديدة، يجعل البقية NotSelected، ويبدأ Transaction مع المختار.
-- `FR-009A` `ANALYZED_APPROVED`: في البحث المباشر لا تبدأ Transaction حتى يتفق الطرفان على بدء التعامل.
-- `FR-009B` `ANALYZED_APPROVED`: لا يستخدم MVP كيان/نموذج `Agreement` مستقل؛ مصدر بدء Transaction هو Selection في مسار الطلب أو اتفاق الطرفين على بدء التعامل في البحث المباشر.
+- `FR-009A` `ANALYZED_APPROVED`: في البحث المباشر يمكن لأي طرف إرسال Request Transaction Start من المحادثة، ولا تبدأ Transaction حتى يؤكد الطرف الآخر.
+- `FR-009B` `ANALYZED_APPROVED`: لا يستخدم MVP كيان/نموذج `Agreement` مستقل؛ مصدر بدء Transaction هو Selection في مسار الطلب أو تأكيد الطرفين في البحث المباشر.
+- `FR-009C` `ANALYZED_APPROVED`: إذا لم يؤكد الطرف الآخر طلب بدء المعاملة أو رفضه، تبقى المحادثة دون Transaction Active.
 
 ### Transaction / Cancellation
 - `FR-TX-01` `ANALYZED_APPROVED`: يدعم النظام عدة معاملات Active للمستخدم بالتوازي.
@@ -167,7 +173,7 @@
 - `FR-EXT-04` `ANALYZED_APPROVED`: يمكن إدراج تكلفة التوصيل في الفاتورة.
 - `FR-EXT-05` `ANALYZED_APPROVED`: `RequiresDeposit` معلومة في Provider Response فقط؛ لا Deposit/Escrow/Refund lifecycle ولا DepositAmount داخل YADD.
 
-### Invoice / Transaction Closure
+### Invoice / Transaction Completion
 - `FR-010` `ANALYZED_APPROVED`: يسمح للمقدم بإنشاء الفاتورة النهائية بعد التنفيذ/التجهيز واستقرار الاتفاق.
 - `FR-010A` `ANALYZED_APPROVED`: تحتوي الفاتورة هوية الطرفين والبنود والأسعار والإجمالي، مع صور اختيارية.
 - `FR-011` `ANALYZED_APPROVED`: يرسل النظام الفاتورة للمستفيد ويتيح Approve أو Request Revision مع ملاحظة.
@@ -176,7 +182,8 @@
 - `FR-011C` `ANALYZED_APPROVED`: يمكن رفع شكوى عند استمرار الخلاف.
 - `FR-011D` `ANALYZED_APPROVED`: الفاتورة غير المستجاب لها تبقى Pending Customer Approval؛ عدم الرد ليس موافقة وتصل تذكيرات للمستفيد.
 - `FR-011E` `PROPOSED/BLOCKED BY INV-PENDING-Q01`: سياسة التصعيد بعد عدم الاستجابة الطويلة لم تعتمد.
-- `FR-012` `ANALYZED_APPROVED`: عند اعتماد الفاتورة تحفظ في سجل الطرفين وتصبح Transaction Completed.
+- `FR-012` `ANALYZED_APPROVED`: عند اعتماد الفاتورة تحفظ في سجل الطرفين وتصبح Transaction `Completed`.
+- `FR-012A` `ANALYZED_APPROVED`: `Completed` هي الحالة النهائية للـTransaction الناجحة؛ التقييمات التالية عمليات Post-Transaction ولا تنقلها إلى حالة `Closed`.
 
 ### Reviews / Reputation
 - `FR-013` `ANALYZED_APPROVED`: لا يسمح بتقييم المستفيد للمقدم إلا إذا كان مرتبطًا بمعاملة Completed مع ذلك المقدم.
@@ -187,6 +194,7 @@
 - `FR-014D` `ANALYZED_APPROVED`: يعرض ملف المقدم عدد المعاملات المكتملة داخل YADD كمؤشر «عدد الأعمال».
 - `FR-014E` `ANALYZED_APPROVED`: تجمع تقييمات المستفيد في سجل تعامل/سمعة محدود يظهر لمقدمي الخدمات والمنتجات فقط في سياق تعامل مشروع مع المستفيد.
 - `FR-014F` `ANALYZED_APPROVED`: لا ينتج عن انخفاض تقييم المستفيد في MVP منع أو تعليق أو تخفيض ظهور أو أي عقوبة آلية.
+- `FR-014G` `ANALYZED_APPROVED`: إكمال أو تخطي أي Rating بعد `Completed` لا يغير Transaction Status.
 
 ### Trust & Safety / Abuse
 - `FR-SAFE-01` `ANALYZED_APPROVED`: يسمح للمستخدم بحظر مستخدم آخر لإيقاف التواصل المباشر.
@@ -241,6 +249,7 @@
 - `OOS-10`: Change Order System مستقل.
 - `OOS-11`: Payment/Wallet/Escrow/Refund أو تسجيل مبلغ العربون بين المستفيد والمقدم.
 - `OOS-12`: Agreement entity مستقل في Core Transaction Model.
+- `OOS-13`: Transaction state مستقلة باسم `Closed` بعد `Completed`.
 
 ## 13. Open Decisions Before v1.0
 
