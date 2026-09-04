@@ -24,12 +24,14 @@
 | UR-TX-01 | DEC-046/047/066/069 | BR-006/007/037 | UC-01 direct start / UC-04 selection | 3.0 / 4.0 | TRANSACTION, CONVERSATION, PROVIDER_RESPONSE | `ANALYZED_APPROVED` |
 | UR-TX-02 | DEC-056 | BR-023 | Transaction management | 4.0 | TRANSACTION | `ANALYZED_APPROVED` |
 | UR-TX-03 | DEC-071 | BR-010/016 | UC-06 completion + post-transaction ratings | 4.0 / 5.0 | TRANSACTION | `ANALYZED_APPROVED` |
+| UR-TX-04 | DEC-073 | BR-040 | Complaint / unresolved invoice dispute | 4.0 / 6.0 | TRANSACTION, REPORT / complaint record | `ANALYZED_APPROVED` |
 | UR-INV-01 | DEC-015/025/050/071 | BR-009..013 | UC-06 Create and Approve Invoice | 4.0 | INVOICE_VERSION, INVOICE_ITEM, TRANSACTION | `ANALYZED_APPROVED` |
+| UR-DSP-01 | DEC-073 | BR-040 | Raise Complaint / Administrative Review | 4.0 / 6.0 | REPORT / complaint record, TRANSACTION | `ANALYZED_APPROVED` |
 | UR-REV-01 | DEC-051 | BR-014/016 | UC-07 Rate Provider | 5.0 | PROVIDER_RATING | `ANALYZED_APPROVED` |
 | UR-REV-02 | DEC-063 | BR-015/016 | UC-07B Provider Rates Beneficiary | 5.0 | BENEFICIARY_RATING | `ANALYZED_APPROVED` |
 | UR-REP-01 | DEC-063 | BR-034 | UC-07B / provider interaction context | 5.0 | BENEFICIARY_RATING / interaction record | `ANALYZED_APPROVED` |
 | UR-SAFE-01 | DEC-053/054 | BR-021/022 | UC-08 Block and Report | 6.0 | REPORT / moderation records | `ANALYZED_APPROVED` |
-| UR-PAY-01 | DEC-018/041 | BR-024/033 | Scope constraint on UC-03/06 | — | **No Payment/Escrow/Refund entity** | `ANALYZED_APPROVED` |
+| UR-PAY-01 | DEC-018/041/073 | BR-024/033/040 | Scope constraint on UC-03/06 and dispute handling | — | **No Payment/Escrow/Refund/Settlement entity** | `ANALYZED_APPROVED` |
 | UR-SUB-01 | DEC-042/043 | BR-029/030 | Provider Subscription Administration | 6.0 | SUBSCRIPTION | `ANALYZED_APPROVED` |
 
 ## Diagram-Level Invariants
@@ -44,9 +46,11 @@ The following must remain consistent across Use Case, DFD, Activity, Sequence, E
 6. `RequiresDeposit` is a boolean attribute of Provider Response, not a Payment use case/entity/process.
 7. Invoice approval makes Transaction `Completed`.
 8. `Completed` is the successful terminal Transaction state; there is no Transaction state `Closed`.
-9. Ratings occur after Completed and do not change Transaction status.
-10. No Beneficiary↔Provider Payment, Escrow or Refund entity/process inside YADD.
-11. Diagram labels are English only according to DEC-072.
+9. Unresolved pre-approval invoice dispute makes Transaction `Disputed`, a terminal unsuccessful state.
+10. Administration reviews platform evidence and applies YADD policy; it does not arbitrate financial/commercial rights or order Payment/Refund/Compensation.
+11. Ratings occur only after Completed; no Ratings for Cancelled or Disputed Transactions.
+12. No Beneficiary↔Provider Payment, Escrow, Refund or Settlement entity/process inside YADD.
+13. Diagram labels are English only according to DEC-072.
 
 ## Open Items and Traceability Scope
 
