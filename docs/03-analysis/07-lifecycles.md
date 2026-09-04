@@ -76,7 +76,7 @@ stateDiagram-v2
     AwaitingInvoice --> AwaitingInvoice: No response / reminders
     AwaitingInvoice --> RevisionRequested: Beneficiary requests revision
     RevisionRequested --> AwaitingInvoice: Provider sends revised invoice
-    RevisionRequested --> Disputed: Unresolved issue reported
+    RevisionRequested --> Disputed: Unresolved complaint
     AwaitingInvoice --> Completed: Beneficiary approves invoice
     Completed --> [*]
     Cancelled --> [*]
@@ -84,6 +84,9 @@ stateDiagram-v2
 ```
 
 - `Completed` هي **النهاية الناجحة للـTransaction** وفق DEC-071.
+- `Disputed` هي **نهاية غير ناجحة للـTransaction** عندما يستمر الخلاف قبل اعتماد الفاتورة ولا يتوصل الطرفان إلى اتفاق، وفق DEC-073.
+- عند `Disputed` تراجع إدارة YADD الشكوى لتطبيق سياسات المنصة واتخاذ إجراء إداري عند وجود مخالفة؛ لا تحكم الإدارة في الحقوق المالية/التجارية ولا تفرض Payment/Refund/Compensation.
+- لا تفتح Ratings لمعاملة `Disputed` لأنها لم تصل إلى `Completed`.
 - لا توجد حالة Transaction باسم `Closed` بعد التقييمات.
 - لا يوجد Auto-Approval للفاتورة.
 - بعد بدء المعاملة، الإلغاء يحتاج سببًا مسجلًا.
@@ -104,9 +107,13 @@ stateDiagram-v2
     RevisionRequested --> Disputed: Unresolved complaint
     Approved --> Archived
     Archived --> [*]
+    Disputed --> [*]
 ```
 
-`Approved` يغلق العمل التوثيقي للفاتورة داخل YADD ويؤدي إلى `Transaction = Completed`، لكنه لا يثبت دفعًا إلكترونيًا. سياسة التصعيد عند عدم الاستجابة الطويلة: `INV-PENDING-Q01`.
+- `Approved` يغلق العمل التوثيقي للفاتورة داخل YADD ويؤدي إلى `Transaction = Completed`، لكنه لا يثبت دفعًا إلكترونيًا.
+- `Disputed` يعني أن الفاتورة لم تعتمد وأن Transaction لا تصبح Completed.
+- الشكوى الإدارية لا تمنح YADD صلاحية الفصل في المبالغ أو إصدار Refund/Compensation؛ دور الإدارة هو تطبيق سياسة المنصة على السلوك والسجلات الداخلية.
+- سياسة التصعيد عند عدم الاستجابة الطويلة: `INV-PENDING-Q01`.
 
 ## 6. Rating Lifecycles — Post-Transaction
 
@@ -121,7 +128,7 @@ stateDiagram-v2
 ```
 
 - النجوم 1–5 إلزامية والتعليق اختياري.
-- لا يفتح التقييم لمعاملة ملغاة أو غير مكتملة.
+- لا يفتح التقييم لمعاملة ملغاة أو `Disputed` أو غير مكتملة.
 - اكتمال هذا التقييم لا يغير Transaction من `Completed` إلى حالة أخرى.
 
 ### Provider rates Beneficiary — optional
