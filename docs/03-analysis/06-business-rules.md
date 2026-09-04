@@ -47,6 +47,7 @@
 | BR-037 | Core Transaction Model لا يستخدم Agreement entity مستقل؛ `Request → Provider Response → Selection → Transaction` في مسار الطلب. | `ANALYZED_APPROVED` | DEC-066 |
 | BR-038 | Backend/API هو المرجع النهائي للصلاحيات وقواعد العمل؛ لا يعتمد Web/Mobile Client كمرجع Authorization نهائي. | `APPROVED_AS_ARCH_PRINCIPLE` | DEC-065 |
 | BR-039 | لكل Provider استجابة فعالة واحدة فقط لكل Request؛ يجوز تعديلها أو سحبها قبل الاختيار ما دام Request مفتوحًا. | `ANALYZED_APPROVED` | DEC-070 |
+| BR-040 | عند استمرار الخلاف قبل اعتماد الفاتورة، تراجع إدارة YADD الشكوى والأدلة داخل المنصة لتطبيق سياسات YADD واتخاذ إجراء إداري عند وجود مخالفة، لكنها لا تفصل في الحقوق المالية/التجارية ولا تلزم دفعًا أو استردادًا أو تعويضًا. إذا بقي الخلاف دون اتفاق تصبح Transaction `Disputed` كحالة نهائية غير ناجحة ولا تفتح Ratings. | `ANALYZED_APPROVED` | DEC-073 |
 
 ## قواعد مفتوحة تحتاج قرارًا/تحققًا
 
@@ -77,4 +78,6 @@
 - لا يوجد Auto-Approval للفاتورة.
 - لا يوجد نظام Change Order مستقل في MVP.
 - لا Payment/Escrow/Refund أو DepositAmount بين المستفيد والمقدم داخل YADD.
+- الإدارة تطبق سياسات YADD على الشكاوى ولا تعمل كجهة تحكيم مالي/تجاري بين الطرفين.
+- `Disputed` نهاية غير ناجحة للTransaction عند عدم التوصل لاتفاق، ولا تفتح Ratings.
 - التذكيرات آلية مساندة، ولا ينبغي أن يعتمد فهم التدفق عليها وحدها.
