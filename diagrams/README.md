@@ -60,9 +60,11 @@ Every current diagram must preserve these rules:
 - `RequiresDeposit` is Yes/No data inside Provider Response only; no deposit amount/payment/refund state.
 - Invoice approval makes Transaction `Completed`.
 - `Completed` is the successful terminal Transaction state; there is no Transaction state named `Closed`.
-- Ratings happen after Completed and do not change Transaction status.
+- Unresolved pre-approval invoice dispute ends the Transaction as `Disputed`, a terminal unsuccessful state.
+- Administration reviews YADD evidence and applies platform policy; it does **not** decide financial/commercial entitlement and must not be modeled as ordering Payment, Refund or Compensation.
+- Ratings happen only after `Completed`; no Ratings for `Cancelled` or `Disputed` Transactions.
 - Beneficiary→Provider rating is mandatory; Provider→Beneficiary rating is optional.
-- No Beneficiary↔Provider Payment/Escrow/Refund process/entity inside YADD.
+- No Beneficiary↔Provider Payment/Escrow/Refund/Settlement process/entity inside YADD.
 
 ## 4. Open Items That Must Not Be Invented
 
