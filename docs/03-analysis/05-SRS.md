@@ -1,10 +1,10 @@
 # Software Requirements Specification — YADD MVP
 
-> **الإصدار:** v0.9.4
+> **الإصدار:** v0.9.5
 >
 > **الحالة:** `PARTIALLY ANALYZED — NOT BASELINED`
 >
-> هذه النسخة تزامن المتطلبات مع قرارات الإغلاق حتى 2026-09-04. البنود المفتوحة صريحة ولا تعتبر متطلبات نهائية.
+> هذه النسخة تزامن المتطلبات مع قرارات الإغلاق حتى 2026-09-04، بما في ذلك DEC-073 الخاص بحدود صلاحية الإدارة في النزاعات. البنود المفتوحة صريحة ولا تعتبر متطلبات نهائية.
 
 ## 1. Scope
 
@@ -96,7 +96,9 @@
 | UR-TX-01 | بدء المعاملة عند اختيار مقدم في مسار الطلب، أو بعد طلب أحد الطرفين بدء المعاملة وتأكيد الطرف الآخر في البحث المباشر. | `ANALYZED_APPROVED` | DEC-046/047/066/069 |
 | UR-TX-02 | امتلاك عدة معاملات جارية بالتوازي. | `ANALYZED_APPROVED` | DEC-056 |
 | UR-TX-03 | اعتبار `Completed` الحالة النهائية للمعاملة الناجحة بعد اعتماد الفاتورة؛ التقييمات لاحقة ولا تنشئ حالة `Closed`. | `ANALYZED_APPROVED` | DEC-071 |
-| UR-INV-01 | فاتورة نهائية موثقة لإغلاق المعاملة. | `ANALYZED_APPROVED` | DEC-015/025/050/071 |
+| UR-TX-04 | إذا استمر الخلاف قبل اعتماد الفاتورة ولم يتوصل الطرفان إلى اتفاق، تنتهي المعاملة في `Disputed` ولا تعتبر `Completed`. | `ANALYZED_APPROVED` | DEC-073 |
+| UR-INV-01 | فاتورة نهائية موثقة لإغلاق المعاملة الناجحة. | `ANALYZED_APPROVED` | DEC-015/025/050/071 |
+| UR-DSP-01 | رفع شكوى مرتبطة بالمعاملة عند استمرار الخلاف قبل اعتماد الفاتورة، مع مراجعة إدارية لسجلات YADD دون تحكيم مالي/تجاري بين الطرفين. | `ANALYZED_APPROVED` | DEC-073 |
 | UR-REV-01 | تقييم مقدم الخدمة/المنتج بعد اكتمال المعاملة بواسطة المستفيد. | `ANALYZED_APPROVED` | DEC-051 |
 | UR-REV-02 | إمكانية تقييم المقدم للمستفيد اختياريًا بعد اكتمال المعاملة وفق مؤشرات سلوكية محددة. | `ANALYZED_APPROVED` | DEC-063 |
 | UR-REP-01 | عرض سجل تعامل المستفيد للمقدمين فقط في سياق تعامل مشروع معه دون عقوبات آلية. | `ANALYZED_APPROVED` | DEC-063 |
@@ -160,11 +162,13 @@
 - `FR-009B` `ANALYZED_APPROVED`: لا يستخدم MVP كيان/نموذج `Agreement` مستقل؛ مصدر بدء Transaction هو Selection في مسار الطلب أو تأكيد الطرفين في البحث المباشر.
 - `FR-009C` `ANALYZED_APPROVED`: إذا لم يؤكد الطرف الآخر طلب بدء المعاملة أو رفضه، تبقى المحادثة دون Transaction Active.
 
-### Transaction / Cancellation
+### Transaction / Cancellation / Dispute
 - `FR-TX-01` `ANALYZED_APPROVED`: يدعم النظام عدة معاملات Active للمستخدم بالتوازي.
 - `FR-TX-02` `ANALYZED_APPROVED`: بعد بدء المعاملة يسمح بالإلغاء مع سبب إلزامي مسجل يظهر للطرف الآخر.
 - `FR-TX-03` `ANALYZED_APPROVED`: يسجل النظام الطرف الملغي والتوقيت وسبب الإلغاء للمراجعة عند الحاجة.
 - `FR-TX-04` `PROPOSED/BLOCKED BY TX-CONC-Q01`: لا يوجد حد أقصى رقمي معتمد للمعاملات المتوازية.
+- `FR-TX-05` `ANALYZED_APPROVED`: عند استمرار نزاع الفاتورة دون اتفاق، تصبح Transaction `Disputed` كحالة نهائية غير ناجحة.
+- `FR-TX-06` `ANALYZED_APPROVED`: لا يسمح Ratings لمعاملة `Disputed` لأنها لم تصل إلى `Completed`.
 
 ### External Payment / Fulfillment Boundaries
 - `FR-EXT-01` `ANALYZED_APPROVED`: لا ينفذ النظام Payment Transaction بين المستفيد والمقدم.
@@ -179,9 +183,11 @@
 - `FR-011` `ANALYZED_APPROVED`: يرسل النظام الفاتورة للمستفيد ويتيح Approve أو Request Revision مع ملاحظة.
 - `FR-011A` `ANALYZED_APPROVED`: يحتفظ بتاريخ نسخ الفاتورة والتعديلات.
 - `FR-011B` `ANALYZED_APPROVED`: الاعتماد نهائي داخل YADD بعد تحذير واضح.
-- `FR-011C` `ANALYZED_APPROVED`: يمكن رفع شكوى عند استمرار الخلاف.
+- `FR-011C` `ANALYZED_APPROVED`: يمكن رفع شكوى مرتبطة بالمعاملة عند استمرار الخلاف قبل الاعتماد.
 - `FR-011D` `ANALYZED_APPROVED`: الفاتورة غير المستجاب لها تبقى Pending Customer Approval؛ عدم الرد ليس موافقة وتصل تذكيرات للمستفيد.
 - `FR-011E` `PROPOSED/BLOCKED BY INV-PENDING-Q01`: سياسة التصعيد بعد عدم الاستجابة الطويلة لم تعتمد.
+- `FR-011F` `ANALYZED_APPROVED`: تتيح المراجعة الإدارية الوصول إلى سجلات YADD المرتبطة بالشكوى وفق الصلاحيات، بهدف تطبيق سياسات المنصة واتخاذ إجراء إداري عند وجود مخالفة.
+- `FR-011G` `ANALYZED_APPROVED`: لا تتيح إدارة YADD إصدار حكم مالي/تجاري بين الطرفين أو إلزام دفع أو Refund أو Compensation.
 - `FR-012` `ANALYZED_APPROVED`: عند اعتماد الفاتورة تحفظ في سجل الطرفين وتصبح Transaction `Completed`.
 - `FR-012A` `ANALYZED_APPROVED`: `Completed` هي الحالة النهائية للـTransaction الناجحة؛ التقييمات التالية عمليات Post-Transaction ولا تنقلها إلى حالة `Closed`.
 
@@ -220,6 +226,7 @@
 - `FR-015` `PARTIALLY_ANALYZED`: يدير موظفو YADD الوظائف الإدارية وفق الصلاحيات.
 - `FR-015A` `ANALYZED_APPROVED`: يسمح للمخول بمراجعة Verification وTrust & Safety Flags والبلاغات واتخاذ إجراء وفق السياسة.
 - `FR-015B` `ANALYZED_APPROVED`: يحتفظ النظام بسجل مناسب للأحداث الإدارية الحساسة.
+- `FR-015C` `ANALYZED_APPROVED`: في Complaint مرتبطة بمعاملة، تقتصر صلاحية الإدارة على مراجعة سجلات المنصة وتطبيق سياسة YADD واتخاذ الإجراء الإداري المناسب؛ لا تعد الإدارة جهة تحكيم مالي/تجاري ولا تصدر التزامًا بالدفع أو الاسترداد أو التعويض.
 
 ## 11. Non-Functional Requirements — Draft / Partial
 
@@ -250,6 +257,7 @@
 - `OOS-11`: Payment/Wallet/Escrow/Refund أو تسجيل مبلغ العربون بين المستفيد والمقدم.
 - `OOS-12`: Agreement entity مستقل في Core Transaction Model.
 - `OOS-13`: Transaction state مستقلة باسم `Closed` بعد `Completed`.
+- `OOS-14`: Financial/commercial arbitration أو إلزام Beneficiary/Provider بالدفع أو Refund أو Compensation بواسطة إدارة YADD.
 
 ## 13. Open Decisions Before v1.0
 
