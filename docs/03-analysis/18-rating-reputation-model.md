@@ -1,8 +1,8 @@
 # Rating & Reputation Model
 
-> **الحالة:** `ANALYZED_APPROVED — CURRENT`
+> **الحالة:** `ANALYZED_APPROVED — SYNCHRONIZED 2026-09-04`
 >
-> **القرارات المرجعية:** DEC-051/052/063 — تحديث 2026-09-03.
+> **القرارات المرجعية:** DEC-051/052/063/071.
 
 ## 1. الهدف
 
@@ -13,7 +13,7 @@
 يفتح أي تقييم فقط عندما:
 1. توجد Transaction بين المستفيد والمقدم.
 2. أرسل المقدم الفاتورة النهائية.
-3. اعتمد المستفيد الفاتورة وأصبحت المعاملة Completed.
+3. اعتمد المستفيد الفاتورة وأصبحت المعاملة `Completed`.
 
 لا تقييم في Request مغلق قبل الاختيار، أو Request Expired، أو Transaction ملغاة/غير مكتملة.
 
@@ -28,7 +28,7 @@
 
 ## 4. تقييم المقدم للمستفيد — اختياري
 
-بعد Transaction Completed يعرض النظام للمقدم Prompt بارزًا لتقييم المستفيد، ويمكن للمقدم تخطيه.
+بعد `Transaction Completed` يعرض النظام للمقدم Prompt بارزًا لتقييم المستفيد، ويمكن للمقدم تخطيه.
 
 إذا اختار التقييم، يستخدم ثلاثة مؤشرات سلوكية، كل منها من 1 إلى 5:
 1. وضوح الطلب والتواصل.
@@ -43,7 +43,7 @@
 
 تجمع تقييمات المقدمين للمستفيد في سجل تعامل محدود داخل YADD.
 
-- يظهر لمقدمي الخدمات/المنتجات فقط عندما يوجد سياق تعامل مشروع مع المستفيد، مثل Request/Response/Transaction ذات صلة.
+- يظهر لمقدمي الخدمات/المنتجات فقط عندما يوجد سياق تعامل مشروع مع المستفيد، مثل Request/Provider Response/Transaction ذات صلة.
 - لا يعرض كسمعة عامة للجمهور.
 - يعرض المؤشرات/المتوسطات المرتبطة بالمعاملات المكتملة، وليس حكمًا مطلقًا على الشخص.
 - لا ينتج عنه في MVP منع أو تعليق حساب أو تخفيض ظهور أو حرمان من إنشاء الطلبات أو أي عقوبة آلية.
@@ -59,19 +59,31 @@
 
 هذا مؤشر خبرة داخل YADD، وليس إثباتًا لكل خبرة المقدم خارج المنصة.
 
-## 7. دورة التقييم
+## 7. Rating Lifecycles — Post-Transaction
+
+### Beneficiary rates Provider — mandatory
 
 ```mermaid
 stateDiagram-v2
     [*] --> Locked
-    Locked --> ProviderRatingRequired: transaction completed
-    ProviderRatingRequired --> ProviderRatingSubmitted: beneficiary rates provider
-    ProviderRatingSubmitted --> BeneficiaryRatingOffered
-    BeneficiaryRatingOffered --> BeneficiaryRatingSubmitted: provider chooses to rate
-    BeneficiaryRatingOffered --> Closed: provider skips
-    BeneficiaryRatingSubmitted --> Closed
-    Closed --> [*]
+    Locked --> ProviderRatingRequired: Transaction Completed
+    ProviderRatingRequired --> ProviderRatingSubmitted: Beneficiary submits 1-5 stars
+    ProviderRatingSubmitted --> [*]
 ```
+
+### Provider rates Beneficiary — optional
+
+```mermaid
+stateDiagram-v2
+    [*] --> Locked
+    Locked --> BeneficiaryRatingOffered: Transaction Completed
+    BeneficiaryRatingOffered --> BeneficiaryRatingSubmitted: Provider submits rating
+    BeneficiaryRatingOffered --> Skipped: Provider skips
+    BeneficiaryRatingSubmitted --> [*]
+    Skipped --> [*]
+```
+
+> `Completed` remains the successful terminal state of the Transaction. The final nodes above mean the rating workflow ended; they are not a Transaction state named `Closed`.
 
 ## 8. القواعد الحالية
 
@@ -82,6 +94,7 @@ stateDiagram-v2
 - `RAT-BR-05`: تقييم المستفيد من المقدم = 3 مؤشرات سلوكية 1–5 + تعليق اختياري — `APPROVED`.
 - `RAT-BR-06`: سجل تعامل المستفيد محدود الظهور للمقدمين في سياق تعامل مشروع ولا ينتج عنه عقوبة آلية — `APPROVED`.
 - `RAT-BR-07`: عدد الأعمال في ملف المقدم = عدد المعاملات المكتملة داخل YADD — `APPROVED`.
+- `RAT-BR-08`: Ratings عمليات Post-Transaction ولا تنقل Transaction إلى حالة `Closed` — `APPROVED` وفق DEC-071.
 
 ## 9. أثر النموذج على التصميم
 
@@ -90,7 +103,7 @@ stateDiagram-v2
 - Business Rules.
 - Transaction/Rating Lifecycle.
 - Use Cases.
-- ERD وعلاقات Review/Rating بالمستفيد والمقدم.
+- ERD وعلاقات Rating بالمستفيد والمقدم.
 - Data Dictionary وConstraints.
 - واجهات التقييم والملفات الشخصية.
 - Chapter 3 وChapter 4.
