@@ -1,8 +1,8 @@
 # Invoice Approval & Dispute Model
 
-> **الحالة:** `ANALYZED_APPROVED / PARTIAL POLICY`
+> **الحالة:** `ANALYZED_APPROVED / PARTIAL POLICY — SYNCHRONIZED 2026-09-04`
 >
-> **القرارات المرجعية:** `DEC-015/016/025/041/050/051/055/063` — مزامنة 2026-09-03.
+> **القرارات المرجعية:** `DEC-015/016/025/041/050/051/055/063/071/073`.
 
 ## 1. المبدأ
 
@@ -44,13 +44,13 @@
 - تصبح Transaction `Completed`.
 - ينتقل المستفيد إلى **تقييم المقدم الإلزامي**: 1–5 نجوم، والتعليق اختياري.
 - يعرض للمقدم بعد اكتمال المعاملة **تقييم المستفيد الاختياري** وفق المؤشرات السلوكية المعتمدة في DEC-063.
-- يمكن للمقدم تخطي التقييم المقابل دون منع إغلاق التدفق.
+- يمكن للمقدم تخطي التقييم المقابل دون تغيير حالة Transaction.
 
-وجود شكوى لاحقة لا يغير النسخة المعتمدة من الفاتورة ولا يعيد فتحها.
+وجود شكوى لاحقة لا يغير النسخة المعتمدة من الفاتورة ولا يعيد فتح Transaction المكتملة.
 
 ## 6. عند استمرار الخلاف قبل الاعتماد
 
-إذا طلب المستفيد تعديل الفاتورة ولم يتوصل الطرفان إلى اتفاق، يستطيع رفع شكوى إلى إدارة YADD مرتبطة بالمعاملة.
+إذا طلب المستفيد تعديل الفاتورة ولم يتوصل الطرفان إلى اتفاق، يستطيع رفع Complaint إلى إدارة YADD مرتبطة بالمعاملة.
 
 تستطيع الإدارة مراجعة السجلات المتاحة داخل المنصة، مثل:
 - الطلب الأصلي إن وجد.
@@ -60,23 +60,35 @@
 - ملاحظات طلب التعديل.
 - المرفقات والأدلة المسجلة داخل YADD.
 
-إدارة YADD تتعامل مع السلوك داخل المنصة وتطبيق سياساتها، ولا تعد جهة تحكيم مالي ولا تلزم طرفًا بإعادة أموال لم تمر عبر النظام.
+### حدود صلاحية الإدارة — DEC-073
+
+- تراجع الإدارة الشكوى لتحديد ما إذا حدثت مخالفة لسياسات YADD.
+- يمكنها اتخاذ إجراء إداري مناسب وفق السياسة، مثل Warning أو Restriction أو Suspension أو Content/Account action بحسب نوع المخالفة والسياسة المعتمدة.
+- لا تفصل إدارة YADD في الحقوق المالية أو التجارية بين الطرفين.
+- لا تصدر أمرًا بالدفع أو Refund أو Compensation.
+- لا تحدد مسؤولية مالية خارجية بين الطرفين.
+- إذا لم يتوصل الطرفان إلى اتفاق قبل اعتماد الفاتورة، تصبح Transaction `Disputed` كحالة نهائية غير ناجحة.
+- لا تفتح Ratings لمعاملة `Disputed` لأنها لم تصل إلى `Completed`.
+
+هذا يفصل بين **Platform Governance** داخل YADD وبين **Financial/Commercial Arbitration** خارج نطاق YADD.
 
 ## 7. حالات الفاتورة
 
 ```mermaid
 stateDiagram-v2
     [*] --> Draft
-    Draft --> PendingCustomerApproval: provider sends invoice
-    PendingCustomerApproval --> PendingCustomerApproval: reminder / no response
-    PendingCustomerApproval --> RevisionRequested: beneficiary requests revision + note
-    RevisionRequested --> Draft: provider edits invoice
-    PendingCustomerApproval --> FinalApproved: beneficiary confirms after warning
-    RevisionRequested --> Disputed: no agreement / complaint raised
+    Draft --> PendingCustomerApproval: Provider sends invoice
+    PendingCustomerApproval --> PendingCustomerApproval: Reminder / no response
+    PendingCustomerApproval --> RevisionRequested: Beneficiary requests revision + note
+    RevisionRequested --> Draft: Provider edits invoice
+    PendingCustomerApproval --> FinalApproved: Beneficiary confirms after warning
+    RevisionRequested --> Disputed: No agreement / complaint raised
     FinalApproved --> Archived
     Archived --> [*]
     Disputed --> [*]
 ```
+
+`Disputed` هنا لا تعني أن الإدارة حكمت لطرف على آخر؛ تعني أن الفاتورة لم تعتمد وأن المعاملة انتهت دون Completion بعد استمرار الخلاف.
 
 ## 8. قواعد معتمدة
 
@@ -85,12 +97,17 @@ stateDiagram-v2
 - `INV-BR-03`: يجب عرض تحذير واضح قبل الاعتماد النهائي.
 - `INV-BR-04`: الفاتورة المعتمدة نهائية وغير قابلة للتعديل أو التراجع داخل YADD.
 - `INV-BR-05`: الشكوى عند عدم الاتفاق ترفع قبل الاعتماد النهائي.
-- `INV-BR-06`: الشكوى الإدارية لا تحول YADD إلى جهة تحكيم مالي أو وسيط دفع.
+- `INV-BR-06`: الإدارة تراجع الشكوى وسجلات المنصة لتطبيق سياسات YADD، ولا تعمل كجهة تحكيم مالي/تجاري.
 - `INV-BR-07`: عدم الاستجابة لا يعد موافقة ولا يوجد Auto-Approval.
 - `INV-BR-08`: اعتماد الفاتورة يجعل Transaction Completed ويؤدي إلى تقييم إلزامي من المستفيد للمقدم.
 - `INV-BR-09`: بعد Completed يعرض للمقدم تقييم المستفيد اختياريًا وفق DEC-063.
 - `INV-BR-10`: لا Payment/Deposit/Refund state داخل invoice lifecycle؛ كل الحركة المالية بين الطرفين خارج YADD.
+- `INV-BR-11`: استمرار الخلاف دون اتفاق يؤدي إلى Transaction `Disputed` كحالة نهائية غير ناجحة.
+- `INV-BR-12`: لا Ratings لمعاملة `Disputed`.
+- `INV-BR-13`: لا تملك إدارة YADD إلزام أي طرف بالدفع أو الاسترداد أو التعويض.
 
 ## 9. سياسة مفتوحة
 
 - `INV-PENDING-Q01`: سياسة التصعيد إذا بقيت الفاتورة معلقة مدة طويلة رغم التذكيرات.
+
+هذه السياسة المفتوحة تخص **عدم الاستجابة** فقط، ولا تعيد فتح قرار صلاحية الإدارة في النزاع الذي أغلقه DEC-073.
