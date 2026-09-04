@@ -1,90 +1,108 @@
 # Request Closure, Cancellation & Expiry Model
 
-> **الحالة:** `ANALYZED_APPROVED / PARTIAL POLICY`
+> **الحالة:** `ANALYZED_APPROVED / PARTIAL POLICY — SYNCHRONIZED 2026-09-04`
 >
-> **القرارات المرجعية:** DEC-047..050/054 — تحديث 2026-08-26.
+> **القرارات المرجعية:** DEC-047..050/054/071.
 
-## 1. الطلب المفتوح
+## 1. Open Request
 
-بعد نشر طلب خدمة أو منتج يكون `Open`. يبقى مفتوحًا حتى:
+After a Service/Product Request is published it becomes `Open`. It remains Open until one of these occurs:
 
-- يختار المستفيد مقدمًا → `Matched` ويبدأ Transaction.
-- يقرر المستفيد أنه لم يعد يحتاج الطلب → `ClosedByBeneficiary`.
-- يصل إلى سياسة عدم النشاط → `Expired`.
+- Beneficiary selects a Provider → `Matched` and an `Active Transaction` starts.
+- Beneficiary no longer needs the Request → `ClosedByBeneficiary`.
+- inactivity policy is reached → `Expired`.
 
-لا يطلب من المستخدم حاليًا تحديد مدة صلاحية رقمية عند النشر كقرار معتمد. مدة عدم النشاط وتذكيرات استمرار الحاجة تحتاج `REQ-EXP-Q01`.
+The exact inactivity duration and reminder schedule remain `REQ-EXP-Q01` and must not be invented in diagrams.
 
-## 2. Request Closure قبل اختيار مقدم
+## 2. Request Closure Before Selection
 
-إذا لم يختر المستفيد مقدمًا بعد، فإغلاق الطلب ليس إلغاء معاملة لأن Transaction لم تبدأ أصلًا.
+If no Provider has been selected yet, closing the Request is **not Transaction Cancellation** because no Transaction exists yet.
 
-- يغلق الطلب أمام الاستجابات الجديدة.
-- لا يسجل Transaction Cancellation على أي طرف.
-- يمكن تسجيل حدث الإغلاق وسببه/سياقه التشغيلي وفق التصميم النهائي.
+- stop accepting new Provider Responses;
+- do not create Transaction cancellation data;
+- Request becomes `ClosedByBeneficiary`.
 
-## 3. اختيار مقدم
+## 3. Provider Selection
 
-في الطلب المنشور، اختيار المستفيد لمقدم من الاستجابات:
+When Beneficiary selects one Provider Response:
 
-1. يوقف استقبال استجابات جديدة.
-2. يجعل الاستجابات الأخرى `NotSelected`.
-3. يحول الطلب إلى `Matched`.
-4. يبدأ المعاملة الرسمية مع المقدم المختار.
+1. Request stops accepting new responses.
+2. remaining active responses become `NotSelected`.
+3. Request becomes `Matched`.
+4. one `Active Transaction` starts with the selected Provider.
 
-لا توجد خطوة اتفاق/نموذج إضافي إلزامي في هذا المسار.
+No additional Agreement form/entity is required in this route.
 
-## 4. Transaction Cancellation بعد بدء المعاملة
+## 4. Transaction Cancellation
 
-بعد بدء Transaction، إذا أراد أحد الطرفين الإلغاء قبل دخول مسار الفاتورة النهائي:
+After Transaction starts, either party may cancel before the final-invoice path reaches completion, subject to current rules:
 
-- يسجل سبب الإلغاء إلزاميًا.
-- يظهر السبب للطرف الآخر.
-- يسجل النظام الطرف الذي ألغى والتوقيت.
-- يمكن للإدارة مراجعة الإلغاءات المتكررة أو المشبوهة.
+- cancellation reason is required;
+- actor and time are recorded;
+- reason is visible to the other party;
+- repeated/suspicious patterns may be flagged for review;
+- repetition alone does not cause automatic punishment.
 
-التكرار وحده لا ينتج عقوبة آلية.
+## 5. Request Expiry
 
-## 5. Expiry وعدم النشاط
+YADD does not leave an Open Request active indefinitely. The system may remind the Beneficiary to confirm that the Request is still needed and may later set it to `Expired` according to an approved inactivity policy.
 
-YADD لا يترك الطلب المفتوح ظاهرًا إلى أجل غير محدد. يرسل تذكيرًا بسيطًا لصاحب الطلب لتأكيد أنه ما زال يحتاجه. إذا استمر عدم النشاط وفق السياسة المعتمدة لاحقًا يصبح `Expired` ويتوقف عن الظهور للمقدمين.
+**Needs Verification:** `REQ-EXP-Q01` defines the numeric duration and reminder timing.
 
-**Needs Verification:** مدة عدم النشاط وعدد/توقيت التذكيرات (`REQ-EXP-Q01`).
+## 6. Abuse Signals
 
-## 6. إساءة استخدام إنشاء/إغلاق الطلبات
+The system may record request-creation/closure patterns and raise a Flag for administrative review. Thresholds remain `SAFE-REQ-Q01` and are not shown numerically in analysis diagrams.
 
-يمكن للنظام تسجيل نمط النشاط ورفع Flag للمراجعة عند وجود نمط غير طبيعي. لا يعني الـFlag أن المستخدم مسيء للاستخدام، ولا يطبق حظر آلي لمجرد عدد الإغلاقات.
+## 7. After Final Invoice Submission
 
-Thresholds: `SAFE-REQ-Q01`.
+Once the final invoice is submitted, the normal transaction path uses invoice states and decisions:
 
-## 7. ما بعد إرسال الفاتورة
+- `PendingCustomerApproval`
+- `RevisionRequested`
+- `Disputed`
+- `Approved`
 
-بعد إرسال الفاتورة لا يستخدم الإلغاء العادي كمسار افتراضي. تطبق دورة الفاتورة: اعتماد، طلب تعديل، شكوى عند استمرار المشكلة، مع بقاء عدم الرد غير مساوي للموافقة.
+No-response is not approval and there is no Auto-Approval.
 
-## 8. الحالات
+## 8. State Model
 
 ```mermaid
 stateDiagram-v2
     [*] --> Draft
-    Draft --> Open: publish
-    Open --> Matched: select provider
-    Open --> ClosedByBeneficiary: no longer needed
-    Open --> Expired: inactivity policy
-    Matched --> ActiveTransaction
-    ActiveTransaction --> Cancelled: recorded reason
-    ActiveTransaction --> AwaitingInvoice
-    AwaitingInvoice --> RevisionRequested
-    RevisionRequested --> AwaitingInvoice
-    RevisionRequested --> Disputed
-    AwaitingInvoice --> Completed: invoice approved
-    Completed --> RatingRequired
-    RatingRequired --> Closed: provider rated
+    Draft --> Open: Publish Request
+    Open --> Matched: Select Provider
+    Open --> ClosedByBeneficiary: No Longer Needed
+    Open --> Expired: Inactivity Policy Reached
+    Matched --> [*]
+    ClosedByBeneficiary --> [*]
+    Expired --> [*]
 ```
 
-## 9. قواعد معتمدة
+Transaction is modeled separately:
 
-- `REQ-BR-01`: Request Closure قبل الاختيار ليس Transaction Cancellation.
-- `REQ-BR-02`: اختيار مقدم في الطلب المنشور يغلق الطلب ويبدأ المعاملة.
-- `REQ-BR-03`: Transaction Cancellation يحتاج سببًا مسجلًا.
-- `REQ-BR-04`: الطلب المفتوح يخضع لتذكير/Expiry بسبب عدم النشاط.
-- `REQ-BR-05`: لا عقوبة آلية لمجرد تكرار إغلاق الطلبات؛ يمكن Flag + Admin Review.
-- `REQ-BR-06`: بعد إرسال الفاتورة يسري مسار الفاتورة بدل الإلغاء العادي.
+```mermaid
+stateDiagram-v2
+    [*] --> Active
+    Active --> Cancelled: Cancel With Recorded Reason
+    Active --> AwaitingInvoice: Provider Sends Final Invoice
+    AwaitingInvoice --> AwaitingInvoice: No Response / Reminder
+    AwaitingInvoice --> RevisionRequested: Request Revision
+    RevisionRequested --> AwaitingInvoice: Revised Invoice Submitted
+    RevisionRequested --> Disputed: Complaint Raised
+    AwaitingInvoice --> Completed: Invoice Approved
+    Completed --> [*]
+    Cancelled --> [*]
+    Disputed --> [*]
+```
+
+`Completed` is the successful terminal Transaction state. Ratings occur after it as Post-Transaction workflows and do not create a `Closed` Transaction state.
+
+## 9. Approved Rules
+
+- `REQ-BR-01`: Request Closure before selection is not Transaction Cancellation.
+- `REQ-BR-02`: selecting one Provider in a published Request closes the Request to new responses and starts one Transaction.
+- `REQ-BR-03`: Transaction Cancellation requires a recorded reason.
+- `REQ-BR-04`: Open Requests are subject to reminders/Expiry in principle.
+- `REQ-BR-05`: repeated closure may produce Flag + Admin Review, not automatic punishment.
+- `REQ-BR-06`: after final invoice submission, the invoice workflow governs the remaining path.
+- `REQ-BR-07`: `Completed` is the successful terminal Transaction state; ratings are Post-Transaction.
