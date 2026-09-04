@@ -1,66 +1,71 @@
 # In-App Communication Model
 
-> **الحالة:** `ANALYZED_APPROVED`
+> **الحالة:** `ANALYZED_APPROVED — SYNCHRONIZED 2026-09-04`
 >
-> **القرارات المرجعية:** DEC-023/024/046/047/053/055 — تحديث 2026-08-26.
+> **القرارات المرجعية:** DEC-023/024/046/047/053/055/069.
 
-## 1. القرار
+## 1. Core Decision
 
-يوفر YADD محادثة خاصة داخلية للتواصل بين المستفيد والمقدم، ويمكن أن تبدأ **قبل المعاملة** للاستفسار والتفاوض الأولي. المحادثة وحدها لا تعني وجود Transaction.
+YADD provides private in-app communication between Beneficiary and Provider. Communication may begin **before a Transaction** for inquiry and negotiation. Chat alone does not create a Transaction.
 
-بعد بدء المعاملة تستمر المحادثة نفسها/سياقها الخاص كقناة موثقة للتفاصيل المتعلقة بالتعامل.
+After Transaction starts, the same private context may continue for execution details. Basic in-app communication does not require exposing a phone number to the other party.
 
-لا يتطلب التواصل الأساسي كشف رقم الهاتف للطرف الآخر.
+## 2. Communication Routes
 
-## 2. مسارا التواصل
+### Published Request Route
 
-### الطلب المنشور
+`Request → Provider Response → Inquiry / Chat → Beneficiary Selects Provider → Active Transaction`
 
-`Request → Provider Response → Inquiry Chat → Beneficiary Selects Provider → Active Transaction`
+Provider selection closes the Request to new responses and starts the Transaction with the selected Provider. No extra Agreement entity or mandatory agreement form exists in this route.
 
-عند اختيار المقدم يغلق الطلب أمام الاستجابات الجديدة وتبدأ المعاملة.
+### Direct Search Route
 
-### البحث المباشر
+`Search → Provider Profile → Inquiry / Chat → Request Transaction Start → Other Party Confirmation → Active Transaction`
 
-`Search → Provider Profile → Inquiry Chat → Both Agree to Start → Active Transaction`
+Rules:
+- either Beneficiary or Provider may send `Request Transaction Start`;
+- YADD asks the other party for confirmation;
+- only explicit confirmation creates `Active Transaction`;
+- rejection or no confirmation leaves the conversation without a Transaction.
 
-لا تبدأ المعاملة بمجرد إرسال رسالة؛ يلزم اتفاق الطرفين على بدء التعامل.
+## 3. MVP Communication Scope
 
-## 3. نطاق المحادثة في MVP
+Minimum supported concepts:
+- text messages;
+- images/attachments related to the request or execution when needed;
+- message notifications;
+- conversation retention according to privacy/retention policy;
+- Block + Report.
 
-تشمل في الحد الأدنى:
+Voice/video calls are not part of the current core model. Voice messages remain `PROPOSED` and must not appear as an approved use case unless separately approved.
 
-- رسائل نصية.
-- صور/مرفقات مرتبطة بالطلب أو التنفيذ عند الحاجة.
-- إشعارات وصول الرسائل.
-- الاحتفاظ بالمحادثة وفق سياسة الخصوصية والاحتفاظ للرجوع إليها في الشكوى/النزاع.
-- Block + Report وفق قواعد Trust & Safety.
+## 4. Communication, Negotiation and Invoice
 
-ولا تشمل حاليًا مكالمات صوتية/فيديو أو خصائص اجتماعية عامة. الرسائل الصوتية `PROPOSED`.
+- price/details/changes may be discussed in chat;
+- MVP has no standalone Change Order entity/process;
+- conversation may be used as supporting evidence in a complaint;
+- the approved final invoice is the authoritative final record of items and prices inside YADD.
 
-## 4. العلاقة بالفاتورة والتفاوض
+## 5. External Communication
 
-- يمكن مناقشة السعر والتفاصيل والتغييرات داخل المحادثة.
-- لا ينشئ MVP نظام Change Order مستقل.
-- يمكن الرجوع للمحادثة كجزء من أدلة الشكوى.
-- الفاتورة النهائية التي يراجعها المستفيد ويعتمدها هي السجل النهائي لبنود وأسعار المعاملة داخل YADD.
+YADD does not claim to prevent external communication. External discussions are not automatically part of YADD's official record; if they change the final items/prices, the agreed result must be reflected in the final invoice to become part of YADD's transaction record.
 
-## 5. التواصل خارج YADD
+## 6. Approved Rules
 
-لا يدعي النظام منع التواصل الخارجي. أي اتفاق خارجي لا يدخل سجل YADD تلقائيًا؛ إذا غير السعر أو نطاق العمل فيجب أن تنعكس النتيجة النهائية في الفاتورة حتى تكون جزءًا من السجل الرسمي.
+- `COM-BR-01`: Private inquiry is allowed before Transaction.
+- `COM-BR-02`: Chat alone does not create Transaction.
+- `COM-BR-03`: Request route starts Transaction when Beneficiary selects Provider.
+- `COM-BR-04`: Direct Search starts Transaction only after one party sends `Request Transaction Start` and the other confirms.
+- `COM-BR-05`: Basic in-app communication does not require phone-number exposure.
+- `COM-BR-06`: Messages/attachments follow privacy and retention policy.
+- `COM-BR-07`: Conversation may support complaint review.
+- `COM-BR-08`: Approved final invoice is the final YADD record of items/prices.
+- `COM-BR-09`: Block + Report is supported; reports require review.
 
-## 6. قواعد معتمدة
+## 7. Diagram Guidance
 
-- `COM-BR-01`: يسمح بالاستفسار الخاص قبل بدء Transaction.
-- `COM-BR-02`: المحادثة وحدها لا تنشئ Transaction.
-- `COM-BR-03`: في مسار الطلب، اختيار المستفيد للمقدم يبدأ Transaction.
-- `COM-BR-04`: في البحث المباشر، يلزم اتفاق الطرفين على بدء التعامل.
-- `COM-BR-05`: لا يحتاج التواصل الأساسي إلى كشف رقم الهاتف.
-- `COM-BR-06`: تحفظ الرسائل والمرفقات وفق سياسة احتفاظ وخصوصية.
-- `COM-BR-07`: يمكن استخدام المحادثة كجزء من أدلة الشكوى.
-- `COM-BR-08`: الفاتورة المعتمدة هي السجل النهائي لبنود وأسعار المعاملة.
-- `COM-BR-09`: يدعم المستخدم Block + Report؛ البلاغ يخضع للمراجعة الإدارية.
+For Activity/Sequence diagrams, never replace the Direct Search start flow with a vague `Both Agree to Start` action. Show the two explicit interactions:
 
-## 7. أثر القرار على MVP
+`Request Transaction Start → Other Party Confirmation → Active Transaction`.
 
-المحادثة ليست تطبيق مراسلة عام؛ هي وسيلة استفسار وتعامل مرتبطة بسياق اكتشاف مقدم/طلب أو معاملة. يجب أن يبقى UX بسيطًا، والتحقق الفعلي من سهولة الاستخدام ضمن `UX-VAL-Q01`.
+The exact UI control used for requesting/confirming start is a design detail and does not block analysis diagrams.
