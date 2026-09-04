@@ -1,23 +1,16 @@
 # الفصل الثالث — تحليل المتطلبات ونمذجة النظام
 
-> **الإصدار:** `v1.0`
+> **الإصدار:** `v1.1`
 >
-> **الحالة:** `VERSION 1 — FOR ASSISTANT SUPERVISOR REVIEW — NOT BASELINED`
+> **الحالة:** `TEXT SYNCHRONIZED — ANALYSIS CORE CLOSED — DIAGRAMS DEFERRED`
 >
-> هذه النسخة مشتقة من وثائق التحليل الحالية في `docs/03-analysis/` ومن Decision Register. وجود عنصر هنا لا يعني أن SRS أصبح Baselined أو أن جميع المخططات معتمدة نهائيًا.
->
-> **علامات المراجعة:**
-> - `⚠ NV` = Needs Verification
-> - `⚠ SUP` = Supervisor Decision Required
-> - `⚠ DRAFT` = Draft for Preliminary Defense
+> هذه النسخة مشتقة من Decision Register وSRS v0.9.4 وBusiness Rules وLifecycles وUse Cases الحالية. المخططات نفسها مؤجلة إلى مرحلة لاحقة، لذلك لا يدعي هذا الفصل أن DFD/UML/ERD الرسومية أصبحت نهائية.
 
 ---
 
 ## 3.1 مقدمة
 
-يعرض هذا الفصل تحليل متطلبات نظام **يَد | YADD** والنموذج التشغيلي المقترح، بدءًا من الأدلة المستخدمة في جمع البيانات، مرورًا بالأطراف والمتطلبات الوظيفية وغير الوظيفية وقواعد العمل ودورات الحالة، وصولًا إلى حالات الاستخدام ومخططات التحليل والنموذج المفاهيمي للبيانات.
-
-يعتمد الفصل على الحالة الفعلية الحالية للمشروع، ولذلك يفصل بين المتطلبات المحللة والمعتمدة، والبنود المقترحة، والنقاط التي ما تزال تحتاج تحققًا أو قرارًا من المشرف.
+يعرض هذا الفصل تحليل متطلبات نظام **يَد | YADD** والنموذج التشغيلي المقترح، بدءًا من تقنيات جمع البيانات، مرورًا بأصحاب المصلحة والمتطلبات الوظيفية وغير الوظيفية وقواعد العمل ودورات الحالة وحالات الاستخدام، وصولًا إلى مواصفات العمليات والبيانات والتتبع. المخططات الرسومية ستُستكمل لاحقًا وفق هذا الأساس التحليلي المغلق.
 
 ---
 
@@ -25,44 +18,46 @@
 
 ### 3.2.1 تحليل الوثائق — Document Analysis
 
-تم تحليل ملفات الجامعة الأصلية، ووثائق الحوكمة الداخلية، وقرارات الفريق، والمتطلبات وقواعد العمل ذات الصلة. تستخدم هذه الوثائق لضبط المتطلبات الأكاديمية ومنع تحويل الأفكار غير المعتمدة إلى متطلبات نهائية.
+تم تحليل ملفات الجامعة الأصلية، ووثائق الحوكمة الداخلية، وDecision Register، وSRS، وقواعد العمل، ووثائق البحث ذات الصلة. الهدف هو ضبط المتطلبات الأكاديمية ومنع تحويل Proposal أو Inference إلى Requirement معتمد دون مصدر.
 
 ### 3.2.2 الاستبيان — Survey `SUR-01`
 
-استخدم الفريق استبيانًا استكشافيًا كأداة جمع بيانات المستخدمين الميدانية الحالية. بلغ عدد المشاركين **29** موزعين إلى:
+استخدم الفريق استبيانًا استكشافيًا كأداة جمع بيانات المستخدمين. بلغ عدد المشاركين 29:
 
 | الفئة | العدد |
 |---|---:|
-| مستفيد/عميل | 7 |
-| مقدم خدمة مهنية/فنية | 8 |
-| مقدم منتج/مشروع منزلي | 14 |
+| Beneficiaries | 7 |
+| Service Providers | 8 |
+| Product/Home-business Providers | 14 |
 | **الإجمالي** | **29** |
 
-العينة استكشافية وغير احتمالية، ولذلك لا تستخدم نتائجها للتعميم الإحصائي على سكان أمانة العاصمة.
+العينة استكشافية وغير احتمالية، ولذلك لا تستخدم النتائج للتعميم الإحصائي على سكان أمانة العاصمة.
 
 من النتائج القابلة للاستخدام تحليليًا:
 
-- انتشار الاعتماد على التوصيات وواتساب والشبكات الاجتماعية والعملاء السابقين.
+- انتشار التوصيات وواتساب والشبكات الاجتماعية والعملاء السابقين كقنوات وصول.
 - وجود صعوبة نسبية لدى عينة المستفيدين في العثور على مقدم مناسب دون معرفة مسبقة.
-- مقارنة الأسعار تتم في حالات عديدة بعد التواصل المنفصل مع أكثر من طرف.
-- مقدم الخدمة يحتاج معلومات عن الطلب قبل التسعير.
-- منتجات المشاريع المنزلية تعتمد بدرجة كبيرة على التجهيز حسب الطلب والاتفاق عبر الرسائل.
-- تلقى مفهوم التحقق من هوية المقدم Feedback إيجابيًا داخل العينة، دون أن يثبت آلية تحقق تقنية محددة.
+- مقارنة الأسعار قد تتطلب تواصلًا منفصلًا مع عدة أطراف.
+- المقدم يحتاج معلومات كافية عن الطلب قبل التسعير.
+- منتجات المشاريع المنزلية تعتمد بدرجة كبيرة على التجهيز حسب الطلب والتواصل عبر الرسائل.
+- تلقى مفهوم Provider Verification قبولًا أوليًا داخل العينة دون إثبات آلية تقنية محددة.
 
-### 3.2.3 المقابلات والملاحظة الميدانية
+### 3.2.3 المقابلات والملاحظة
 
-الحالة الحالية:
+قرر المشرف قبول **Survey-only** كأداة جمع بيانات المستخدمين الرسمية للمشروع. الإجابات التي جُمعت شفهيًا باستخدام أسئلة الاستبيان نفسها وأدخلت في `SUR-01` تعامل كـInterviewer-administered questionnaire، وليست مقابلات مستقلة.
 
-- Interviews: `NOT PLANNED`.
-- User Field Observation: `NOT PLANNED`.
-
-قرر الفريق الاكتفاء بالاستبيان كأداة ميدانية للمستخدمين، مع الاعتماد أيضًا على Document Analysis وSimilar Systems.
-
-`⚠ SUP — GOV-Q04:` هيكل 1447 يذكر Interviews وObservation ضمن Data Gathering Techniques. لذلك قبول عدم تنفيذهما يحتاج تثبيتًا مع المشرف/القسم ولا يُعتبر القرار الداخلي للفريق بديلًا عن المتطلب الأكاديمي.
+لا ينسب المشروع لنفسه Interviews أو User Field Observation لم تُنفذ فعليًا. أي ملاحظات مسترجعة لاحقًا من الذاكرة تستخدم فقط كـRetrospective Supplementary Evidence مع فصل ما شوهد فعلًا عن Inference.
 
 ### 3.2.4 الأنظمة المشابهة — Similar Systems
 
-تم تحليل مشاريع جامعية ومنصات تشغيلية يمنية ومراجع تشغيلية أخرى، مع الفصل بين المصادر الرسمية والملاحظات المباشرة والاستنتاجات التحليلية. وتستخدم هذه النتائج لفهم الوظائف الموجودة فعليًا والفجوات المحتملة، لا لنسخ متطلبات المنافسين إلى YADD تلقائيًا.
+تم تحليل منصات تشغيلية ومصادر أكاديمية مع الفصل بين:
+
+- `Evidence`
+- `Inference`
+- `Design Inspiration`
+- `Team Decision`
+
+ولا تنسخ خصائص الأنظمة المنافسة إلى YADD تلقائيًا كمتطلبات.
 
 ---
 
@@ -70,50 +65,77 @@
 
 ### 3.3.1 أصحاب المصلحة
 
-الأطراف الأساسية هي:
+الأطراف الأساسية:
 
-- المستفيد من الخدمة أو المنتج.
-- مقدم الخدمة المهنية/الفنية.
-- مقدم المنتج/المشروع المنزلي.
-- إدارة منصة YADD وموظفو المراجعة المخولون.
-- فريق المشروع.
-- المشرفون والقسم الأكاديمي.
+- Beneficiary.
+- Service Provider.
+- Product Provider / Home-business Provider.
+- YADD Administration and authorized staff.
+- Project Team.
+- Supervisor / Academic Department.
 
 ### 3.3.2 نموذج الحساب والبوابات
 
-يعتمد YADD **حساب User واحدًا للشخص**. اختيار المستخدم أن يبدأ كمستفيد أو مقدم يحدد مسار الـOnboarding والبوابة الابتدائية، ولا ينشئ نوعي حساب منفصلين.
+يعتمد YADD حساب `User` واحدًا للشخص.
 
-يمكن للحساب:
+- اختيار Beneficiary أو Provider عند البداية يحدد الـOnboarding والبوابة الابتدائية، وليس نوع حساب دائمًا.
+- يمكن استخدام Beneficiary Portal مباشرة.
+- يمكن إنشاء `Provider Profile` داخل الحساب نفسه.
+- Provider Portal يحتاج Provider Profile مستوفيًا شروط التحقق والتفعيل.
+- يمكن لـProvider Profile تفعيل Service Activity أو Product Activity أو كليهما.
 
-- استخدام Beneficiary Portal مباشرة.
-- إنشاء Provider Profile داخل الحساب نفسه.
-- استخدام Provider Portal بعد استيفاء متطلبات التحقق والتفعيل.
+### 3.3.3 نموذج Actors الرئيسي
 
-يمكن لـProvider Profile دعم Service Activity أو Product Activity أو كليهما وفق القرارات الحالية.
+Actors الرئيسية في المخطط العام:
+
+- `Beneficiary`
+- `Provider`
+- `YADD Administrator`
+
+يمكن تخصص Provider إلى Service Provider وProduct Provider عند الحاجة. وتبقى الأدوار الإدارية المتخصصة مثل Verification Reviewer وContent Moderator وSubscription Administrator ضمن التفاصيل والصلاحيات، لا كActors إلزامية في المخطط الرئيسي.
 
 ---
 
 ## 3.4 وصف النظام المقترح — Proposed System
 
-يقترح YADD منصة محلية داخل أمانة العاصمة — صنعاء لتنظيم اكتشاف وطلب الخدمات المهنية والمنتجات المنزلية.
+يعتمد YADD مسارين أساسيين للوصول إلى المقدم.
 
-يعتمد النظام مسارين أساسيين للوصول إلى مقدم الخدمة/المنتج:
+### 3.4.1 Direct Search Route
 
-### المسار الأول — البحث المباشر
+`Search Providers → View Provider Profile / Portfolio or Catalog → Private Inquiry / Chat → Request Transaction Start → Other Party Confirmation → Active Transaction`
 
-`Search → Provider Profile → Inquiry/Chat → Agreement to Start → Active Transaction`
+القواعد:
 
-المحادثة وحدها لا تنشئ معاملة رسمية.
+- Chat وحدها لا تنشئ Transaction.
+- يمكن لأي طرف إرسال Request Transaction Start.
+- لا تصبح Transaction `Active` إلا بعد تأكيد الطرف الآخر.
+- عدم التأكيد أو الرفض يبقي المحادثة دون Transaction.
 
-### المسار الثاني — إنشاء طلب
+### 3.4.2 Create Request Route
 
-`Create Request → Provider Responses → Compare/Chat → Select Provider → Active Transaction`
+`Create Request → Matching Providers → Provider Responses → Compare / Chat → Select Provider → Active Transaction`
 
-عند اختيار مقدم واحد يغلق الطلب أمام الاستجابات الجديدة، وتصبح بقية الاستجابات `NotSelected`.
+القواعد:
 
-بعد بدء المعاملة يستمر التدفق الأساسي إلى:
+- Request قد يكون Service أو Product.
+- السعر الاسترشادي اختياري وغير ملزم.
+- لكل Provider استجابة فعالة واحدة فقط لكل Request.
+- يمكن تعديل/سحب Provider Response ما دام Request في حالة Open ولم يتم الاختيار.
+- Beneficiary يختار مقدمًا واحدًا.
+- عند الاختيار يغلق Request أمام الاستجابات الجديدة وتصبح البقية `NotSelected`.
+- لا يوجد `Agreement` entity مستقل في MVP.
 
-`Active Transaction → Final Invoice → Customer Approval → Completed → Provider Rating`
+### 3.4.3 Common Transaction Flow
+
+`Active Transaction → Fulfillment / Preparation → Final Invoice → Approve or Request Revision → Completed`
+
+- Provider ينشئ Final Invoice بعد التنفيذ/التجهيز.
+- Beneficiary يختار Approve أو Request Revision.
+- لا يوجد Auto-Approval.
+- عند اعتماد الفاتورة تصبح Transaction `Completed`.
+- `Completed` هي الحالة النهائية الناجحة للTransaction.
+- لا توجد Transaction state باسم `Closed`.
+- Ratings تحدث بعد Completed كعمليات Post-Transaction.
 
 ---
 
@@ -121,183 +143,249 @@
 
 أهم متطلبات المستخدم المحللة حاليًا:
 
-1. استخدام حساب واحد للاستفادة والتقديم.
-2. اختيار بوابة البداية والانتقال بين البوابات عند استيفاء الشروط.
-3. إنشاء Provider Profile وتفعيل نشاط خدمة أو منتج أو كليهما.
-4. التحقق من مقدم الخدمة قبل السماح له بالتقديم.
-5. البحث المباشر عن مقدم حسب التصنيف والمنطقة.
-6. إنشاء طلب خدمة/منتج وإضافة وصف وصور وسعر استرشادي اختياري.
-7. تمكين المقدم المؤهل من الاستجابة واقتراح سعر مختلف عند الحاجة.
-8. مقارنة الاستجابات واختيار مقدم واحد.
-9. التواصل الخاص قبل بدء المعاملة دون اعتبار المحادثة Transaction.
-10. بدء المعاملة عند الاختيار أو اتفاق الطرفين في البحث المباشر.
-11. إنشاء فاتورة نهائية واعتمادها قبل إغلاق المعاملة.
-12. تقييم مقدم الخدمة/المنتج بعد اكتمال المعاملة.
-13. Block + Report مع مراجعة إدارية.
-14. معرفة حالة اشتراك مقدم الخدمة وفترة صلاحيته.
+1. استخدام حساب User واحد للاستفادة والتقديم.
+2. الانتقال بين Beneficiary Portal وProvider Portal وفق الصلاحيات.
+3. إنشاء Provider Profile وتفعيل Service أو Product Activity أو كليهما.
+4. التحقق من Provider قبل وظائف التقديم.
+5. البحث المباشر حسب الفئة والمنطقة.
+6. إنشاء Request لخدمة أو منتج.
+7. تمكين Provider المؤهل من إرسال Provider Response واقتراح سعر مختلف عند الحاجة.
+8. تعديل/سحب Provider Response قبل الاختيار وفق القواعد الحالية.
+9. مقارنة الاستجابات واختيار مقدم واحد.
+10. التواصل الخاص قبل Transaction دون اعتبار Chat معاملة.
+11. بدء Direct Search Transaction بعد طلب صريح وتأكيد الطرف الآخر.
+12. إلغاء Transaction بعد البداية مع سبب مسجل وفق القواعد الحالية.
+13. إنشاء Final Invoice ومراجعتها واعتمادها أو طلب تعديلها.
+14. اعتبار Transaction `Completed` بعد اعتماد الفاتورة.
+15. تقييم Provider إلزاميًا من Beneficiary بعد Completed.
+16. إتاحة تقييم Beneficiary اختياريًا من Provider بعد Completed.
+17. Block + Report مع مراجعة إدارية.
+18. إدارة Portfolio/Catalog داخل Provider Profile.
+19. إدارة Provider Verification وSubscription records ضمن النظام.
 
-`⚠ NV:` بعض السياسات الرقمية والتشغيلية التفصيلية ما تزال مفتوحة ولا تعد Requirements نهائية.
+السياسات الرقمية الثانوية غير المحسومة تبقى Needs Verification ولا تمنع Core Flow.
 
 ---
 
 ## 3.6 المتطلبات الوظيفية — Functional Requirements Overview
 
-### 3.6.1 الحساب وملف المقدم
+### 3.6.1 Account and Provider Profile
 
-- حساب User واحد.
+- User Account واحد.
 - Provider Profile داخل الحساب نفسه.
-- وظائف التقديم لا تتاح قبل Provider Verification.
-- نشاط Service أو Product أو كليهما.
+- وظائف التقديم لا تعمل قبل Verification.
+- Service Activity أو Product Activity أو كلاهما.
 
-### 3.6.2 التحقق من مقدم الخدمة
+### 3.6.2 Provider Verification
 
-- تقديم طلب تحقق.
-- الحد الأدنى الحالي: وثيقة هوية + صورة شخصية مع الوثيقة.
+- تقديم Verification Request.
+- الحد الأدنى الحالي يتضمن وثيقة هوية وصورة شخصية مع الوثيقة.
 - القرار النهائي للمراجعة البشرية المخولة.
-- AI مساعد فقط ولا يقرر Verified/Rejected بصورة نهائية منفردة.
+- AI مساعد فقط ولا يصدر قرار Verified/Rejected نهائيًا منفردًا.
 
-`⚠ NV:` أنواع الوثائق الدقيقة ومدة الاحتفاظ بها ما تزال مفتوحة.
+**Needs Verification:** أنواع الوثائق الدقيقة، متطلبات الصور التفصيلية، مدة الاحتفاظ.
 
-### 3.6.3 الاكتشاف والموقع
+### 3.6.3 Discovery and Location
 
-- بحث حسب التصنيف والمديرية/الحي.
-- مقدم الخدمة يحدد مناطق خدمته.
+- البحث حسب الفئة والمديرية/الحي.
+- Provider يحدد Service Areas.
 - الموقع الدقيق غير ظاهر للعامة.
-- التوسع إلى أحياء مجاورة يحتاج موافقة المستفيد.
+- التوسع للأحياء المجاورة يحتاج موافقة Beneficiary.
 
-### 3.6.4 الطلب والاستجابات
+### 3.6.4 Requests and Provider Responses
 
-- إنشاء طلب خدمة أو منتج.
+- إنشاء Service/Product Request.
 - الصور والمعلومات الإضافية اختيارية.
-- السعر الاسترشادي اختياري وغير ملزم.
-- المقدم المؤهل يستطيع الاستجابة أو اقتراح سعر آخر.
-- المستفيد يستطيع مقارنة الاستجابات واختيار مقدم واحد.
+- السعر الاسترشادي اختياري.
+- Provider يمكنه اقتراح سعر آخر.
+- Provider Response قد تحدد `RequiresDeposit = Yes/No` فقط.
+- استجابة فعالة واحدة لكل Provider/Request.
+- يمكن Edit/Withdraw قبل الاختيار ما دام Request Open.
+- Beneficiary يقارن الاستجابات ويختار Provider واحدًا.
 
-### 3.6.5 التواصل والمعاملة
+### 3.6.5 Communication and Transaction Start
 
-- محادثة خاصة قبل بدء المعاملة مسموحة.
-- Chat وحده لا ينشئ Transaction.
-- في مسار الطلب يبدأ Transaction عند اختيار المقدم.
-- في البحث المباشر يبدأ Transaction بعد اتفاق الطرفين على بدء التعامل.
-- بعد بدء المعاملة يمكن الإلغاء مع سبب إلزامي مسجل.
+- Private Chat قبل Transaction مسموحة.
+- Chat وحدها لا تنشئ Transaction.
+- Request Route: Selection يبدأ Transaction مع Provider المختار.
+- Direct Search Route: أحد الطرفين يرسل Request Transaction Start، والطرف الآخر يؤكد قبل Active Transaction.
 
-### 3.6.6 الفاتورة وإغلاق المعاملة
+### 3.6.6 Transaction and Cancellation
 
-- ينشئ المقدم الفاتورة النهائية بعد التنفيذ/التجهيز واستقرار الاتفاق.
-- المستفيد يستطيع Approve أو Request Revision مع ملاحظة.
-- عدم الرد لا يعد موافقة ولا يوجد Auto-Approval.
-- اعتماد الفاتورة يجعل Transaction مكتملة داخل YADD.
+- Transaction لها Beneficiary واحد وProvider واحد.
+- يمكن إلغاء Transaction بعد بدئها وفق القواعد الحالية مع سبب مسجل.
+- Request Closure قبل Selection مختلف عن Transaction Cancellation.
+- عدة Transactions متوازية مسموحة حاليًا دون حد رقمي معتمد.
 
-### 3.6.7 التقييم والسمعة
+### 3.6.7 Invoice
 
-- التقييم للمقدم من المستفيد فقط في النموذج الحالي.
-- 1–5 نجوم إلزامية، والتعليق اختياري.
-- لا يفتح التقييم إلا لمعاملة مكتملة.
-- ملف المقدم يعرض عدد الأعمال المكتملة داخل YADD كمؤشر خبرة داخل المنصة.
+- Provider ينشئ Final Invoice بعد التنفيذ/التجهيز.
+- تحتوي على البنود والأسعار والإجمالي ويمكن أن تحتوي صورًا اختيارية.
+- Beneficiary يختار Approve أو Request Revision مع ملاحظة.
+- عدم الرد يبقيها Pending Customer Approval.
+- لا يوجد Auto-Approval.
+- اعتماد الفاتورة يؤدي إلى Transaction Completed.
 
-### 3.6.8 Trust & Safety
+### 3.6.8 Ratings and Reputation
+
+**Beneficiary → Provider**
+- بعد Transaction Completed.
+- 1–5 Stars إلزامية.
+- Comment اختياري.
+
+**Provider → Beneficiary**
+- بعد Transaction Completed.
+- اختياري مع Prompt بارز.
+- ثلاثة مؤشرات 1–5:
+  - Request and communication clarity.
+  - Commitment to agreement.
+  - Cooperation and conduct.
+- Comment اختياري.
+- لا ينتج عنه منع/عقوبة آلية في MVP.
+
+### 3.6.9 Portfolio / Catalog
+
+- Service Provider يستخدم Portfolio.
+- Product Provider يستخدم Product Catalog.
+- يمكن توحيدهما تقنيًا في Showcase Item.
+- تحفظ نسخة الأصل بصورة غير عامة.
+- نسخة العرض تحمل Watermark تعريفية مرتبطة بـYADD/Provider.
+- Watermark لا تثبت الملكية القانونية.
+
+### 3.6.10 Trust & Safety
 
 - Block يوقف التواصل المباشر.
 - Report يرسل الحالة للمراجعة الإدارية.
-- البلاغ أو AI Flag لا يساوي عقوبة نهائية تلقائية.
+- البلاغ أو AI Flag لا يساوي إدانة أو عقوبة تلقائية.
 
-### 3.6.9 الاشتراك
+### 3.6.11 Subscription
 
-- نموذج الإيراد الحالي اشتراك دوري من المقدمين دون عمولة معاملات.
-- YADD يدير حالة وفترة الاشتراك.
-- التحصيل خارجي والتفعيل/التجديد يؤكده موظف مخول.
-- إرسال عروض جديدة يتطلب Provider Verified وSubscription Active.
+- النموذج التجاري الحالي اشتراك دوري من Providers دون عمولة معاملات.
+- YADD يدير Subscription record.
+- التحصيل خارجي ويؤكده موظف مخول.
+- تقديم Provider Responses جديدة يتطلب Provider Verified + Subscription Active.
+
+### 3.6.12 Financial Boundary
+
+YADD لا يدير أي حركة مالية بين Beneficiary وProvider.
+
+لا يوجد داخل MVP:
+
+- Payment.
+- Wallet.
+- Escrow.
+- Refund.
+- Deposit amount/percentage/status.
+
+يجوز فقط أن تحدد Provider Response `RequiresDeposit = Yes/No`; كل تفاصيل الدفع والتسوية خارج YADD.
 
 ---
 
 ## 3.7 المتطلبات غير الوظيفية — Non-Functional Requirements
 
-المبادئ المحللة حاليًا تشمل:
+### 3.7.1 Security and Privacy
 
-### الأمان والخصوصية
-
-- حماية الحساب والمحادثات والمرفقات وبيانات التحقق.
-- تقييد الوصول إلى بيانات الهوية الحساسة وتسجيل الوصول الإداري المناسب.
+- حماية الحسابات والمحادثات والمرفقات وبيانات Verification.
+- تقييد الوصول إلى بيانات الهوية الحساسة.
+- تسجيل الوصول/الإجراءات الإدارية المناسبة وفق التصميم النهائي.
 - عدم نشر الموقع الدقيق للعامة.
 - تقليل جمع وإظهار البيانات الشخصية إلى ما يلزم الوظيفة.
 
-### قابلية الاستخدام
+### 3.7.2 Usability
 
-- استخدام خطوات ومصطلحات بسيطة وواضحة للمستخدم.
-- عدم عرض حالات النظام التقنية الداخلية إذا لم تكن مفيدة للمستخدم.
+- خطوات ومصطلحات بسيطة وواضحة للمستخدم.
+- إخفاء الحالات الداخلية التقنية غير اللازمة للمستخدم.
 
-`⚠ NV — UX-VAL-Q01:` ملاءمة الواجهة للفئة المستهدفة والاتصال الضعيف تحتاج اختبار Usability فعليًا قبل اعتبارها مثبتة.
+`UX-VAL-Q01`: ملاءمة التدفق للمستخدم المستهدف والاتصال الضعيف تحتاج Usability Validation فعلية.
 
-### الاعتمادية
+### 3.7.3 Reliability and Data Integrity
 
-- عدم الرد على الفاتورة لا يعتبر موافقة.
-- لا تغلق المعاملة تلقائيًا دون اعتماد المستفيد.
+- عدم الرد على الفاتورة لا يعد موافقة.
+- لا تتحول Transaction إلى Completed بدون Invoice Approval.
+- Final Invoice المعتمدة هي السجل الرسمي النهائي للبنود والأسعار داخل YADD.
+- لا يتم الكتابة فوق تاريخ الفاتورة بما يفقد النسخ السابقة.
 
-### الأداء والتوفر
+### 3.7.4 Performance and Availability
 
-`⚠ NV:` أهداف زمن الاستجابة والتوفر والتعامل مع الاتصال المتقطع لم تعتمد بعد، وتحدد بعد Prototype وTechnical Architecture.
+لا توجد أهداف كمية معتمدة بعد لزمن الاستجابة أو التوفر أو تحمل الاتصال المتقطع. تحدد بعد Prototype وTechnical Validation؛ لا يتم اختلاق أرقام.
 
 ---
 
 ## 3.8 قواعد العمل الأساسية — Business Rules
 
-أهم القواعد التي تحكم Core Flow:
-
-1. يوجد مسارا اكتشاف: Direct Search وCreate Request.
-2. السعر في الطلب اختياري واسترشادي.
-3. المقدم يمكنه اقتراح سعر مختلف.
-4. المستفيد يختار مقدمًا واحدًا من الاستجابات.
-5. المحادثة قبل المعاملة مسموحة لكنها ليست Transaction.
-6. اختيار مقدم من طلب منشور يبدأ المعاملة ويغلق الطلب أمام استجابات جديدة.
-7. الفاتورة النهائية هي السجل الرسمي النهائي للبنود والأسعار داخل YADD.
-8. لا يوجد Auto-Approval للفاتورة.
-9. إغلاق Request قبل اختيار مقدم يختلف عن Transaction Cancellation.
-10. تقييم مقدم الخدمة يصبح إلزاميًا بعد اكتمال المعاملة.
-11. لا يوجد تقييم مقابل للمستفيد من المقدم في النموذج الحالي.
-12. عدة معاملات متوازية مسموحة دون حد رقمي معتمد حاليًا.
-13. التوصيل ليس عملية تديرها YADD.
-14. Provider Profile لا يقدم عروضًا قبل Verification وActive Subscription.
-15. AI يدعم التحقق والسلامة لكنه لا يصدر وحده قرارًا نهائيًا عالي الأثر.
-
-`⚠ SUP — DEP-Q02:` دور YADD النهائي في العربون/الدفعة المقدمة ما يزال مفتوحًا ولا يضاف له Payment/Escrow Lifecycle قبل قرار المشرف.
+1. يوجد Direct Search وCreate Request.
+2. السعر في Request اختياري واسترشادي.
+3. Provider يمكنه اقتراح سعر مختلف.
+4. لكل Provider استجابة فعالة واحدة لكل Request؛ يمكن تعديلها أو سحبها قبل Selection.
+5. Beneficiary يختار Provider واحدًا.
+6. Chat قبل Transaction مسموحة لكنها ليست Transaction.
+7. Direct Search Transaction تحتاج Request Start + confirmation من الطرف الآخر.
+8. Selection من Request يغلق الطلب أمام استجابات جديدة ويبدأ Transaction.
+9. لا يوجد Agreement entity مستقل.
+10. `RequiresDeposit` Boolean فقط، والدفع الخارجي خارج YADD.
+11. Final Invoice هي السجل النهائي للبنود والأسعار داخل YADD.
+12. لا يوجد Auto-Approval.
+13. Request Closure قبل Selection مختلف عن Transaction Cancellation.
+14. `Completed` هي الحالة النهائية الناجحة للTransaction.
+15. Beneficiary Rating للمقدم إلزامي بعد Completed.
+16. Provider Rating للمستفيد اختياري بعد Completed.
+17. Ratings لا تنقل Transaction إلى Closed.
+18. عدة Transactions متوازية مسموحة دون حد رقمي معتمد.
+19. التوصيل ليس عملية يديرها YADD.
+20. Provider Responses جديدة تتطلب Verification + Active Subscription.
+21. AI يدعم Verification/Safety ولا يصدر وحده قرارًا نهائيًا عالي الأثر.
 
 ---
 
 ## 3.9 دورات الحالة — Lifecycles
 
-### 3.9.1 دورة الطلب
+### 3.9.1 Request Lifecycle
 
 `Draft → Open → Matched / ClosedByBeneficiary / Expired`
 
-- `Matched`: تم اختيار مقدم وبدأت المعاملة.
-- `ClosedByBeneficiary`: الطلب لم يعد مطلوبًا قبل اختيار مقدم.
+- `Matched`: تم اختيار Provider وبدأت Transaction.
+- `ClosedByBeneficiary`: لم يعد Request مطلوبًا قبل Selection.
 - `Expired`: بعد سياسة عدم نشاط لم تعتمد قيمها الرقمية بعد.
 
-### 3.9.2 دورة الاستجابة
+### 3.9.2 Provider Response Lifecycle
 
 `Submitted → Selected / NotSelected / Withdrawn`
 
-### 3.9.3 دورة المعاملة
+أثناء الحالة النشطة يمكن تعديل Provider Response بدل إنشاء استجابات مكررة، ما دام Request Open ولم يتم Selection.
 
-`Active → AwaitingInvoice → RevisionRequested / Completed / Disputed → RatingRequired → Closed`
+### 3.9.3 Transaction Lifecycle
 
-كما يمكن أن تنتقل `Active` إلى `Cancelled` بسبب إلغاء أحد الطرفين مع سبب مسجل.
+المسار الناجح:
 
-### 3.9.4 دورة الفاتورة
+`Active → AwaitingInvoice → RevisionRequested ↔ AwaitingInvoice → Completed`
+
+مسارات بديلة بحسب الحالة:
+
+- `Cancelled`
+- `Disputed`
+
+`Completed` terminal successful state. لا توجد حالة Transaction باسم `Closed`.
+
+### 3.9.4 Invoice Lifecycle
 
 `Draft → PendingCustomerApproval → Approved / RevisionRequested / Disputed`
 
-عدم الاستجابة يبقي الفاتورة Pending ولا يحولها إلى Approved تلقائيًا.
+عدم الاستجابة يبقي الفاتورة Pending ولا يحولها تلقائيًا إلى Approved.
 
-### 3.9.5 دورة التقييم
+### 3.9.5 Rating Lifecycles
 
-`Locked → Required → Submitted → Final`
+بعد Transaction Completed يبدأ تدفق Post-Transaction مستقل:
+
+- Provider Rating by Beneficiary: `Required → Submitted`.
+- Beneficiary Rating by Provider: `Offered → Submitted / Skipped`.
+
+هذه الحالات ليست Transaction states.
 
 ---
 
 ## 3.10 حالات الاستخدام الأساسية — Use Cases
 
-حالات الاستخدام الحالية هي:
+حالات الاستخدام الحالية:
 
 - `UC-01` Search and Inquire Directly.
 - `UC-02` Create Request.
@@ -306,122 +394,97 @@
 - `UC-05` Cancel Active Transaction.
 - `UC-06` Create and Approve Invoice.
 - `UC-07` Rate Provider.
-- `UC-08` Block and Report User.
+- `UC-07B` Provider Rates Beneficiary.
+- `UC-08` Block and Report User / Content.
 - `UC-09` Provider Verification / Portal Activation.
+- `UC-10` Manage Portfolio / Catalog.
 
-التفاصيل الكاملة موجودة في `docs/03-analysis/08-use-cases.md`، وتحتاج Cross-review قبل اعتبارها نهائية.
-
----
-
-## 3.11 DFD — Data Flow Diagrams
-
-> **الحالة:** `⚠ DRAFT / SUBJECT TO GOV-Q02`
-
-هيكل 1447 يطلب DFD، بينما دليل المشاريع يحتوي توجيهًا بعدم خلط منهجيات التحليل. لذلك لا يعتمد DFD النهائي قبل حسم `GOV-Q02` مع المشرف.
-
-المسودة الحالية تتضمن:
-
-- Context view للنظام مع المستفيد والمقدم والإدارة.
-- Level 1 أولي يغطي إدارة الطلب، الاكتشاف، الاستجابات، المعاملة، الفاتورة والتقييم.
-
-`⚠ SYNC:` DFD الحالي في ملف التحليل قديم جزئيًا في بعض المصطلحات ويحتاج إعادة رسم وفق Core Flow الحالي قبل النسخة النهائية للفصل.
+Direct Search وProvider Response specifications تعكس DEC-069/070، والتقييمات تعكس DEC-063/071.
 
 ---
 
-## 3.12 UML Models
+## 3.11 المخططات — Diagrams Deferred
 
-> **الحالة:** `⚠ DRAFT / SUBJECT TO GOV-Q02`
+وفق قرار المشرف وهيكل الجامعة، يستخدم Chapter Three **DFD + UML معًا**. المخططات المطلوبة تشمل:
 
-المخرجات المطلوبة وفق هيكل 1447 تشمل:
-
+- DFD Context / Levels as needed.
 - Use Case Diagram + Specifications.
 - Activity Diagrams.
 - Sequence Diagrams.
 - Class Diagram.
+- ERD.
 
-توجد مسودات حالية، لكنها تحتاج تحديثًا لتستخدم المصطلحات والقرارات الحالية مثل `Transaction` بدل نماذج Agreement القديمة عند الحاجة، وتحتاج تحققًا من الاتساق مع SRS وBusiness Rules.
+**الحالة الحالية:** `DEFERRED BY TEAM FOR LATER COMPLETION`.
 
----
-
-## 3.13 النموذج المفاهيمي للبيانات — ERD
-
-> **الحالة:** `⚠ DRAFT FOR PRELIMINARY DEFENSE — NOT DATABASE DESIGN`
-
-يوجد ERD مفاهيمي أولي، لكنه لا يعد Schema نهائيًا ولا Database Design معتمدًا.
-
-يجب أن يمثل على الأقل المفاهيم الأساسية المستقرة مثل:
-
-- User.
-- Provider Profile.
-- Provider Activity.
-- Category.
-- District/Neighborhood/Service Area.
-- Request.
-- Provider Response.
-- Transaction.
-- Chat/Message بحسب مستوى النمذجة المطلوب.
-- Invoice وInvoice Items.
-- Rating.
-- Verification.
-- Subscription.
-- Report/Block بالقدر الذي تبرره المتطلبات.
-
-`⚠ SYNC:` ERD الحالي في `11-ERD.md` يعود إلى نموذج أقدم يستخدم `Agreement` وReview cardinality سابقة، ولذلك يجب تحديثه قبل اعتباره ERD الفصل الثالث الحالي.
+عند إنشائها يجب أن تستخدم تسميات داخل الرسم باللغة الإنجليزية فقط وفق DEC-072، وأن تشتق من SRS/Business Rules/Lifecycles/Use Cases الحالية دون إعادة فتح القرارات المستقرة.
 
 ---
 
-## 3.14 مواصفات العمليات والبيانات والتتبع
+## 3.12 مواصفات العمليات والبيانات — Process & Data Specifications
 
-يتطلب إغلاق الفصل الثالث أيضًا:
+يتطلب إغلاق الجانب النصي من Chapter Three توثيق العمليات والبيانات المتبادلة ومخازن البيانات المنطقية بما يتوافق مع النموذج الحالي.
 
-- Process Specifications.
-- Data Flow Descriptions.
-- Data Store Descriptions.
-- Traceability Matrix تربط Requirements بالUse Cases والمخططات والتصميم.
+المجالات المنطقية الحالية:
 
-هذه المخرجات موجودة حاليًا بدرجات متفاوتة من الاكتمال، ولا تعد مغلقة قبل مراجعة SRS والمخططات.
+1. Accounts & Provider Profiles.
+2. Discovery & Requests.
+3. Provider Responses & Communication.
+4. Transactions & Invoices.
+5. Ratings & Reputation.
+6. Verification, Safety & Administration.
+
+لا تستخدم مصطلحات `Offer` أو `Agreement` كمخزن/كيان قياسي؛ المصطلح الحالي هو `Provider Response` ولا يوجد Agreement entity مستقل.
+
+مخازن البيانات المنطقية التي سيشتق منها DFD لاحقًا يجب أن تكون قابلة للربط بالمفاهيم الحالية مثل Users/Profiles، Requests/Responses، Conversations/Transactions، Invoices، Ratings، Portfolio/Catalog، Verification/Subscriptions/Reports.
 
 ---
 
-## 3.15 النقاط المفتوحة المؤثرة على الفصل
+## 3.13 التتبع — Traceability
 
-### نقاط يجب حسمها مع المشرف/القسم
+تتبع المتطلبات يجب أن يسير وفق:
 
-| ID | السؤال | الأثر |
-|---|---|---|
-| `GOV-Q02` | كيفية التعامل مع DFD + UML والمنهج | مخططات الفصل الثالث |
-| `GOV-Q04` | قبول عدم تنفيذ Interviews/Observation | Data Gathering / Academic Compliance |
-| `DEP-Q02` | دور YADD في العربون | Scope / Business Rules / SRS / ERD |
+`Evidence / Decision → Requirement → Business Rule → Use Case → Process / Diagram → Entity → Design`
 
-### نقاط يمكن أن تبقى Needs Verification إذا لم تمنع Core Design
+وجود Requirement داخل SRS لا يعني تلقائيًا أنه Approved Requirement. البنود التي تعتمد على قيم تشغيلية غير محسومة تبقى Needs Verification حتى يتم إثباتها أو اعتمادها.
 
-- `REQ-EXP-Q01` — مدة Expiry والتذكيرات.
-- `INV-PENDING-Q01` — تصعيد الفاتورة المعلقة.
-- `SAFE-REQ-Q01` — Abuse thresholds.
-- `TX-CONC-Q01` — الحد الرقمي للمعاملات المتوازية.
-- `LOC-DATA-Q01` و`LOC-OPS-TIME-Q01`.
+يجب تحديث Requirements Traceability Matrix لاحقًا عند استكمال المخططات وChapter Four design، لكن Core semantic model الحالي مغلق بما يكفي للاشتقاق دون استخدام `OFFER / AGREEMENT / REVIEW` القديم.
+
+---
+
+## 3.14 النقاط المفتوحة غير المانعة للCore Analysis
+
+تبقى البنود التالية Needs Verification / Design Detail ولا تعيد فتح Core Flow:
+
+- `REQ-EXP-Q01` — Expiry/reminder timing.
+- `INV-PENDING-Q01` — long pending invoice escalation.
+- `SAFE-REQ-Q01` — abuse thresholds.
+- `TX-CONC-Q01` — numeric concurrent transaction limit if needed.
+- `UX-VAL-Q01` — usability/low-connectivity validation.
+- `LOC-DATA-Q01`, `LOC-OPS-TIME-Q01`.
 - `VER-DOC-Q01`, `VER-RET-Q01`, `VER-LIC-Q01`.
 - `AI-MOD-Q01/02`, `AI-PROV-Q01`, `AI-RET-Q01`, `AI-APPEAL-Q01`.
 - `SUB-PLAN-Q01`, `SUB-PAY-Q01`, `SUB-OPS-Q01`.
-- `UX-VAL-Q01` يحتاج Evidence لاحقًا ولا يغلق بمجرد قرار داخلي.
+
+هذه لا تتحول إلى Facts أو Requirements رقمية نهائية دون Evidence.
 
 ---
 
-## 3.16 خلاصة الفصل
+## 3.15 خلاصة الفصل
 
-يوضح التحليل الحالي أن YADD يعتمد نموذج حساب موحد، ومسارين للاكتشاف والطلب، ودورة تعامل تبدأ من البحث أو الطلب وتنتهي بمعاملة موثقة بفاتورة معتمدة وتقييم للمقدم. كما يحدد النظام قواعد للتحقق، الموقع، التواصل، الإلغاء، السلامة والاشتراك.
+أصبح Core Analysis متسقًا نصيًا مع القرارات الحالية:
 
-مع ذلك، لا يزال الفصل في **Version 1 غير Baselined**. يجب قبل اعتماده النهائي إغلاق التعارض المنهجي حول DFD/UML، تثبيت موقف Data Gathering أكاديميًا، مراجعة SRS وقواعد العمل، ثم تحديث المخططات وERD والتتبع وفق القرارات الحالية.
+- User Account واحد.
+- Provider Profile واحد اختياري لكل User.
+- Service/Product Activities يمكن تفعيلها معًا.
+- Direct Search وCreate Request مساران أساسيان.
+- Provider Response واحدة فعالة قابلة للتعديل/السحب قبل Selection.
+- Direct Search Transaction تبدأ فقط بطلب + تأكيد الطرف الآخر.
+- لا يوجد Agreement entity مستقل.
+- العربون Yes/No فقط والدفع خارج YADD.
+- Final Invoice approval يؤدي إلى `Completed`.
+- `Completed` terminal successful Transaction state ولا توجد `Closed` state.
+- Beneficiary → Provider rating إلزامي بعد Completed.
+- Provider → Beneficiary rating اختياري بعد Completed.
+- Portfolio/Catalog وVerification وBlock/Report وSubscriptions جزء من النموذج الحالي.
 
----
-
-## قائمة نقاط المراجعة للمشرف المساعد
-
-| ID | النقطة | الحالة |
-|---|---|---|
-| `GOV-Q02` | هل ننفذ DFD وUML معًا؟ وكيف يقدم ذلك منهجيًا؟ | يحتاج قرار |
-| `GOV-Q04` | هل يقبل الاعتماد على SUR-01 دون Interviews/Observation؟ | يحتاج قرار |
-| `DEP-Q02` | هل يدير YADD العربون أم يبقى خارجيًا؟ | يحتاج قرار |
-| SRS/Core Flow | هل يوجد اعتراض جوهري قبل تثبيت المخططات وقاعدة البيانات؟ | للمراجعة |
-| DFD/UML | المسودات تحتاج تحديثًا بعد قرار المنهج | مفتوح |
-| ERD | النموذج الحالي يحتاج Synchronization مع SRS/Business Rules الحالية | مفتوح |
+**الحكم:** الجانب النصي من Chapter Three مغلق للمراجعة الأولية، باستثناء المخططات المؤجلة صراحة وبعض Needs Verification التشغيلية التي لا تمنع Core Design. ولا يصبح الفصل Baselined نهائيًا إلا بعد استكمال المخططات والتتبع النهائي ومراجعة الفريق/المشرف.
