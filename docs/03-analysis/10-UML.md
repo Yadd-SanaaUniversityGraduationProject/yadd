@@ -1,34 +1,32 @@
 # UML Models — YADD Preliminary Defense
 
-> **الحالة:** `DRAFT FOR PRELIMINARY DEFENSE — SYNCHRONIZED 2026-09-04`
+> **Status:** `DRAFT FOR PRELIMINARY DEFENSE — CORE SYNCHRONIZED 2026-09-04`
 >
-> **المراجع الحاكمة:** DEC-046/047/048/050/051/063/064/066/067/068/069/070/071/072 + `05-SRS.md` + `06-business-rules.md` + `07-lifecycles.md` + `08-use-cases.md`.
+> **Governing basis:** DEC-046/047/048/050/051/063/064/066/067/068/069/070/071/072 + `05-SRS.md` + `06-business-rules.md` + `07-lifecycles.md` + `08-use-cases.md`.
 >
-> يستخدم المشروع DFD وUML معًا وفق DEC-060. جميع التسميات داخل المخططات باللغة الإنجليزية وفق DEC-072. هذه النماذج تمثل الحالة الحالية للمراجعة مع المشرف وليست Baseline نهائيًا.
+> YADD uses DFD and UML together according to DEC-060. All labels inside final academic diagrams must be English according to DEC-072.
 
 ## 1. Actor Model
 
-### Actors العامة في المخطط الرئيسي
+### Main actors
+- `Beneficiary`
+- `Provider`
+  - `Service Provider` specialization when useful
+  - `Product Provider` specialization when useful
+- `YADD Administrator`
 
-- `Beneficiary` — المستفيد.
-- `Provider` — المقدم.
-  - `Service Provider` — تخصص من Provider عند الحاجة.
-  - `Product Provider` — تخصص من Provider عند الحاجة.
-- `YADD Administrator` — تمثيل عام للأعمال الإدارية في المخطط الرئيسي.
+### Specialized administrative roles
+- `Verification Reviewer`
+- `Content Moderator`
+- `Subscription Administrator`
 
-### أدوار إدارية تفصيلية
-
-- `Verification Reviewer`.
-- `Content Moderator`.
-- `Subscription Administrator`.
-
-استخدام `YADD Administrator` في الرسم الرئيسي هو تبسيط نمذجي فقط ولا يعني أن موظفًا واحدًا يجب أن يمتلك جميع الصلاحيات.
+`YADD Administrator` is a modeling simplification for the main diagram and does not imply one employee owns all administrative permissions.
 
 ---
 
 ## 2. Main Use Case Diagram — Working Representation
 
-> ملاحظة: Mermaid لا يوفر ترميز UML Use Case البيضاوي الأصلي؛ لذلك يمثل الرسم التالي **العلاقات ومحتوى System Boundary** بصورة عمل، ويجب عند إخراج النسخة الأكاديمية النهائية رسم الحالات بأشكال Use Case القياسية دون تغيير العلاقات الموضحة هنا.
+> Mermaid is used only as a working semantic representation. The final academic Use Case Diagram must use standard UML actors, system boundary and oval use cases.
 
 ```mermaid
 flowchart LR
@@ -37,31 +35,31 @@ flowchart LR
     A[YADD Administrator]
 
     subgraph YADD[YADD System]
-        UC1([Register / Login / Manage Account])
+        UC1([Manage Account])
         UC2([Search Providers])
-        UC3([View Provider Profile & Portfolio/Catalog])
+        UC3([View Provider Profile])
         UC4([Create Request])
         UC5([Compare Provider Responses])
-        UC6([Chat / Inquire])
+        UC6([Communicate / Inquire])
         UC7([Select Provider])
-        UC8([Manage Active Transaction])
-        UC9([Approve Invoice / Request Revision])
-        UC10([Rate Provider])
-        UC11([Block / Report User or Content])
+        UC8([Start Transaction])
+        UC9([Manage Transaction])
+        UC10([Review / Approve Invoice])
+        UC11([Rate Provider])
+        UC12([Block / Report])
 
-        UC12([Manage Provider Profile])
-        UC13([Submit Verification])
+        UC13([Manage Provider Profile])
         UC14([Manage Portfolio / Catalog])
-        UC15([Set Service Areas])
-        UC16([View Matching Requests])
-        UC17([Respond to Request])
-        UC18([Indicate Deposit Required])
+        UC15([Manage Service Areas])
+        UC16([Submit Verification])
+        UC17([View Matching Requests])
+        UC18([Manage Provider Response])
         UC19([Create / Revise Final Invoice])
-        UC20([Optionally Rate Beneficiary])
+        UC20([Rate Beneficiary])
 
         UC21([Review Provider Verification])
         UC22([Review Reports / Flags])
-        UC23([Manage Provider Subscription Status])
+        UC23([Manage Provider Subscription])
     end
 
     B --- UC1
@@ -75,11 +73,12 @@ flowchart LR
     B --- UC9
     B --- UC10
     B --- UC11
+    B --- UC12
 
     P --- UC1
     P --- UC6
     P --- UC8
-    P --- UC11
+    P --- UC9
     P --- UC12
     P --- UC13
     P --- UC14
@@ -95,18 +94,19 @@ flowchart LR
     A --- UC23
 ```
 
-### ملاحظات على الرسم
+### Main Use Case semantics
 
-1. `Service Provider` و`Product Provider` يرثان الوظائف العامة من `Provider`، ويمكن إظهارهما كتخصصين في نسخة UML الرسومية النهائية إذا احتاج المشرف ذلك.
-2. `Guest` غير موجود في النموذج الحالي؛ لم يعتمد Actor مستقل للتصفح العام.
-3. `Agreement` ليس Use Case أو Entity مستقلًا في MVP الحالي؛ المسار المعتمد هو `Request → Provider Response → Selection → Transaction`.
-4. `Indicate Deposit Required` يعني فقط `RequiresDeposit = Yes/No` ولا يتضمن مبلغًا أو دفعًا أو Refund داخل YADD.
-5. تقييم المستفيد للمقدم إلزامي بعد اكتمال المعاملة، وتقييم المقدم للمستفيد اختياري.
-6. في البحث المباشر يمكن لأي طرف طلب بدء المعاملة، والطرف الآخر يجب أن يؤكد قبل إنشاء Active Transaction.
+1. `Service Provider` and `Product Provider` inherit general Provider behavior; do not duplicate all inherited use cases unless needed for clarity.
+2. No `Guest` actor is currently approved.
+3. No standalone `Agreement` use case/entity exists. Request route is `Request → Provider Response → Selection → Transaction`.
+4. `Manage Provider Response` covers submit/edit/withdraw under DEC-070. `RequiresDeposit = Yes/No` is data inside Provider Response, **not a standalone Use Case**.
+5. `Start Transaction` has both Beneficiary and Provider associations because either may request start in Direct Search. The other party must confirm before Active Transaction is created.
+6. In Request route, Beneficiary selection starts the Transaction with the selected Provider. Do not force an `<<include>>` relation in the main overview if it obscures the different Direct Search semantics; details belong in specifications/Activity/Sequence.
+7. Beneficiary→Provider rating is mandatory after Completed; Provider→Beneficiary rating is optional.
 
 ---
 
-## 3. Activity Diagram — Published Request to Post-Transaction Ratings
+## 3. Activity Diagram — Published Request Route
 
 ```mermaid
 flowchart TD
@@ -118,8 +118,8 @@ flowchart TD
     D --> E[Provider Submits Provider Response]
     E --> E1[Optional Proposed Price / Note]
     E1 --> E2[Set RequiresDeposit Yes or No]
-    E2 --> F[Beneficiary Views and Compares Responses]
-    F --> G{Needs Inquiry Before Selection?}
+    E2 --> F[Beneficiary Compares Responses]
+    F --> G{Needs Inquiry?}
     G -- Yes --> H[Private Chat / Inquiry]
     H --> F
     G -- No --> I{Select Provider?}
@@ -147,17 +147,11 @@ flowchart TD
     Y -- No --> ZE
 ```
 
-### حدود النشاط
-
-- `Completed` هي الحالة النهائية الناجحة للـTransaction؛ عقد التقييمات هنا يمثل Post-Transaction workflow ولا يغيّر Transaction Status إلى `Closed`.
-- أي دفع أو عربون أو استرداد يتم خارج YADD.
-- عدم الرد على الفاتورة لا يعد موافقة ولا يوجد Auto-Approval.
-- لا يوجد `Agreement` مستقل ولا Change Order مستقل في MVP.
-- تقييم المقدم للمستفيد لا ينتج عقوبة آلية.
+`Completed` is the successful terminal Transaction state; ratings shown afterward are Post-Transaction workflow only.
 
 ---
 
-## 4. Activity Diagram — Direct Search Route to Active Transaction
+## 4. Activity Diagram — Direct Search Route
 
 ```mermaid
 flowchart TD
@@ -174,7 +168,7 @@ flowchart TD
     H --> Z2([End])
 ```
 
-المحادثة وحدها لا تنشئ Transaction؛ يلزم `Request Transaction Start` من أحد الطرفين ثم تأكيد الطرف الآخر وفق DEC-069.
+Chat alone does not create Transaction.
 
 ---
 
@@ -187,19 +181,18 @@ sequenceDiagram
     actor P as Provider
     participant DB as Database
 
-    B->>Y: Create and publish request
+    B->>Y: Create and publish Request
     Y->>DB: Save Request = Open
-    Y-->>P: Expose matching request
+    Y-->>P: Expose matching Request
 
     P->>Y: Submit Provider Response
-    Note over P,Y: Proposed price/note optional
-RequiresDeposit = Yes/No only
-    Y->>DB: Save active response
+    Note over P,Y: Proposed price/note optional; RequiresDeposit = Yes/No only
+    Y->>DB: Save active Provider Response
     Y-->>B: Show response for comparison
 
     opt Provider edits or withdraws before selection
         P->>Y: Edit / withdraw active response
-        Y->>DB: Update active response state
+        Y->>DB: Update response data/status
         Y-->>B: Refresh response information
     end
 
@@ -210,14 +203,12 @@ RequiresDeposit = Yes/No only
         Y-->>B: Deliver reply
     end
 
-    B->>Y: Select provider
-    Y->>DB: Request = Matched
-Other responses = NotSelected
-Create Active Transaction
-    Y-->>P: Provider selected / transaction active
+    B->>Y: Select Provider
+    Y->>DB: Request = Matched; other responses = NotSelected; create Active Transaction
+    Y-->>P: Provider selected / Transaction active
     Y-->>B: Transaction active
 
-    alt Transaction cancelled before final invoice
+    alt Transaction cancelled
         B->>Y: Cancel + reason
         Y->>DB: Save Cancelled + actor + reason + time
         Y-->>P: Cancellation recorded
@@ -233,15 +224,14 @@ Create Active Transaction
             Y-->>B: Show revised invoice
         else Approve
             B->>Y: Approve final invoice
-            Y->>DB: Invoice = Final
-Transaction = Completed
+            Y->>DB: Invoice = Final; Transaction = Completed
             Y-->>B: Require Provider rating
             B->>Y: Submit provider rating 1-5 + optional comment
             Y->>DB: Save provider rating
             Y-->>P: Show optional beneficiary rating prompt
-            opt Provider chooses to rate beneficiary
+            opt Provider chooses to rate Beneficiary
                 P->>Y: Submit 3 behavioral scores + optional comment
-                Y->>DB: Save beneficiary interaction rating
+                Y->>DB: Save beneficiary rating
             end
             Note over B,P: Transaction remains Completed
         end
@@ -260,14 +250,14 @@ sequenceDiagram
     participant DB as Database
 
     B->>Y: Search providers by category/area
-    Y->>DB: Query eligible providers
+    Y->>DB: Query eligible Provider Profiles
     DB-->>Y: Matching Provider Profiles
     Y-->>B: Results
 
     B->>Y: Open Provider Profile
     Y->>DB: Load public profile + Portfolio/Catalog
     DB-->>Y: Public provider data
-    Y-->>B: Show profile and watermarked display images
+    Y-->>B: Show profile
 
     B->>Y: Start private inquiry
     Y-->>P: Deliver inquiry
@@ -295,42 +285,46 @@ sequenceDiagram
 
 ---
 
-## 7. Class Diagram — Deferred Until ERD Synchronization
+## 7. Class Diagram — Source Model
 
-الـClass Diagram القديم كان يعتمد `Offer → Agreement → Invoice/Review` ولذلك لم يعد صالحًا بعد DEC-066.
+The Class Diagram must be rebuilt from the synchronized conceptual ERD in `11-ERD.md`; do not reuse the old `Offer → Agreement → Review` class model.
 
-**الحالة:** `READY TO REBUILD FROM SYNCHRONIZED ERD`.
+Minimum current domain classes/concepts:
+- User
+- ProviderProfile
+- ProviderActivity
+- Category
+- Area / ProviderServiceArea
+- ShowcaseItem
+- Request
+- ProviderResponse
+- Conversation / Message
+- Transaction
+- Invoice / InvoiceVersion / InvoiceItem according to chosen class abstraction
+- ProviderRating
+- BeneficiaryRating
+- VerificationCase / VerificationArtifact
+- Subscription
+- Report
 
-سيشتق Class Diagram الجديد من `11-ERD.md` مع مراعاة DEC-069/070/071. الحد الأدنى المتوقع للمراجعة يشمل:
-
-- User / roles or permissions.
-- ProviderProfile and provider activities.
-- Request.
-- ProviderResponse.
-- Transaction.
-- Invoice and invoice revisions/items.
-- Provider rating and beneficiary interaction rating.
-- Portfolio/Catalog items and media.
-- Category / Area.
-- Verification / Subscription / Report entities بالقدر المثبت في SRS.
+Physical database choices such as Media table structure or `InvoiceVersion` vs `Invoice + Revision` are Chapter Four design decisions and must not be invented as analysis facts.
 
 ---
 
-## 8. Review Checklist Before Supervisor Delivery
+## 8. Diagram Readiness Checklist
 
-- [x] لا يستخدم `Customer` بدل `Beneficiary`.
-- [x] لا يستخدم `Offer` كالمصطلح الرئيسي؛ المصطلح القياسي `Provider Response`.
-- [x] لا يوجد `Agreement` مستقل.
-- [x] اختيار Provider Response يبدأ Transaction في مسار الطلب.
-- [x] Provider Response واحدة فعالة لكل Provider/Request ويمكن تعديلها أو سحبها قبل الاختيار.
-- [x] البحث المباشر يستخدم Request Start + Other Party Confirmation قبل Transaction.
-- [x] العربون معلومة Yes/No فقط والدفع خارجي.
-- [x] Invoice approval يؤدي إلى Transaction Completed.
-- [x] `Completed` هي النهاية الناجحة للـTransaction ولا توجد Transaction state باسم `Closed`.
-- [x] Beneficiary → Provider rating إلزامي بعد Completed.
-- [x] Provider → Beneficiary rating اختياري بثلاثة مؤشرات بعد Completed.
-- [x] Portfolio/Catalog ظاهر ضمن وظائف Provider.
-- [x] Actors متوافقة مع DEC-067.
-- [x] تسميات المخططات داخل الرسم بالإنجليزية وفق DEC-072.
-- [ ] Class Diagram يحتاج إعادة بناء من ERD الحالي.
-- [ ] مراجعة بصرية نهائية وإخراج UML قياسي للطباعة قبل تسليم 5 سبتمبر.
+- [x] Actors aligned with DEC-067.
+- [x] English-only labels aligned with DEC-072.
+- [x] No Guest actor.
+- [x] No standalone Agreement.
+- [x] Canonical term is Provider Response.
+- [x] Provider Response edit/withdraw represented.
+- [x] RequiresDeposit is response data, not a standalone use case/payment flow.
+- [x] Direct Search start request + other-party confirmation represented.
+- [x] Request selection creates one Transaction.
+- [x] Invoice approval leads to Completed.
+- [x] No Transaction state Closed.
+- [x] Ratings are Post-Transaction.
+- [x] Beneficiary→Provider rating mandatory; Provider→Beneficiary optional.
+- [x] Class Diagram source concepts defined from synchronized ERD.
+- [ ] Final visual redraw/export in standard UML notation remains to be produced.
