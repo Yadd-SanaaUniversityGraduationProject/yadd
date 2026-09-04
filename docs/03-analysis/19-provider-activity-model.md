@@ -1,78 +1,107 @@
 # Provider Activity Model
 
-> **الحالة:** `ANALYZED_APPROVED`
+> **Status:** `ANALYZED_APPROVED — SYNCHRONIZED 2026-09-04`
 >
-> **القرار المرجعي:** `BUS-Q02` — قرار الفريق 2026-08-12.
+> **Decision basis:** DEC-029/030/034/035/041/043/064.
 
-## 1. القرار
+## 1. Core Decision
 
-يمتلك المستخدم `Provider Profile` واحدًا مرتبطًا بحساب `User` نفسه. داخل هذا الملف يمكن تفعيل أحد النشاطين أو كليهما:
+A User may own one `Provider Profile`. Inside that profile the Provider may activate:
 
 - `Service Activity`
 - `Product Activity`
+- or both.
 
-وبالتالي يمكن أن يكون المقدم:
+Activating both does not create a second User account or a second Provider Profile.
 
-- مقدم خدمات فقط.
-- مقدم منتجات فقط.
-- مقدم خدمات ومنتجات معًا.
+## 2. Shared Provider-Profile Data
 
-لا يتطلب الجمع بين النشاطين إنشاء حساب جديد أو Provider Profile ثانٍ.
+The following concepts are shared at Provider Profile level:
 
-## 2. ما هو مشترك على مستوى Provider Profile
+- User identity linkage;
+- Provider Profile status;
+- Provider Verification status;
+- Subscription status/period;
+- reputation indicators derived from eligible completed Transactions;
+- common profile information.
 
-العناصر المشتركة بين النشاطين تبقى على مستوى `Provider Profile`، ومنها مفهوميًا:
+Provider Verification is an approved requirement. Exact accepted identity-document types and retention periods remain open policy details and do not alter this model.
 
-- هوية المقدم المرتبطة بحساب User.
-- حالة التفعيل.
-- حالة Provider Verification.
-- السمعة/التقييم المرتبط بالمعاملات المؤهلة.
-- معلومات عامة مشتركة تحدد لاحقًا في التصميم.
-
-> تفاصيل إجراءات التحقق نفسها ما تزال محجوبة بـ`VER-Q01`، ولا يعني هذا القرار اعتماد ID/Selfie/OCR/Face Matching.
-
-## 3. ما هو متخصص حسب النشاط
+## 3. Activity-Specific Concepts
 
 ### Service Activity
 
-يمثل قدرة المقدم على تقديم خدمات مهنية/فنية. ويكون له ما يلزم من بيانات خاصة بالخدمات مثل التصنيفات ومناطق الخدمة عند اعتمادها.
+Represents professional/technical service capability and may be associated with:
+- categories;
+- Provider Service Areas;
+- Service Portfolio items.
 
 ### Product Activity
 
-يمثل قدرة المقدم على تقديم منتجات الأسر المنتجة/المشاريع المنزلية. ويكون له ما يلزم من بيانات خاصة بالمنتجات وطرق الاستلام/التجهيز والعربون عند اعتماد تفاصيلها.
+Represents products from home-based/small household projects and may be associated with:
+- categories;
+- preparation/fulfillment information;
+- Product Catalog items.
 
-لا يفرض هذا القرار أن تكون جميع حقول الخدمة والمنتج متطابقة.
+Both activity types use the same Core Transaction model after the Provider is selected/confirmed.
 
-## 4. العلاقة بالطلبات والمعاملات
+## 4. Requests and Eligibility
 
-كل طلب/معاملة تحدد نوع النشاط الذي تنتمي إليه:
+Each Request identifies the relevant activity context (`Service` or `Product`).
 
-- طلب خدمة يوجّه إلى مقدمي الخدمة المؤهلين.
-- طلب منتج يوجّه إلى مقدمي المنتج المؤهلين.
+A Provider is eligible to view/respond according to the currently approved rules, including:
+- matching activity/category;
+- service-area/location eligibility where applicable;
+- Provider Verification;
+- Active Subscription for submitting new Provider Responses.
 
-إذا كان Provider Profile مفعّلًا للنشاطين، يستطيع الحساب التعامل مع كلا النوعين من بوابة المقدم نفسها، مع إبقاء مسارات العمل والحقول المتخصصة منفصلة عند الحاجة.
+## 5. Deposit Boundary
 
-## 5. النموذج المفاهيمي
+There is no financial deposit lifecycle inside YADD.
+
+- only a `Provider Response` may contain `RequiresDeposit = Yes/No`;
+- no deposit amount, percentage, payment status, refund or escrow is stored/managed as part of the Beneficiary↔Provider transaction model;
+- any payment/settlement occurs outside YADD.
+
+Therefore `RequiresDeposit` is **not** a separate Provider Activity, Use Case, Payment entity or Transaction state.
+
+## 6. Portfolio / Catalog
+
+- Service Provider uses a Portfolio concept.
+- Product Provider uses a Product Catalog concept.
+- both may be represented technically through the unified conceptual `SHOWCASE_ITEM` model.
+- display media may include YADD-linked watermarking; original media remains non-public according to the approved model.
+
+## 7. Conceptual Model
 
 ```mermaid
 classDiagram
     class User
     class ProviderProfile
-    class ServiceActivity
-    class ProductActivity
+    class ProviderActivity
+    class Category
+    class ShowcaseItem
 
     User "1" --> "0..1" ProviderProfile : owns
-    ProviderProfile "1" --> "0..1" ServiceActivity : activates
-    ProviderProfile "1" --> "0..1" ProductActivity : activates
+    ProviderProfile "1" --> "1..*" ProviderActivity : activates
+    ProviderActivity --> Category : classifiedBy
+    ProviderProfile --> ShowcaseItem : publishes
 ```
 
-هذا رسم مفاهيمي وليس ERD نهائيًا. شكل الجداول النهائي يعتمد على اكتمال SRS ومتطلبات البيانات.
+`ProviderActivity.activityType` conceptually distinguishes `SERVICE` and `PRODUCT`. The physical database representation is a Chapter Four design decision.
 
-## 6. قواعد معتمدة
+## 8. Approved Rules
 
-- `PROV-BR-01`: لكل مستخدم Provider Profile واحد كحد أقصى داخل الحساب نفسه.
-- `PROV-BR-02`: يمكن تفعيل Service Activity أو Product Activity أو كليهما.
-- `PROV-BR-03`: تفعيل نشاط ثانٍ لا ينشئ حسابًا أو Provider Profile جديدًا.
-- `PROV-BR-04`: الهوية وحالة التحقق مشتركتان على مستوى Provider Profile.
-- `PROV-BR-05`: بيانات ومتطلبات ومسارات الخدمة والمنتج يمكن أن تختلف حسب طبيعة النشاط.
-- `PROV-BR-06`: أهلية رؤية طلب أو الاستجابة له تتطلب أن يكون النشاط المناسب مفعّلًا، إضافة إلى بقية شروط الأهلية المعتمدة لاحقًا مثل الموقع والتحقق.
+- `PROV-BR-01`: one Provider Profile at most per User.
+- `PROV-BR-02`: Service Activity, Product Activity, or both are allowed.
+- `PROV-BR-03`: activating another activity does not create another account/profile.
+- `PROV-BR-04`: identity and Verification are shared at Provider Profile level.
+- `PROV-BR-05`: Service/Product data may differ where domain needs differ.
+- `PROV-BR-06`: Request/response eligibility requires matching activity plus other approved eligibility rules.
+- `PROV-BR-07`: Portfolio/Catalog are supported within Provider Profile using the approved Showcase concept.
+
+## 9. Diagram Guidance
+
+For the Main Use Case Diagram, use a general `Provider` actor and show `Service Provider` / `Product Provider` specialization only when it adds clarity. Do not duplicate every Provider use case for both subtypes when the behavior is inherited.
+
+For ERD/Class diagrams, do not model Service Provider and Product Provider as separate User accounts.
