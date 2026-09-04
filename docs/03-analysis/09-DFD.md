@@ -1,18 +1,18 @@
 # Data Flow Diagrams — YADD Preliminary Defense
 
-> **الحالة:** `DRAFT FOR PRELIMINARY DEFENSE — SYNCHRONIZED 2026-09-03`
+> **الحالة:** `DRAFT FOR PRELIMINARY DEFENSE — CORE SYNCHRONIZED 2026-09-04`
 >
-> **المراجع الحاكمة:** DEC-012/029/041/046/047/048/050/051/053/063/064/066/067/068 + `05-SRS.md` + `06-business-rules.md` + `07-lifecycles.md` + `08-use-cases.md`.
+> **المراجع الحاكمة:** DEC-012/029/041/046/047/048/050/051/053/063/064/066/067/068/069/070/071/072 + `05-SRS.md` + `06-business-rules.md` + `07-lifecycles.md` + `08-use-cases.md`.
 >
-> يستخدم المشروع DFD وUML معًا وفق DEC-060. يمثل DFD أدناه **تدفقات البيانات** ولا يستخدم لوصف حالات الكائنات أو تسلسل الرسائل التفصيلي.
+> يستخدم المشروع DFD وUML معًا وفق DEC-060. يمثل DFD أدناه **تدفقات البيانات**، ولا يستخدم لوصف حالات الكائنات أو تسلسل الرسائل التفصيلي. جميع التسميات داخل الرسم النهائي باللغة الإنجليزية وفق DEC-072.
 
 ---
 
 ## 1. Context DFD
 
-### الهدف
+### Purpose
 
-يعرض النظام كعملية واحدة `YADD System` ويبين تبادل البيانات مع الجهات الخارجية الأساسية فقط.
+يمثل النظام كعملية واحدة `YADD System` ويعرض تبادل البيانات مع الجهات الخارجية الرئيسية فقط.
 
 ```mermaid
 flowchart LR
@@ -21,30 +21,30 @@ flowchart LR
     A[YADD Administrator]
     Y((YADD System))
 
-    B -->|account data; search criteria; requests; messages; provider selection; invoice response; ratings; reports| Y
-    Y -->|search results; provider profiles; responses; messages; transaction status; invoices; notifications; history| B
+    B -->|Account Data; Search Criteria; Request Data; Messages; Provider Selection; Transaction Start Request or Confirmation; Invoice Response; Rating Data; Report Data| Y
+    Y -->|Search Results; Provider Information; Provider Responses; Messages; Transaction Start Confirmation Request; Transaction Status; Invoice Data; Notifications; History| B
 
-    P -->|account/provider data; verification data; service areas; portfolio/catalog data; provider responses; messages; invoices; beneficiary ratings; reports| Y
-    Y -->|verification/subscription status; matching requests; beneficiary interaction data; messages; transaction status; invoice status; notifications| P
+    P -->|Account and Provider Data; Verification Data; Service Areas; Portfolio or Catalog Data; Provider Response Data; Response Edit or Withdrawal; Messages; Transaction Start Request or Confirmation; Invoice Data; Beneficiary Rating Data; Report Data| Y
+    Y -->|Verification and Subscription Status; Matching Requests; Response and Selection Status; Messages; Transaction Start Confirmation Request; Transaction Status; Invoice Status; Notifications| P
 
-    A -->|verification decisions; subscription updates; report/moderation actions| Y
-    Y -->|verification cases; reports/flags; subscription records; administrative audit information| A
+    A -->|Verification Decisions; Subscription Updates; Report and Moderation Actions| Y
+    Y -->|Verification Cases; Reports and Flags; Subscription Records; Administrative Audit Information| A
 ```
 
-### حدود الـContext
+### Context Boundaries
 
-- `Beneficiary` و`Provider` Actors وظيفيان؛ قد يستخدم الشخص الحساب نفسه في الدورين وفق DEC-008..011.
-- `Service Provider` و`Product Provider` تخصصان من `Provider` ولا يظهران ككيانين خارجيين منفصلين في Context الرئيسي.
-- `YADD Administrator` تمثيل عام لأدوار Verification/Moderation/Subscription في الرسم الرئيسي.
-- لا يوجد `Guest` حاليًا كActor مستقل.
-- لا يظهر Payment Gateway أو Escrow أو Delivery Service لأن الدفع بين المستفيد والمقدم والتوصيل يقعان خارج نطاق YADD الحالي.
-- الـBackend/API وقاعدة البيانات أجزاء داخل حدود YADD وليست External Entities.
+- `Beneficiary` and `Provider` are behavioral actors; the same person may use both roles through one User account.
+- `Service Provider` and `Product Provider` are specializations of Provider and need not appear as separate Context entities.
+- `YADD Administrator` is the main external administrative actor; detailed roles may be decomposed later.
+- No `Guest` actor is currently approved.
+- No Payment Gateway, Escrow service or Delivery service appears because these are outside YADD's current Beneficiary↔Provider transaction scope.
+- Backend/API and Database are internal to YADD and must not appear as Context external entities.
 
 ---
 
 ## 2. Level 0 DFD
 
-### العمليات الرئيسية
+### Processes
 
 1. `1.0 Manage Accounts & Provider Profiles`
 2. `2.0 Manage Discovery & Requests`
@@ -53,7 +53,7 @@ flowchart LR
 5. `5.0 Manage Ratings & Reputation`
 6. `6.0 Manage Administration, Verification & Safety`
 
-### مخازن البيانات الرئيسية
+### Logical Data Stores
 
 - `D1 Users & Provider Profiles`
 - `D2 Categories & Areas`
@@ -86,163 +86,166 @@ flowchart LR
     D7[(D7 Portfolio / Catalog)]
     D8[(D8 Verification / Subscription / Reports & Admin Audit)]
 
-    B -->|registration/login/account updates| P1
-    P -->|registration/login/provider profile/service areas| P1
+    B -->|Account Data| P1
+    P -->|Account and Provider Profile Data; Service Area Data| P1
     P1 <--> D1
+    P1 <--> D2
     P1 <--> D7
-    P1 -->|account/profile information| B
-    P1 -->|profile/portal information| P
+    P1 -->|Account and Profile Information| B
+    P1 -->|Profile and Portal Information| P
 
-    B -->|search criteria; request data; request closure| P2
+    B -->|Search Criteria; Request Data; Request Closure Data| P2
     P2 <--> D1
     P2 <--> D2
     P2 <--> D3
-    P2 -->|search results; provider profile references; request status| B
-    P2 -->|matching request data| P
+    P2 -->|Search Results; Provider References; Request Status| B
+    P2 -->|Matching Request Data| P
 
-    P -->|provider response; proposed price; RequiresDeposit; messages| P3
-    B -->|messages; response comparison input; provider selection| P3
+    P -->|Provider Response Data; Response Edit or Withdrawal; Message Data; Transaction Start Request or Confirmation| P3
+    B -->|Message Data; Provider Selection; Transaction Start Request or Confirmation| P3
     P3 <--> D3
     P3 <--> D4
-    P3 -->|responses; messages; selection result| B
-    P3 -->|messages; response/selection status| P
-    P3 -->|selected provider / direct-start confirmation| P4
+    P3 -->|Provider Responses; Messages; Selection Result; Start Confirmation Request| B
+    P3 -->|Messages; Response Status; Selection Status; Start Confirmation Request| P
+    P3 -->|Selected Provider Data; Confirmed Direct Start Data| P4
 
-    B -->|cancellation; invoice approval; revision request; complaint| P4
-    P -->|transaction updates; final/revised invoice| P4
+    B -->|Cancellation Data; Invoice Approval; Revision Request; Complaint Data| P4
+    P -->|Transaction Update Data; Final or Revised Invoice Data| P4
     P4 <--> D4
     P4 <--> D5
-    P4 -->|transaction/invoice status| B
-    P4 -->|transaction/invoice status| P
-    P4 -->|completed transaction reference| P5
-    P4 -->|complaint/report reference when needed| P6
+    P4 -->|Transaction and Invoice Status| B
+    P4 -->|Transaction and Invoice Status| P
+    P4 -->|Completed Transaction Reference| P5
+    P4 -->|Complaint Reference| P6
 
-    B -->|provider rating 1-5; optional comment| P5
-    P -->|optional beneficiary behavioral rating; optional comment| P5
+    B -->|Provider Rating Data| P5
+    P -->|Beneficiary Rating Data| P5
     P5 <--> D6
     P5 <--> D4
-    P5 -->|provider reputation / completed-work indicators| B
-    P5 -->|beneficiary interaction record in legitimate context| P
+    P5 -->|Provider Reputation and Completed Work Indicators| B
+    P5 -->|Beneficiary Interaction Record| P
 
-    P -->|verification submission; subscription proof/info; reports| P6
-    B -->|reports| P6
-    A -->|verification decision; subscription status action; moderation action| P6
+    P -->|Verification Submission; Subscription Information; Report Data| P6
+    B -->|Report Data| P6
+    A -->|Verification Decision; Subscription Status Action; Moderation Action| P6
     P6 <--> D1
     P6 <--> D7
     P6 <--> D8
-    P6 -->|verification/subscription/report status| P
-    P6 -->|report status when applicable| B
-    P6 -->|cases; flags; records; audit information| A
+    P6 -->|Verification; Subscription; Report Status| P
+    P6 -->|Report Status| B
+    P6 -->|Cases; Flags; Records; Audit Information| A
 ```
 
 ---
 
-## 3. Process Notes
+## 3. Process Semantics
 
 ### 1.0 Manage Accounts & Provider Profiles
 
-يدير:
-
-- حساب User الواحد.
-- الانتقال بين بوابة المستفيد والمقدم.
-- Provider Profile.
-- Service/Product Activity.
-- مناطق الخدمة.
-- Portfolio/Catalog metadata ونسخة العرض ذات العلامة المائية.
-
-لا يعتمد صلاحية التقديم على الواجهة؛ الصلاحية النهائية تطبق داخل النظام وفق التحقق والاشتراك.
+Manages:
+- one User account per person;
+- Provider Profile;
+- Service/Product Activity;
+- service areas;
+- Portfolio/Catalog metadata and watermarked display copy.
 
 ### 2.0 Manage Discovery & Requests
 
-يدير:
+Manages:
+- Direct Search by category/area;
+- creation/publication of Request;
+- discovery of eligible Providers;
+- Request closure before Provider selection;
+- Request expiry in principle.
 
-- البحث المباشر حسب التصنيف والمديرية/الحي.
-- إنشاء ونشر Request.
-- توزيع الطلب على المقدمين المؤهلين.
-- إغلاق الطلب قبل الاختيار.
-- Expiry في المبدأ، مع بقاء التوقيت `REQ-EXP-Q01` مفتوحًا.
+Exact expiry/reminder timing is `REQ-EXP-Q01` and must not be shown as a numeric value in the diagram.
 
 ### 3.0 Manage Provider Responses & Communication
 
-يدير:
+Manages:
+- canonical `Provider Response` terminology;
+- one active Provider Response per Provider per Request;
+- edit/withdraw response while Request is Open and before selection;
+- optional proposed price/note;
+- `RequiresDeposit = Yes/No` only;
+- private communication before Transaction;
+- Provider selection in Request route;
+- `Transaction Start Request` and `Start Confirmation` in Direct Search route.
 
-- `Provider Response` وليس Offer كمصطلح قياسي.
-- السعر المقترح عند الحاجة.
-- `RequiresDeposit = Yes/No` فقط.
-- المحادثة الخاصة قبل Transaction.
-- اختيار Provider Response في مسار الطلب.
-
-لا يسجل مبلغ العربون أو نسبته أو حالته المالية.
+Chat alone does not create Transaction.
 
 ### 4.0 Manage Transactions & Invoices
 
-يدير:
+Transaction becomes Active through either:
+1. Beneficiary selects one Provider in Request route; or
+2. one party sends a Transaction Start Request and the other confirms in Direct Search route.
 
-- إنشاء Active Transaction من Selection أو اتفاق الطرفين في البحث المباشر.
-- Transaction Cancellation مع السبب.
-- الفاتورة النهائية ونسخ التعديل.
-- Pending Customer Approval.
-- Approve / Request Revision / Dispute.
-- تحويل Transaction إلى Completed بعد اعتماد الفاتورة.
+This process also manages:
+- Transaction cancellation with recorded reason;
+- final/revised invoice;
+- Pending Customer Approval;
+- Approve / Request Revision / Dispute;
+- `Transaction = Completed` after invoice approval.
 
-لا يوجد Data Store باسم Agreement ولا عملية `Record Agreement` مستقلة.
+`Completed` is the successful terminal Transaction state. There is no Transaction state named `Closed` after ratings.
 
 ### 5.0 Manage Ratings & Reputation
 
-يدير:
+Manages Post-Transaction operations:
+- mandatory Beneficiary→Provider rating after Completed;
+- optional Provider→Beneficiary rating after Completed;
+- completed-work count and provider reputation indicators;
+- limited beneficiary interaction record.
 
-- تقييم المستفيد للمقدم بعد Completed: 1–5 إلزامي + تعليق اختياري.
-- تقييم المقدم للمستفيد: اختياري بثلاثة مؤشرات سلوكية 1–5 + تعليق اختياري.
-- سجل تعامل المستفيد المرئي للمقدمين فقط في سياق تعامل مشروع.
-- عدد المعاملات المكتملة للمقدم كمؤشر خبرة داخل YADD.
-
-لا ينتج عن تقييم المستفيد عقوبة أو منع آلي في MVP.
+Ratings do not change Transaction status.
 
 ### 6.0 Manage Administration, Verification & Safety
 
-يدير:
+Manages:
+- Provider Verification;
+- Provider Subscription state;
+- Reports / Moderation / Flags;
+- reported Portfolio/Catalog content;
+- administrative audit records.
 
-- Provider Verification.
-- حالة اشتراك المقدم.
-- Reports / Moderation / Flags.
-- مراجعة Portfolio/Catalog المبلغ عنه.
-- Audit records للأعمال الإدارية الحساسة.
-
-AI إن استخدم يولد مساعدات/Flags ولا يصدر وحده قرار تحقق نهائي أو عقوبة عالية الأثر.
-
----
-
-## 4. Balancing Check — Context vs Level 0
-
-| External Entity | أهم التدفقات في Context | ممثلة في Level 0؟ |
-|---|---|---|
-| Beneficiary | الحساب، البحث، الطلب، الرسائل، الاختيار، الفاتورة، التقييم، البلاغ | نعم |
-| Provider | الملف، التحقق، المناطق، Portfolio/Catalog، الاستجابة، الرسائل، الفاتورة، تقييم المستفيد، البلاغ | نعم |
-| YADD Administrator | التحقق، الاشتراك، البلاغات/المراقبة، السجل الإداري | نعم |
+AI is an internal assistance mechanism, not an external actor in the main DFD.
 
 ---
 
-## 5. عناصر غير ممثلة عمدًا
+## 4. Balancing Check
 
-- Payment/Escrow/Refund lifecycle بين المستفيد والمقدم.
-- إدارة توصيل أو سائقين.
-- Shopping Cart مستقل.
-- `Agreement` ككيان أو مخزن بيانات مستقل.
-- Guest/Web browsing كActor مستقل.
-- القيم الرقمية غير المحسومة مثل Expiry timing وAI thresholds.
+| External Entity | Context data represented in Level 0? |
+|---|---|
+| Beneficiary | Yes — account, discovery, requests, messages, selection/start confirmation, invoice response, ratings and reports |
+| Provider | Yes — profile, verification, service areas, portfolio/catalog, responses, messages, start confirmation, invoices, ratings and reports |
+| YADD Administrator | Yes — verification, subscription, moderation/reports and administrative records |
 
 ---
 
-## 6. Review Checklist Before Supervisor Delivery
+## 5. Deliberately Excluded
 
-- [x] Context DFD متوازن مع Level 0 من حيث الجهات الخارجية الرئيسية.
-- [x] الخدمة والمنتج يستخدمان Provider/Core Flow واحدًا مع الاختلافات التشغيلية عند الحاجة.
-- [x] لا يوجد Agreement Data Store.
-- [x] المصطلح القياسي `Provider Response`.
-- [x] العربون Yes/No فقط دون Payment data.
-- [x] Invoice وRating متوافقان مع Core Flow الحالي.
-- [x] Admin/Verification/Safety ممثلة دون اختراع أدوار خارج القرار.
-- [ ] إخراج الرسم النهائي برموز DFD القياسية وبأسماء عربية موحدة قبل التسليم.
-- [ ] مراجعة ERD لضمان أن Data Stores الأساسية قابلة للاشتقاق من النموذج المفاهيمي الجديد.
+- Payment / Escrow / Refund lifecycle between Beneficiary and Provider.
+- Deposit amount, percentage, payment status or refund data.
+- Delivery-driver or shipment-management process.
+- Shopping Cart.
+- `Agreement` process/store/entity.
+- Guest actor.
+- numeric values that remain open such as expiry timing and AI thresholds.
 
-> مخازن Level 0 هنا **Logical Data Stores** وليست جداول قاعدة بيانات نهائية. Relation Schema وData Dictionary تشتق لاحقًا من ERD في مسار التصميم.
+---
+
+## 6. Diagram Readiness Checklist
+
+- [x] Context and Level 0 use the same three main external entities.
+- [x] Processes and stores are aligned with current SRS/Business Rules.
+- [x] `Provider Response` is the canonical term; no Offer store/process.
+- [x] edit/withdraw response rule is represented.
+- [x] Direct Search start request + confirmation is represented.
+- [x] no Agreement Data Store or Record Agreement process.
+- [x] `RequiresDeposit` is data within Provider Response only.
+- [x] `Completed` is terminal successful Transaction state.
+- [x] ratings are Post-Transaction.
+- [x] all final diagram labels must be English.
+- [ ] visual redraw/export with standard DFD notation remains to be produced.
+
+> Level 0 stores are **logical data stores**, not final database tables. Relation Schema and Data Dictionary are Chapter Four design outputs.
