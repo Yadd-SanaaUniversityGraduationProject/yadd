@@ -1,42 +1,42 @@
 # خط أساس مشروع يَد | YADD
 
-> **الحالة:** `DRAFT — TEAM REVIEW REQUIRED`
+> **الحالة:** `DRAFT — CORE MODEL SYNCHRONIZED 2026-09-04 — TEAM REVIEW REQUIRED`
 >
-> **الغرض:** توحيد ما نعرفه قبل تحويله إلى متطلبات ونماذج.
+> **الغرض:** توحيد الحالة الحالية قبل تحويلها إلى متطلبات ونماذج. عند التعارض تكون الأولوية لـDecision Register ثم SRS ثم Business Rules.
 
 ## 1. تعريف المشروع
 
-YADD منصة رقمية تستهدف تسهيل اكتشاف وطلب الخدمات المهنية والمنتجات المنزلية في أمانة العاصمة — صنعاء، مع تركيز معلن على تنظيم التعاملات وبناء الثقة.
+YADD منصة رقمية تستهدف تسهيل اكتشاف وطلب الخدمات المهنية والمنتجات المنزلية في أمانة العاصمة — صنعاء، مع تركيز على تنظيم التعاملات وبناء الثقة.
 
 ## 2. Problem Hypothesis
 
 بحسب وثائق المشروع الحالية توجد فرضيات مشكلة تتمثل في:
 
-- صعوبة وصول المهنيين والأسر المنتجة إلى العملاء محليًا.
-- غياب مسار منظم لطلبات الخدمات ومقارنة الاستجابات.
-- صعوبة توثيق السعر/الاتفاق النهائي.
-- الحاجة إلى تقييمات أكثر ارتباطًا بمعاملة فعلية.
-- ضعف سجل التعاملات في القنوات غير المنظمة.
+- صعوبة الوصول إلى مقدم مناسب دون معرفة مسبقة في بعض الحالات.
+- تشتت البحث والمقارنة والتواصل بين قنوات متعددة.
+- صعوبة الاحتفاظ بسجل موحد للبنود والسعر النهائي في الممارسات غير المنظمة.
+- الحاجة إلى مؤشرات سمعة مرتبطة بتعاملات موثقة.
+- أهمية مراعاة نطاق خدمة المقدم جغرافيًا.
 
-**الحالة:** `ASSUMPTION / PARTIALLY SUPPORTED` بحسب كل بند. مرجع الأدلة الحالي هو `SUR-01` + Document Analysis + Similar Systems + Research في `02-data-gathering.md`.
+**الحالة:** `ASSUMPTION / PARTIALLY SUPPORTED` بحسب كل بند. مرجع الأدلة: `SUR-01` + Document Analysis + Similar Systems + Research في `02-data-gathering.md`. لا تعمم نتائج SUR-01 إحصائيًا على سكان أمانة العاصمة.
 
-### Data-gathering clarification — 2026-09-03
+### Data-gathering clarification
 
-- المشرف قبل الاكتفاء بالاستبيان كأداة جمع بيانات المستخدمين للمشروع.
+- المشرف قبل الاكتفاء بالاستبيان كأداة جمع بيانات المستخدمين للمشروع وفق DEC-062.
 - إجابات شخصين جُمعت شفهيًا باستخدام أسئلة الاستبيان نفسها وأدخلت في SUR-01؛ تعامل كـ`interviewer-administered questionnaire` ولا تضاعف كعينة مقابلات مستقلة.
-- أي معلومات إضافية تذكرت من الحوار أو الملاحظة الميدانية لاحقًا لا تعامل كـFact أو مقابلة موثقة؛ يمكن تسجيلها فقط كـ`Retrospective Supplementary Evidence` مع فصل الملاحظة المباشرة عن الاستنتاج وعدم اختلاق اقتباسات/تفاصيل.
+- أي معلومات إضافية مسترجعة من الذاكرة لا تعامل كـFact أو مقابلة موثقة؛ يمكن تسجيلها فقط كـRetrospective Supplementary Evidence مع وسم واضح.
 
-## 3. Scope — مستقر عالي المستوى
+## 3. Scope — Stable High-Level Scope
 
 - `APPROVED`: أمانة العاصمة — صنعاء.
 - `APPROVED`: الخدمات المهنية والفنية.
 - `APPROVED`: منتجات الأسر المنتجة/المشاريع المنزلية.
-- `APPROVED`: مسارا الاكتشاف الأساسيان: بحث مباشر أو نشر Request للمقدمين المناسبين.
-- `APPROVED`: Portfolio/Catalog داخل Provider Profile مع آلية علامة مائية تعريفية وفق DEC-064.
-- `APPROVED`: أي حركة مالية بين المستفيد والمقدم خارج YADD؛ لا Payment/Escrow/Refund، والعربون مجرد `RequiresDeposit` في Provider Response دون مبلغ.
+- `APPROVED`: مسارا الاكتشاف: Direct Search أو Create Request.
+- `APPROVED`: Portfolio/Catalog داخل Provider Profile وفق DEC-064.
+- `APPROVED`: كل حركة مالية بين Beneficiary وProvider خارج YADD؛ لا Payment/Escrow/Refund. Provider Response قد تحتوي فقط `RequiresDeposit = Yes/No` دون مبلغ أو حالة دفع.
 - `OUT_OF_SCOPE`: المحافظات الأخرى في MVP.
 - `OUT_OF_SCOPE`: بوابات Visa/MasterCard ومدفوعات معاملات المستخدمين داخل YADD.
-- `OUT_OF_SCOPE`: إدارة النقل/التوصيل والسيارات/الورش الثقيلة.
+- `OUT_OF_SCOPE`: إدارة النقل/التوصيل كخدمة من YADD، وصيانة السيارات/الورش الثقيلة.
 - `OUT_OF_SCOPE`: الحسابات المؤسسية والمتاجر الكبرى.
 - `OUT_OF_SCOPE`: Agreement entity مستقل في Core Transaction Model.
 
@@ -44,56 +44,99 @@ YADD منصة رقمية تستهدف تسهيل اكتشاف وطلب الخد�
 
 ```text
 Discovery
-  ├─ Direct Search → Profile/Portfolio → Chat → Both Agree to Start
-  └─ Request → Provider Responses → Chat/Compare → Selection
-                                      ↓
-                              Active Transaction
-                                      ↓
-                         Fulfillment / Execution
-                                      ↓
-                               Final Invoice
-                                      ↓
-                    Approve / Request Revision
-                                      ↓
-                          Transaction Completed
-                                      ↓
-              Beneficiary rates Provider — mandatory
-                                      ↓
-               Provider rates Beneficiary — optional
-                                      ↓
-                                    Close
+  ├─ Direct Search
+  │    → Provider Profile / Portfolio or Catalog
+  │    → Private Chat
+  │    → Either Party Requests Transaction Start
+  │    → Other Party Confirms
+  │
+  └─ Create Request
+       → Provider Responses
+       → Compare / Chat
+       → Beneficiary Selects One Provider
+
+                         ↓
+                  Active Transaction
+                         ↓
+             Fulfillment / Preparation
+                         ↓
+                   Final Invoice
+                         ↓
+             Approve / Request Revision
+                         ↓
+               Transaction Completed
+                         ↓
+        Beneficiary Rates Provider — Required
+                         ↓
+       Provider Rates Beneficiary — Optional
+                         ↓
+                  End of Workflow
 ```
 
-- إغلاق Request قبل الاختيار ليس Transaction Cancellation.
-- إلغاء Transaction بعد البدء يحتاج سببًا مسجلًا.
-- التقييم المقابل للمستفيد اختياري ومحدود الظهور ولا يؤدي إلى عقوبات آلية في MVP.
+### Core invariants
+
+- Chat alone does not create Transaction.
+- In Direct Search, explicit `Request Transaction Start` + other-party confirmation are required before Active Transaction.
+- In Request route, selecting one Provider starts one Transaction and closes the Request to new responses.
+- One active Provider Response per Provider per Request; edit/withdraw allowed while Request is Open and before selection.
+- `RequiresDeposit` is a boolean on Provider Response only.
+- Request Closure before selection is not Transaction Cancellation.
+- Transaction Cancellation after start requires a recorded reason.
+- Invoice approval sets Transaction to `Completed`.
+- `Completed` is the successful terminal Transaction state; Ratings are Post-Transaction and do not create a `Closed` Transaction state.
 
 ## 5. Actors — Main Modeling View
 
 - `Beneficiary`.
-- `Provider` كActor عام، مع `Service Provider` و`Product Provider` كتخصصين عند الحاجة.
-- `YADD Administrator` كActor عام في المخطط الرئيسي، مع بقاء Verification/Moderation/Subscription أدوار صلاحيات متخصصة في التفاصيل.
+- `Provider` as the general provider actor.
+  - `Service Provider` specialization when useful.
+  - `Product Provider` specialization when useful.
+- `YADD Administrator` as the general administrative actor in the main diagram.
 
-## 6. Technical Direction — Approved / Technology Details Partial
+Detailed administrative roles may include:
+- `Verification Reviewer`.
+- `Content Moderator`.
+- `Subscription Administrator`.
 
-- YADD يتبع Client–Server Architecture.
-- Backend/API مركزي هو المرجع النهائي لمعالجة البيانات والصلاحيات وBusiness Rules والتعامل مع قاعدة البيانات.
-- واجهة الويب هي واجهة الاستخدام الأساسية في المرحلة الحالية.
-- Flutter اتجاه معتمد كعميل Mobile لاحق يتصل بالـBackend/API نفسه.
-- اختيار Framework الويب وBackend وقاعدة البيانات والمزودات التفصيلية يبقى خاضعًا لدراسة الجدوى والاعتماد التقني؛ ASP.NET Core/PostgreSQL مرشحان حاليًا ولا يحولهما هذا الملف إلى قرار نهائي.
+No independent `Guest` actor is approved for the current model.
 
-## 7. Academic Delivery Direction — Supervisor Closure 2026-09-03
+## 6. Account / Provider Activity Model
 
-- التقرير باللغة العربية.
-- Chapter Three يستخدم DFD وUML معًا وفق هيكل 1447.
-- ERD ضمن Chapter Three.
-- Chapter Four مطلوب بمستوى تصميم كامل، بما في ذلك Relation Schema وPK/FK/Constraints وData Dictionary وQuery Statements وتصميم الواجهات وهيكلها والنماذج والاستعلامات والتقارير.
+- One `User` account per person.
+- A User may have zero or one Provider Profile.
+- Provider Profile may activate Service Activity, Product Activity, or both.
+- Provider Verification is required before provider submission functions.
+- Response submission also requires Active Subscription.
 
-## 8. المرحلة الحالية
+## 7. Technical Direction — Approved / Technology Details Partial
 
-- التخطيط الإداري: `ACTIVE` مع بوابة عاجلة لتسليم المخططات الرئيسية للمشرف في 5 سبتمبر 2026.
-- البحث: `ACTIVE` ويحتاج مزامنة نهائية للأنظمة المشابهة والدراسات والفجوة.
-- Data Gathering: الاستبيان منفذ ومحلل ومقبول من المشرف؛ Retrospective evidence إن أضيف يجب أن يبقى موسومًا بوضوح.
-- SRS: `PARTIALLY ANALYZED — NOT BASELINED` لكنه متزامن مع P0 المغلقة حتى 2026-09-03.
-- Modeling/Design: Core Flow أصبح قابلًا للنمذجة؛ DFD/UML/ERD القديمة تعتبر Synchronization Debt حتى إعادة بنائها وفق القرارات الحالية.
-- Implementation: لم يبدأ وفق أدلة المستودع الحالية.
+- YADD follows Client–Server Architecture.
+- centralized Backend/API is authoritative for processing, authorization, Business Rules and database access.
+- Web Interface is the primary current client direction.
+- Flutter is a later Mobile client direction using the same Backend/API.
+- exact Web/Backend frameworks and providers remain design/feasibility decisions; they do not affect current analysis diagrams.
+
+## 8. Academic Delivery Direction
+
+- report language: Arabic, with technical English terms as needed — DEC-061.
+- all labels inside academic diagrams: English — DEC-072.
+- Chapter Three uses DFD and UML together — DEC-060.
+- ERD belongs in Chapter Three.
+- Chapter Four contains Relation Schema, PK/FK/Constraints, Data Dictionary, Query Statements and interface design outputs — DEC-059.
+
+## 9. Open Items — Non-Blocking for Core Diagrams
+
+Open items remain documented in `docs/00-governance/03-open-questions.md`, including exact timings, thresholds, identity-document lists/retention, detailed AI provider/policy settings, geographic seed data and subscription packages.
+
+These items must not be invented in diagrams. They **do not block** the current Main Use Case, DFD Context/Level 0, core Activity/Sequence diagrams, conceptual ERD, or core Class Diagram because their structural concepts are already approved.
+
+## 10. Modeling Readiness
+
+- SRS v0.9.4: `PARTIALLY ANALYZED — NOT BASELINED`, but core modeling requirements are synchronized through 2026-09-04.
+- Business Rules, Lifecycles and Use Cases: synchronized with DEC-069/070/071/072.
+- DFD working model: synchronized 2026-09-04.
+- UML working Activity/Sequence model: synchronized; Class Diagram remains to be drawn from the synchronized ERD.
+- Conceptual ERD: core synchronized; physical schema remains Chapter Four work.
+- Process/Data Specifications and Core Traceability: synchronized for diagram drafting.
+
+The fact that the SRS is not yet formally Baselined means later supervisor feedback may trigger controlled changes; it does not create a current blocker for the approved core diagram model.
