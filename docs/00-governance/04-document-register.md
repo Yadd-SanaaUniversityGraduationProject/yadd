@@ -5,6 +5,7 @@
 
 | الوثيقة | الغرض | الحالة الحالية | شرط الإغلاق/الملاحظة |
 |---|---|---|---|
+| Governance README | قواعد القراءة وSingle Source of Truth | `SYNCHRONIZED 2026-09-05` | ملفات الجامعة الأصلية أعلى سلطة أكاديمية؛ DEC-062 reflected |
 | University Requirements Map | تحويل متطلبات الجامعة إلى مخرجات | `SOURCE_DERIVED — DECISION STATUS SYNCHRONIZED 2026-09-05` | ملفات الجامعة الأصلية أعلى سلطة أكاديمية |
 | Decision Register | فصل القرار عن المقترح وحفظ superseded history | `ACTIVE — CURRENT THROUGH DEC-073 / 2026-09-04` | يبقى حيًا؛ لا تعدل القرارات دون Evidence/Decision process |
 | Open Questions | منع الافتراضات الصامتة | `ACTIVE — P0 CORE CLOSED — P1/P2 VISIBLE` | GOV-Q01..04 وDEP-Q02 وRAT-CUST-Q01 وDISPUTE-AUTH-Q01 مغلقة؛ الباقي ظاهر |
@@ -25,10 +26,10 @@
 | Source Register | سجل المصادر IEEE والتحقق | `ACTIVE` | إدخال كل مصدر مستخدم والتحقق منه |
 | Previous Studies Evidence Map | ربط الدراسات بالادعاءات | `ACTIVE / NEEDS_REVIEW` | مراجعة الفجوة/التتبع قبل الفصل الثاني النهائي |
 | Stakeholders | تحديد الأطراف | `ANALYZED — SYNCHRONIZED 2026-09-04` | Actors الرئيسية متوافقة مع DEC-067 |
-| Data Gathering | أدوات وأدلة جمع البيانات | `SURVEY ANALYZED — SURVEY-ONLY ACCEPTED — SYNCHRONIZED 2026-09-05` | DEC-062؛ لا Interviews/Observation غير منفذة؛ البحث/Current System integration ما يزال مطلوبًا |
+| Data Gathering | أدوات وأدلة جمع البيانات | `SURVEY ANALYZED — SURVEY-ONLY ACCEPTED — SYNCHRONIZED 2026-09-05` | DEC-062؛ لا Interviews/Observation غير منفذة؛ research closure/traceability ما يزال مطلوبًا |
 | Interview Guide | دليل مقابلات سابق | `RETAINED FOR TRACEABILITY` | لا يحول القالب إلى Evidence أو مقابلة منفذة |
 | Interview Record Template | قالب مقابلات سابق | `RETAINED FOR TRACEABILITY` | يستخدم فقط إن نفذت مقابلة موثقة فعلًا لاحقًا |
-| Current System Analysis | وصف الواقع والمشكلة | `DRAFT — SURVEY EVIDENCE AVAILABLE` | لا تعميم؛ يراجع مع findings البحثية النهائية |
+| Current System Analysis | وصف الواقع والمشكلة | `DRAFT — SURVEY EVIDENCE AVAILABLE — SURVEY-ONLY ACCEPTED — SYNCHRONIZED 2026-09-05` | لا تعميم؛ final research corroboration/prioritization ما يزال مطلوبًا |
 | Proposed System | وصف النظام المقترح | `ANALYZED — SYNCHRONIZED 2026-09-05` | يشمل current core flow وDEC-073؛ مشتق لا Source of Truth |
 | SRS | User/FR/NFR | `v0.9.5 — PARTIALLY ANALYZED — NOT BASELINED — CURRENT` | Core P0 وDEC-073 متزامنة؛ Baseline بعد review/traceability |
 | Business Rules | قواعد النظام | `PARTIALLY ANALYZED — CURRENT THROUGH DEC-073` | السياسات المفتوحة تبقى Needs Verification |
