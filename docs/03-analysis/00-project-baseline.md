@@ -1,6 +1,6 @@
 # خط أساس مشروع يَد | YADD
 
-> **الحالة:** `DRAFT — CORE MODEL SYNCHRONIZED 2026-09-04 — TEAM REVIEW REQUIRED`
+> **الحالة:** `DRAFT — CORE MODEL SYNCHRONIZED 2026-09-05 — TEAM REVIEW REQUIRED`
 >
 > **الغرض:** توحيد الحالة الحالية قبل تحويلها إلى متطلبات ونماذج. عند التعارض تكون الأولوية لـDecision Register ثم SRS ثم Business Rules.
 
@@ -39,6 +39,7 @@ YADD منصة رقمية تستهدف تسهيل اكتشاف وطلب الخد�
 - `OUT_OF_SCOPE`: إدارة النقل/التوصيل كخدمة من YADD، وصيانة السيارات/الورش الثقيلة.
 - `OUT_OF_SCOPE`: الحسابات المؤسسية والمتاجر الكبرى.
 - `OUT_OF_SCOPE`: Agreement entity مستقل في Core Transaction Model.
+- `OUT_OF_SCOPE`: Financial/commercial arbitration أو إلزام Beneficiary/Provider بالدفع أو Refund أو Compensation بواسطة إدارة YADD.
 
 ## 4. Core Model — Approved for Modeling
 
@@ -62,15 +63,15 @@ Discovery
                          ↓
                    Final Invoice
                          ↓
-             Approve / Request Revision
-                         ↓
-               Transaction Completed
-                         ↓
-        Beneficiary Rates Provider — Required
-                         ↓
-       Provider Rates Beneficiary — Optional
-                         ↓
-                  End of Workflow
+          Approve / Request Revision / Dispute
+             ↙                         ↘
+        Completed                    Disputed
+             ↓                    (unsuccessful terminal)
+ Beneficiary Rates Provider — Required
+             ↓
+ Provider Rates Beneficiary — Optional
+             ↓
+      End of Post-Transaction Flow
 ```
 
 ### Core invariants
@@ -84,6 +85,9 @@ Discovery
 - Transaction Cancellation after start requires a recorded reason.
 - Invoice approval sets Transaction to `Completed`.
 - `Completed` is the successful terminal Transaction state; Ratings are Post-Transaction and do not create a `Closed` Transaction state.
+- If a pre-approval invoice dispute remains unresolved, Transaction becomes `Disputed`, a terminal unsuccessful state — `DEC-073`.
+- YADD Administration may review platform evidence and apply platform policy, but does not decide financial/commercial entitlement or order Payment/Refund/Compensation — `DEC-073`.
+- Ratings open only after `Completed`; no Ratings for `Cancelled` or `Disputed` Transactions.
 
 ## 5. Actors — Main Modeling View
 
@@ -132,11 +136,11 @@ These items must not be invented in diagrams. They **do not block** the current 
 
 ## 10. Modeling Readiness
 
-- SRS v0.9.4: `PARTIALLY ANALYZED — NOT BASELINED`, but core modeling requirements are synchronized through 2026-09-04.
-- Business Rules, Lifecycles and Use Cases: synchronized with DEC-069/070/071/072.
-- DFD working model: synchronized 2026-09-04.
-- UML working Activity/Sequence model: synchronized; Class Diagram remains to be drawn from the synchronized ERD.
+- SRS v0.9.5: `PARTIALLY ANALYZED — NOT BASELINED`, with core modeling requirements synchronized through 2026-09-04 including `DEC-073`.
+- Business Rules, Lifecycles and Use Cases: synchronized with current Core Decisions through `DEC-073` in their applicable scope.
+- DFD working model: synchronized to current Core Model; final standard visual export remains a delivery task.
+- UML working Activity/Sequence model: synchronized including `Disputed`; final standard UML redraw/Class Diagram remains a delivery task.
 - Conceptual ERD: core synchronized; physical schema remains Chapter Four work.
-- Process/Data Specifications and Core Traceability: synchronized for diagram drafting.
+- Process/Data Specifications and Core Traceability: synchronized for diagram drafting; design traceability remains pending.
 
 The fact that the SRS is not yet formally Baselined means later supervisor feedback may trigger controlled changes; it does not create a current blocker for the approved core diagram model.
