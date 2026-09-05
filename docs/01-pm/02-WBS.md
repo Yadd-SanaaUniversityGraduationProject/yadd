@@ -1,11 +1,11 @@
 # WBS ومنهج إدارة مشروع يَد | YADD
 
-> **الحالة:** `ALIGNED WITH PRELIMINARY DEFENSE ROADMAP v2`
+> **الحالة:** `ALIGNED WITH PRELIMINARY DEFENSE ROADMAP v3 — SYNCHRONIZED 2026-09-05`
 
 ## فصل إدارة المشروع عن منهج تحليل النظام
 
 - **إدارة العمل:** GitHub + Markdown + Closure Tracker + مراجعات قصيرة + تخطيط بالمخرجات.
-- **منهج تحليل/نمذجة النظام:** `NEEDS_VERIFICATION` عبر GOV-Q02 بسبب تعارض ظاهر بين دليل المشاريع وهيكل 1447.
+- **منهج تحليل/نمذجة النظام:** حُسم `GOV-Q02` في 2026-09-03 وفق DEC-060؛ يستخدم المشروع **DFD وUML معًا** في Chapter Three بحسب قرار المشرف ومتطلبات التسليم الحالية.
 
 لا تستخدم عبارة Hybrid Agile-PMP لحل تعارض مخططات التحليل؛ إدارة المشروع ومنهج نمذجة النظام مستويان مختلفان.
 
@@ -36,8 +36,8 @@
 │   └── 4.6 Lifecycles / exceptions
 ├── 5.0 Analysis Modeling
 │   ├── 5.1 Use cases + specifications
-│   ├── 5.2 DFD (subject to GOV-Q02)
-│   ├── 5.3 UML activity/sequence/class
+│   ├── 5.2 DFD Context + Level 0 / required levels
+│   ├── 5.3 UML use case/activity/sequence/class
 │   ├── 5.4 ERD
 │   └── 5.5 Process/data specifications
 ├── 6.0 Design
@@ -53,7 +53,7 @@
 
 ## علاقة WBS بالخطة الزمنية
 
-- `docs/01-pm/05-work-plan.md` هو المرجع الحالي للمواعيد والمسؤوليات والتسلسل التنفيذي.
+- `docs/01-pm/05-work-plan.md` هو المرجع الحالي للمواعيد والمسؤوليات والتسلسل التنفيذي، بحالة `ACTIVE — PRELIMINARY DEFENSE ROADMAP v3`.
 - WBS يحدد **هيكل المخرجات** ولا يعيد توزيع العمل أو المواعيد داخله.
 - المخرجات المنجزة قبل المناقشة الأولية يمكن أن تكون `DRAFT FOR PRELIMINARY DEFENSE` ولا تصبح Baseline نهائيًا تلقائيًا.
 
