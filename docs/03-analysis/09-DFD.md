@@ -1,8 +1,8 @@
 # Data Flow Diagrams — YADD Preliminary Defense
 
-> **الحالة:** `DRAFT FOR PRELIMINARY DEFENSE — CORE SYNCHRONIZED 2026-09-04`
+> **الحالة:** `DRAFT FOR PRELIMINARY DEFENSE — CORE SYNCHRONIZED 2026-09-05`
 >
-> **المراجع الحاكمة:** DEC-012/029/041/046/047/048/050/051/053/063/064/066/067/068/069/070/071/072 + `05-SRS.md` + `06-business-rules.md` + `07-lifecycles.md` + `08-use-cases.md`.
+> **المراجع الحاكمة:** DEC-012/029/041/046/047/048/050/051/053/063/064/066/067/068/069/070/071/072/073 + `05-SRS.md` + `06-business-rules.md` + `07-lifecycles.md` + `08-use-cases.md`.
 >
 > يستخدم المشروع DFD وUML معًا وفق DEC-060. يمثل DFD أدناه **تدفقات البيانات**، ولا يستخدم لوصف حالات الكائنات أو تسلسل الرسائل التفصيلي. جميع التسميات داخل الرسم النهائي باللغة الإنجليزية وفق DEC-072.
 
@@ -21,14 +21,14 @@ flowchart LR
     A[YADD Administrator]
     Y((YADD System))
 
-    B -->|Account Data; Search Criteria; Request Data; Messages; Provider Selection; Transaction Start Request or Confirmation; Invoice Response; Rating Data; Report Data| Y
-    Y -->|Search Results; Provider Information; Provider Responses; Messages; Transaction Start Confirmation Request; Transaction Status; Invoice Data; Notifications; History| B
+    B -->|Account Data; Search Criteria; Request Data; Messages; Provider Selection; Transaction Start Request or Confirmation; Invoice Response; Complaint Data; Rating Data; Report Data| Y
+    Y -->|Search Results; Provider Information; Provider Responses; Messages; Transaction Start Confirmation Request; Transaction Status; Invoice Data; Complaint Status; Notifications; History| B
 
     P -->|Account and Provider Data; Verification Data; Service Areas; Portfolio or Catalog Data; Provider Response Data; Response Edit or Withdrawal; Messages; Transaction Start Request or Confirmation; Invoice Data; Beneficiary Rating Data; Report Data| Y
     Y -->|Verification and Subscription Status; Matching Requests; Response and Selection Status; Messages; Transaction Start Confirmation Request; Transaction Status; Invoice Status; Notifications| P
 
-    A -->|Verification Decisions; Subscription Updates; Report and Moderation Actions| Y
-    Y -->|Verification Cases; Reports and Flags; Subscription Records; Administrative Audit Information| A
+    A -->|Verification Decisions; Subscription Updates; Report and Moderation Actions; Complaint Review Actions| Y
+    Y -->|Verification Cases; Reports and Flags; Complaint Evidence; Subscription Records; Administrative Audit Information| A
 ```
 
 ### Context Boundaries
@@ -39,6 +39,7 @@ flowchart LR
 - No `Guest` actor is currently approved.
 - No Payment Gateway, Escrow service or Delivery service appears because these are outside YADD's current Beneficiary↔Provider transaction scope.
 - Backend/API and Database are internal to YADD and must not appear as Context external entities.
+- Administration review of a Transaction complaint is limited to platform evidence/policy; YADD is not modeled as a financial/commercial arbitrator.
 
 ---
 
@@ -127,13 +128,13 @@ flowchart LR
 
     P -->|Verification Submission; Subscription Information; Report Data| P6
     B -->|Report Data| P6
-    A -->|Verification Decision; Subscription Status Action; Moderation Action| P6
+    A -->|Verification Decision; Subscription Status Action; Moderation Action; Complaint Review Action| P6
     P6 <--> D1
     P6 <--> D7
     P6 <--> D8
     P6 -->|Verification; Subscription; Report Status| P
-    P6 -->|Report Status| B
-    P6 -->|Cases; Flags; Records; Audit Information| A
+    P6 -->|Report or Complaint Status| B
+    P6 -->|Cases; Flags; Complaint Evidence; Records; Audit Information| A
 ```
 
 ---
@@ -184,20 +185,23 @@ This process also manages:
 - Transaction cancellation with recorded reason;
 - final/revised invoice;
 - Pending Customer Approval;
-- Approve / Request Revision / Dispute;
-- `Transaction = Completed` after invoice approval.
+- Approve / Request Revision / Complaint;
+- `Transaction = Completed` after invoice approval;
+- `Transaction = Disputed` when a pre-approval dispute remains unresolved and the parties do not reach agreement.
 
-`Completed` is the successful terminal Transaction state. There is no Transaction state named `Closed` after ratings.
+`Completed` is the successful terminal Transaction state. `Disputed` is a terminal unsuccessful state. There is no Transaction state named `Closed` after ratings. Only `Completed` produces a Completed Transaction Reference for Process 5 ratings.
+
+Complaint data may be passed to Process 6 for administrative review. Administration reviews YADD evidence and applies platform policy, but does not decide financial/commercial entitlement or order Payment/Refund/Compensation.
 
 ### 5.0 Manage Ratings & Reputation
 
-Manages Post-Transaction operations:
-- mandatory Beneficiary→Provider rating after Completed;
-- optional Provider→Beneficiary rating after Completed;
+Manages Post-Transaction operations **only after `Completed`**:
+- mandatory Beneficiary→Provider rating;
+- optional Provider→Beneficiary rating;
 - completed-work count and provider reputation indicators;
 - limited beneficiary interaction record.
 
-Ratings do not change Transaction status.
+Ratings do not change Transaction status. No ratings are created for `Cancelled` or `Disputed` Transactions.
 
 ### 6.0 Manage Administration, Verification & Safety
 
@@ -206,9 +210,10 @@ Manages:
 - Provider Subscription state;
 - Reports / Moderation / Flags;
 - reported Portfolio/Catalog content;
+- Transaction complaint review according to `DEC-073`;
 - administrative audit records.
 
-AI is an internal assistance mechanism, not an external actor in the main DFD.
+AI is an internal assistance mechanism, not an external actor in the main DFD. Transaction complaint review is limited to YADD policy/administrative action and does not create Payment, Refund, Compensation or Settlement processes.
 
 ---
 
@@ -216,15 +221,15 @@ AI is an internal assistance mechanism, not an external actor in the main DFD.
 
 | External Entity | Context data represented in Level 0? |
 |---|---|
-| Beneficiary | Yes — account, discovery, requests, messages, selection/start confirmation, invoice response, ratings and reports |
+| Beneficiary | Yes — account, discovery, requests, messages, selection/start confirmation, invoice response, complaints, ratings and reports |
 | Provider | Yes — profile, verification, service areas, portfolio/catalog, responses, messages, start confirmation, invoices, ratings and reports |
-| YADD Administrator | Yes — verification, subscription, moderation/reports and administrative records |
+| YADD Administrator | Yes — verification, subscription, moderation/reports, complaint review and administrative records |
 
 ---
 
 ## 5. Deliberately Excluded
 
-- Payment / Escrow / Refund lifecycle between Beneficiary and Provider.
+- Payment / Escrow / Refund / Settlement lifecycle between Beneficiary and Provider.
 - Deposit amount, percentage, payment status or refund data.
 - Delivery-driver or shipment-management process.
 - Shopping Cart.
@@ -244,7 +249,9 @@ AI is an internal assistance mechanism, not an external actor in the main DFD.
 - [x] no Agreement Data Store or Record Agreement process.
 - [x] `RequiresDeposit` is data within Provider Response only.
 - [x] `Completed` is terminal successful Transaction state.
-- [x] ratings are Post-Transaction.
+- [x] `Disputed` is terminal unsuccessful for unresolved pre-approval dispute.
+- [x] administration complaint review does not create financial/commercial settlement authority.
+- [x] ratings are Post-Transaction and only after Completed.
 - [x] all final diagram labels must be English.
 - [ ] visual redraw/export with standard DFD notation remains to be produced.
 
