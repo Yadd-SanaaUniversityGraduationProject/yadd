@@ -128,8 +128,8 @@
 | Operational/UX Feasibility | عمرو ناجي + محمد حميد | 8 سبتمبر | `OPEN` | لا ادعاء نجاح UX قبل الاختبار |
 | Chapter 1 | عمرو ناجي | 9 سبتمبر | `v1.1 — READY FOR PRELIMINARY DEFENSE REVIEW` | مشتق من Sources of Truth؛ final formatting/review pending |
 | Chapter 2 | عمرو ناجي | 9 سبتمبر | `v1.1 — CORE SOURCES VERIFIED — REVIEW OPEN` | final research/reference closure pending |
-| Chapter 3 | محمد حميد | 9 سبتمبر | `TEXT v1.1 — CURRENT CORE, SEP-04/05 SYNC STILL REQUIRED` | يجب عكس SRS v0.9.5/DEC-073 وحالة working diagrams قبل freeze |
-| Chapter 4 | محمد عبدالرحمن + عمرو ناجي | 9 سبتمبر | `IN PROGRESS` | current relation/data/interface/query drafts need completion/review |
+| Chapter 3 | محمد حميد | 9 سبتمبر | `v1.2 — CORE MODEL CURRENT — WORKING DIAGRAMS AVAILABLE` | final diagram redraw/export + design traceability + review pending |
+| Chapter 4 | محمد عبدالرحمن + عمرو ناجي | 9 سبتمبر | `IN PROGRESS — CURRENT-MODEL DRAFTS SYNCHRONIZED` | physical DB details, Figma/forms/report details and review remain open |
 | Traceability/Consistency Audit | الثلاثة | 10 سبتمبر | `IN PROGRESS EARLY PASS` | core traceability current; design traceability/final scan pending |
 | References + Formatting + Print Check | عمرو ناجي | 11 سبتمبر | `OPEN` | الرسومات واضحة والمراجع والترقيم موحدة |
 | PowerPoint + Defense Rehearsal | عمرو ناجي + الفريق | 11 سبتمبر | `OPEN` | العرض من الفصول نفسها والفريق قادر على شرح القرارات والمخططات |
