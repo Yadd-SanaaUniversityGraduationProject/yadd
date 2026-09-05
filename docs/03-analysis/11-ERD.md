@@ -1,10 +1,10 @@
 # Conceptual ERD — YADD Preliminary Defense
 
-> **الحالة:** `DRAFT FOR PRELIMINARY DEFENSE — CORE SYNCHRONIZED 2026-09-04`
+> **الحالة:** `DRAFT FOR PRELIMINARY DEFENSE — CORE SYNCHRONIZED 2026-09-05`
 >
 > هذا ERD **مفاهيمي للفصل الثالث** وليس Relation Schema أو Database Design نهائيًا. الأنواع الفيزيائية، PK/FK التفصيلية، الفهارس، القيود التنفيذية وأسماء الجداول النهائية تنتقل إلى Chapter Four.
 >
-> **المراجع الحاكمة:** DEC-008..016/018/019/021/023..025/029..043/046..056/063..072 + `05-SRS.md` + `06-business-rules.md` + `07-lifecycles.md` + `08-use-cases.md`.
+> **المراجع الحاكمة:** DEC-008..016/018/019/021/023..025/029..043/046..056/063..073 + `05-SRS.md` + `06-business-rules.md` + `07-lifecycles.md` + `08-use-cases.md`.
 >
 > جميع التسميات داخل الرسم النهائي تكون باللغة الإنجليزية وفق DEC-072.
 
@@ -22,8 +22,10 @@
 8. تقييم Beneficiary للمقدم وتقييم Provider للمستفيد نموذجان مختلفان في الحقول والقواعد، لذلك يمثَّلان ككيانين منفصلين مفاهيميًا.
 9. Portfolio/Catalog يمثلان مفهوم عرض موحدًا عبر `SHOWCASE_ITEM` مع `item_type`.
 10. `Completed` هي النهاية الناجحة للTransaction ولا توجد حالة Transaction باسم `Closed`.
-11. لكل Provider استجابة فعالة واحدة فقط لكل Request؛ يمكن تعديلها أو سحبها قبل الاختيار وفق DEC-070.
-12. Request واحد يمكن أن ينتج **صفر أو Transaction واحدة فقط**؛ لأن اختيار Provider واحد يغلق Request أمام الاستجابات الجديدة.
+11. `Disputed` نهاية غير ناجحة للTransaction عند استمرار خلاف الفاتورة قبل الاعتماد دون اتفاق؛ لا تفتح Ratings — DEC-073.
+12. لكل Provider استجابة فعالة واحدة فقط لكل Request؛ يمكن تعديلها أو سحبها قبل الاختيار وفق DEC-070.
+13. Request واحد يمكن أن ينتج **صفر أو Transaction واحدة فقط**؛ لأن اختيار Provider واحد يغلق Request أمام الاستجابات الجديدة.
+14. مراجعة النزاع إداريًا تستخدم `REPORT`/complaint context ولا تنشئ كيان Payment/Refund/Compensation أو سلطة تسوية مالية داخل YADD.
 
 ---
 
@@ -260,9 +262,9 @@ erDiagram
 
 - `Completed` للنجاح بعد اعتماد الفاتورة.
 - `Cancelled` عند الإلغاء وفق القواعد.
-- `Disputed` بحسب مسار النزاع الحالي.
+- `Disputed` عند استمرار الخلاف قبل اعتماد الفاتورة وعدم الوصول إلى اتفاق — DEC-073.
 
-لا توجد حالة Transaction باسم `Closed`.
+لا توجد حالة Transaction باسم `Closed`. لا Ratings إلا بعد `Completed`.
 
 ### INVOICE_VERSION / INVOICE_ITEM
 يمثلان الاحتفاظ بتاريخ نسخ الفاتورة بدل الكتابة فوق نسخة واحدة.
@@ -349,6 +351,7 @@ erDiagram
 - تفاصيل باقات/أسعار/إثبات دفع الاشتراك: `SUB-PLAN-Q01 / SUB-PAY-Q01` مفتوحة.
 - AI Flags/Audit physical tables لا تثبت قبل حسم provider/retention/threshold policies.
 - `REPORT.target_reference` تمثيل مفاهيمي polymorphic؛ التنفيذ الفيزيائي قد يفصله إلى علاقات أكثر صرامة.
+- Transaction complaint under DEC-073 can use the REPORT/complaint concept and Transaction status; it does not justify a financial settlement entity.
 
 ---
 
@@ -384,7 +387,8 @@ erDiagram
 12. Transaction `Completed` تسمح Provider Rating واحدة بحد أقصى من Beneficiary.
 13. Transaction `Completed` تسمح Beneficiary Rating واحدة بحد أقصى من Provider، وهي اختيارية.
 14. Ratings لا تغير Transaction status بعد Completed — DEC-071.
-15. لا توجد علاقة مالية للعربون داخل ERD — DEC-041.
+15. Transaction `Disputed` لا تسمح Ratings — DEC-073.
+16. لا توجد علاقة مالية للعربون أو النزاع داخل ERD — DEC-041/073.
 
 ---
 
@@ -415,14 +419,14 @@ erDiagram
 | Request | DEC-012/013/048/049 |
 | Provider Response | DEC-013/014/041/047/066/070 |
 | Conversation/Message | DEC-023/024/046/069 |
-| Transaction | DEC-047/048/056/066/068/069/071 |
-| Invoice versions/items | DEC-015/016/025/050/055/071 |
-| Provider Rating | DEC-051/052/071 |
-| Beneficiary Rating | DEC-063/071 |
+| Transaction | DEC-047/048/056/066/068/069/071/073 |
+| Invoice versions/items | DEC-015/016/025/050/055/071/073 |
+| Provider Rating | DEC-051/052/071/073 |
+| Beneficiary Rating | DEC-063/071/073 |
 | Showcase Item | DEC-064 |
 | Verification Case | DEC-034..036 |
 | Subscription | DEC-021/042/043 |
-| Report | DEC-053/054 |
+| Report / Complaint Context | DEC-053/054/073 |
 
 ---
 
@@ -438,10 +442,12 @@ erDiagram
 - [x] Invoice history represented conceptually.
 - [x] Both rating directions represented separately.
 - [x] `Completed` is terminal successful Transaction state; no `Closed` state.
-- [x] One active Provider Response per Provider/Request is now approved.
+- [x] `Disputed` is terminal unsuccessful and produces no Ratings.
+- [x] One active Provider Response per Provider/Request is approved.
 - [x] Request produces at most one Transaction.
 - [x] Portfolio/Catalog unified concept represented.
 - [x] Verification/Subscription/Report represented as supporting model.
+- [x] No financial settlement entity introduced for complaints/disputes.
 - [ ] Final visual ERD redraw in standard notation for supervisor delivery.
 - [ ] Class Diagram derivation from this synchronized ERD.
 - [ ] Relation Schema/Data Dictionary derivation in Chapter Four.
