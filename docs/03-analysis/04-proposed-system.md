@@ -1,6 +1,6 @@
 # وصف النظام المقترح — Proposed System Working Model
 
-> **الحالة:** `ANALYZED — SYNCHRONIZED 2026-09-04`
+> **الحالة:** `ANALYZED — SYNCHRONIZED 2026-09-05`
 >
 > هذه الوثيقة وصف تحليلي مشتق من Decision Register وSRS وBusiness Rules الحالية. لا تتغلب على مصادر الحقيقة الأعلى ولا تجعل SRS Baselined.
 
@@ -68,31 +68,39 @@ YADD منصة رقمية محلية ضمن نطاق MVP في أمانة العا
 
 بعد بدء Transaction في أي من المسارين، يستخدم YADD تدفقًا موحدًا للخدمة والمنتج:
 
-`Active Transaction → Fulfillment / Preparation → Final Invoice → Approve or Request Revision → Completed`
+`Active Transaction → Fulfillment / Preparation → Final Invoice → Approve / Request Revision / Dispute`
+
+النهايات:
+
+- `Approve → Completed` — النهاية الناجحة للTransaction.
+- إذا استمر الخلاف قبل اعتماد الفاتورة ولم يتوصل الطرفان إلى اتفاق → `Disputed` — نهاية غير ناجحة.
+- يمكن إلغاء Transaction قبل ذلك وفق قواعد الإلغاء الحالية مع سبب مسجل → `Cancelled`.
 
 قواعد أساسية:
 
 - Provider ينفذ الخدمة أو يجهز المنتج خارج منطق الدفع داخل YADD.
 - بعد التنفيذ/التجهيز واستقرار البنود ينشئ Provider الفاتورة النهائية.
-- Beneficiary يختار `Approve` أو `Request Revision` مع ملاحظة.
+- Beneficiary يختار `Approve` أو `Request Revision` مع ملاحظة، ويمكن رفع Complaint عند استمرار الخلاف.
 - عدم الرد لا يعد موافقة ولا يوجد Auto-Approval.
 - عند اعتماد الفاتورة تصبح Transaction `Completed`.
 - `Completed` هي النهاية الناجحة للTransaction؛ لا توجد حالة Transaction مستقلة باسم `Closed`.
-- يمكن إلغاء Transaction بعد بدئها وفق القواعد الحالية مع سبب مسجل.
+- إذا لم يحل الخلاف قبل اعتماد الفاتورة تصبح Transaction `Disputed` وفق `DEC-073` ولا تفتح Ratings.
+- إدارة YADD تراجع السجلات لتطبيق سياسة المنصة واتخاذ إجراء إداري عند وجود مخالفة، لكنها لا تفصل ماليًا/تجاريًا ولا تأمر Payment/Refund/Compensation.
 
-**المرجع:** DEC-015/025/048/050/055/068/071.
+**المرجع:** DEC-015/025/048/050/055/068/071/073.
 
 ## 6. Post-Transaction Ratings
 
-بعد `Transaction Completed`:
+بعد `Transaction Completed` فقط:
 
 - تقييم Beneficiary للمقدم إلزامي: 1–5 نجوم، والتعليق اختياري.
 - يعرض النظام للمقدم Prompt بارزًا لتقييم Beneficiary اختياريًا.
 - تقييم Beneficiary من Provider يتكون من ثلاثة مؤشرات 1–5: وضوح الطلب والتواصل، الالتزام بالاتفاق، حسن التعامل والتعاون، مع تعليق اختياري.
 - التقييمات مرتبطة بمعاملة Completed ولا تغير Transaction إلى حالة أخرى.
 - لا تنتج عقوبات آلية على Beneficiary من انخفاض التقييم في MVP.
+- لا Ratings لمعاملة `Cancelled` أو `Disputed`.
 
-**المرجع:** DEC-051/063/071.
+**المرجع:** DEC-051/063/071/073.
 
 ## 7. Provider Profile, Portfolio and Catalog
 
@@ -117,8 +125,9 @@ YADD منصة رقمية محلية ضمن نطاق MVP في أمانة العا
 - Block + Report.
 - مراجعة البلاغات/Flags إداريًا.
 - إدارة سجل اشتراك Provider Profile، مع تحصيل خارجي وتأكيد من موظف مخول.
+- مراجعة Complaint المرتبطة بمعاملة وفق حدود `DEC-073`: تطبيق سياسة المنصة وإجراءاتها الإدارية فقط، دون تحكيم مالي/تجاري.
 
-**المرجع:** DEC-034..043/053/054.
+**المرجع:** DEC-034..043/053/054/073.
 
 ## 9. Financial and Fulfillment Boundaries
 
@@ -128,6 +137,7 @@ YADD منصة رقمية محلية ضمن نطاق MVP في أمانة العا
 - Wallet.
 - Escrow.
 - Refund processing.
+- Financial/commercial settlement or compensation decisions by YADD Administration.
 - Deposit amount / percentage / payment status.
 - Delivery network / drivers / shipment tracking.
 
@@ -135,7 +145,7 @@ YADD منصة رقمية محلية ضمن نطاق MVP في أمانة العا
 
 في المنتجات يمكن الاتفاق على الاستلام أو توصيل يرتبه Provider خارجيًا، ويمكن إدراج تكلفته في الفاتورة.
 
-**المرجع:** DEC-018/019/041.
+**المرجع:** DEC-018/019/041/073.
 
 ## 10. Current Technical Direction
 
@@ -162,10 +172,11 @@ YADD منصة رقمية محلية ضمن نطاق MVP في أمانة العا
 9. Select Provider or Confirm Direct Transaction Start.
 10. Manage Transaction and Cancellation.
 11. Create, Revise and Approve Final Invoice.
-12. Rate Provider and optionally Rate Beneficiary.
-13. Provider Verification.
-14. Block, Report and Administrative Review.
-15. Manage Provider Subscription Records.
+12. Raise Complaint / Administrative Review for unresolved pre-approval disputes.
+13. Rate Provider and optionally Rate Beneficiary after Completed.
+14. Provider Verification.
+15. Block, Report and Administrative Review.
+16. Manage Provider Subscription Records.
 
 هذه القائمة وصف تحليلي للCapabilities وليست بديلًا عن FR IDs في SRS.
 
