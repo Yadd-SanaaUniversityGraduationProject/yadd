@@ -2,7 +2,7 @@
 
 > **Status:** `DRAFT FOR PRELIMINARY DEFENSE — CORE SYNCHRONIZED 2026-09-04`
 >
-> **Governing basis:** DEC-046/047/048/050/051/063/064/066/067/068/069/070/071/072 + `05-SRS.md` + `06-business-rules.md` + `07-lifecycles.md` + `08-use-cases.md`.
+> **Governing basis:** DEC-046/047/048/050/051/063/064/066/067/068/069/070/071/072/073 + `05-SRS.md` + `06-business-rules.md` + `07-lifecycles.md` + `08-use-cases.md`.
 >
 > YADD uses DFD and UML together according to DEC-060. All labels inside final academic diagrams must be English according to DEC-072.
 
@@ -147,7 +147,7 @@ flowchart TD
     Y -- No --> ZE
 ```
 
-`Completed` is the successful terminal Transaction state; ratings shown afterward are Post-Transaction workflow only.
+`Completed` is the successful terminal Transaction state; ratings shown afterward are Post-Transaction workflow only. `Disputed` is a terminal unsuccessful state when the pre-approval invoice dispute remains unresolved. Administration reviews YADD evidence and applies platform policy but does not decide payment, refund, compensation or other financial/commercial entitlement between the parties.
 
 ---
 
@@ -180,13 +180,14 @@ sequenceDiagram
     participant Y as YADD Backend/API
     actor P as Provider
     participant DB as Database
+    actor A as YADD Administrator
 
     B->>Y: Create and publish Request
     Y->>DB: Save Request = Open
     Y-->>P: Expose matching Request
 
     P->>Y: Submit Provider Response
-    Note over P,Y: Proposed price/note optional; RequiresDeposit = Yes/No only
+    Note over P,Y: Proposed price or note optional. RequiresDeposit is Yes or No only.
     Y->>DB: Save active Provider Response
     Y-->>B: Show response for comparison
 
@@ -204,14 +205,18 @@ sequenceDiagram
     end
 
     B->>Y: Select Provider
-    Y->>DB: Request = Matched; other responses = NotSelected; create Active Transaction
+    Y->>DB: Save Request as Matched, mark other responses NotSelected, create Active Transaction
     Y-->>P: Provider selected / Transaction active
     Y-->>B: Transaction active
 
-    alt Transaction cancelled
-        B->>Y: Cancel + reason
+    alt Beneficiary cancels Transaction
+        B->>Y: Cancel Transaction + reason
         Y->>DB: Save Cancelled + actor + reason + time
         Y-->>P: Cancellation recorded
+    else Provider cancels Transaction
+        P->>Y: Cancel Transaction + reason
+        Y->>DB: Save Cancelled + actor + reason + time
+        Y-->>B: Cancellation recorded
     else Work completed / product prepared
         P->>Y: Submit final invoice
         Y->>DB: Save invoice = PendingCustomerApproval
@@ -222,9 +227,16 @@ sequenceDiagram
             Y-->>P: Revision requested
             P->>Y: Submit revised invoice
             Y-->>B: Show revised invoice
+        else Dispute remains unresolved
+            B->>Y: Raise complaint for administrative review
+            Y->>DB: Save complaint and set Transaction = Disputed
+            Y-->>A: Send complaint and YADD evidence for review
+            A->>Y: Record platform-policy action if applicable
+            Y->>DB: Save administrative review outcome
+            Note over B,P: No ratings after Disputed. YADD does not decide payment, refund or compensation.
         else Approve
             B->>Y: Approve final invoice
-            Y->>DB: Invoice = Final; Transaction = Completed
+            Y->>DB: Save Final invoice and set Transaction to Completed
             Y-->>B: Require Provider rating
             B->>Y: Submit provider rating 1-5 + optional comment
             Y->>DB: Save provider rating
@@ -324,7 +336,9 @@ Physical database choices such as Media table structure or `InvoiceVersion` vs `
 - [x] Request selection creates one Transaction.
 - [x] Invoice approval leads to Completed.
 - [x] No Transaction state Closed.
-- [x] Ratings are Post-Transaction.
+- [x] Unresolved pre-approval dispute leads to terminal `Disputed`.
+- [x] Administration does not decide payment/refund/compensation entitlement.
+- [x] Ratings occur only after Completed, not after Cancelled or Disputed.
 - [x] Beneficiary→Provider rating mandatory; Provider→Beneficiary optional.
 - [x] Class Diagram source concepts defined from synchronized ERD.
 - [ ] Final visual redraw/export in standard UML notation remains to be produced.
