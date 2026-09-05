@@ -1,16 +1,16 @@
 # الفصل الثالث — تحليل المتطلبات ونمذجة النظام
 
-> **الإصدار:** `v1.1`
+> **الإصدار:** `v1.2`
 >
-> **الحالة:** `TEXT SYNCHRONIZED — ANALYSIS CORE CLOSED — DIAGRAMS DEFERRED`
+> **الحالة:** `TEXT SYNCHRONIZED — CORE MODEL CURRENT — WORKING DIAGRAMS AVAILABLE — FINAL VISUAL REVIEW PENDING`
 >
-> هذه النسخة مشتقة من Decision Register وSRS v0.9.4 وBusiness Rules وLifecycles وUse Cases الحالية. المخططات نفسها مؤجلة إلى مرحلة لاحقة، لذلك لا يدعي هذا الفصل أن DFD/UML/ERD الرسومية أصبحت نهائية.
+> هذه النسخة مشتقة من Decision Register وSRS v0.9.5 وBusiness Rules وLifecycles وUse Cases وDFD/UML/ERD الحالية حتى `DEC-073`. لا تتغلب على Sources of Truth ولا تجعل SRS Baselined. Working diagrams موجودة في وثائق التحليل، بينما الرسم/التصدير النهائي بالترميز القياسي والمراجعة البشرية ما يزال مطلوبًا قبل Freeze.
 
 ---
 
 ## 3.1 مقدمة
 
-يعرض هذا الفصل تحليل متطلبات نظام **يَد | YADD** والنموذج التشغيلي المقترح، بدءًا من تقنيات جمع البيانات، مرورًا بأصحاب المصلحة والمتطلبات الوظيفية وغير الوظيفية وقواعد العمل ودورات الحالة وحالات الاستخدام، وصولًا إلى مواصفات العمليات والبيانات والتتبع. المخططات الرسومية ستُستكمل لاحقًا وفق هذا الأساس التحليلي المغلق.
+يعرض هذا الفصل تحليل متطلبات نظام **يَد | YADD** والنموذج التشغيلي المقترح، بدءًا من تقنيات جمع البيانات، مرورًا بأصحاب المصلحة والمتطلبات الوظيفية وغير الوظيفية وقواعد العمل ودورات الحالة وحالات الاستخدام، وصولًا إلى مواصفات العمليات والبيانات والتتبع والمخططات التحليلية.
 
 ---
 
@@ -44,7 +44,7 @@
 
 ### 3.2.3 المقابلات والملاحظة
 
-قرر المشرف قبول **Survey-only** كأداة جمع بيانات المستخدمين الرسمية للمشروع. الإجابات التي جُمعت شفهيًا باستخدام أسئلة الاستبيان نفسها وأدخلت في `SUR-01` تعامل كـInterviewer-administered questionnaire، وليست مقابلات مستقلة.
+قرر المشرف قبول **Survey-only** كأداة جمع بيانات المستخدمين الرسمية للمشروع وفق `DEC-062`. الإجابات التي جُمعت شفهيًا باستخدام أسئلة الاستبيان نفسها وأدخلت في `SUR-01` تعامل كـInterviewer-administered questionnaire، وليست مقابلات مستقلة.
 
 لا ينسب المشروع لنفسه Interviews أو User Field Observation لم تُنفذ فعليًا. أي ملاحظات مسترجعة لاحقًا من الذاكرة تستخدم فقط كـRetrospective Supplementary Evidence مع فصل ما شوهد فعلًا عن Inference.
 
@@ -127,15 +127,19 @@ Actors الرئيسية في المخطط العام:
 
 ### 3.4.3 Common Transaction Flow
 
-`Active Transaction → Fulfillment / Preparation → Final Invoice → Approve or Request Revision → Completed`
+المسار المشترك:
+
+`Active Transaction → Fulfillment / Preparation → Final Invoice → Approve / Request Revision / Dispute`
 
 - Provider ينشئ Final Invoice بعد التنفيذ/التجهيز.
-- Beneficiary يختار Approve أو Request Revision.
+- Beneficiary يختار Approve أو Request Revision، ويمكن رفع Complaint إذا استمر الخلاف.
 - لا يوجد Auto-Approval.
 - عند اعتماد الفاتورة تصبح Transaction `Completed`.
 - `Completed` هي الحالة النهائية الناجحة للTransaction.
+- إذا استمر الخلاف قبل الاعتماد ولم يتوصل الطرفان لاتفاق تصبح Transaction `Disputed`، وهي نهاية غير ناجحة وفق `DEC-073`.
+- YADD Administration تراجع أدلة المنصة وتطبق سياستها فقط؛ لا تحكم الحقوق المالية/التجارية ولا تأمر Payment/Refund/Compensation.
 - لا توجد Transaction state باسم `Closed`.
-- Ratings تحدث بعد Completed كعمليات Post-Transaction.
+- Ratings تحدث فقط بعد `Completed` كعمليات Post-Transaction؛ لا Ratings لـCancelled/Disputed.
 
 ---
 
@@ -157,11 +161,12 @@ Actors الرئيسية في المخطط العام:
 12. إلغاء Transaction بعد البداية مع سبب مسجل وفق القواعد الحالية.
 13. إنشاء Final Invoice ومراجعتها واعتمادها أو طلب تعديلها.
 14. اعتبار Transaction `Completed` بعد اعتماد الفاتورة.
-15. تقييم Provider إلزاميًا من Beneficiary بعد Completed.
-16. إتاحة تقييم Beneficiary اختياريًا من Provider بعد Completed.
-17. Block + Report مع مراجعة إدارية.
-18. إدارة Portfolio/Catalog داخل Provider Profile.
-19. إدارة Provider Verification وSubscription records ضمن النظام.
+15. إنهاء Transaction في `Disputed` إذا بقي خلاف الفاتورة غير محلول قبل الاعتماد، مع Complaint/Admin review بلا تحكيم مالي — `DEC-073`.
+16. تقييم Provider إلزاميًا من Beneficiary بعد Completed.
+17. إتاحة تقييم Beneficiary اختياريًا من Provider بعد Completed.
+18. Block + Report مع مراجعة إدارية.
+19. إدارة Portfolio/Catalog داخل Provider Profile.
+20. إدارة Provider Verification وSubscription records ضمن النظام.
 
 السياسات الرقمية الثانوية غير المحسومة تبقى Needs Verification ولا تمنع Core Flow.
 
@@ -217,7 +222,7 @@ Actors الرئيسية في المخطط العام:
 - Request Closure قبل Selection مختلف عن Transaction Cancellation.
 - عدة Transactions متوازية مسموحة حاليًا دون حد رقمي معتمد.
 
-### 3.6.7 Invoice
+### 3.6.7 Invoice and Dispute
 
 - Provider ينشئ Final Invoice بعد التنفيذ/التجهيز.
 - تحتوي على البنود والأسعار والإجمالي ويمكن أن تحتوي صورًا اختيارية.
@@ -225,16 +230,18 @@ Actors الرئيسية في المخطط العام:
 - عدم الرد يبقيها Pending Customer Approval.
 - لا يوجد Auto-Approval.
 - اعتماد الفاتورة يؤدي إلى Transaction Completed.
+- عند استمرار الخلاف قبل الاعتماد يمكن رفع Complaint؛ إذا لم يتوصل الطرفان لاتفاق تنتهي Transaction في `Disputed`.
+- Admin review يطبق YADD policy/admin action ولا يحسم Payment/Refund/Compensation أو الحقوق المالية/التجارية.
 
 ### 3.6.8 Ratings and Reputation
 
 **Beneficiary → Provider**
-- بعد Transaction Completed.
+- بعد Transaction Completed فقط.
 - 1–5 Stars إلزامية.
 - Comment اختياري.
 
 **Provider → Beneficiary**
-- بعد Transaction Completed.
+- بعد Transaction Completed فقط.
 - اختياري مع Prompt بارز.
 - ثلاثة مؤشرات 1–5:
   - Request and communication clarity.
@@ -242,6 +249,8 @@ Actors الرئيسية في المخطط العام:
   - Cooperation and conduct.
 - Comment اختياري.
 - لا ينتج عنه منع/عقوبة آلية في MVP.
+
+لا Ratings بعد Cancelled أو Disputed.
 
 ### 3.6.9 Portfolio / Catalog
 
@@ -257,6 +266,7 @@ Actors الرئيسية في المخطط العام:
 - Block يوقف التواصل المباشر.
 - Report يرسل الحالة للمراجعة الإدارية.
 - البلاغ أو AI Flag لا يساوي إدانة أو عقوبة تلقائية.
+- Transaction Complaint تحت DEC-073 يستخدم نفس مبدأ المراجعة الإدارية المحدودة بسياسة المنصة.
 
 ### 3.6.11 Subscription
 
@@ -275,6 +285,7 @@ YADD لا يدير أي حركة مالية بين Beneficiary وProvider.
 - Wallet.
 - Escrow.
 - Refund.
+- Compensation/Settlement authority by YADD Administration.
 - Deposit amount/percentage/status.
 
 يجوز فقط أن تحدد Provider Response `RequiresDeposit = Yes/No`; كل تفاصيل الدفع والتسوية خارج YADD.
@@ -304,6 +315,7 @@ YADD لا يدير أي حركة مالية بين Beneficiary وProvider.
 - لا تتحول Transaction إلى Completed بدون Invoice Approval.
 - Final Invoice المعتمدة هي السجل الرسمي النهائي للبنود والأسعار داخل YADD.
 - لا يتم الكتابة فوق تاريخ الفاتورة بما يفقد النسخ السابقة.
+- `Disputed` لا يعامل كCompleted ولا يفتح Ratings.
 
 ### 3.7.4 Performance and Availability
 
@@ -327,13 +339,15 @@ YADD لا يدير أي حركة مالية بين Beneficiary وProvider.
 12. لا يوجد Auto-Approval.
 13. Request Closure قبل Selection مختلف عن Transaction Cancellation.
 14. `Completed` هي الحالة النهائية الناجحة للTransaction.
-15. Beneficiary Rating للمقدم إلزامي بعد Completed.
-16. Provider Rating للمستفيد اختياري بعد Completed.
-17. Ratings لا تنقل Transaction إلى Closed.
-18. عدة Transactions متوازية مسموحة دون حد رقمي معتمد.
-19. التوصيل ليس عملية يديرها YADD.
-20. Provider Responses جديدة تتطلب Verification + Active Subscription.
-21. AI يدعم Verification/Safety ولا يصدر وحده قرارًا نهائيًا عالي الأثر.
+15. unresolved pre-approval dispute يؤدي إلى `Disputed` كحالة نهائية غير ناجحة.
+16. YADD Administration لا تحكم Payment/Refund/Compensation في النزاع.
+17. Beneficiary Rating للمقدم إلزامي بعد Completed.
+18. Provider Rating للمستفيد اختياري بعد Completed.
+19. Ratings لا تنقل Transaction إلى Closed ولا تفتح لـCancelled/Disputed.
+20. عدة Transactions متوازية مسموحة دون حد رقمي معتمد.
+21. التوصيل ليس عملية يديرها YADD.
+22. Provider Responses جديدة تتطلب Verification + Active Subscription.
+23. AI يدعم Verification/Safety ولا يصدر وحده قرارًا نهائيًا عالي الأثر.
 
 ---
 
@@ -359,12 +373,12 @@ YADD لا يدير أي حركة مالية بين Beneficiary وProvider.
 
 `Active → AwaitingInvoice → RevisionRequested ↔ AwaitingInvoice → Completed`
 
-مسارات بديلة بحسب الحالة:
+مسارات نهائية بديلة:
 
 - `Cancelled`
 - `Disputed`
 
-`Completed` terminal successful state. لا توجد حالة Transaction باسم `Closed`.
+`Completed` terminal successful state. `Disputed` terminal unsuccessful state under DEC-073. لا توجد حالة Transaction باسم `Closed`.
 
 ### 3.9.4 Invoice Lifecycle
 
@@ -379,7 +393,7 @@ YADD لا يدير أي حركة مالية بين Beneficiary وProvider.
 - Provider Rating by Beneficiary: `Required → Submitted`.
 - Beneficiary Rating by Provider: `Offered → Submitted / Skipped`.
 
-هذه الحالات ليست Transaction states.
+هذه الحالات ليست Transaction states، ولا تبدأ بعد Cancelled/Disputed.
 
 ---
 
@@ -392,37 +406,39 @@ YADD لا يدير أي حركة مالية بين Beneficiary وProvider.
 - `UC-03` Respond to Request.
 - `UC-04` Select Provider from Request.
 - `UC-05` Cancel Active Transaction.
-- `UC-06` Create and Approve Invoice.
+- `UC-06` Create and Approve Invoice، ويشمل revision/complaint branch وفق المواصفات الحالية.
 - `UC-07` Rate Provider.
 - `UC-07B` Provider Rates Beneficiary.
 - `UC-08` Block and Report User / Content.
 - `UC-09` Provider Verification / Portal Activation.
 - `UC-10` Manage Portfolio / Catalog.
 
-Direct Search وProvider Response specifications تعكس DEC-069/070، والتقييمات تعكس DEC-063/071.
+Direct Search وProvider Response specifications تعكس DEC-069/070، والتقييمات تعكس DEC-063/071، والنزاع يعكس DEC-073.
 
 ---
 
-## 3.11 المخططات — Diagrams Deferred
+## 3.11 المخططات — Current Working State
 
-وفق قرار المشرف وهيكل الجامعة، يستخدم Chapter Three **DFD + UML معًا**. المخططات المطلوبة تشمل:
+وفق قرار المشرف وهيكل الجامعة، يستخدم Chapter Three **DFD + UML معًا**. المخرجات المطلوبة تشمل:
 
-- DFD Context / Levels as needed.
+- DFD Context / Level 0 / levels as academically needed.
 - Use Case Diagram + Specifications.
 - Activity Diagrams.
 - Sequence Diagrams.
 - Class Diagram.
 - ERD.
 
-**الحالة الحالية:** `DEFERRED BY TEAM FOR LATER COMPLETION`.
+**الحالة الحالية:**
 
-عند إنشائها يجب أن تستخدم تسميات داخل الرسم باللغة الإنجليزية فقط وفق DEC-072، وأن تشتق من SRS/Business Rules/Lifecycles/Use Cases الحالية دون إعادة فتح القرارات المستقرة.
+- `09-DFD.md`: Working Context + Level 0 semantics متزامنة حتى DEC-073؛ final standard redraw/export pending.
+- `10-UML.md`: Working Use Case/Activity/Sequence semantics متزامنة؛ Sequence section 5 Mermaid syntax مصححة في 2026-09-05؛ final standard UML redraw/Class Diagram pending.
+- `11-ERD.md`: Core Conceptual ERD متزامن حتى DEC-073؛ final visual review pending.
+
+جميع التسميات داخل الرسم النهائي باللغة الإنجليزية وفق DEC-072.
 
 ---
 
 ## 3.12 مواصفات العمليات والبيانات — Process & Data Specifications
-
-يتطلب إغلاق الجانب النصي من Chapter Three توثيق العمليات والبيانات المتبادلة ومخازن البيانات المنطقية بما يتوافق مع النموذج الحالي.
 
 المجالات المنطقية الحالية:
 
@@ -435,19 +451,19 @@ Direct Search وProvider Response specifications تعكس DEC-069/070، والت
 
 لا تستخدم مصطلحات `Offer` أو `Agreement` كمخزن/كيان قياسي؛ المصطلح الحالي هو `Provider Response` ولا يوجد Agreement entity مستقل.
 
-مخازن البيانات المنطقية التي سيشتق منها DFD لاحقًا يجب أن تكون قابلة للربط بالمفاهيم الحالية مثل Users/Profiles، Requests/Responses، Conversations/Transactions، Invoices، Ratings، Portfolio/Catalog، Verification/Subscriptions/Reports.
+مخازن البيانات المنطقية تتبع النموذج الحالي مثل Users/Profiles، Requests/Responses، Conversations/Transactions، Invoices، Ratings، Portfolio/Catalog، Verification/Subscriptions/Reports. Complaint/Dispute يستخدم Transaction + Report context ولا يضيف Settlement store.
 
 ---
 
 ## 3.13 التتبع — Traceability
 
-تتبع المتطلبات يجب أن يسير وفق:
+تتبع المتطلبات يسير وفق:
 
 `Evidence / Decision → Requirement → Business Rule → Use Case → Process / Diagram → Entity → Design`
 
 وجود Requirement داخل SRS لا يعني تلقائيًا أنه Approved Requirement. البنود التي تعتمد على قيم تشغيلية غير محسومة تبقى Needs Verification حتى يتم إثباتها أو اعتمادها.
 
-يجب تحديث Requirements Traceability Matrix لاحقًا عند استكمال المخططات وChapter Four design، لكن Core semantic model الحالي مغلق بما يكفي للاشتقاق دون استخدام `OFFER / AGREEMENT / REVIEW` القديم.
+Core Traceability الحالية متزامنة حتى `DEC-073`; Design Traceability لChapter Four والمخططات النهائية ما يزال مطلوبًا قبل Freeze/Baseline.
 
 ---
 
@@ -471,7 +487,7 @@ Direct Search وProvider Response specifications تعكس DEC-069/070، والت
 
 ## 3.15 خلاصة الفصل
 
-أصبح Core Analysis متسقًا نصيًا مع القرارات الحالية:
+أصبح Core Analysis متسقًا نصيًا مع القرارات الحالية حتى DEC-073:
 
 - User Account واحد.
 - Provider Profile واحد اختياري لكل User.
@@ -483,8 +499,10 @@ Direct Search وProvider Response specifications تعكس DEC-069/070، والت
 - العربون Yes/No فقط والدفع خارج YADD.
 - Final Invoice approval يؤدي إلى `Completed`.
 - `Completed` terminal successful Transaction state ولا توجد `Closed` state.
+- unresolved pre-approval dispute يؤدي إلى `Disputed` terminal unsuccessful state، مع Admin review محدود بسياسة المنصة ودون تحكيم مالي.
 - Beneficiary → Provider rating إلزامي بعد Completed.
 - Provider → Beneficiary rating اختياري بعد Completed.
+- لا Ratings لـCancelled/Disputed.
 - Portfolio/Catalog وVerification وBlock/Report وSubscriptions جزء من النموذج الحالي.
 
-**الحكم:** الجانب النصي من Chapter Three مغلق للمراجعة الأولية، باستثناء المخططات المؤجلة صراحة وبعض Needs Verification التشغيلية التي لا تمنع Core Design. ولا يصبح الفصل Baselined نهائيًا إلا بعد استكمال المخططات والتتبع النهائي ومراجعة الفريق/المشرف.
+**الحكم:** الجانب النصي وWorking Models متزامنة للمراجعة الأولية، لكن الفصل لا يصبح Baselined أو جاهزًا نهائيًا إلا بعد final diagram redraw/export، إكمال Design Traceability، ومراجعة الفريق/المشرف.
