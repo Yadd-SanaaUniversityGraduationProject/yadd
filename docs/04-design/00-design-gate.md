@@ -1,12 +1,17 @@
 # Design Gate
 
-> **الحالة:** `PARTIALLY_BLOCKED`
+> **الحالة:** `OPEN FOR PRELIMINARY DESIGN — FINAL BASELINE STILL BLOCKED`
+>
+> **آخر مزامنة:** 2026-09-05
+
+وفق `DEC-059`، Chapter Four مطلوب بمستوى تصميم كامل للمناقشة الأولية، بينما يبقى SRS الحالي `PARTIALLY ANALYZED — NOT BASELINED`. لذلك يجوز إعداد ومراجعة تصميمات كاملة للمناقشة، لكن لا تعامل كالتزام تنفيذ نهائي أو Database Baseline قبل المراجعة النهائية.
 
 قبل اعتماد أي تصميم نهائي:
 
-- SRS core requirements reviewed.
-- Business rules for requests/offers/invoices/reviews resolved.
-- ERD conceptual reviewed.
-- GOV-Q01 يحدد مستوى التصميم المطلوب للتسليم القريب.
+- مراجعة SRS core requirements وTraceability النهائية.
+- بقاء Business Rules/Lifecycles الحرجة متسقة مع القرارات الحالية، بما فيها `DEC-073`.
+- مراجعة ERD المفاهيمي وربط كل Entity بحاجة موثقة.
+- إغلاق أو إبقاء Design Decisions الفيزيائية غير المحسومة مصنفة بوضوح بدل تخمينها.
+- اجتياز `docs/00-governance/06-readiness-checklist.md` للمستوى المطلوب.
 
-يمكن إعداد Drafts الآن لتوفير الوقت، لكن تحمل `DRAFT` ولا تعكس قرارًا نهائيًا.
+مخرجات Chapter Four الحالية تصنف `DRAFT FOR PRELIMINARY DEFENSE` حتى Baseline رسمي لاحق.
