@@ -1,10 +1,10 @@
 # Data Gathering Plan & Evidence Log
 
-> **الحالة:** `SURVEY ANALYZED — INTERVIEWS NOT PLANNED — ACADEMIC CONFIRMATION REQUIRED`
+> **الحالة:** `SURVEY ANALYZED — SURVEY-ONLY USER DATA APPROACH ACCEPTED — SYNCHRONIZED 2026-09-05`
 
 ## 1. منهج جمع البيانات الحالي
 
-قرر الفريق أن تكون أداة جمع بيانات المستخدمين الميدانية في المشروع هي **الاستبيان `SUR-01` فقط**. لا توجد مقابلات ميدانية منفذة، ولا تُنشأ سجلات `INT-*`، ولا توجد Observation ميدانية للمستخدمين مخططة حاليًا.
+أداة جمع بيانات المستخدمين الميدانية المعتمدة للمشروع هي **الاستبيان `SUR-01`**. لا توجد مقابلات ميدانية منفذة، ولا تُنشأ سجلات `INT-*`، ولا توجد Observation ميدانية للمستخدمين منفذة ضمن Evidence الحالي.
 
 يبقى المشروع معتمدًا أيضًا على:
 
@@ -12,7 +12,7 @@
 - **Similar Systems / Direct Platform Inspection** لدراسة الأنظمة المشابهة؛ وهذا يختلف عن Observation الميدانية للمستخدمين.
 - **Research Sources** المسجلة في Source Register.
 
-> **قيد أكاديمي:** هيكل 1447 يذكر صراحة `Document Analysis, Interviews, Observation, Similar Systems` تحت Data Gathering Techniques. لذلك قرار الاكتفاء بالاستبيان كأداة ميدانية للمستخدمين هو قرار فريق يحتاج تثبيت قبوله مع المشرف/القسم عبر `GOV-Q04`. لا نحذف هذا المتطلب من University Requirements Map ولا ندعي أنه غير موجود.
+> **الحوكمة الأكاديمية:** هيكل 1447 يذكر `Document Analysis, Interviews, Observation, Similar Systems` تحت Data Gathering Techniques. حُسم `GOV-Q04` في 2026-09-03 وفق `DEC-062`: قبل المشرف الاستبيان كأداة جمع بيانات المستخدمين للمشروع. الإجابات الشفهية باستخدام أسئلة الاستبيان نفسها تعامل كـ`interviewer-administered questionnaire` وليست مقابلات مستقلة. لا يغيّر هذا القرار نص متطلب الجامعة الأصلي ولا يسمح بادعاء تنفيذ Interviews/Observation لم تنفذ فعليًا.
 
 ---
 
@@ -120,17 +120,18 @@
 
 ### Interviews
 
-`NOT PLANNED`
+`NOT PLANNED / NOT CLAIMED AS EXECUTED`
 
 - `24-interview-guide.md` و`25-interview-record-template.md` محتفظ بهما للتتبع فقط.
 - لا تنشأ معرفات `INT-*`.
 - لا تعتمد أي نتيجة على مقابلة غير منفذة.
+- الإجابات الشفهية باستخدام أسئلة `SUR-01` نفسها تبقى ضمن Evidence الاستبيان وفق `DEC-062` وليست Interviews مستقلة.
 
 ### User Observation
 
-`NOT PLANNED AS FIELD USER DATA`
+`NOT EXECUTED AS FIELD USER DATA`
 
-لا توجد Observation ميدانية للمستخدمين مخططة حاليًا ضمن قرار الاكتفاء بالاستبيان. أما فحص التطبيقات والمنصات المشابهة مباشرة فيصنف `E1-OBS — DIRECT TEAM OBSERVATION` داخل Previous Studies Evidence Map، وليس مقابلة أو Observation مستخدمين.
+لا ينسب المشروع لنفسه User Observation ميدانية غير منفذة. أما فحص التطبيقات والمنصات المشابهة مباشرة فيصنف `E1-OBS — DIRECT TEAM OBSERVATION` داخل Previous Studies Evidence Map، وليس مقابلة أو Observation مستخدمين.
 
 ---
 
@@ -155,10 +156,10 @@
 
 ## 8. شرط الإغلاق الحالي
 
-مرحلة جمع بيانات المستخدمين عبر الاستبيان **منفذة ومحللة**. ما يزال مطلوبًا قبل إغلاق Data Gathering أكاديميًا:
+مرحلة جمع بيانات المستخدمين عبر الاستبيان **منفذة ومحللة**، وقبول Survey-only كأداة جمع بيانات المستخدمين ثبت عبر `GOV-Q04 / DEC-062`. ما يزال مطلوبًا قبل اعتبار Data Gathering الأكاديمي مكتملًا للنسخة النهائية:
 
-1. تثبيت قبول قرار عدم تنفيذ Interviews/Observation مع المشرف/القسم (`GOV-Q04`).
-2. إكمال Similar Systems والمصادر اللازمة.
-3. دمج Findings النهائية في `03-current-system-analysis.md` دون تجاوز حدود العينة.
+1. استكمال Similar Systems والمصادر اللازمة للمستوى الأكاديمي المطلوب.
+2. دمج Findings النهائية في `03-current-system-analysis.md` دون تجاوز حدود العينة.
+3. الحفاظ على Traceability بين أي استنتاج مستخدم أكاديميًا وبين Evidence/Source Register.
 
-إذا لم يُقبل `GOV-Q04`، يعاد فتح خطة المقابلات/الملاحظة فقط بالقدر الذي يطلبه المشرف/القسم.
+أي طلب لاحق من المشرف بإضافة أداة جمع بيانات جديدة يعامل كتوجيه جديد ويحدث الخطة حينها؛ لا تفترض مقابلات أو ملاحظة إضافية دون ذلك.
