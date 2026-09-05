@@ -1,6 +1,6 @@
 # Process, Data Flow & Data Store Specifications
 
-> **الحالة:** `ANALYZED — SYNCHRONIZED 2026-09-04`
+> **الحالة:** `ANALYZED — SYNCHRONIZED 2026-09-05`
 >
 > هذه الوثيقة مشتقة من `05-SRS.md`, `06-business-rules.md`, `07-lifecycles.md`, `08-use-cases.md`, و`09-DFD.md`. جميع التسميات داخل المخططات النهائية باللغة الإنجليزية وفق DEC-072.
 
@@ -11,9 +11,9 @@
 | 1.0 | Manage Accounts & Provider Profiles | account data, provider profile data, service areas, portfolio/catalog data | account/profile information, portal information | D1, D2, D7 | DEC-008..011/029..036/064 |
 | 2.0 | Manage Discovery & Requests | search criteria, request data, request closure | search results, matching requests, request status | D1, D2, D3 | DEC-012..014/031..033/045/048/049 |
 | 3.0 | Manage Provider Responses & Communication | provider response data, response edit/withdrawal, messages, provider selection, transaction-start request/confirmation | responses, messages, selection/start result | D3, D4 | DEC-023/046/047/066/069/070 |
-| 4.0 | Manage Transactions & Invoices | selected provider, confirmed direct start, cancellation data, invoice/revision data, invoice approval | transaction status, invoice status, completed transaction reference | D4, D5 | DEC-015/025/048/050/055/066/069/071 |
-| 5.0 | Manage Ratings & Reputation | provider rating, beneficiary behavioral rating | provider reputation, beneficiary interaction record | D4, D6 | DEC-051/052/063/071 |
-| 6.0 | Manage Administration, Verification & Safety | verification submission/decision, subscription updates, reports, moderation actions | verification/subscription/report status, flags, audit information | D1, D7, D8 | DEC-034..043/053/054/064 |
+| 4.0 | Manage Transactions & Invoices | selected provider, confirmed direct start, cancellation data, invoice/revision data, invoice approval, complaint data | transaction status, invoice status, completed transaction reference, complaint reference | D4, D5 | DEC-015/025/048/050/055/066/069/071/073 |
+| 5.0 | Manage Ratings & Reputation | provider rating, beneficiary behavioral rating | provider reputation, beneficiary interaction record | D4, D6 | DEC-051/052/063/071/073 |
+| 6.0 | Manage Administration, Verification & Safety | verification submission/decision, subscription updates, reports, complaint reference/evidence, moderation actions | verification/subscription/report/complaint status, flags, audit information | D1, D7, D8 | DEC-034..043/053/054/064/073 |
 
 ## 2. Logical Data Stores
 
@@ -26,7 +26,7 @@
 | D5 | Invoices | final/revised invoice versions and invoice items |
 | D6 | Ratings & Interaction Records | Beneficiary→Provider rating and optional Provider→Beneficiary interaction rating |
 | D7 | Portfolio / Catalog | Showcase/Portfolio/Catalog metadata and display media references |
-| D8 | Verification / Subscription / Reports & Admin Audit | verification cases, subscription records, reports/flags and administrative audit information |
+| D8 | Verification / Subscription / Reports & Admin Audit | verification cases, subscription records, reports/complaints/flags and administrative audit information |
 
 ## 3. Process Constraints Relevant to Diagrams
 
@@ -56,17 +56,21 @@
 - Invoice may be Approved or Revision Requested; no Auto-Approval.
 - Invoice approval sets Transaction to `Completed`.
 - `Completed` is the successful terminal Transaction state. Ratings occur after it and do not create `Closed` Transaction status.
-- Payment/Refund/Escrow are outside YADD.
+- If a pre-approval invoice dispute remains unresolved, Transaction becomes `Disputed`, a terminal unsuccessful state — DEC-073.
+- Complaint evidence may be reviewed administratively, but YADD does not decide financial/commercial entitlement or order Payment/Refund/Compensation.
+- Payment/Refund/Escrow/Settlement are outside YADD.
 
 ### 5.0 Manage Ratings & Reputation
 - Beneficiary→Provider rating is required after Completed: 1–5 stars, optional comment.
 - Provider→Beneficiary rating is optional after Completed: three 1–5 behavioral indicators plus optional comment.
 - Ratings are Post-Transaction operations and never reopen or close the Transaction.
+- No Ratings for `Cancelled` or `Disputed` Transactions.
 
 ### 6.0 Manage Administration, Verification & Safety
 - Verification final decision is human.
 - AI may assist and produce Flags but does not issue final high-impact decisions alone.
 - Subscription collection is external; YADD records/administratively confirms subscription state.
+- Transaction Complaint review applies YADD policy/admin action only; no financial/commercial arbitration authority.
 
 ## 4. Data Flow Naming Rule
 
@@ -75,7 +79,7 @@ Data flows in DFD must be named as **data/noun phrases**, not actions. Examples:
 - `Request Data`, not `Create Request`.
 - `Provider Response Data`, not `Submit Response`.
 - `Transaction Start Request` / `Start Confirmation`, not `Start Transaction` as a data-flow label.
-- `Invoice Approval`, `Revision Request`, `Transaction Status`, `Rating Data`.
+- `Invoice Approval`, `Revision Request`, `Complaint Data`, `Transaction Status`, `Rating Data`.
 
 ## 5. Open Items That Do Not Block Core Diagrams
 
