@@ -1,71 +1,71 @@
-# In-App Communication Model
+# نموذج التواصل داخل التطبيق — In-App Communication Model
 
 > **الحالة:** `ANALYZED_APPROVED — SYNCHRONIZED 2026-09-04`
 >
 > **القرارات المرجعية:** DEC-023/024/046/047/053/055/069.
 
-## 1. Core Decision
+## 1. القرار الأساسي
 
-YADD provides private in-app communication between Beneficiary and Provider. Communication may begin **before a Transaction** for inquiry and negotiation. Chat alone does not create a Transaction.
+يوفر YADD تواصلًا خاصًا داخل التطبيق بين `Beneficiary` و`Provider`. يمكن أن يبدأ التواصل **قبل وجود Transaction** لأغراض الاستفسار والتفاوض. المحادثة وحدها لا تنشئ `Transaction`.
 
-After Transaction starts, the same private context may continue for execution details. Basic in-app communication does not require exposing a phone number to the other party.
+بعد بدء `Transaction`، يمكن أن يستمر سياق التواصل الخاص نفسه لتفاصيل التنفيذ. لا يتطلب التواصل الأساسي داخل التطبيق كشف رقم الهاتف للطرف الآخر.
 
-## 2. Communication Routes
+## 2. مسارات التواصل
 
-### Published Request Route
+### مسار الطلب المنشور — Published Request Route
 
 `Request → Provider Response → Inquiry / Chat → Beneficiary Selects Provider → Active Transaction`
 
-Provider selection closes the Request to new responses and starts the Transaction with the selected Provider. No extra Agreement entity or mandatory agreement form exists in this route.
+يؤدي اختيار المقدم إلى إغلاق `Request` أمام الاستجابات الجديدة وبدء `Transaction` مع الـ`Provider` المختار. لا يوجد في هذا المسار `Agreement` entity إضافية أو نموذج اتفاق إلزامي.
 
-### Direct Search Route
+### مسار البحث المباشر — Direct Search Route
 
 `Search → Provider Profile → Inquiry / Chat → Request Transaction Start → Other Party Confirmation → Active Transaction`
 
-Rules:
-- either Beneficiary or Provider may send `Request Transaction Start`;
-- YADD asks the other party for confirmation;
-- only explicit confirmation creates `Active Transaction`;
-- rejection or no confirmation leaves the conversation without a Transaction.
+القواعد:
+- يمكن لأي من `Beneficiary` أو `Provider` إرسال `Request Transaction Start`؛
+- يطلب YADD من الطرف الآخر التأكيد؛
+- التأكيد الصريح وحده ينشئ `Active Transaction`؛
+- الرفض أو عدم التأكيد يترك المحادثة دون `Transaction`.
 
-## 3. MVP Communication Scope
+## 3. نطاق التواصل في MVP
 
-Minimum supported concepts:
-- text messages;
-- images/attachments related to the request or execution when needed;
-- message notifications;
-- conversation retention according to privacy/retention policy;
-- Block + Report.
+الحد الأدنى من المفاهيم المدعومة:
+- رسائل نصية؛
+- صور/مرفقات مرتبطة بالطلب أو التنفيذ عند الحاجة؛
+- إشعارات الرسائل؛
+- الاحتفاظ بالمحادثة وفق سياسة الخصوصية/الاحتفاظ؛
+- `Block + Report`.
 
-Voice/video calls are not part of the current core model. Voice messages remain `PROPOSED` and must not appear as an approved use case unless separately approved.
+مكالمات الصوت/الفيديو ليست جزءًا من الـCore Model الحالي. تظل الرسائل الصوتية `PROPOSED` ولا يجوز إظهارها كـUse Case معتمدة ما لم تعتمد بصورة مستقلة.
 
-## 4. Communication, Negotiation and Invoice
+## 4. التواصل والتفاوض والفاتورة
 
-- price/details/changes may be discussed in chat;
-- MVP has no standalone Change Order entity/process;
-- conversation may be used as supporting evidence in a complaint;
-- the approved final invoice is the authoritative final record of items and prices inside YADD.
+- يمكن مناقشة السعر/التفاصيل/التغييرات داخل المحادثة؛
+- لا يحتوي MVP على `Change Order` entity/process مستقلة؛
+- يمكن استخدام المحادثة كدليل داعم في الشكوى؛
+- تمثل الفاتورة النهائية المعتمدة السجل النهائي المرجعي للعناصر والأسعار داخل YADD.
 
-## 5. External Communication
+## 5. التواصل الخارجي
 
-YADD does not claim to prevent external communication. External discussions are not automatically part of YADD's official record; if they change the final items/prices, the agreed result must be reflected in the final invoice to become part of YADD's transaction record.
+لا يدعي YADD أنه يمنع التواصل خارج المنصة. لا تصبح المناقشات الخارجية تلقائيًا جزءًا من السجل الرسمي لـYADD؛ وإذا غيرت العناصر/الأسعار النهائية، فيجب أن تنعكس النتيجة المتفق عليها في الفاتورة النهائية حتى تصبح جزءًا من سجل `Transaction` داخل YADD.
 
-## 6. Approved Rules
+## 6. القواعد المعتمدة
 
-- `COM-BR-01`: Private inquiry is allowed before Transaction.
-- `COM-BR-02`: Chat alone does not create Transaction.
-- `COM-BR-03`: Request route starts Transaction when Beneficiary selects Provider.
-- `COM-BR-04`: Direct Search starts Transaction only after one party sends `Request Transaction Start` and the other confirms.
-- `COM-BR-05`: Basic in-app communication does not require phone-number exposure.
-- `COM-BR-06`: Messages/attachments follow privacy and retention policy.
-- `COM-BR-07`: Conversation may support complaint review.
-- `COM-BR-08`: Approved final invoice is the final YADD record of items/prices.
-- `COM-BR-09`: Block + Report is supported; reports require review.
+- `COM-BR-01`: يسمح بالاستفسار الخاص قبل `Transaction`.
+- `COM-BR-02`: المحادثة وحدها لا تنشئ `Transaction`.
+- `COM-BR-03`: يبدأ مسار `Request` الـ`Transaction` عندما يختار `Beneficiary` مقدمًا.
+- `COM-BR-04`: يبدأ `Direct Search` الـ`Transaction` فقط بعد أن يرسل أحد الطرفين `Request Transaction Start` ويؤكد الطرف الآخر.
+- `COM-BR-05`: لا يتطلب التواصل الأساسي داخل التطبيق كشف رقم الهاتف.
+- `COM-BR-06`: تخضع الرسائل/المرفقات لسياسة الخصوصية والاحتفاظ.
+- `COM-BR-07`: يمكن للمحادثة أن تدعم مراجعة الشكوى.
+- `COM-BR-08`: الفاتورة النهائية المعتمدة هي سجل YADD النهائي للعناصر/الأسعار.
+- `COM-BR-09`: يدعم النظام `Block + Report`، وتحتاج البلاغات إلى مراجعة.
 
-## 7. Diagram Guidance
+## 7. إرشادات المخططات — Diagram Guidance
 
-For Activity/Sequence diagrams, never replace the Direct Search start flow with a vague `Both Agree to Start` action. Show the two explicit interactions:
+في مخططات `Activity/Sequence`، لا تستبدل مسار بدء `Direct Search` بعبارة عامة مثل `Both Agree to Start`. يجب إظهار التفاعلين الصريحين:
 
 `Request Transaction Start → Other Party Confirmation → Active Transaction`.
 
-The exact UI control used for requesting/confirming start is a design detail and does not block analysis diagrams.
+عنصر الواجهة الدقيق المستخدم لطلب/تأكيد البدء هو تفصيل تصميمي ولا يعيق مخططات التحليل.
