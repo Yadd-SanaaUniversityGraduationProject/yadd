@@ -1,32 +1,32 @@
-# UML Models — YADD Preliminary Defense
+# نماذج UML — YADD Preliminary Defense
 
-> **Status:** `DRAFT FOR PRELIMINARY DEFENSE — CORE SYNCHRONIZED 2026-09-04`
+> **الحالة:** `DRAFT FOR PRELIMINARY DEFENSE — CORE SYNCHRONIZED 2026-09-04`
 >
-> **Governing basis:** DEC-046/047/048/050/051/063/064/066/067/068/069/070/071/072/073 + `05-SRS.md` + `06-business-rules.md` + `07-lifecycles.md` + `08-use-cases.md`.
+> **المراجع الحاكمة:** DEC-046/047/048/050/051/063/064/066/067/068/069/070/071/072/073 + `05-SRS.md` + `06-business-rules.md` + `07-lifecycles.md` + `08-use-cases.md`.
 >
-> YADD uses DFD and UML together according to DEC-060. All labels inside final academic diagrams must be English according to DEC-072.
+> يستخدم YADD كلًا من DFD وUML وفق `DEC-060`. يجب أن تكون جميع التسميات داخل المخططات الأكاديمية النهائية باللغة الإنجليزية وفق `DEC-072`.
 
-## 1. Actor Model
+## 1. نموذج الـActors
 
-### Main actors
+### الـActors الرئيسيون
 - `Beneficiary`
 - `Provider`
-  - `Service Provider` specialization when useful
-  - `Product Provider` specialization when useful
+  - تخصص `Service Provider` عند الحاجة
+  - تخصص `Product Provider` عند الحاجة
 - `YADD Administrator`
 
-### Specialized administrative roles
+### الأدوار الإدارية المتخصصة
 - `Verification Reviewer`
 - `Content Moderator`
 - `Subscription Administrator`
 
-`YADD Administrator` is a modeling simplification for the main diagram and does not imply one employee owns all administrative permissions.
+استخدام `YADD Administrator` في المخطط الرئيسي هو تبسيط نمذجي، ولا يعني أن موظفًا واحدًا يمتلك جميع الصلاحيات الإدارية.
 
 ---
 
-## 2. Main Use Case Diagram — Working Representation
+## 2. Main Use Case Diagram — تمثيل عمل
 
-> Mermaid is used only as a working semantic representation. The final academic Use Case Diagram must use standard UML actors, system boundary and oval use cases.
+> يستخدم Mermaid هنا فقط كتمثيل دلالي أثناء العمل. يجب أن يستخدم `Use Case Diagram` الأكاديمي النهائي Actors قياسيين، وحدود النظام، وUse Cases بيضاوية وفق UML.
 
 ```mermaid
 flowchart LR
@@ -94,15 +94,15 @@ flowchart LR
     A --- UC23
 ```
 
-### Main Use Case semantics
+### دلالات Main Use Case
 
-1. `Service Provider` and `Product Provider` inherit general Provider behavior; do not duplicate all inherited use cases unless needed for clarity.
-2. No `Guest` actor is currently approved.
-3. No standalone `Agreement` use case/entity exists. Request route is `Request → Provider Response → Selection → Transaction`.
-4. `Manage Provider Response` covers submit/edit/withdraw under DEC-070. `RequiresDeposit = Yes/No` is data inside Provider Response, **not a standalone Use Case**.
-5. `Start Transaction` has both Beneficiary and Provider associations because either may request start in Direct Search. The other party must confirm before Active Transaction is created.
-6. In Request route, Beneficiary selection starts the Transaction with the selected Provider. Do not force an `<<include>>` relation in the main overview if it obscures the different Direct Search semantics; details belong in specifications/Activity/Sequence.
-7. Beneficiary→Provider rating is mandatory after Completed; Provider→Beneficiary rating is optional.
+1. يرث `Service Provider` و`Product Provider` السلوك العام للـ`Provider`؛ لذلك لا تكرر كل Use Cases الموروثة إلا عند الحاجة للوضوح.
+2. لا يوجد Actor باسم `Guest` معتمد حاليًا.
+3. لا يوجد Use Case أو entity مستقلة باسم `Agreement`. مسار الطلب هو `Request → Provider Response → Selection → Transaction`.
+4. تغطي `Manage Provider Response` الإرسال/التعديل/السحب وفق `DEC-070`. وتمثل `RequiresDeposit = Yes/No` بيانات داخل `Provider Response`، **وليست Use Case مستقلة**.
+5. ترتبط `Start Transaction` بكل من `Beneficiary` و`Provider` لأن أيًا منهما قد يطلب البدء في `Direct Search`. ويجب أن يؤكد الطرف الآخر قبل إنشاء `Active Transaction`.
+6. في مسار `Request`، يبدأ اختيار `Beneficiary` للـ`Provider` المختار الـ`Transaction`. لا تفرض علاقة `<<include>>` في العرض الرئيسي إذا كانت ستخفي اختلاف دلالة `Direct Search`؛ توضع التفاصيل في المواصفات وActivity/Sequence.
+7. تقييم `Beneficiary→Provider` إلزامي بعد `Completed`؛ وتقييم `Provider→Beneficiary` اختياري.
 
 ---
 
@@ -147,7 +147,7 @@ flowchart TD
     Y -- No --> ZE
 ```
 
-`Completed` is the successful terminal Transaction state; ratings shown afterward are Post-Transaction workflow only. `Disputed` is a terminal unsuccessful state when the pre-approval invoice dispute remains unresolved. Administration reviews YADD evidence and applies platform policy but does not decide payment, refund, compensation or other financial/commercial entitlement between the parties.
+`Completed` هي الحالة النهائية الناجحة للـ`Transaction`؛ أما التقييمات الظاهرة بعدها فهي Post-Transaction workflow فقط. `Disputed` حالة نهائية غير ناجحة عندما يبقى نزاع الفاتورة قبل الاعتماد دون حل. تراجع الإدارة أدلة YADD وتطبق سياسة المنصة، لكنها لا تقرر الدفع أو الاسترداد أو التعويض أو أي استحقاق مالي/تجاري آخر بين الطرفين.
 
 ---
 
@@ -168,7 +168,7 @@ flowchart TD
     H --> Z2([End])
 ```
 
-Chat alone does not create Transaction.
+المحادثة وحدها لا تنشئ `Transaction`.
 
 ---
 
@@ -297,11 +297,11 @@ sequenceDiagram
 
 ---
 
-## 7. Class Diagram — Source Model
+## 7. Class Diagram — النموذج المصدر
 
-The Class Diagram must be rebuilt from the synchronized conceptual ERD in `11-ERD.md`; do not reuse the old `Offer → Agreement → Review` class model.
+يجب إعادة بناء `Class Diagram` من الـConceptual ERD المتزامن في `11-ERD.md`، وعدم إعادة استخدام نموذج الكلاسات القديم `Offer → Agreement → Review`.
 
-Minimum current domain classes/concepts:
+الحد الأدنى من Domain classes/concepts الحالية:
 - User
 - ProviderProfile
 - ProviderActivity
@@ -319,26 +319,26 @@ Minimum current domain classes/concepts:
 - Subscription
 - Report
 
-Physical database choices such as Media table structure or `InvoiceVersion` vs `Invoice + Revision` are Chapter Four design decisions and must not be invented as analysis facts.
+خيارات قاعدة البيانات الفيزيائية مثل بنية جدول Media أو `InvoiceVersion` مقابل `Invoice + Revision` هي قرارات تصميم في Chapter Four، ولا يجوز اختلاقها كحقائق تحليلية.
 
 ---
 
-## 8. Diagram Readiness Checklist
+## 8. قائمة جاهزية المخططات — Diagram Readiness Checklist
 
-- [x] Actors aligned with DEC-067.
-- [x] English-only labels aligned with DEC-072.
-- [x] No Guest actor.
-- [x] No standalone Agreement.
-- [x] Canonical term is Provider Response.
-- [x] Provider Response edit/withdraw represented.
-- [x] RequiresDeposit is response data, not a standalone use case/payment flow.
-- [x] Direct Search start request + other-party confirmation represented.
-- [x] Request selection creates one Transaction.
-- [x] Invoice approval leads to Completed.
-- [x] No Transaction state Closed.
-- [x] Unresolved pre-approval dispute leads to terminal `Disputed`.
-- [x] Administration does not decide payment/refund/compensation entitlement.
-- [x] Ratings occur only after Completed, not after Cancelled or Disputed.
-- [x] Beneficiary→Provider rating mandatory; Provider→Beneficiary optional.
-- [x] Class Diagram source concepts defined from synchronized ERD.
-- [ ] Final visual redraw/export in standard UML notation remains to be produced.
+- [x] الـActors متوافقة مع `DEC-067`.
+- [x] التسميات الإنجليزية فقط متوافقة مع `DEC-072`.
+- [x] لا يوجد `Guest` actor.
+- [x] لا توجد `Agreement` مستقلة.
+- [x] المصطلح القياسي هو `Provider Response`.
+- [x] تعديل/سحب `Provider Response` ممثل.
+- [x] `RequiresDeposit` بيانات داخل الاستجابة وليست Use Case/Payment flow مستقلة.
+- [x] طلب بدء `Direct Search` + تأكيد الطرف الآخر ممثلان.
+- [x] اختيار `Request` ينشئ `Transaction` واحدة.
+- [x] اعتماد الفاتورة يؤدي إلى `Completed`.
+- [x] لا توجد حالة `Transaction` باسم `Closed`.
+- [x] النزاع غير المحلول قبل الاعتماد يؤدي إلى الحالة النهائية `Disputed`.
+- [x] الإدارة لا تقرر استحقاق payment/refund/compensation.
+- [x] تحدث `Ratings` فقط بعد `Completed`، وليس بعد `Cancelled` أو `Disputed`.
+- [x] تقييم `Beneficiary→Provider` إلزامي؛ وتقييم `Provider→Beneficiary` اختياري.
+- [x] مفاهيم مصدر `Class Diagram` محددة من ERD المتزامن.
+- [ ] ما يزال مطلوبًا إعادة الرسم/التصدير البصري النهائي وفق ترميز UML القياسي.
