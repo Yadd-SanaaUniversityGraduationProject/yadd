@@ -1,43 +1,43 @@
-# Account & Portal Model
+# نموذج الحساب والبوابات — Account & Portal Model
 
-> **Status:** `ANALYZED_APPROVED — SYNCHRONIZED 2026-09-04`
+> **الحالة:** `ANALYZED_APPROVED — SYNCHRONIZED 2026-09-04`
 >
-> **Decision basis:** DEC-008..011, DEC-029/030, DEC-034/035.
+> **أساس القرارات:** DEC-008..011, DEC-029/030, DEC-034/035.
 
-## 1. Core Account Decision
+## 1. القرار الأساسي للحساب
 
-YADD uses **one User account per person**. Beneficiary and Provider are not separate account types.
+يعتمد YADD **حساب `User` واحدًا لكل شخص**. لا يمثل `Beneficiary` و`Provider` نوعين منفصلين من الحسابات.
 
-On first use, the person may choose which portal to start with:
+عند الاستخدام الأول، يمكن للشخص اختيار البوابة التي يبدأ منها:
 
 1. `Beneficiary Portal`
 2. `Provider Portal`
 
-This choice controls onboarding/start experience only; it does not create a permanent account type.
+هذا الاختيار يتحكم فقط في تجربة البداية/التهيئة (`onboarding/start experience`) ولا ينشئ نوع حساب دائمًا.
 
-## 2. Beneficiary Portal
+## 2. بوابة المستفيد — Beneficiary Portal
 
-A User may use Beneficiary capabilities without owning a Provider Profile.
+يمكن لـ`User` استخدام إمكانات `Beneficiary` دون امتلاك `Provider Profile`.
 
-Core Beneficiary capabilities include discovery, Request creation, communication, provider selection/transaction start, invoice review, provider rating, Block/Report, subject to the related business rules.
+تشمل إمكانات المستفيد الأساسية: الاكتشاف، إنشاء `Request`، التواصل، اختيار `Provider`/بدء `Transaction`، مراجعة الفاتورة، تقييم المقدم، و`Block/Report`، مع الخضوع لقواعد العمل ذات الصلة.
 
-## 3. Provider Portal
+## 3. بوابة المقدم — Provider Portal
 
-Provider capabilities use a `Provider Profile` attached to the same User account.
+تستخدم إمكانات `Provider` ملف `Provider Profile` مرتبطًا بحساب `User` نفسه.
 
-Current rules:
-- a User may have zero or one Provider Profile;
-- Provider Profile may activate `Service Activity`, `Product Activity`, or both;
-- Provider Profile must pass Provider Verification before provider submission functions;
-- submitting new Provider Responses additionally requires an Active Subscription.
+القواعد الحالية:
+- يمكن لـ`User` امتلاك صفر أو `Provider Profile` واحد؛
+- يمكن لـ`Provider Profile` تفعيل `Service Activity` أو `Product Activity` أو كليهما؛
+- يجب أن يجتاز `Provider Profile` عملية `Provider Verification` قبل وظائف التقديم الخاصة بالمقدم؛
+- يتطلب إرسال `Provider Responses` جديدة بالإضافة إلى ذلك اشتراكًا `Active`.
 
-## 4. Portal Switching
+## 4. التبديل بين البوابات — Portal Switching
 
-- a Beneficiary may create/complete a Provider Profile from the same account;
-- after Provider Profile activation, the User may switch between Beneficiary and Provider portals;
-- a User who started as Provider may use Beneficiary capabilities without creating another account.
+- يمكن لـ`Beneficiary` إنشاء/استكمال `Provider Profile` من الحساب نفسه؛
+- بعد تفعيل `Provider Profile`، يمكن لـ`User` التبديل بين `Beneficiary Portal` و`Provider Portal`؛
+- يمكن لـ`User` الذي بدأ كمقدم استخدام إمكانات `Beneficiary` دون إنشاء حساب آخر.
 
-## 5. Conceptual Model
+## 5. النموذج المفاهيمي
 
 ```mermaid
 flowchart TD
@@ -53,36 +53,36 @@ flowchart TD
     B <-->|Switch Portal| P
 ```
 
-All labels in the final academic diagram must be English according to DEC-072.
+يجب أن تكون جميع التسميات داخل المخطط الأكاديمي النهائي باللغة الإنجليزية وفق `DEC-072`.
 
-## 6. Approved Rules
+## 6. القواعد المعتمدة
 
-| ID | Rule | Status |
+| ID | القاعدة | الحالة |
 |---|---|---|
-| ACC-BR-01 | One User account per person. | `ANALYZED_APPROVED` |
-| ACC-BR-02 | First-use choice selects start portal, not permanent account type. | `ANALYZED_APPROVED` |
-| ACC-BR-03 | Provider Profile is attached to User, not a separate account. | `ANALYZED_APPROVED` |
-| ACC-BR-04 | Switching to Beneficiary Portal never needs another account. | `ANALYZED_APPROVED` |
-| ACC-BR-05 | Beneficiary may start Provider Profile creation from the same account. | `ANALYZED_APPROVED` |
-| ACC-BR-06 | Provider submission functions require an activated/verified Provider Profile. | `ANALYZED_APPROVED` |
-| ACC-BR-07 | Provider Profile may activate Service Activity, Product Activity, or both. | `ANALYZED_APPROVED` |
+| ACC-BR-01 | حساب `User` واحد لكل شخص. | `ANALYZED_APPROVED` |
+| ACC-BR-02 | اختيار الاستخدام الأول يحدد بوابة البداية، وليس نوع حساب دائمًا. | `ANALYZED_APPROVED` |
+| ACC-BR-03 | يرتبط `Provider Profile` بـ`User` ولا يمثل حسابًا منفصلًا. | `ANALYZED_APPROVED` |
+| ACC-BR-04 | التبديل إلى `Beneficiary Portal` لا يحتاج أبدًا إلى حساب آخر. | `ANALYZED_APPROVED` |
+| ACC-BR-05 | يمكن لـ`Beneficiary` بدء إنشاء `Provider Profile` من الحساب نفسه. | `ANALYZED_APPROVED` |
+| ACC-BR-06 | تتطلب وظائف التقديم الخاصة بالمقدم `Provider Profile` مفعّلًا/متحققًا. | `ANALYZED_APPROVED` |
+| ACC-BR-07 | يمكن لـ`Provider Profile` تفعيل `Service Activity` أو `Product Activity` أو كليهما. | `ANALYZED_APPROVED` |
 
-## 7. Verification Detail Boundary
+## 7. حدود تفاصيل التحقق — Verification Detail Boundary
 
-Provider Verification itself is approved and includes, at minimum, an official identity document plus a personal photo with the document and final human review.
+عملية `Provider Verification` نفسها معتمدة، وتتضمن كحد أدنى وثيقة هوية رسمية إضافة إلى صورة شخصية مع الوثيقة ومراجعة بشرية نهائية.
 
-Still open and **not to be invented in diagrams**:
-- exact accepted identity-document types/sides;
-- retention period for identity/verification data;
-- activity categories requiring additional professional licensing.
+ما يزال مفتوحًا و**لا يجوز اختلاقه داخل المخططات**:
+- أنواع/جوانب وثائق الهوية المقبولة بدقة؛
+- مدة الاحتفاظ ببيانات الهوية/التحقق؛
+- فئات الأنشطة التي تتطلب ترخيصًا مهنيًا إضافيًا.
 
-These do not alter the account/portal structure.
+هذه التفاصيل لا تغير بنية الحساب/البوابات.
 
-## 8. Diagram Impact
+## 8. الأثر على المخططات — Diagram Impact
 
-For current diagrams:
-- do not create separate `Customer Account` and `Provider Account` entities;
-- model `Beneficiary` and `Provider` as behavioral actors using the same User identity;
-- use `USER 1 → 0..1 PROVIDER_PROFILE` conceptually;
-- Service Provider/Product Provider may appear as specializations of the general Provider actor where useful;
-- no Guest actor is approved.
+بالنسبة للمخططات الحالية:
+- لا تنشئ كيانين منفصلين باسم `Customer Account` و`Provider Account`؛
+- مثّل `Beneficiary` و`Provider` كـActors سلوكيين يستخدمان هوية `User` نفسها؛
+- استخدم مفاهيميًا `USER 1 → 0..1 PROVIDER_PROFILE`؛
+- يمكن إظهار `Service Provider` و`Product Provider` كتخصصين (`specializations`) للـ`Provider` العام عندما يضيف ذلك وضوحًا؛
+- لا يوجد `Guest` actor معتمد.
