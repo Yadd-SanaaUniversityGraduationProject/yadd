@@ -1,10 +1,10 @@
-# Process, Data Flow & Data Store Specifications
+# مواصفات العمليات وتدفقات البيانات ومخازن البيانات — Process, Data Flow & Data Store Specifications
 
 > **الحالة:** `ANALYZED — SYNCHRONIZED 2026-09-05`
 >
-> هذه الوثيقة مشتقة من `05-SRS.md`, `06-business-rules.md`, `07-lifecycles.md`, `08-use-cases.md`, و`09-DFD.md`. جميع التسميات داخل المخططات النهائية باللغة الإنجليزية وفق DEC-072.
+> هذه الوثيقة مشتقة من `05-SRS.md`, `06-business-rules.md`, `07-lifecycles.md`, `08-use-cases.md`, و`09-DFD.md`. جميع التسميات داخل المخططات النهائية باللغة الإنجليزية وفق `DEC-072`.
 
-## 1. Processes — DFD Level 0
+## 1. العمليات — DFD Level 0
 
 | ID | Process | Main Inputs | Main Outputs | Logical Stores | Basis |
 |---|---|---|---|---|---|
@@ -15,82 +15,82 @@
 | 5.0 | Manage Ratings & Reputation | provider rating, beneficiary behavioral rating | provider reputation, beneficiary interaction record | D4, D6 | DEC-051/052/063/071/073 |
 | 6.0 | Manage Administration, Verification & Safety | verification submission/decision, subscription updates, reports, complaint reference/evidence, moderation actions | verification/subscription/report/complaint status, flags, audit information | D1, D7, D8 | DEC-034..043/053/054/064/073 |
 
-## 2. Logical Data Stores
+## 2. مخازن البيانات المنطقية — Logical Data Stores
 
-| ID | Store | Purpose |
+| ID | Store | الغرض |
 |---|---|---|
-| D1 | Users & Provider Profiles | User account, Provider Profile and core profile state |
-| D2 | Categories & Areas | categories, districts/neighborhoods and service-area reference data |
-| D3 | Requests & Provider Responses | Requests and Provider Responses including response status and `RequiresDeposit` boolean |
-| D4 | Conversations & Transactions | private conversations/messages and Transaction records/status |
-| D5 | Invoices | final/revised invoice versions and invoice items |
-| D6 | Ratings & Interaction Records | Beneficiary→Provider rating and optional Provider→Beneficiary interaction rating |
-| D7 | Portfolio / Catalog | Showcase/Portfolio/Catalog metadata and display media references |
-| D8 | Verification / Subscription / Reports & Admin Audit | verification cases, subscription records, reports/complaints/flags and administrative audit information |
+| D1 | Users & Provider Profiles | حساب `User` و`Provider Profile` والحالة الأساسية للملف |
+| D2 | Categories & Areas | التصنيفات، المديريات/الأحياء، وبيانات مرجعية لمناطق الخدمة |
+| D3 | Requests & Provider Responses | `Requests` و`Provider Responses` بما فيها حالة الاستجابة و`RequiresDeposit` كقيمة Boolean |
+| D4 | Conversations & Transactions | المحادثات/الرسائل الخاصة وسجلات/حالات `Transaction` |
+| D5 | Invoices | نسخ الفاتورة النهائية/المعدلة وبنود الفاتورة |
+| D6 | Ratings & Interaction Records | تقييم `Beneficiary→Provider` وسجل تقييم التفاعل الاختياري `Provider→Beneficiary` |
+| D7 | Portfolio / Catalog | بيانات `Showcase/Portfolio/Catalog` الوصفية ومراجع وسائط العرض |
+| D8 | Verification / Subscription / Reports & Admin Audit | حالات التحقق، سجلات الاشتراك، البلاغات/الشكاوى/Flags ومعلومات التدقيق الإداري |
 
-## 3. Process Constraints Relevant to Diagrams
+## 3. قيود العمليات ذات الصلة بالمخططات
 
 ### 1.0 Manage Accounts & Provider Profiles
-- One `User` account per person.
-- A User may have zero or one `Provider Profile`.
-- Provider Profile may activate Service Activity, Product Activity, or both.
-- Provider submission functions require required verification; response submission also requires Active Subscription.
+- يوجد حساب `User` واحد لكل شخص.
+- يمكن لـ`User` امتلاك صفر أو `Provider Profile` واحد.
+- يمكن لـ`Provider Profile` تفعيل `Service Activity` أو `Product Activity` أو كليهما.
+- تتطلب وظائف التقديم الخاصة بالمقدم التحقق المطلوب؛ كما يتطلب إرسال الاستجابات `Active Subscription`.
 
 ### 2.0 Manage Discovery & Requests
-- Two discovery routes exist: Direct Search and Create Request.
-- Request location uses District + Neighborhood; exact address/GPS is not public.
-- Request expiry exists in principle; exact inactivity/reminder timing remains `REQ-EXP-Q01` and must not be invented in a diagram.
+- يوجد مساران للاكتشاف: `Direct Search` و`Create Request`.
+- يستخدم موقع `Request` الـ`District + Neighborhood`؛ ولا يكون العنوان الدقيق/GPS عامًا.
+- يوجد `Request expiry` من حيث المبدأ؛ لكن توقيت عدم النشاط/التذكير الدقيق يبقى `REQ-EXP-Q01` ولا يجوز اختلاقه داخل مخطط.
 
 ### 3.0 Manage Provider Responses & Communication
-- Canonical term is `Provider Response`, not Offer.
-- One active Provider Response per Provider per Request.
-- Provider may edit or withdraw the response while Request is Open and no Provider has been selected.
-- `RequiresDeposit` is Yes/No only; no deposit amount or payment state exists in YADD.
-- Chat alone does not create a Transaction.
-- Request route: Beneficiary selection starts the Transaction.
-- Direct Search route: either party sends `Request Transaction Start`; the other party must confirm before `Active Transaction` is created.
+- المصطلح القياسي هو `Provider Response` وليس `Offer`.
+- يسمح باستجابة `Provider Response` فعالة واحدة لكل `Provider` لكل `Request`.
+- يمكن للـ`Provider` تعديل الاستجابة أو سحبها ما دام `Request` بحالة `Open` ولم يتم اختيار مقدم.
+- `RequiresDeposit` هي `Yes/No` فقط؛ ولا توجد قيمة عربون أو حالة دفع داخل YADD.
+- المحادثة وحدها لا تنشئ `Transaction`.
+- في مسار `Request`: يبدأ اختيار `Beneficiary` للـ`Provider` الـ`Transaction`.
+- في مسار `Direct Search`: يرسل أي من الطرفين `Request Transaction Start`، ويجب أن يؤكد الطرف الآخر قبل إنشاء `Active Transaction`.
 
 ### 4.0 Manage Transactions & Invoices
-- No standalone `Agreement` process or store exists.
-- Transaction may start from Request selection or confirmed Direct Search start.
-- Invoice may be Approved or Revision Requested; no Auto-Approval.
-- Invoice approval sets Transaction to `Completed`.
-- `Completed` is the successful terminal Transaction state. Ratings occur after it and do not create `Closed` Transaction status.
-- If a pre-approval invoice dispute remains unresolved, Transaction becomes `Disputed`, a terminal unsuccessful state — DEC-073.
-- Complaint evidence may be reviewed administratively, but YADD does not decide financial/commercial entitlement or order Payment/Refund/Compensation.
-- Payment/Refund/Escrow/Settlement are outside YADD.
+- لا توجد عملية أو Data Store مستقلة باسم `Agreement`.
+- يمكن أن تبدأ `Transaction` من اختيار مقدم داخل `Request` أو من بدء مؤكد في `Direct Search`.
+- يمكن أن تكون الفاتورة `Approved` أو `Revision Requested`؛ ولا يوجد `Auto-Approval`.
+- يؤدي اعتماد الفاتورة إلى جعل `Transaction = Completed`.
+- `Completed` هي الحالة النهائية الناجحة للـ`Transaction`. تحدث `Ratings` بعدها ولا تنشئ حالة `Transaction` باسم `Closed`.
+- إذا استمر نزاع الفاتورة قبل الاعتماد دون حل، تصبح `Transaction = Disputed`، وهي حالة نهائية غير ناجحة — `DEC-073`.
+- يمكن مراجعة أدلة الشكوى إداريًا، لكن YADD لا يقرر الاستحقاق المالي/التجاري ولا يأمر بـ`Payment/Refund/Compensation`.
+- `Payment/Refund/Escrow/Settlement` خارج YADD.
 
 ### 5.0 Manage Ratings & Reputation
-- Beneficiary→Provider rating is required after Completed: 1–5 stars, optional comment.
-- Provider→Beneficiary rating is optional after Completed: three 1–5 behavioral indicators plus optional comment.
-- Ratings are Post-Transaction operations and never reopen or close the Transaction.
-- No Ratings for `Cancelled` or `Disputed` Transactions.
+- تقييم `Beneficiary→Provider` مطلوب بعد `Completed`: من 1–5 نجوم مع تعليق اختياري.
+- تقييم `Provider→Beneficiary` اختياري بعد `Completed`: ثلاثة مؤشرات سلوكية من 1–5 مع تعليق اختياري.
+- `Ratings` عمليات Post-Transaction ولا تعيد فتح `Transaction` ولا تغلقها.
+- لا توجد `Ratings` للـ`Cancelled` أو `Disputed Transactions`.
 
 ### 6.0 Manage Administration, Verification & Safety
-- Verification final decision is human.
-- AI may assist and produce Flags but does not issue final high-impact decisions alone.
-- Subscription collection is external; YADD records/administratively confirms subscription state.
-- Transaction Complaint review applies YADD policy/admin action only; no financial/commercial arbitration authority.
+- القرار النهائي في `Verification` بشري.
+- يمكن للـAI المساعدة وإنتاج `Flags` لكنه لا يصدر قرارات نهائية عالية الأثر وحده.
+- تحصيل `Subscription` خارجي؛ بينما يسجل YADD حالة الاشتراك ويؤكدها إداريًا.
+- مراجعة شكوى `Transaction` تطبق سياسة YADD/الإجراء الإداري فقط، ولا تمنح سلطة تحكيم مالي/تجاري.
 
-## 4. Data Flow Naming Rule
+## 4. قاعدة تسمية تدفقات البيانات — Data Flow Naming Rule
 
-Data flows in DFD must be named as **data/noun phrases**, not actions. Examples:
+يجب تسمية Data Flows في DFD بصيغة **بيانات/عبارات اسمية** لا بصيغة أفعال. أمثلة:
 
-- `Request Data`, not `Create Request`.
-- `Provider Response Data`, not `Submit Response`.
-- `Transaction Start Request` / `Start Confirmation`, not `Start Transaction` as a data-flow label.
+- `Request Data` وليس `Create Request`.
+- `Provider Response Data` وليس `Submit Response`.
+- `Transaction Start Request` / `Start Confirmation` وليس `Start Transaction` كتسمية Data Flow.
 - `Invoice Approval`, `Revision Request`, `Complaint Data`, `Transaction Status`, `Rating Data`.
 
-## 5. Open Items That Do Not Block Core Diagrams
+## 5. عناصر مفتوحة لا تعيق Core Diagrams
 
-The following must be omitted or shown only generically, without invented numeric values:
+يجب حذف العناصر التالية من المخططات أو إظهارها بصورة عامة فقط، دون اختلاق قيم رقمية:
 
-- `REQ-EXP-Q01` expiry/reminder timing.
-- `INV-PENDING-Q01` long-pending invoice escalation.
-- `SAFE-REQ-Q01` abuse thresholds.
-- `LOC-DATA-Q01` final geographic seed list and `LOC-OPS-TIME-Q01` timing.
-- exact verification document types/retention/licensing.
-- detailed AI policy/provider/threshold/retention.
-- subscription packages/prices/payment-proof method/expiry operational effects.
+- `REQ-EXP-Q01`: توقيت expiry/reminders.
+- `INV-PENDING-Q01`: تصعيد الفاتورة التي تبقى Pending مدة طويلة.
+- `SAFE-REQ-Q01`: عتبات إساءة الاستخدام.
+- `LOC-DATA-Q01`: القائمة الجغرافية النهائية، و`LOC-OPS-TIME-Q01`: التوقيت.
+- أنواع وثائق التحقق الدقيقة/الاحتفاظ/التراخيص.
+- تفاصيل سياسة/مزود/threshold/retention الخاصة بالـAI.
+- باقات الاشتراك/الأسعار/طريقة إثبات الدفع/الآثار التشغيلية لانتهاء الاشتراك.
 
-These do **not** alter the current Actors, core DFD processes/stores, core Transaction lifecycle, or core ERD relationships.
+هذه العناصر **لا تغير** الـActors الحاليين، أو عمليات/مخازن Core DFD، أو Core Transaction lifecycle، أو علاقات Core ERD.
