@@ -535,7 +535,7 @@ sequenceDiagram
             deactivate ADC
             AUI-->>A: showReviewResult()
             deactivate AUI
-            Note over B,A: YADD applies platform policy only; no payment, refund or compensation ruling
+            Note over B,A: YADD applies platform policy only — no payment, refund or compensation ruling
         else Approve final invoice
             B->>BUI: approveFinalInvoice(invoiceId)
             activate BUI
@@ -588,7 +588,7 @@ sequenceDiagram
                 PUI-->>P: ratingConfirmed()
                 deactivate PUI
             end
-            Note over TX,RAT: Transaction remains COMPLETED; Ratings are Post-Transaction operations
+            Note over TX,RAT: Transaction remains COMPLETED — Ratings are Post-Transaction operations
         end
     end
 ```
