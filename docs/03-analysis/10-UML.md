@@ -213,7 +213,7 @@ flowchart TD
     V --> Z2([End — Disputed])
     R -- Approve --> W[Invoice Approved / Transaction Completed]
     W --> X[Beneficiary Rates Provider — Required]
-    X --> Y{Provider Wants to Rate Beneficiary?}
+    X --> Y{Provider Wants to rate Beneficiary?}
     Y -- Yes --> Y1[Rate 3 Behavioral Indicators + Optional Comment]
     Y1 --> ZE([End — Post-Transaction Flow Complete])
     Y -- No --> ZE
