@@ -26,15 +26,16 @@
 
 ## 2. Main Use Case Diagram — تمثيل عمل
 
-> يستخدم Mermaid هنا فقط كتمثيل دلالي أثناء العمل. يجب أن يستخدم `Use Case Diagram` الأكاديمي النهائي Actors قياسيين، وحدود النظام، وUse Cases بيضاوية وفق UML.
+> يستخدم Mermaid هنا كتمثيل دلالي/بصري قابل للمراجعة داخل GitHub. يحاكي القالب الأكاديمي المرجعي من حيث حدود النظام، الحالات البيضاوية، اللون الأزرق الفاتح، وعلاقات `<<include>>` / `<<extend>>` عندما يدعمها السيناريو المعتمد. يبقى التصدير الأكاديمي النهائي بحاجة إلى Actors قياسيين (stick figures) ومراجعة نهائية قبل التسليم.
 
 ```mermaid
+%%{init: {"theme":"base","themeVariables":{"background":"#FFFFFF","primaryColor":"#ADD8E6","primaryTextColor":"#1F2933","primaryBorderColor":"#9ABFCB","lineColor":"#737373","clusterBkg":"#FFFFFF","clusterBorder":"#B7B7B7","fontFamily":"Arial"}}}%%
 flowchart LR
-    B[Beneficiary]
-    P[Provider]
-    A[YADD Administrator]
+    B["Beneficiary"]:::actor
+    P["Provider"]:::actor
+    A["YADD Administrator"]:::actor
 
-    subgraph YADD[YADD System]
+    subgraph YADD["YADD System"]
         UC1([Manage Account])
         UC2([Search Providers])
         UC3([View Provider Profile])
@@ -43,7 +44,7 @@ flowchart LR
         UC6([Communicate / Inquire])
         UC7([Select Provider])
         UC8([Start Transaction])
-        UC9([Manage Transaction])
+        UC9([Cancel Transaction])
         UC10([Review / Approve Invoice])
         UC11([Rate Provider])
         UC12([Block / Report])
@@ -92,6 +93,18 @@ flowchart LR
     A --- UC21
     A --- UC22
     A --- UC23
+
+    UC3 -.->|«extend»| UC2
+    UC6 -.->|«extend»| UC3
+    UC6 -.->|«extend»| UC5
+    UC8 -.->|«extend»| UC6
+    UC7 -.->|«include»| UC5
+    UC18 -.->|«include»| UC17
+
+    classDef usecase fill:#ADD8E6,stroke:#9ABFCB,stroke-width:1px,color:#1F2933;
+    classDef actor fill:#FFFFFF,stroke:#FFFFFF,color:#222222,font-weight:bold;
+    class UC1,UC2,UC3,UC4,UC5,UC6,UC7,UC8,UC9,UC10,UC11,UC12,UC13,UC14,UC15,UC16,UC17,UC18,UC19,UC20,UC21,UC22,UC23 usecase;
+    style YADD fill:#FFFFFF,stroke:#B7B7B7,stroke-width:1.5px,color:#222222;
 ```
 
 ### دلالات Main Use Case
@@ -101,8 +114,14 @@ flowchart LR
 3. لا يوجد Use Case أو entity مستقلة باسم `Agreement`. مسار الطلب هو `Request → Provider Response → Selection → Transaction`.
 4. تغطي `Manage Provider Response` الإرسال/التعديل/السحب وفق `DEC-070`. وتمثل `RequiresDeposit = Yes/No` بيانات داخل `Provider Response`، **وليست Use Case مستقلة**.
 5. ترتبط `Start Transaction` بكل من `Beneficiary` و`Provider` لأن أيًا منهما قد يطلب البدء في `Direct Search`. ويجب أن يؤكد الطرف الآخر قبل إنشاء `Active Transaction`.
-6. في مسار `Request`، يبدأ اختيار `Beneficiary` للـ`Provider` المختار الـ`Transaction`. لا تفرض علاقة `<<include>>` في العرض الرئيسي إذا كانت ستخفي اختلاف دلالة `Direct Search`؛ توضع التفاصيل في المواصفات وActivity/Sequence.
-7. تقييم `Beneficiary→Provider` إلزامي بعد `Completed`؛ وتقييم `Provider→Beneficiary` اختياري.
+6. في مسار `Request`، يبدأ اختيار `Beneficiary` للـ`Provider` المختار الـ`Transaction`. لذلك **لا** توجد علاقة `<<include>>` بين `Select Provider` و`Start Transaction`؛ لأن `Start Transaction` تمثل طلب البدء المتبادل الخاص بمسار `Direct Search`.
+7. `Select Provider <<include>> Compare Provider Responses` لأن المقارنة جزء من التدفق الأساسي الحالي لاختيار مقدم من الطلب المنشور.
+8. `View Provider Profile <<extend>> Search Providers`، و`Communicate / Inquire <<extend>> View Provider Profile` في مسار البحث المباشر؛ لأن فتح الملف ثم بدء الاستفسار سلوكان اختياريان فوق البحث الأساسي.
+9. `Communicate / Inquire <<extend>> Compare Provider Responses` في مسار الطلب المنشور؛ لأن الاستفسار قبل الاختيار اختياري.
+10. `Start Transaction <<extend>> Communicate / Inquire` **في مسار البحث المباشر فقط**؛ لأن المحادثة قد تستمر أو تنتهي دون Transaction.
+11. `Manage Provider Response <<include>> View Matching Requests` لأن الاستجابة تعتمد على مراجعة Request مؤهل ومفتوح قبل الإرسال/الإدارة.
+12. تقييم `Beneficiary→Provider` إلزامي بعد `Completed`؛ وتقييم `Provider→Beneficiary` اختياري. لم تربط التقييمات بعلاقة `include/extend` في الرسم الرئيسي حتى لا نمثل Post-Transaction operations كجزء من اعتماد الفاتورة نفسه.
+13. اللون المستخدم لحالات الاستخدام في تمثيل Mermaid هو `LightBlue (#ADD8E6)`، مع خلفية بيضاء وحدود رمادية رفيعة لمحاكاة القالب المرجعي المرفق. هذا قرار عرض للمراجعة وليس Business Rule.
 
 ---
 
@@ -340,5 +359,6 @@ sequenceDiagram
 - [x] الإدارة لا تقرر استحقاق payment/refund/compensation.
 - [x] تحدث `Ratings` فقط بعد `Completed`، وليس بعد `Cancelled` أو `Disputed`.
 - [x] تقييم `Beneficiary→Provider` إلزامي؛ وتقييم `Provider→Beneficiary` اختياري.
+- [x] `<<include>>` / `<<extend>>` في Main Use Case مرتبطة فقط بالتدفقات المدعومة حاليًا، وليست علاقات شكلية مضافة لإرضاء الرسم.
 - [x] مفاهيم مصدر `Class Diagram` محددة من ERD المتزامن.
-- [ ] ما يزال مطلوبًا إعادة الرسم/التصدير البصري النهائي وفق ترميز UML القياسي.
+- [ ] ما يزال مطلوبًا اعتماد/تصدير الرسم البصري النهائي وفق ترميز UML القياسي بعد مراجعة الفريق.
