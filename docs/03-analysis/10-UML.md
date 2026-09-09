@@ -246,126 +246,485 @@ flowchart TD
 
 ## 5. Sequence Diagram — Published Request Route
 
+> أعيد بناء مخطط التسلسل بأسلوب قريب من القالب الأكاديمي المرجعي: Actor → Boundary/UI → Control → Entity، مع Activation Bars و`alt`/`opt` للحالات البديلة. أسماء `*UI` و`*Controller` هنا **Derived Interaction Roles** لأغراض النمذجة، وليست التزامًا بأسماء Classes فعلية في التنفيذ. الـEntities المسماة مثل `Request`, `ProviderResponse`, `Transaction`, `Invoice`, `Rating`, و`Report` مستمدة من النموذج التحليلي الحالي.
+
 ```mermaid
+%%{init: {"theme":"base","themeVariables":{"background":"#FFFFFF","fontFamily":"Arial","actorBkg":"#F8E8C8","actorBorder":"#7E7E7E","actorTextColor":"#222222","actorLineColor":"#8A8A8A","signalColor":"#A07878","signalTextColor":"#5C3F3F","labelBoxBkgColor":"#FFFFFF","labelBoxBorderColor":"#7E7E7E","labelTextColor":"#222222","loopTextColor":"#222222","noteBkgColor":"#FFFFFF","noteBorderColor":"#7E7E7E","noteTextColor":"#222222","activationBkgColor":"#C8E0E8","activationBorderColor":"#7B969C","sequenceNumberColor":"#222222"}}}%%
 sequenceDiagram
     actor B as Beneficiary
-    participant Y as YADD Backend/API
     actor P as Provider
-    participant DB as Database
     actor A as YADD Administrator
+    participant BUI as BeneficiaryUI «boundary»
+    participant PUI as ProviderUI «boundary»
+    participant AUI as AdminUI «boundary»
+    participant RQC as RequestController «control»
+    participant CMC as CommunicationController «control»
+    participant TXC as TransactionController «control»
+    participant IVC as InvoiceController «control»
+    participant RTC as RatingController «control»
+    participant ADC as AdminController «control»
+    participant REQ as Request «entity»
+    participant RES as ProviderResponse «entity»
+    participant CONV as Conversation «entity»
+    participant TX as Transaction «entity»
+    participant INV as Invoice «entity»
+    participant RAT as Rating «entity»
+    participant REP as Report «entity»
 
-    B->>Y: Create and publish Request
-    Y->>DB: Save Request = Open
-    Y-->>P: Expose matching Request
+    B->>BUI: createRequest(requestData)
+    activate BUI
+    BUI->>RQC: createRequest(requestData)
+    activate RQC
+    RQC->>REQ: createOpenRequest(requestData)
+    activate REQ
+    REQ-->>RQC: requestCreated(requestId)
+    deactivate REQ
+    RQC-->>BUI: requestPublished(requestId)
+    deactivate RQC
+    BUI-->>B: publicationConfirmed()
+    deactivate BUI
 
-    P->>Y: Submit Provider Response
-    Note over P,Y: Proposed price or note optional. RequiresDeposit is Yes or No only.
-    Y->>DB: Save active Provider Response
-    Y-->>B: Show response for comparison
+    P->>PUI: viewMatchingRequests()
+    activate PUI
+    PUI->>RQC: getMatchingRequests(providerId)
+    activate RQC
+    RQC->>REQ: findOpenEligibleRequests(providerId)
+    activate REQ
+    REQ-->>RQC: matchingRequests
+    deactivate REQ
+    RQC-->>PUI: matchingRequests
+    deactivate RQC
+    PUI-->>P: showMatchingRequests()
+    deactivate PUI
 
-    opt Provider edits or withdraws before selection
-        P->>Y: Edit / withdraw active response
-        Y->>DB: Update response data/status
-        Y-->>B: Refresh response information
+    P->>PUI: submitProviderResponse(requestId, responseData)
+    activate PUI
+    PUI->>RQC: submitProviderResponse(requestId, responseData)
+    activate RQC
+    Note over RQC,RES: Preconditions: Provider Verified + Active Subscription + Request Open
+    RQC->>RES: createActiveResponse(responseData, RequiresDeposit)
+    activate RES
+    RES-->>RQC: responseCreated(responseId)
+    deactivate RES
+    RQC-->>BUI: responseAvailable(responseId)
+    RQC-->>PUI: responseSubmitted()
+    deactivate RQC
+    PUI-->>P: submissionConfirmed()
+    deactivate PUI
+
+    alt Edit active response before selection
+        P->>PUI: editProviderResponse(responseId, changes)
+        activate PUI
+        PUI->>RQC: editProviderResponse(responseId, changes)
+        activate RQC
+        RQC->>RES: updateActiveResponse(changes)
+        activate RES
+        RES-->>RQC: responseUpdated()
+        deactivate RES
+        RQC-->>BUI: responseChanged(responseId)
+        RQC-->>PUI: editConfirmed()
+        deactivate RQC
+        PUI-->>P: showUpdatedResponse()
+        deactivate PUI
+    else Withdraw active response before selection
+        P->>PUI: withdrawProviderResponse(responseId)
+        activate PUI
+        PUI->>RQC: withdrawProviderResponse(responseId)
+        activate RQC
+        RQC->>RES: markWithdrawn()
+        activate RES
+        RES-->>RQC: withdrawn()
+        deactivate RES
+        RQC-->>BUI: responseWithdrawn(responseId)
+        RQC-->>PUI: withdrawalConfirmed()
+        deactivate RQC
+        PUI-->>P: showWithdrawnStatus()
+        deactivate PUI
     end
+
+    B->>BUI: compareProviderResponses(requestId)
+    activate BUI
+    BUI->>RQC: getActiveResponses(requestId)
+    activate RQC
+    RQC->>RES: listActiveResponses(requestId)
+    activate RES
+    RES-->>RQC: activeResponses
+    deactivate RES
+    RQC-->>BUI: comparisonData
+    deactivate RQC
+    BUI-->>B: showResponseComparison()
+    deactivate BUI
 
     opt Inquiry before selection
-        B->>Y: Send message
-        Y-->>P: Deliver private message
-        P->>Y: Reply
-        Y-->>B: Deliver reply
+        B->>BUI: sendMessage(providerId, message)
+        activate BUI
+        BUI->>CMC: sendInquiry(requestId, providerId, message)
+        activate CMC
+        CMC->>CONV: appendMessage(message)
+        activate CONV
+        CONV-->>CMC: messageStored()
+        deactivate CONV
+        CMC-->>PUI: deliverMessage(message)
+        CMC-->>BUI: messageSent()
+        deactivate CMC
+        PUI-->>P: showNewMessage()
+        BUI-->>B: showSentMessage()
+        deactivate BUI
+
+        P->>PUI: reply(message)
+        activate PUI
+        PUI->>CMC: sendReply(requestId, message)
+        activate CMC
+        CMC->>CONV: appendMessage(message)
+        activate CONV
+        CONV-->>CMC: messageStored()
+        deactivate CONV
+        CMC-->>BUI: deliverReply(message)
+        CMC-->>PUI: replySent()
+        deactivate CMC
+        BUI-->>B: showReply()
+        PUI-->>P: showSentReply()
+        deactivate PUI
     end
 
-    B->>Y: Select Provider
-    Y->>DB: Save Request as Matched, mark other responses NotSelected, create Active Transaction
-    Y-->>P: Provider selected / Transaction active
-    Y-->>B: Transaction active
+    B->>BUI: selectProvider(responseId)
+    activate BUI
+    BUI->>RQC: selectProvider(requestId, responseId)
+    activate RQC
+    RQC->>REQ: closeToNewResponses()
+    activate REQ
+    REQ-->>RQC: requestMatched()
+    deactivate REQ
+    RQC->>RES: markSelectedAndOthersNotSelected(responseId)
+    activate RES
+    RES-->>RQC: selectionSaved()
+    deactivate RES
+    RQC->>TXC: createTransactionFromSelection(requestId, responseId)
+    activate TXC
+    TXC->>TX: createActiveTransaction()
+    activate TX
+    TX-->>TXC: transactionCreated(transactionId)
+    deactivate TX
+    TXC-->>RQC: transactionActive(transactionId)
+    deactivate TXC
+    RQC-->>PUI: providerSelected(transactionId)
+    RQC-->>BUI: transactionActive(transactionId)
+    deactivate RQC
+    PUI-->>P: showActiveTransaction()
+    BUI-->>B: showActiveTransaction()
+    deactivate BUI
 
-    alt Beneficiary cancels Transaction
-        B->>Y: Cancel Transaction + reason
-        Y->>DB: Save Cancelled + actor + reason + time
-        Y-->>P: Cancellation recorded
-    else Provider cancels Transaction
-        P->>Y: Cancel Transaction + reason
-        Y->>DB: Save Cancelled + actor + reason + time
-        Y-->>B: Cancellation recorded
-    else Work completed / product prepared
-        P->>Y: Submit final invoice
-        Y->>DB: Save invoice = PendingCustomerApproval
-        Y-->>B: Request invoice review
+    alt Beneficiary cancels active Transaction
+        B->>BUI: cancelTransaction(reason)
+        activate BUI
+        BUI->>TXC: cancelTransaction(transactionId, Beneficiary, reason)
+        activate TXC
+        TXC->>TX: setStatus(CANCELLED, actor, reason, time)
+        activate TX
+        TX-->>TXC: cancellationRecorded()
+        deactivate TX
+        TXC-->>PUI: transactionCancelled(reason)
+        TXC-->>BUI: cancellationConfirmed()
+        deactivate TXC
+        PUI-->>P: showCancellation(reason)
+        BUI-->>B: showCancelledStatus()
+        deactivate BUI
+    else Provider cancels active Transaction
+        P->>PUI: cancelTransaction(reason)
+        activate PUI
+        PUI->>TXC: cancelTransaction(transactionId, Provider, reason)
+        activate TXC
+        TXC->>TX: setStatus(CANCELLED, actor, reason, time)
+        activate TX
+        TX-->>TXC: cancellationRecorded()
+        deactivate TX
+        TXC-->>BUI: transactionCancelled(reason)
+        TXC-->>PUI: cancellationConfirmed()
+        deactivate TXC
+        BUI-->>B: showCancellation(reason)
+        PUI-->>P: showCancelledStatus()
+        deactivate PUI
+    else Fulfillment / preparation completed
+        P->>PUI: createFinalInvoice(invoiceData)
+        activate PUI
+        PUI->>IVC: createFinalInvoice(transactionId, invoiceData)
+        activate IVC
+        IVC->>INV: createPendingApprovalVersion(invoiceData)
+        activate INV
+        INV-->>IVC: invoiceCreated(invoiceId)
+        deactivate INV
+        IVC-->>BUI: finalInvoiceReady(invoiceId)
+        IVC-->>PUI: invoiceSubmitted()
+        deactivate IVC
+        BUI-->>B: requestInvoiceReview()
+        PUI-->>P: submissionConfirmed()
+        deactivate PUI
 
-        alt Request revision
-            B->>Y: Request revision + note
-            Y-->>P: Revision requested
-            P->>Y: Submit revised invoice
-            Y-->>B: Show revised invoice
-        else Dispute remains unresolved
-            B->>Y: Raise complaint for administrative review
-            Y->>DB: Save complaint and set Transaction = Disputed
-            Y-->>A: Send complaint and YADD evidence for review
-            A->>Y: Record platform-policy action if applicable
-            Y->>DB: Save administrative review outcome
-            Note over B,P: No ratings after Disputed. YADD does not decide payment, refund or compensation.
-        else Approve
-            B->>Y: Approve final invoice
-            Y->>DB: Save Final invoice and set Transaction to Completed
-            Y-->>B: Require Provider rating
-            B->>Y: Submit provider rating 1-5 + optional comment
-            Y->>DB: Save provider rating
-            Y-->>P: Show optional beneficiary rating prompt
+        B->>BUI: reviewFinalInvoice(invoiceId)
+        activate BUI
+        BUI->>IVC: getCurrentInvoice(invoiceId)
+        activate IVC
+        IVC->>INV: loadCurrentVersion()
+        activate INV
+        INV-->>IVC: invoiceDetails
+        deactivate INV
+        IVC-->>BUI: invoiceDetails
+        deactivate IVC
+        BUI-->>B: showInvoice()
+        deactivate BUI
+
+        alt Request invoice revision
+            B->>BUI: requestInvoiceRevision(note)
+            activate BUI
+            BUI->>IVC: requestRevision(invoiceId, note)
+            activate IVC
+            IVC->>INV: markRevisionRequested(note)
+            activate INV
+            INV-->>IVC: revisionRequested()
+            deactivate INV
+            IVC-->>PUI: revisionRequest(note)
+            IVC-->>BUI: revisionRequestRecorded()
+            deactivate IVC
+            PUI-->>P: showRevisionRequest(note)
+            BUI-->>B: showPendingRevision()
+            deactivate BUI
+
+            P->>PUI: reviseFinalInvoice(changes)
+            activate PUI
+            PUI->>IVC: reviseFinalInvoice(invoiceId, changes)
+            activate IVC
+            IVC->>INV: createNewVersion(changes)
+            activate INV
+            INV-->>IVC: revisedVersionCreated()
+            deactivate INV
+            IVC-->>BUI: revisedInvoiceReady()
+            IVC-->>PUI: revisionSubmitted()
+            deactivate IVC
+            BUI-->>B: showRevisedInvoice()
+            PUI-->>P: showRevisionConfirmed()
+            deactivate PUI
+        else Unresolved dispute before approval
+            B->>BUI: raiseTransactionComplaint(details)
+            activate BUI
+            BUI->>ADC: createComplaint(transactionId, details)
+            activate ADC
+            ADC->>REP: saveComplaintAndEvidenceRefs(details)
+            activate REP
+            REP-->>ADC: complaintCreated(complaintId)
+            deactivate REP
+            ADC->>TX: setStatus(DISPUTED)
+            activate TX
+            TX-->>ADC: disputedStatusSaved()
+            deactivate TX
+            ADC-->>AUI: complaintReadyForReview(complaintId)
+            ADC-->>BUI: complaintRecorded()
+            deactivate ADC
+            AUI-->>A: showComplaintForReview()
+            BUI-->>B: showDisputedStatus()
+            deactivate BUI
+
+            A->>AUI: reviewComplaintAndYADDEvidence()
+            activate AUI
+            AUI->>ADC: recordPlatformPolicyActionIfApplicable()
+            activate ADC
+            ADC->>REP: saveAdministrativeReviewOutcome()
+            activate REP
+            REP-->>ADC: outcomeSaved()
+            deactivate REP
+            ADC-->>AUI: reviewRecorded()
+            deactivate ADC
+            AUI-->>A: showReviewResult()
+            deactivate AUI
+            Note over B,A: YADD applies platform policy only; no payment, refund or compensation ruling
+        else Approve final invoice
+            B->>BUI: approveFinalInvoice(invoiceId)
+            activate BUI
+            BUI->>IVC: approveFinalInvoice(invoiceId)
+            activate IVC
+            IVC->>INV: approveCurrentVersion()
+            activate INV
+            INV-->>IVC: invoiceApproved()
+            deactivate INV
+            IVC->>TXC: completeTransaction(transactionId)
+            activate TXC
+            TXC->>TX: setStatus(COMPLETED)
+            activate TX
+            TX-->>TXC: completed()
+            deactivate TX
+            TXC-->>IVC: transactionCompleted()
+            deactivate TXC
+            IVC-->>BUI: completionConfirmed()
+            IVC-->>PUI: transactionCompleted()
+            deactivate IVC
+            BUI-->>B: requireProviderRating()
+            PUI-->>P: showCompletedStatus()
+            deactivate BUI
+
+            B->>BUI: rateProvider(stars, optionalComment)
+            activate BUI
+            BUI->>RTC: submitProviderRating(transactionId, stars, comment)
+            activate RTC
+            RTC->>RAT: createProviderRating()
+            activate RAT
+            RAT-->>RTC: ratingSaved()
+            deactivate RAT
+            RTC-->>BUI: providerRatingSaved()
+            RTC-->>PUI: optionalBeneficiaryRatingPrompt()
+            deactivate RTC
+            BUI-->>B: ratingConfirmed()
+            deactivate BUI
+
             opt Provider chooses to rate Beneficiary
-                P->>Y: Submit 3 behavioral scores + optional comment
-                Y->>DB: Save beneficiary rating
+                P->>PUI: rateBeneficiary(threeScores, optionalComment)
+                activate PUI
+                PUI->>RTC: submitBeneficiaryRating(transactionId, scores, comment)
+                activate RTC
+                RTC->>RAT: createBeneficiaryRating()
+                activate RAT
+                RAT-->>RTC: ratingSaved()
+                deactivate RAT
+                RTC-->>PUI: beneficiaryRatingSaved()
+                deactivate RTC
+                PUI-->>P: ratingConfirmed()
+                deactivate PUI
             end
-            Note over B,P: Transaction remains Completed
+            Note over TX,RAT: Transaction remains COMPLETED; Ratings are Post-Transaction operations
         end
     end
 ```
+
+### Sequence modeling note
+
+- `Beneficiary`, `Provider`, و`YADD Administrator` هم الـActors المعتمدون في النموذج الرئيسي.
+- `BeneficiaryUI`, `ProviderUI`, `AdminUI` تمثل `«boundary»` interaction roles.
+- `RequestController`, `CommunicationController`, `TransactionController`, `InvoiceController`, `RatingController`, و`AdminController` تمثل `«control»` roles مشتقة لأغراض Sequence modeling وليست Classes تنفيذ معتمدة.
+- `Request`, `ProviderResponse`, `Conversation`, `Transaction`, `Invoice`, `Rating`, و`Report` تمثل `«entity»` lifelines مرتبطة بمفاهيم التحليل الحالية.
+- استخدمت لوحة الألوان المرجعية بصريًا: خلفية بيضاء، Actor/Boundary أصفر باهت (`#F8E8C8`)، اللون الأخضر المرجعي للمقدم (`#D8E8D0`) واللون الأزرق الفاتح للـControl/Entity (`#C8E0E8`) كمرجع للتصدير النهائي، وأسهم/Signals أحمر باهت (`#A07878`) مع Lifelines وحدود رمادية. Mermaid لا يدعم تلوين كل Lifeline أو رموز `boundary/control/entity` القياسية بصورة مستقلة بنفس دقة أداة UML؛ لذلك النسخة النهائية للتقرير تحتاج إعادة تصدير بنفس الـpalette من أداة UML قياسية إذا كان التطابق البصري الحرفي مطلوبًا.
 
 ---
 
 ## 6. Sequence Diagram — Direct Search Route
 
 ```mermaid
+%%{init: {"theme":"base","themeVariables":{"background":"#FFFFFF","fontFamily":"Arial","actorBkg":"#F8E8C8","actorBorder":"#7E7E7E","actorTextColor":"#222222","actorLineColor":"#8A8A8A","signalColor":"#A07878","signalTextColor":"#5C3F3F","labelBoxBkgColor":"#FFFFFF","labelBoxBorderColor":"#7E7E7E","labelTextColor":"#222222","loopTextColor":"#222222","noteBkgColor":"#FFFFFF","noteBorderColor":"#7E7E7E","noteTextColor":"#222222","activationBkgColor":"#C8E0E8","activationBorderColor":"#7B969C","sequenceNumberColor":"#222222"}}}%%
 sequenceDiagram
     actor B as Beneficiary
-    participant Y as YADD Backend/API
     actor P as Provider
-    participant DB as Database
+    participant BUI as BeneficiaryUI «boundary»
+    participant PUI as ProviderUI «boundary»
+    participant DSC as DiscoveryController «control»
+    participant CMC as CommunicationController «control»
+    participant TXC as TransactionController «control»
+    participant PROF as ProviderProfile «entity»
+    participant CONV as Conversation «entity»
+    participant TX as Transaction «entity»
 
-    B->>Y: Search providers by category/area
-    Y->>DB: Query eligible Provider Profiles
-    DB-->>Y: Matching Provider Profiles
-    Y-->>B: Results
+    B->>BUI: searchProviders(category, area)
+    activate BUI
+    BUI->>DSC: searchProviders(category, area)
+    activate DSC
+    DSC->>PROF: findEligibleProviders(category, area)
+    activate PROF
+    PROF-->>DSC: matchingProviderProfiles
+    deactivate PROF
+    DSC-->>BUI: searchResults
+    deactivate DSC
+    BUI-->>B: showProviders()
+    deactivate BUI
 
-    B->>Y: Open Provider Profile
-    Y->>DB: Load public profile + Portfolio/Catalog
-    DB-->>Y: Public provider data
-    Y-->>B: Show profile
+    B->>BUI: openProviderProfile(providerId)
+    activate BUI
+    BUI->>DSC: getProviderProfile(providerId)
+    activate DSC
+    DSC->>PROF: loadPublicProfileAndShowcase()
+    activate PROF
+    PROF-->>DSC: publicProfileData
+    deactivate PROF
+    DSC-->>BUI: providerProfile
+    deactivate DSC
+    BUI-->>B: showProviderProfile()
+    deactivate BUI
 
-    B->>Y: Start private inquiry
-    Y-->>P: Deliver inquiry
-    P->>Y: Reply
-    Y-->>B: Deliver reply
+    B->>BUI: sendInquiry(message)
+    activate BUI
+    BUI->>CMC: openOrContinueInquiry(providerId, message)
+    activate CMC
+    CMC->>CONV: createOrAppendMessage(message)
+    activate CONV
+    CONV-->>CMC: messageStored()
+    deactivate CONV
+    CMC-->>PUI: deliverInquiry(message)
+    CMC-->>BUI: inquirySent()
+    deactivate CMC
+    PUI-->>P: showInquiry()
+    BUI-->>B: showSentMessage()
+    deactivate BUI
 
-    alt Beneficiary requests transaction start
-        B->>Y: Request Transaction Start
-        Y-->>P: Request Start Confirmation
-        P->>Y: Confirm Transaction Start
-        Y->>DB: Create Active Transaction
-        Y-->>B: Transaction active
-        Y-->>P: Transaction active
-    else Provider requests transaction start
-        P->>Y: Request Transaction Start
-        Y-->>B: Request Start Confirmation
-        B->>Y: Confirm Transaction Start
-        Y->>DB: Create Active Transaction
-        Y-->>B: Transaction active
-        Y-->>P: Transaction active
-    else No confirmation
-        Note over B,P: Chat continues or ends without Transaction
+    P->>PUI: reply(message)
+    activate PUI
+    PUI->>CMC: sendReply(conversationId, message)
+    activate CMC
+    CMC->>CONV: appendMessage(message)
+    activate CONV
+    CONV-->>CMC: messageStored()
+    deactivate CONV
+    CMC-->>BUI: deliverReply(message)
+    CMC-->>PUI: replySent()
+    deactivate CMC
+    BUI-->>B: showReply()
+    PUI-->>P: showSentReply()
+    deactivate PUI
+
+    alt Beneficiary requests Transaction start
+        B->>BUI: requestTransactionStart()
+        activate BUI
+        BUI->>TXC: requestTransactionStart(conversationId)
+        activate TXC
+        TXC-->>PUI: requestStartConfirmation()
+        PUI-->>P: showStartRequest()
+        P->>PUI: confirmTransactionStart()
+        activate PUI
+        PUI->>TXC: confirmTransactionStart(conversationId)
+        TXC->>TX: createActiveTransaction(Beneficiary, Provider)
+        activate TX
+        TX-->>TXC: transactionCreated(transactionId)
+        deactivate TX
+        TXC-->>BUI: transactionActive(transactionId)
+        TXC-->>PUI: transactionActive(transactionId)
+        deactivate TXC
+        BUI-->>B: showActiveTransaction()
+        PUI-->>P: showActiveTransaction()
+        deactivate PUI
+        deactivate BUI
+    else Provider requests Transaction start
+        P->>PUI: requestTransactionStart()
+        activate PUI
+        PUI->>TXC: requestTransactionStart(conversationId)
+        activate TXC
+        TXC-->>BUI: requestStartConfirmation()
+        BUI-->>B: showStartRequest()
+        B->>BUI: confirmTransactionStart()
+        activate BUI
+        BUI->>TXC: confirmTransactionStart(conversationId)
+        TXC->>TX: createActiveTransaction(Beneficiary, Provider)
+        activate TX
+        TX-->>TXC: transactionCreated(transactionId)
+        deactivate TX
+        TXC-->>BUI: transactionActive(transactionId)
+        TXC-->>PUI: transactionActive(transactionId)
+        deactivate TXC
+        BUI-->>B: showActiveTransaction()
+        PUI-->>P: showActiveTransaction()
+        deactivate BUI
+        deactivate PUI
+    else No confirmation / rejection
+        Note over B,P: Chat continues or ends without creating a Transaction
     end
+
+    Note over TXC,TX: After Active Transaction, continue through the common cancellation / invoice / completion flow
 ```
+
+هذا المخطط يحافظ على قاعدة `DEC-069`: أي من الطرفين قد يطلب بدء Transaction، لكن لا ينشئ YADD `Active Transaction` قبل تأكيد الطرف الآخر. عدم التأكيد/الرفض يبقي المحادثة دون Transaction.
 
 ---
 
@@ -408,6 +767,8 @@ sequenceDiagram
 - [x] `<<include>>` يستخدم فقط للسلوك الإلزامي داخل الـBase Use Case.
 - [x] `<<extend>>` يستخدم فقط للسلوك الشرطي/الاختياري.
 - [x] التبعيات الزمنية/الحالية مثل Ratings بعد Completed ممثلة كـPreconditions/Postconditions.
+- [x] Sequence Diagrams تستخدم Actor / Boundary / Control / Entity interaction roles مع Activation Bars و`alt`/`opt` وفق القالب المرجعي.
+- [x] أسماء UI/Controller في Sequence Diagrams موسومة كـDerived modeling roles وليست Implementation Classes معتمدة.
 - [x] اعتماد الفاتورة يؤدي إلى `Completed`.
 - [x] لا توجد حالة `Transaction` باسم `Closed`.
 - [x] النزاع غير المحلول قبل الاعتماد يؤدي إلى الحالة النهائية `Disputed`.
