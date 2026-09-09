@@ -24,9 +24,9 @@
 
 ---
 
-## 2. Main Use Case Diagram — تمثيل عمل
+## 2. Main Use Case Diagram — Working UML Decomposition
 
-> يستخدم Mermaid هنا كتمثيل دلالي/بصري قابل للمراجعة داخل GitHub. يحاكي القالب الأكاديمي المرجعي من حيث حدود النظام، الحالات البيضاوية، اللون الأزرق الفاتح، وعلاقات `<<include>>` / `<<extend>>` عندما يدعمها السيناريو المعتمد. يبقى التصدير الأكاديمي النهائي بحاجة إلى Actors قياسيين (stick figures) ومراجعة نهائية قبل التسليم.
+> هذا الرسم يعيد تفكيك السيناريوهات المركبة إلى Actor goals أصغر حتى تكون علاقات `<<include>>` و`<<extend>>` ذات معنى UML واضح. لا تستخدم العلاقات لتمثيل مجرد التسلسل الزمني؛ التبعيات الزمنية/الحالية تمثل كـPreconditions/Postconditions في المواصفات. اللون والأسلوب البصري يحاكيان القالب المرجعي الذي وفره الفريق، بينما Actors القياسية النهائية تحتاج إعادة رسم/تصدير بصري لاحق.
 
 ```mermaid
 %%{init: {"theme":"base","themeVariables":{"background":"#FFFFFF","primaryColor":"#ADD8E6","primaryTextColor":"#1F2933","primaryBorderColor":"#9ABFCB","lineColor":"#737373","clusterBkg":"#FFFFFF","clusterBorder":"#B7B7B7","fontFamily":"Arial"}}}%%
@@ -37,30 +37,47 @@ flowchart LR
 
     subgraph YADD["YADD System"]
         UC1([Manage Account])
+
         UC2([Search Providers])
         UC3([View Provider Profile])
         UC4([Create Request])
-        UC5([Compare Provider Responses])
-        UC6([Communicate / Inquire])
-        UC7([Select Provider])
-        UC8([Start Transaction])
-        UC9([Cancel Transaction])
-        UC10([Review / Approve Invoice])
-        UC11([Rate Provider])
-        UC12([Block / Report])
+        UC5([Close Open Request])
+        UC6([Compare Provider Responses])
+        UC7([Communicate / Inquire])
+        UC8([Select Provider])
 
-        UC13([Manage Provider Profile])
-        UC14([Manage Portfolio / Catalog])
-        UC15([Manage Service Areas])
-        UC16([Submit Verification])
-        UC17([View Matching Requests])
-        UC18([Manage Provider Response])
-        UC19([Create / Revise Final Invoice])
-        UC20([Rate Beneficiary])
+        UC9([Request Transaction Start])
+        UC10([Confirm Transaction Start])
+        UC11([Create Active Transaction])
+        UC12([Cancel Transaction])
 
-        UC21([Review Provider Verification])
-        UC22([Review Reports / Flags])
-        UC23([Manage Provider Subscription])
+        UC13([Review Final Invoice])
+        UC14([Approve Final Invoice])
+        UC15([Request Invoice Revision])
+        UC16([Raise Transaction Complaint])
+        UC17([Complete Transaction])
+        UC18([Rate Provider])
+
+        UC19([Manage Provider Profile])
+        UC20([Manage Portfolio / Catalog])
+        UC21([Manage Service Areas])
+        UC22([Submit Verification])
+        UC23([View Matching Requests])
+        UC24([Submit Provider Response])
+        UC25([Edit Provider Response])
+        UC26([Withdraw Provider Response])
+        UC27([Validate Response Eligibility])
+        UC28([Create Final Invoice])
+        UC29([Revise Final Invoice])
+        UC30([Rate Beneficiary])
+
+        UC31([Block User])
+        UC32([Report User / Content])
+
+        UC33([Review Provider Verification])
+        UC34([Review Reports / Flags])
+        UC35([Review Transaction Complaint])
+        UC36([Manage Provider Subscription])
     end
 
     B --- UC1
@@ -73,55 +90,91 @@ flowchart LR
     B --- UC8
     B --- UC9
     B --- UC10
-    B --- UC11
     B --- UC12
+    B --- UC13
+    B --- UC14
+    B --- UC15
+    B --- UC16
+    B --- UC18
+    B --- UC31
+    B --- UC32
 
     P --- UC1
-    P --- UC6
-    P --- UC8
+    P --- UC7
     P --- UC9
+    P --- UC10
     P --- UC12
-    P --- UC13
-    P --- UC14
-    P --- UC15
-    P --- UC16
-    P --- UC17
-    P --- UC18
     P --- UC19
     P --- UC20
+    P --- UC21
+    P --- UC22
+    P --- UC23
+    P --- UC24
+    P --- UC25
+    P --- UC26
+    P --- UC28
+    P --- UC29
+    P --- UC30
+    P --- UC31
+    P --- UC32
 
-    A --- UC21
-    A --- UC22
-    A --- UC23
+    A --- UC33
+    A --- UC34
+    A --- UC35
+    A --- UC36
 
     UC3 -.->|«extend»| UC2
-    UC6 -.->|«extend»| UC3
-    UC6 -.->|«extend»| UC5
+    UC7 -.->|«extend»| UC3
+    UC7 -.->|«extend»| UC6
     UC8 -.->|«extend»| UC6
-    UC7 -.->|«include»| UC5
-    UC18 -.->|«include»| UC17
+    UC24 -.->|«extend»| UC23
+    UC9 -.->|«extend»| UC7
+
+    UC24 -.->|«include»| UC27
+    UC8 -.->|«include»| UC11
+    UC10 -.->|«include»| UC11
+
+    UC14 -.->|«extend»| UC13
+    UC15 -.->|«extend»| UC13
+    UC16 -.->|«extend»| UC13
+    UC14 -.->|«include»| UC17
 
     classDef usecase fill:#ADD8E6,stroke:#9ABFCB,stroke-width:1px,color:#1F2933;
     classDef actor fill:#FFFFFF,stroke:#FFFFFF,color:#222222,font-weight:bold;
-    class UC1,UC2,UC3,UC4,UC5,UC6,UC7,UC8,UC9,UC10,UC11,UC12,UC13,UC14,UC15,UC16,UC17,UC18,UC19,UC20,UC21,UC22,UC23 usecase;
+    class UC1,UC2,UC3,UC4,UC5,UC6,UC7,UC8,UC9,UC10,UC11,UC12,UC13,UC14,UC15,UC16,UC17,UC18,UC19,UC20,UC21,UC22,UC23,UC24,UC25,UC26,UC27,UC28,UC29,UC30,UC31,UC32,UC33,UC34,UC35,UC36 usecase;
     style YADD fill:#FFFFFF,stroke:#B7B7B7,stroke-width:1.5px,color:#222222;
 ```
 
 ### دلالات Main Use Case
 
-1. يرث `Service Provider` و`Product Provider` السلوك العام للـ`Provider`؛ لذلك لا تكرر كل Use Cases الموروثة إلا عند الحاجة للوضوح.
-2. لا يوجد Actor باسم `Guest` معتمد حاليًا.
-3. لا يوجد Use Case أو entity مستقلة باسم `Agreement`. مسار الطلب هو `Request → Provider Response → Selection → Transaction`.
-4. تغطي `Manage Provider Response` الإرسال/التعديل/السحب وفق `DEC-070`. وتمثل `RequiresDeposit = Yes/No` بيانات داخل `Provider Response`، **وليست Use Case مستقلة**.
-5. ترتبط `Start Transaction` بكل من `Beneficiary` و`Provider` لأن أيًا منهما قد يطلب البدء في `Direct Search`. ويجب أن يؤكد الطرف الآخر قبل إنشاء `Active Transaction`.
-6. في مسار `Request`، يبدأ اختيار `Beneficiary` للـ`Provider` المختار الـ`Transaction`. لذلك **لا** توجد علاقة `<<include>>` بين `Select Provider` و`Start Transaction`؛ لأن `Start Transaction` تمثل طلب البدء المتبادل الخاص بمسار `Direct Search`.
-7. `Select Provider <<include>> Compare Provider Responses` لأن المقارنة جزء من التدفق الأساسي الحالي لاختيار مقدم من الطلب المنشور.
-8. `View Provider Profile <<extend>> Search Providers`، و`Communicate / Inquire <<extend>> View Provider Profile` في مسار البحث المباشر؛ لأن فتح الملف ثم بدء الاستفسار سلوكان اختياريان فوق البحث الأساسي.
-9. `Communicate / Inquire <<extend>> Compare Provider Responses` في مسار الطلب المنشور؛ لأن الاستفسار قبل الاختيار اختياري.
-10. `Start Transaction <<extend>> Communicate / Inquire` **في مسار البحث المباشر فقط**؛ لأن المحادثة قد تستمر أو تنتهي دون Transaction.
-11. `Manage Provider Response <<include>> View Matching Requests` لأن الاستجابة تعتمد على مراجعة Request مؤهل ومفتوح قبل الإرسال/الإدارة.
-12. تقييم `Beneficiary→Provider` إلزامي بعد `Completed`؛ وتقييم `Provider→Beneficiary` اختياري. لم تربط التقييمات بعلاقة `include/extend` في الرسم الرئيسي حتى لا نمثل Post-Transaction operations كجزء من اعتماد الفاتورة نفسه.
-13. اللون المستخدم لحالات الاستخدام في تمثيل Mermaid هو `LightBlue (#ADD8E6)`، مع خلفية بيضاء وحدود رمادية رفيعة لمحاكاة القالب المرجعي المرفق. هذا قرار عرض للمراجعة وليس Business Rule.
+1. `Service Provider` و`Product Provider` تخصصان من `Provider` وفق `DEC-067`، ولا يلزم تكرارهما داخل الرسم الرئيسي.
+2. لا يوجد Actor مستقل باسم `Guest` حاليًا.
+3. لا توجد Use Case/Entity باسم `Agreement`; المسار القياسي في الطلب هو `Request → Provider Response → Selection → Transaction`.
+4. `View Provider Profile <<extend>> Search Providers` لأن البحث قد ينتهي دون فتح ملف بعينه.
+5. `Communicate / Inquire <<extend>> View Provider Profile` في Direct Search، ويمتد أيضًا من `Compare Provider Responses` في Request Route لأن الاستفسار قبل الاختيار اختياري.
+6. `Select Provider <<extend>> Compare Provider Responses`: المقارنة يمكن أن تتم دون اختيار، بينما الاختيار يحدث عند قرار المستفيد. عند حدوث الاختيار فهو **يتضمن** `Create Active Transaction` لأن `DEC-047/066` يفرضان بدء Transaction في Request Route.
+7. `Submit Provider Response <<extend>> View Matching Requests`: مشاهدة الطلب لا تلزم Provider بالاستجابة. وعند الإرسال يجب دائمًا تنفيذ `Validate Response Eligibility` الذي يمثل شرط Verified Provider + Active Subscription + Open Request.
+8. `Request Transaction Start <<extend>> Communicate / Inquire` في Direct Search فقط؛ المحادثة قد تستمر أو تنتهي دون Transaction. أما عند `Confirm Transaction Start` الإيجابي فيتم تضمين `Create Active Transaction` وفق `DEC-069`.
+9. `Review Final Invoice` هو الأساس؛ `Approve Final Invoice` و`Request Invoice Revision` و`Raise Transaction Complaint` امتدادات شرطية لقرار المراجعة. عند الاعتماد فقط يتم `<<include>> Complete Transaction` لأن الاعتماد يجعل Transaction = `Completed` دائمًا.
+10. `Rate Provider` و`Rate Beneficiary` Use Cases مستقلة من ناحية Actor goal، لكنهما **غير متاحتين بحرية**: كلتاهما تتطلبان `Transaction = Completed`. الأولى إلزامية على Beneficiary بعد Completed، والثانية اختيارية على Provider. لذلك لا تمثل تبعية Completed بأسهم `include/extend`.
+11. `Cancel Transaction` تتطلب Transaction قائمة وفي حالة تسمح بالإلغاء. `Close Open Request` مختلفة عنها وتتطلب Request Open قبل الاختيار.
+12. `Edit Provider Response` و`Withdraw Provider Response` تتطلبان استجابة فعالة مع Request Open وقبل selection وفق `DEC-070`; لا تربطان بعلاقة `include/extend` مصطنعة مع `Submit Provider Response`.
+13. `Revise Final Invoice` تتطلب `Revision Requested` سابقة؛ و`Review Provider Verification`/`Review Transaction Complaint` أهداف إدارية لاحقة مستقلة تعتمد على وجود submission/complaint، وليست أجزاء included داخل فعل المرسل.
+14. تم فصل `Block User` عن `Report User / Content`: يستطيع المستخدم تنفيذ أحدهما دون الآخر، وReport يخضع لاحقًا لمراجعة إدارية.
+15. `Create Active Transaction`, `Complete Transaction`, و`Validate Response Eligibility` تمثل سلوكًا نظاميًا مشتركًا/إلزاميًا، وليس Actor goals مستقلة؛ لذلك لا ترتبط مباشرة بـActor.
+16. اللون المستخدم لحالات الاستخدام هو `LightBlue (#ADD8E6)` مع خلفية بيضاء وحدود رمادية رفيعة لمحاكاة القالب المرجعي؛ هذا قرار عرض لا Business Rule.
+
+### Preconditions / Postconditions التي يجب ألا تُفهم كـ`include`/`extend`
+
+- `Rate Provider`: Precondition = `Transaction Completed`; Post-Transaction required step.
+- `Rate Beneficiary`: Precondition = `Transaction Completed`; optional Provider action.
+- `Cancel Transaction`: Precondition = active/cancellable Transaction.
+- `Close Open Request`: Precondition = Request Open + no Provider selected.
+- `Edit/Withdraw Provider Response`: Precondition = active response + Request Open + before selection.
+- `Review Final Invoice`: Precondition = invoice `Pending Customer Approval`.
+- `Revise Final Invoice`: Precondition = revision previously requested.
+- `Review Provider Verification`: Precondition = verification submission exists.
+- `Review Transaction Complaint`: Precondition = complaint exists.
 
 ---
 
@@ -349,16 +402,18 @@ sequenceDiagram
 - [x] لا يوجد `Guest` actor.
 - [x] لا توجد `Agreement` مستقلة.
 - [x] المصطلح القياسي هو `Provider Response`.
-- [x] تعديل/سحب `Provider Response` ممثل.
+- [x] تعديل/سحب `Provider Response` ممثلان كتبعيات مشروطة لا كعلاقات UML مصطنعة.
 - [x] `RequiresDeposit` بيانات داخل الاستجابة وليست Use Case/Payment flow مستقلة.
-- [x] طلب بدء `Direct Search` + تأكيد الطرف الآخر ممثلان.
-- [x] اختيار `Request` ينشئ `Transaction` واحدة.
+- [x] Request Route وDirect Search يفصلان آليتي بدء Transaction بصورة صحيحة.
+- [x] `<<include>>` يستخدم فقط للسلوك الإلزامي داخل الـBase Use Case.
+- [x] `<<extend>>` يستخدم فقط للسلوك الشرطي/الاختياري.
+- [x] التبعيات الزمنية/الحالية مثل Ratings بعد Completed ممثلة كـPreconditions/Postconditions.
 - [x] اعتماد الفاتورة يؤدي إلى `Completed`.
 - [x] لا توجد حالة `Transaction` باسم `Closed`.
 - [x] النزاع غير المحلول قبل الاعتماد يؤدي إلى الحالة النهائية `Disputed`.
 - [x] الإدارة لا تقرر استحقاق payment/refund/compensation.
 - [x] تحدث `Ratings` فقط بعد `Completed`، وليس بعد `Cancelled` أو `Disputed`.
 - [x] تقييم `Beneficiary→Provider` إلزامي؛ وتقييم `Provider→Beneficiary` اختياري.
-- [x] `<<include>>` / `<<extend>>` في Main Use Case مرتبطة فقط بالتدفقات المدعومة حاليًا، وليست علاقات شكلية مضافة لإرضاء الرسم.
+- [x] `Block User` و`Report User / Content` منفصلتان في الرسم الرئيسي.
 - [x] مفاهيم مصدر `Class Diagram` محددة من ERD المتزامن.
 - [ ] ما يزال مطلوبًا اعتماد/تصدير الرسم البصري النهائي وفق ترميز UML القياسي بعد مراجعة الفريق.
