@@ -1,8 +1,8 @@
-# YADD Diagrams — Authoritative Inputs
+# YADD Diagrams — Working Sources and Governance
 
-> **Diagram drafting status:** `CORE MODEL READY — 2026-09-04`
+> **Diagram drafting status:** `UML WORKING PACKAGE ORGANIZED — 2026-09-11`
 >
-> هذه الصفحة تحدد الملفات التي يجوز الاعتماد عليها عند إنشاء المخططات الحالية حتى لا تختلط النسخ القديمة مع النموذج المعتمد.
+> هذه الصفحة تحدد مصادر السلطة، بنية ملفات الرسم، وقواعد التصدير حتى لا تختلط Semantic Models مع Editable Diagram Sources أو Generated Exports.
 
 ## 1. Source Priority for Diagram Drafting
 
@@ -14,7 +14,7 @@
 4. `docs/03-analysis/07-lifecycles.md` — current state/lifecycle semantics.
 5. `docs/03-analysis/08-use-cases.md` — current use-case behavior.
 6. `docs/03-analysis/09-DFD.md` — working DFD model.
-7. `docs/03-analysis/10-UML.md` — working UML Activity/Sequence/Use Case representation.
+7. `docs/03-analysis/10-UML.md` — working UML index, semantics and relationship rules.
 8. `docs/03-analysis/11-ERD.md` — current conceptual ERD.
 9. `docs/03-analysis/12-process-data-specifications.md` — current process/data-flow/store semantics.
 10. `docs/03-analysis/13-traceability-matrix.md` — core cross-model consistency check.
@@ -31,7 +31,61 @@ Supporting current models may be consulted only when needed:
 - `22-ai-trust-safety-model.md`
 - `23-provider-subscription-model.md`
 
-## 2. Do Not Use as Current Diagram Authority
+## 2. Current Repository Structure for Diagrams
+
+```text
+diagrams/
+├── README.md
+└── 03-analysis/
+    └── uml/
+        ├── activity/
+        │   └── activity-*.md
+        ├── sequence/
+        │   └── uc-*-sequence.md
+        └── class/
+            └── class-domain-model.md
+```
+
+القواعد الحالية:
+
+- `docs/` يحكم معنى المشروع والتحليل والمتطلبات.
+- `diagrams/03-analysis/uml/` يحتوي Working Diagram Sources المشتقة من تلك الوثائق.
+- لا ننشئ نسخًا مكررة من DFD/ERD/Use Case فقط لأجل التنظيم؛ تبقى مصادرها الحالية في وثائق التحليل إلى أن يتم إعداد editable visual source نهائي.
+- عند إنشاء ملفات `.puml` أو `.drawio` أو ما يعادلها لاحقًا، توضع تحت نوع المخطط المناسب داخل `diagrams/` مع الحفاظ على التتبع إلى الوثيقة الحاكمة.
+- Generated exports مثل SVG/PNG/PDF لا تصبح Source of Truth، ولا يجوز تعديلها يدويًا بما يجعلها تختلف عن المصدر القابل للتعديل.
+
+## 3. Current UML Working Packages
+
+### Activity
+
+- `03-analysis/uml/activity/activity-published-request-route.md`
+- `03-analysis/uml/activity/activity-direct-search-route.md`
+- `03-analysis/uml/activity/activity-final-invoice-dispute.md`
+- `03-analysis/uml/activity/activity-provider-verification.md`
+- `03-analysis/uml/activity/activity-report-administrative-review.md`
+
+### Sequence
+
+- `03-analysis/uml/sequence/uc-01-search-inquire-directly-sequence.md`
+- `03-analysis/uml/sequence/uc-02-create-request-sequence.md`
+- `03-analysis/uml/sequence/uc-03-respond-to-request-sequence.md`
+- `03-analysis/uml/sequence/uc-04-select-provider-sequence.md`
+- `03-analysis/uml/sequence/uc-05-cancel-active-transaction-sequence.md`
+- `03-analysis/uml/sequence/uc-06-final-invoice-sequence.md`
+- `03-analysis/uml/sequence/uc-06-dispute-complaint-sequence.md`
+- `03-analysis/uml/sequence/uc-07-rate-provider-sequence.md`
+- `03-analysis/uml/sequence/uc-07b-rate-beneficiary-sequence.md`
+- `03-analysis/uml/sequence/uc-08-block-report-sequence.md`
+- `03-analysis/uml/sequence/uc-09-provider-verification-sequence.md`
+- `03-analysis/uml/sequence/uc-10-manage-portfolio-catalog-sequence.md`
+
+### Class
+
+- `03-analysis/uml/class/class-domain-model.md`
+
+كل الملفات أعلاه حاليًا `REVIEW DRAFT — NOT BASELINED` ما لم يذكر خلاف ذلك داخل الملف نفسه.
+
+## 4. Do Not Use as Current Diagram Authority
 
 The following are Legacy/derived/stale paths and must **not** be used as the source for current diagrams:
 
@@ -43,7 +97,7 @@ The following are Legacy/derived/stale paths and must **not** be used as the sou
 
 Legacy material is retained for history during stabilization; it is not the current modeling source.
 
-## 3. Current Diagram Invariants
+## 5. Current Diagram Invariants
 
 Every current diagram must preserve these rules:
 
@@ -66,7 +120,7 @@ Every current diagram must preserve these rules:
 - Beneficiary→Provider rating is mandatory; Provider→Beneficiary rating is optional.
 - No Beneficiary↔Provider Payment/Escrow/Refund/Settlement process/entity inside YADD.
 
-## 4. Open Items That Must Not Be Invented
+## 6. Open Items That Must Not Be Invented
 
 Open policy/detail questions do not block the core diagrams, but their unresolved values must not be invented. Examples:
 
@@ -81,12 +135,13 @@ Open policy/detail questions do not block the core diagrams, but their unresolve
 
 Represent the approved concept generically or omit the unresolved numeric/policy detail.
 
-## 5. Editable and Exported Sources
+## 7. Editable and Exported Sources
 
-During analysis, Markdown/Mermaid files above remain the repository working source for model semantics. Final academic diagrams may be redrawn in draw.io or another approved diagram tool for standard notation and print quality.
+During analysis, Markdown/Mermaid files under the organized package remain working visual/modeling sources derived from the authoritative documents above. Final academic diagrams may be redrawn in PlantUML, draw.io, or another approved diagram tool for standard notation and print quality.
 
-When exporting:
-- keep the editable source (`.drawio` or equivalent);
+When exporting later:
+- keep the editable source (`.puml`, `.drawio`, or equivalent);
 - export SVG/PDF for report/print where appropriate;
 - export high-resolution PNG when needed for PowerPoint;
-- never let an exported image diverge semantically from the authoritative model above.
+- keep generated exports separate from editable sources;
+- never let an exported image diverge semantically from the authoritative model.
