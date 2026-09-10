@@ -45,7 +45,7 @@ sequenceDiagram
         VC->>CASE: setStatus(SUBMITTED)
         CASE-->>VC: statusUpdated()
         VC-->>UI: verificationSubmitted(caseId)
-        UI-->>U: showUnderReviewStatus()
+        UI-->>U: showSubmittedForReviewStatus()
     else Required verification inputs missing or unusable
         VC-->>UI: submissionRejected(reason)
         UI-->>U: showVerificationErrors()
@@ -59,13 +59,14 @@ sequenceDiagram
         VC->>CASE: setStatus(SUBMITTED)
         CASE-->>VC: statusUpdated()
         VC-->>UI: resubmissionAccepted()
-        UI-->>U: showUnderReviewStatus()
+        UI-->>U: showSubmittedForReviewStatus()
     end
 ```
 
 ### Scenario A notes
 
 - لا يتم تفعيل Provider Profile تلقائيًا بمجرد رفع البيانات.
+- بعد الإرسال تكون الحالة المفاهيمية `Submitted`، وتنتقل إلى `UnderReview` عند بدء المراجعة البشرية وفق lifecycle المعتمد.
 - أثناء انتظار المراجعة يمكن للحساب الاستمرار كمستفيد، لكن لا تُفتح وظائف Provider المعتمدة على التحقق.
 - لم يُفترض نوع وثيقة محدد أو عدد صور أو مدة صلاحية تشغيلية لأن هذه التفاصيل ما تزال مفتوحة.
 
@@ -91,6 +92,11 @@ sequenceDiagram
     RUI->>VC: loadVerificationCase(caseId)
     VC->>CASE: getCaseAndEvidence(caseId)
     CASE-->>VC: verificationEvidence
+
+    opt Case is still Submitted
+        VC->>CASE: setStatus(UNDER_REVIEW)
+        CASE-->>VC: statusUpdated()
+    end
 
     opt Automated assistance is available
         VC->>VA: runAssistiveChecks(verificationEvidence)
@@ -141,6 +147,7 @@ sequenceDiagram
 - وصولًا إلى قواعد بيانات حكومية أو سجل جنائي، لأن ذلك غير معتمد.
 - أنواع وثائق محددة، مدة الاحتفاظ، أو تراخيص مهنية خاصة، لأنها ما تزال `Needs Verification`.
 - عرض بيانات التحقق الحساسة لأي Beneficiary أو Provider آخر.
+- تفاصيل إنشاء/تعديل Provider Profile والنشاط ومناطق الخدمة؛ هذه أهداف نمذجة مستقلة في Main Use Case decomposition، بينما هذا الملف يركز على Verification/Activation interaction نفسها.
 
 ## Postconditions
 
