@@ -41,15 +41,14 @@ sequenceDiagram
         R-->>C: requestCreated(requestId, OPEN)
         deactivate R
         C-->>UI: publicationConfirmed(requestId)
-        deactivate C
         UI-->>B: showPublicationConfirmation()
-        deactivate UI
     else Missing or invalid required data
         C-->>UI: validationFailed(validationErrors)
-        deactivate C
         UI-->>B: showValidationErrors()
-        deactivate UI
     end
+
+    deactivate C
+    deactivate UI
 ```
 
 ## Scope boundary
