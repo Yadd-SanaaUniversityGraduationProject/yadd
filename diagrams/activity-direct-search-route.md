@@ -21,14 +21,19 @@ flowchart TD
     C -- Yes --> D[Private Chat / Inquiry]
 
     D --> E{Either Party Requests Transaction Start?}
-    E -- No --> D
-    E -- Yes --> F[Send Request Transaction Start]
-    F --> G{Other Party Confirms?}
+    E -- No --> F{Continue Chat?}
+    F -- Yes --> D
+    F -- No --> Z
 
-    G -- No / Reject --> D
-    G -- Yes --> H[Create Active Transaction]
-    H --> I[Continue Through Common Transaction / Invoice Flow]
-    I --> ZE([End of Direct-Search Activity View])
+    E -- Yes --> G[Send Request Transaction Start]
+    G --> H{Other Party Confirms?}
+    H -- Yes --> I[Create Active Transaction]
+    I --> J[Continue Through Common Transaction / Invoice Flow]
+    J --> ZE([End of Direct-Search Activity View])
+
+    H -- No / Reject --> K{Continue Chat?}
+    K -- Yes --> D
+    K -- No --> Z
 ```
 
 ## Semantic constraints
@@ -36,7 +41,7 @@ flowchart TD
 - Private Chat by itself never creates a Transaction.
 - Either Beneficiary or Provider may request Transaction Start.
 - `Active Transaction` is created only after the other party confirms.
-- No confirmation or rejection leaves the parties in Chat without a Transaction.
+- No confirmation or rejection leaves the parties without a Transaction; the Conversation may continue or end.
 - There is no standalone `Agreement` entity/form in this route.
 
 ## Scope boundary
