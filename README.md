@@ -21,8 +21,16 @@ docs/
 ├── 04-design/           # تصميم قاعدة البيانات والواجهات والاستعلامات والتقارير
 └── 05-report-drafts/    # مسودات فصول مشتقة للمراجعة؛ ليست Source of Truth
 
-diagrams/                # تصديرات PNG/draw.io عند الحاجة؛ المصدر القابل للتعديل يبقى في Markdown/Mermaid
+diagrams/
+├── README.md            # حوكمة المخططات وفهرس مصادر الرسم
+└── 03-analysis/
+    └── uml/
+        ├── activity/    # Working Activity Diagram sources
+        ├── sequence/    # Working Sequence Diagram sources
+        └── class/       # Working Class Diagram source/package
 ```
+
+وثائق `docs/` تحكم معنى المشروع والمتطلبات والتحليل. ملفات `diagrams/` هي تمثيلات رسمية مشتقة وقابلة للمراجعة، ولا تتغلب على مصادر الحقيقة الأعلى. التصديرات النهائية SVG/PNG/PDF تُنشأ لاحقًا من مصادر الرسم ولا تعامل كمصدر مستقل للمعنى.
 
 ## مسارات Legacy
 
