@@ -50,7 +50,7 @@ sequenceDiagram
         PUI-->>P: showSubmissionError()
     end
 
-    Note over P,I: Invoice contains parties, items, prices and total; images are optional
+    Note over P,I: Invoice contains parties, items, prices and total — images are optional
 ```
 
 ### Scenario A postcondition
@@ -121,7 +121,7 @@ sequenceDiagram
         end
     end
 
-    Note over B,I: No response keeps the invoice Pending Customer Approval; no Auto-Approval
+    Note over B,I: No response keeps the invoice Pending Customer Approval — no Auto-Approval
     Note over B,I: Reminder concept is approved, but long-pending escalation timing remains open
 ```
 
