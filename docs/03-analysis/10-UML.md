@@ -1,6 +1,6 @@
 # نماذج UML — YADD Preliminary Defense
 
-> **الحالة:** `DRAFT FOR PRELIMINARY DEFENSE — SEQUENCE PACKAGE SYNCHRONIZED 2026-09-11`
+> **الحالة:** `DRAFT FOR PRELIMINARY DEFENSE — UML PACKAGE ORGANIZED 2026-09-11`
 >
 > **المراجع الحاكمة:** DEC-046/047/048/050/051/063/064/066/067/068/069/070/071/072/073 + `05-SRS.md` + `06-business-rules.md` + `07-lifecycles.md` + `08-use-cases.md`.
 >
@@ -152,7 +152,7 @@ flowchart LR
 3. لا توجد Use Case/Entity باسم `Agreement`; المسار القياسي في الطلب هو `Request → Provider Response → Selection → Transaction`.
 4. `View Provider Profile <<extend>> Search Providers` لأن البحث قد ينتهي دون فتح ملف بعينه.
 5. `Communicate / Inquire <<extend>> View Provider Profile` في Direct Search، ويمتد أيضًا من `Compare Provider Responses` في Request Route لأن الاستفسار قبل الاختيار اختياري.
-6. `Select Provider <<extend>> Compare Provider Responses`: المقارنة يمكن أن تتم دون اختيار، بينما الاختيار يحدث عند قرار المستفيد. عند حدوث الاختيار فهو **يتضمن** `Create Active Transaction` لأن `DEC-047/066` يفرضان بدء Transaction في Request Route.
+6. `Select Provider <<extend>> Compare Provider Responses`: المقارنة يمكن أن تنتهي دون اختيار، بينما الاختيار يحدث عند قرار المستفيد. عند حدوث الاختيار فهو **يتضمن** `Create Active Transaction` لأن `DEC-047/066` يفرضان بدء Transaction في Request Route.
 7. `Submit Provider Response <<extend>> View Matching Requests`: مشاهدة الطلب لا تلزم Provider بالاستجابة. وعند الإرسال يجب دائمًا تنفيذ `Validate Response Eligibility` الذي يمثل شرط Verified Provider + Active Subscription + Open Request.
 8. `Request Transaction Start <<extend>> Communicate / Inquire` في Direct Search فقط؛ المحادثة قد تستمر أو تنتهي دون Transaction. أما عند `Confirm Transaction Start` الإيجابي فيتم تضمين `Create Active Transaction` وفق `DEC-069`.
 9. `Review Final Invoice` هو الأساس؛ `Approve Final Invoice` و`Request Invoice Revision` و`Raise Transaction Complaint` امتدادات شرطية لقرار المراجعة. عند الاعتماد فقط يتم `<<include>> Complete Transaction` لأن الاعتماد يجعل Transaction = `Completed` دائمًا.
@@ -178,95 +178,42 @@ flowchart LR
 
 ---
 
-## 3. Activity Diagram — Published Request Route
+## 3. Activity Diagram Package — Standalone Review Drafts
 
-```mermaid
-flowchart TD
-    S([Start]) --> A[Beneficiary Creates Request]
-    A --> B{Request Data Valid?}
-    B -- No --> A
-    B -- Yes --> C[Publish Open Request]
-    C --> D[Eligible Providers View Request]
-    D --> E[Provider Submits Provider Response]
-    E --> E1[Optional Proposed Price / Note]
-    E1 --> E2[Set RequiresDeposit Yes or No]
-    E2 --> F[Beneficiary Compares Responses]
-    F --> G{Needs Inquiry?}
-    G -- Yes --> H[Private Chat / Inquiry]
-    H --> F
-    G -- No --> I{Select Provider?}
-    I -- No --> F
-    I -- Yes --> J[Close Request to New Responses]
-    J --> K[Mark Other Responses NotSelected]
-    K --> L[Create Active Transaction]
-    L --> M{Transaction Cancelled?}
-    M -- Yes --> N[Record Cancellation Actor, Reason and Time]
-    N --> Z([End — Cancelled])
-    M -- No --> O[Provider Performs Service / Prepares Product]
-    O --> P[Provider Creates Final Invoice]
-    P --> Q[Invoice Pending Customer Approval]
-    Q --> R{Beneficiary Decision}
-    R -- Request Revision --> T[Record Revision Note]
-    T --> U[Provider Revises Invoice]
-    U --> Q
-    R -- Dispute --> V[Raise Transaction Complaint]
-    V --> V1[Administrator Reviews YADD Evidence and Applies Platform Policy]
-    V1 --> V2{Agreement Reached Before Final Approval?}
-    V2 -- Yes --> Q
-    V2 -- No --> Z2([End — Disputed])
-    R -- Approve --> W[Invoice Approved / Transaction Completed]
-    W --> X[Beneficiary Rates Provider — Required]
-    X --> Y{Provider Wants to rate Beneficiary?}
-    Y -- Yes --> Y1[Rate 3 Behavioral Indicators + Optional Comment]
-    Y1 --> ZE([End — Post-Transaction Flow Complete])
-    Y -- No --> ZE
-```
+> **Synchronization correction — 2026-09-11:** أصبحت ملفات Activity المستقلة تحت `diagrams/03-analysis/uml/activity/` هي Working Semantic Source لمسارات النشاط. لا نكرر المخططات كاملة هنا لتقليل خطر Divergence بين نسختين.
 
-`Completed` هي الحالة النهائية الناجحة للـ`Transaction`، والتقييمات بعدها Post-Transaction workflow فقط. رفع Complaint **لا يحول Transaction تلقائيًا إلى `Disputed`**؛ تتم المراجعة الإدارية أولًا، وإذا بقي الخلاف دون اتفاق قبل اعتماد الفاتورة تصبح `Disputed`. الإدارة تطبق سياسة YADD على السجلات الداخلية ولا تقرر الدفع أو الاسترداد أو التعويض أو أي استحقاق مالي/تجاري بين الطرفين.
+| Workflow | Standalone working file | Current status |
+|---|---|---|
+| Published Request Route | `diagrams/03-analysis/uml/activity/activity-published-request-route.md` | `REVIEW DRAFT — NOT BASELINED` |
+| Direct Search Route | `diagrams/03-analysis/uml/activity/activity-direct-search-route.md` | `REVIEW DRAFT — NOT BASELINED` |
+| Final Invoice, Revision and Dispute | `diagrams/03-analysis/uml/activity/activity-final-invoice-dispute.md` | `REVIEW DRAFT — NOT BASELINED` |
+| Provider Verification and Activation | `diagrams/03-analysis/uml/activity/activity-provider-verification.md` | `REVIEW DRAFT — NOT BASELINED` |
+| Report and Administrative Review | `diagrams/03-analysis/uml/activity/activity-report-administrative-review.md` | `REVIEW DRAFT — NOT BASELINED` |
+
+هذه الحزمة Route/Decision-focused ولا تعني أن لكل Use Case مخطط Activity مستقل. التغييرات في الحالات يجب أن تبقى متسقة مع `07-lifecycles.md`، بينما تفاصيل الرسائل بين المشاركين تبقى في Sequence Package.
 
 ---
 
-## 4. Activity Diagram — Direct Search Route
+## 4. Sequence Diagram Package — Standalone Review Drafts
 
-```mermaid
-flowchart TD
-    S([Start]) --> A[Beneficiary Searches by Category and Area]
-    A --> B[View Provider Profile and Portfolio/Catalog]
-    B --> C{Start Inquiry?}
-    C -- No --> Z([End])
-    C -- Yes --> D[Private Chat / Inquiry]
-    D --> E[Either Party Requests Transaction Start]
-    E --> F{Other Party Confirms?}
-    F -- No --> D
-    F -- Yes --> G[Create Active Transaction]
-    G --> H[Continue Through Common Transaction / Invoice Flow]
-    H --> Z2([End])
-```
-
-المحادثة وحدها لا تنشئ `Transaction`.
-
----
-
-## 5. Sequence Diagram Package — Standalone Review Drafts
-
-> **Synchronization correction — 2026-09-11:** تم إيقاف استخدام مخطط Sequence العملاق لمسار Published Request ومخطط Direct Search المكرر داخل هذا الملف كمصدر العمل الرئيسي، لأنهما يدمجان عدة Use Cases مستقلة في رسم واحد ويصعبان التتبع والطباعة على A4. المصدر التشغيلي الحالي للـSequence Diagrams هو الملفات المستقلة داخل `diagrams/`، وكل ملف مشتق مباشرة من Use Case/Alternative flow محددة.
+> المصدر التشغيلي الحالي للـSequence Diagrams هو الملفات المستقلة تحت `diagrams/03-analysis/uml/sequence/`، وكل ملف مشتق مباشرة من Use Case/Alternative flow محددة.
 
 ### Current sequence package
 
 | Source scenario | Standalone working file | Current status |
 |---|---|---|
-| UC-01 — Search and Inquire Directly | `diagrams/uc-01-search-inquire-directly-sequence.md` | `REVIEW DRAFT — NOT BASELINED` |
-| UC-02 — Create Request | `diagrams/uc-02-create-request-sequence.md` | `REVIEW DRAFT — NOT BASELINED` |
-| UC-03 — Respond to Request | `diagrams/uc-03-respond-to-request-sequence.md` | `REVIEW DRAFT — NOT BASELINED` |
-| UC-04 — Select Provider from Request | `diagrams/uc-04-select-provider-sequence.md` | `REVIEW DRAFT — NOT BASELINED` |
-| UC-05 — Cancel Active Transaction | `diagrams/uc-05-cancel-active-transaction-sequence.md` | `REVIEW DRAFT — NOT BASELINED` |
-| UC-06 — Final Invoice | `diagrams/uc-06-final-invoice-sequence.md` | `REVIEW DRAFT — NOT BASELINED` |
-| UC-06 Alternative — Transaction Complaint / Administrative Review | `diagrams/uc-06-dispute-complaint-sequence.md` | `REVIEW DRAFT — NOT BASELINED` |
-| UC-07 — Rate Provider | `diagrams/uc-07-rate-provider-sequence.md` | `REVIEW DRAFT — NOT BASELINED` |
-| UC-07B — Provider Rates Beneficiary | `diagrams/uc-07b-rate-beneficiary-sequence.md` | `REVIEW DRAFT — NOT BASELINED` |
-| UC-08 — Block and Report User / Content | `diagrams/uc-08-block-report-sequence.md` | `REVIEW DRAFT — NOT BASELINED` |
-| UC-09 — Provider Verification / Portal Activation | `diagrams/uc-09-provider-verification-sequence.md` | `REVIEW DRAFT — NOT BASELINED` |
-| UC-10 — Manage Portfolio / Catalog | `diagrams/uc-10-manage-portfolio-catalog-sequence.md` | `REVIEW DRAFT — NOT BASELINED` |
+| UC-01 — Search and Inquire Directly | `diagrams/03-analysis/uml/sequence/uc-01-search-inquire-directly-sequence.md` | `REVIEW DRAFT — NOT BASELINED` |
+| UC-02 — Create Request | `diagrams/03-analysis/uml/sequence/uc-02-create-request-sequence.md` | `REVIEW DRAFT — NOT BASELINED` |
+| UC-03 — Respond to Request | `diagrams/03-analysis/uml/sequence/uc-03-respond-to-request-sequence.md` | `REVIEW DRAFT — NOT BASELINED` |
+| UC-04 — Select Provider from Request | `diagrams/03-analysis/uml/sequence/uc-04-select-provider-sequence.md` | `REVIEW DRAFT — NOT BASELINED` |
+| UC-05 — Cancel Active Transaction | `diagrams/03-analysis/uml/sequence/uc-05-cancel-active-transaction-sequence.md` | `REVIEW DRAFT — NOT BASELINED` |
+| UC-06 — Final Invoice | `diagrams/03-analysis/uml/sequence/uc-06-final-invoice-sequence.md` | `REVIEW DRAFT — NOT BASELINED` |
+| UC-06 Alternative — Transaction Complaint / Administrative Review | `diagrams/03-analysis/uml/sequence/uc-06-dispute-complaint-sequence.md` | `REVIEW DRAFT — NOT BASELINED` |
+| UC-07 — Rate Provider | `diagrams/03-analysis/uml/sequence/uc-07-rate-provider-sequence.md` | `REVIEW DRAFT — NOT BASELINED` |
+| UC-07B — Provider Rates Beneficiary | `diagrams/03-analysis/uml/sequence/uc-07b-rate-beneficiary-sequence.md` | `REVIEW DRAFT — NOT BASELINED` |
+| UC-08 — Block and Report User / Content | `diagrams/03-analysis/uml/sequence/uc-08-block-report-sequence.md` | `REVIEW DRAFT — NOT BASELINED` |
+| UC-09 — Provider Verification / Portal Activation | `diagrams/03-analysis/uml/sequence/uc-09-provider-verification-sequence.md` | `REVIEW DRAFT — NOT BASELINED` |
+| UC-10 — Manage Portfolio / Catalog | `diagrams/03-analysis/uml/sequence/uc-10-manage-portfolio-catalog-sequence.md` | `REVIEW DRAFT — NOT BASELINED` |
 
 ### Sequence modeling rules
 
@@ -289,9 +236,13 @@ flowchart TD
 
 ---
 
-## 6. Class Diagram — النموذج المصدر
+## 5. Class Diagram Package — Conceptual Domain Model
 
-يجب إعادة بناء `Class Diagram` من الـConceptual ERD المتزامن في `11-ERD.md`، وعدم إعادة استخدام نموذج الكلاسات القديم `Offer → Agreement → Review`.
+الـWorking Class Diagram مبني الآن من الـConceptual ERD المتزامن في `11-ERD.md` وموجود في:
+
+`diagrams/03-analysis/uml/class/class-domain-model.md`
+
+وهو مقسم إلى ثلاث Views قابلة للمراجعة والطباعة: Account/Provider/Discovery، Communication/Transaction/Invoice/Ratings، وVerification/Subscription/Trust. هذا التقسيم Presentation choice فقط؛ جميعها تمثل Conceptual Domain Model واحدًا.
 
 الحد الأدنى من Domain classes/concepts الحالية:
 - User
@@ -311,11 +262,11 @@ flowchart TD
 - Subscription
 - Report
 
-خيارات قاعدة البيانات الفيزيائية مثل بنية جدول Media أو `InvoiceVersion` مقابل `Invoice + Revision` هي قرارات تصميم في Chapter Four، ولا يجوز اختلاقها كحقائق تحليلية.
+خيارات قاعدة البيانات الفيزيائية مثل بنية جدول Media أو `InvoiceVersion` مقابل `Invoice + Revision` وComposition/lifecycle ownership هي قرارات تصميم في Chapter Four، ولا يجوز اختلاقها كحقائق تحليلية.
 
 ---
 
-## 7. قائمة جاهزية المخططات — Diagram Readiness Checklist
+## 6. قائمة جاهزية المخططات — Diagram Readiness Checklist
 
 - [x] الـActors متوافقة مع `DEC-067`.
 - [x] التسميات الإنجليزية فقط متوافقة مع `DEC-072`.
@@ -328,8 +279,10 @@ flowchart TD
 - [x] `<<include>>` يستخدم فقط للسلوك الإلزامي داخل الـBase Use Case.
 - [x] `<<extend>>` يستخدم فقط للسلوك الشرطي/الاختياري.
 - [x] التبعيات الزمنية/الحالية مثل Ratings بعد Completed ممثلة كـPreconditions/Postconditions.
+- [x] Activity package منظمة كمسارات مستقلة قابلة للتتبع بدل تكرار Activity لكل UC.
 - [x] Sequence package مفككة إلى Scenarios مستقلة قابلة للتتبع بدل Giant Route Sequence.
 - [x] أسماء UI/Controller في Sequence Diagrams موسومة كـDerived modeling roles وليست Implementation Classes معتمدة.
+- [x] Working Class Diagram package مشتقة من ERD الحالي وموجودة في المسار المنظم.
 - [x] اعتماد الفاتورة يؤدي إلى `Completed`.
 - [x] لا توجد حالة `Transaction` باسم `Closed`.
 - [x] Complaint لا تحول Transaction تلقائيًا إلى `Disputed`؛ النزاع غير المحلول دون اتفاق قبل الاعتماد هو الذي يؤدي إلى `Disputed`.
@@ -337,6 +290,5 @@ flowchart TD
 - [x] تحدث `Ratings` فقط بعد `Completed`، وليس بعد `Cancelled` أو `Disputed`.
 - [x] تقييم `Beneficiary→Provider` إلزامي؛ وتقييم `Provider→Beneficiary` اختياري.
 - [x] `Block User` و`Report User / Content` منفصلتان في الرسم الرئيسي.
-- [x] مفاهيم مصدر `Class Diagram` محددة من ERD المتزامن.
 - [ ] ما يزال مطلوبًا اختبار Render لكل Mermaid standalone file ومراجعة Visual/A4 قبل الـbaseline.
 - [ ] ما يزال مطلوبًا اعتماد/تصدير الرسم البصري النهائي وفق ترميز UML القياسي بعد مراجعة الفريق.
