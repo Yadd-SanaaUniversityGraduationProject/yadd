@@ -23,13 +23,13 @@ flowchart TD
     E --> F[Authorized Administrator Opens Report]
     F --> G[Review Report and Available YADD Evidence]
 
-    G --> H{Violation Supported by Evidence and Policy?}
+    G --> H{Administrative Action Warranted Under Approved Policy?}
     H -- Yes --> I[Record Authorized Administrative Action]
     I --> J[Save Review Outcome]
-    J --> Z1([End — Reviewed with Action])
+    J --> Z1([End — Review Recorded])
 
-    H -- No / Insufficient Evidence --> K[Record No Violation or Insufficient Evidence Outcome]
-    K --> Z2([End — Reviewed without Punitive Action])
+    H -- No --> K[Record Review Outcome Without Administrative Action]
+    K --> Z2([End — Review Recorded])
 ```
 
 ## Semantic constraints
