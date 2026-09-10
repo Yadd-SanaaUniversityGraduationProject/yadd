@@ -29,67 +29,35 @@ sequenceDiagram
     Note over B,PR: Precondition: Request Open + at least one selectable Provider Response
 
     B->>UI: openProviderResponses(requestId)
-    activate UI
     UI->>SC: getProviderResponses(requestId)
-    activate SC
     SC->>PR: listSelectableResponses(requestId)
-    activate PR
     PR-->>SC: providerResponses
-    deactivate PR
     SC-->>UI: comparisonData
-    deactivate SC
     UI-->>B: showResponseComparison()
-    deactivate UI
 
     B->>UI: selectProvider(responseId)
-    activate UI
     UI->>SC: selectProvider(requestId, responseId)
-    activate SC
-
     SC->>RQ: checkRequestOpen(requestId)
-    activate RQ
     RQ-->>SC: requestState
-    deactivate RQ
-
     SC->>PR: checkResponseSelectable(responseId)
-    activate PR
     PR-->>SC: responseState
-    deactivate PR
 
     alt Request Open + response selectable
         SC->>RQ: closeToNewResponses()
-        activate RQ
         RQ-->>SC: requestClosedToNewResponses()
-        deactivate RQ
-
         SC->>PR: markSelected(responseId)
-        activate PR
         PR-->>SC: selectedResponseSaved()
-        deactivate PR
-
         SC->>PR: markOtherResponsesNotSelected(requestId, responseId)
-        activate PR
         PR-->>SC: otherResponsesUpdated()
-        deactivate PR
-
         SC->>TC: createTransactionFromSelection(requestId, responseId)
-        activate TC
         TC->>TX: createActiveTransaction(requestId, responseId)
-        activate TX
         TX-->>TC: transactionCreated(transactionId, ACTIVE)
-        deactivate TX
         TC-->>SC: transactionActive(transactionId)
-        deactivate TC
-
         SC-->>UI: selectionConfirmed(transactionId)
-        deactivate SC
         UI-->>B: showActiveTransaction(transactionId)
-        deactivate UI
     else Request no longer Open or response no longer selectable
         SC-->>UI: selectionRejected(reason)
-        deactivate SC
         UI-->>B: showSelectionError()
-        deactivate UI
     end
 ```
 
