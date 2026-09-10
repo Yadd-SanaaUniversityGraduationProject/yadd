@@ -19,32 +19,33 @@ flowchart TD
     S([Start]) --> A[Provider Creates Final Invoice]
     A --> B[Send Final Invoice]
     B --> C[Invoice Pending Customer Approval]
-    C --> D{Beneficiary Decision}
+    C --> D{Beneficiary Responds?}
 
-    D -- Approve --> E[Show Final Approval Warning]
-    E --> F{Confirm Final Approval?}
-    F -- No --> C
-    F -- Yes --> G[Mark Invoice Final / Immutable]
-    G --> H[Set Transaction Completed]
-    H --> ZC([End — Completed])
+    D -- No --> E[Keep Invoice Pending and Send Reminder]
+    E --> C
 
-    D -- Request Revision --> I[Record Revision Note]
-    I --> J[Provider Revises Invoice]
-    J --> K[Preserve Revision History]
-    K --> C
+    D -- Yes --> F{Beneficiary Decision}
 
-    D -- Continued Disagreement --> L[Raise Transaction Complaint]
-    L --> M[Administrator Reviews YADD Evidence]
-    M --> N[Apply Platform Policy if Applicable]
-    N --> O{Agreement Reached Before Final Approval?}
-    O -- Yes --> C
-    O -- No --> P[Set Transaction Disputed]
-    P --> ZD([End — Disputed])
+    F -- Approve --> G[Show Final Approval Warning]
+    G --> H{Confirm Final Approval?}
+    H -- No --> C
+    H -- Yes --> I[Mark Invoice Final / Immutable]
+    I --> J[Set Transaction Completed]
+    J --> ZC([End — Completed])
 
-    C --> Q{No Response?}
-    Q -- Yes --> R[Keep Invoice Pending and Send Reminder]
+    F -- Request Revision --> K[Record Revision Note]
+    K --> L[Provider Revises Invoice]
+    L --> M[Preserve Revision History]
+    M --> C
+
+    F -- Continued Disagreement --> N[Raise Transaction Complaint]
+    N --> O[Administrator Reviews YADD Evidence]
+    O --> P[Apply Platform Policy if Applicable]
+    P --> Q{Agreement Reached Before Final Approval?}
+    Q -- Yes --> R[Return to Invoice Resolution Flow]
     R --> C
-    Q -- No --> D
+    Q -- No --> T[Set Transaction Disputed]
+    T --> ZD([End — Disputed])
 ```
 
 ## Semantic constraints
