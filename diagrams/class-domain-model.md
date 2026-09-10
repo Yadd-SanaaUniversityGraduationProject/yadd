@@ -11,6 +11,7 @@
 - **Modeling rule:** `Beneficiary` and `Provider` are not separate account classes. One `User` may own at most one `ProviderProfile`.
 - **Legacy exclusion:** no `Agreement`, no payment/refund/deposit entity, and no Transaction state named `Closed`.
 - **Abstraction rule:** PK/FK implementation details are not repeated as UML attributes here; associations and multiplicities express conceptual relationships. Physical table structure remains a Chapter Four design concern.
+- **Association rule:** plain UML associations are used unless the current analysis explicitly establishes object-lifetime ownership. The ERD establishes containment/cardinality for Message, InvoiceVersion/InvoiceItem and VerificationArtifact, but it does not currently approve deletion/lifetime semantics strong enough to assert UML composition.
 - **Invoice abstraction:** the current conceptual ERD uses `InvoiceVersion` + `InvoiceItem` to preserve revision history. The physical design may later choose another structure while preserving that requirement.
 
 ---
@@ -75,6 +76,7 @@ classDiagram
     ProviderProfile "1" --> "0..*" ProviderActivity : activates
     Category "1" --> "0..*" ProviderActivity : classifies
 
+    Area "0..1" --> "0..*" Area : parent of
     ProviderProfile "1" --> "0..*" ProviderServiceArea : serves through
     Area "1" --> "0..*" ProviderServiceArea : covered by
 
@@ -91,6 +93,7 @@ classDiagram
 ### View A constraints
 
 - `ProviderActivity` allows Service Activity, Product Activity, or both under one Provider Profile.
+- `Area` supports the current conceptual District/Neighborhood parent-child hierarchy.
 - `ProviderServiceArea` models the Provider-to-Area coverage relation.
 - `ShowcaseItem` conceptually unifies Portfolio and Catalog via `itemType`.
 - `Request.indicativePrice` is optional/non-binding at requirements level even though Mermaid cannot express attribute nullability cleanly in this compact view.
@@ -169,7 +172,7 @@ classDiagram
     User "1" --> "0..*" Conversation : beneficiary party
     ProviderProfile "1" --> "0..*" Conversation : provider party
     Request "0..1" --> "0..*" Conversation : may contextualize
-    Conversation "1" *-- "0..*" Message : contains
+    Conversation "1" --> "0..*" Message : contains
     User "1" --> "0..*" Message : sends
 
     User "1" --> "0..*" Transaction : beneficiary party
@@ -178,8 +181,8 @@ classDiagram
     ProviderResponse "0..1" --> "0..1" Transaction : may start
     Conversation "0..1" --> "0..1" Transaction : may link
 
-    Transaction "1" *-- "0..*" InvoiceVersion : has
-    InvoiceVersion "1" *-- "1..*" InvoiceItem : contains
+    Transaction "1" --> "0..*" InvoiceVersion : has
+    InvoiceVersion "1" --> "1..*" InvoiceItem : contains
 
     Transaction "1" --> "0..1" ProviderRating : provider rating
     User "1" --> "0..*" ProviderRating : writes
@@ -201,6 +204,7 @@ classDiagram
 - `ProviderRating` is at most one per Transaction and is required from Beneficiary after `Completed`.
 - `BeneficiaryRating` is at most one per Transaction and is optional from Provider after `Completed`.
 - Ratings do not change Transaction status.
+- The associations `Conversation–Message`, `Transaction–InvoiceVersion`, and `InvoiceVersion–InvoiceItem` intentionally do not claim UML composition because lifecycle/deletion ownership is not baselined in the current analysis.
 
 ---
 
@@ -251,7 +255,7 @@ classDiagram
 
     User "1" --> "0..1" ProviderProfile : may own
     ProviderProfile "1" --> "0..*" VerificationCase : submits
-    VerificationCase "1" *-- "1..*" VerificationArtifact : includes
+    VerificationCase "1" --> "1..*" VerificationArtifact : includes
     ProviderProfile "1" --> "0..*" Subscription : has
 
     User "1" --> "0..*" Report : submits
@@ -269,6 +273,7 @@ classDiagram
 - `Report.targetReference` remains a conceptual polymorphic reference in the current ERD. A stricter physical mapping is a Chapter Four design decision.
 - A Report alone does not prove a violation or create an automatic final punishment.
 - Transaction Complaint may use the Report/complaint concept and Transaction context; it does not create Payment/Refund/Compensation entities.
+- `VerificationCase–VerificationArtifact` is kept as a plain association until object lifecycle ownership is explicitly fixed in design.
 
 ---
 
@@ -284,6 +289,7 @@ The three views together preserve the current Conceptual ERD semantics while avo
 - Media table/storage structure.
 - Exact `InvoiceVersion` versus `Invoice + Revision` physical design.
 - Physical implementation of polymorphic Report targets.
+- Composition/lifecycle ownership semantics for contained records unless explicitly decided during design.
 - Framework classes, controllers, repositories, APIs, or service-layer names.
 
 These belong to Chapter Four or later design decisions and are intentionally not presented as approved analysis facts.
