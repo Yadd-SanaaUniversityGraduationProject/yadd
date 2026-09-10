@@ -12,8 +12,8 @@
 - `UC-05 — Cancel Active Transaction`
 - `UC-06 — Create, Revise and Approve Final Invoice`
 - `UC-07 / UC-07B — Post-Transaction Ratings`
-- `DEC-047/048/050/051/063/066/068/070/071/073`
-- Current Business Rules and Transaction/Invoice lifecycles.
+- `DEC-047/048/049/050/051/063/066/068/070/071/073`
+- Current Business Rules and Request/Transaction/Invoice lifecycles.
 
 ## Diagram
 
@@ -24,51 +24,55 @@ flowchart TD
     B -- No --> A
     B -- Yes --> C[Publish Open Request]
 
-    C --> D[Eligible Providers View Request]
-    D --> E[Provider Submits Provider Response]
-    E --> F[Beneficiary Compares Responses]
-    F --> G{Needs Inquiry?}
-    G -- Yes --> H[Private Chat / Inquiry]
-    H --> F
-    G -- No --> I{Select Provider?}
-    I -- No --> F
-    I -- Yes --> J[Close Request to New Responses]
+    C --> D{Request remains open for matching?}
+    D -- Beneficiary closes --> ZR([End — ClosedByBeneficiary])
+    D -- Inactivity policy reached --> ZE1([End — Expired])
+    D -- Yes --> E[Eligible Providers View Request]
+    E --> F[One or More Providers Submit Responses]
+    F --> G[Beneficiary Compares Responses]
+    G --> H{Needs Inquiry?}
+    H -- Yes --> I[Private Chat / Inquiry]
+    I --> G
+    H -- No --> J{Select Provider?}
+    J -- No --> D
+    J -- Yes --> K[Close Request to New Responses]
 
-    J --> K[Mark Selected Response and Others NotSelected]
-    K --> L[Create Active Transaction]
-    L --> M{Transaction Cancelled?}
-    M -- Yes --> N[Record Actor, Reason and Time]
-    N --> ZC([End — Cancelled])
+    K --> L[Mark Selected Response and Others NotSelected]
+    L --> M[Create Active Transaction]
+    M --> N{Transaction Cancelled?}
+    N -- Yes --> O[Record Actor, Reason and Time]
+    O --> ZC([End — Cancelled])
 
-    M -- No --> O[Provider Performs Service / Prepares Product]
-    O --> P[Provider Creates Final Invoice]
-    P --> Q[Invoice Pending Customer Approval]
-    Q --> R{Beneficiary Decision}
+    N -- No --> P[Provider Performs Service / Prepares Product]
+    P --> Q[Provider Creates Final Invoice]
+    Q --> R[Invoice Pending Customer Approval]
+    R --> T{Beneficiary Decision}
 
-    R -- Request Revision --> T[Record Revision Note]
-    T --> U[Provider Revises Final Invoice]
-    U --> Q
+    T -- Request Revision --> U[Record Revision Note]
+    U --> V[Provider Revises Final Invoice]
+    V --> R
 
-    R -- Raise Complaint --> V[Transaction Complaint]
-    V --> V1[Administrator Reviews YADD Evidence and Applies Platform Policy]
-    V1 --> V2{Agreement Reached Before Final Approval?}
-    V2 -- Yes --> Q
-    V2 -- No --> ZD([End — Disputed])
+    T -- Raise Complaint --> W[Transaction Complaint]
+    W --> W1[Administrator Reviews YADD Evidence and Applies Platform Policy]
+    W1 --> W2{Agreement Reached Before Final Approval?}
+    W2 -- Yes --> R
+    W2 -- No --> ZD([End — Disputed])
 
-    R -- Approve --> W[Invoice Approved]
-    W --> X[Transaction Completed]
-    X --> Y[Beneficiary Rates Provider — Required]
-    Y --> Y2{Provider Rates Beneficiary?}
+    T -- Approve --> X[Invoice Approved]
+    X --> Y[Transaction Completed]
+    Y --> Y1[Beneficiary Rates Provider — Required]
+    Y1 --> Y2{Provider Rates Beneficiary?}
     Y2 -- Yes --> Y3[Provider Rates Beneficiary]
-    Y3 --> ZE([End — Post-Transaction Flow Complete])
-    Y2 -- No --> ZE
+    Y3 --> ZZ([End — Post-Transaction Flow Complete])
+    Y2 -- No --> ZZ
 ```
 
 ## Semantic constraints
 
 - Chat alone does not create a Transaction.
 - Request Route creates `Active Transaction` only after Provider selection.
-- `Close Open Request` before selection is different from `Transaction Cancellation`.
+- Beneficiary may close an `Open` Request before selection; this is `Request Closure`, not `Transaction Cancellation`.
+- Request expiry is represented conceptually only. Exact inactivity duration and reminder timing remain open and are not invented here.
 - Final Invoice approval makes Transaction `Completed`.
 - Complaint does not automatically make Transaction `Disputed`; `Disputed` occurs only when disagreement remains unresolved without agreement before final approval.
 - Ratings open only after `Completed` and do not change Transaction status.
