@@ -26,85 +26,51 @@ sequenceDiagram
     Note over P,PR: Preconditions: Provider Verified + Active Subscription + Request Open
 
     P->>UI: openRequest(requestId)
-    activate UI
     UI->>C: getRequestForResponse(requestId)
-    activate C
     C->>RQ: loadOpenRequest(requestId)
-    activate RQ
     RQ-->>C: requestDetails
-    deactivate RQ
     C-->>UI: requestDetails
-    deactivate C
     UI-->>P: showRequestDetails()
-    deactivate UI
 
     Note over P,UI: Response may accept indicative price or propose another price and add a note
     Note over P,UI: RequiresDeposit is Yes or No only
 
     P->>UI: submitProviderResponse(responseData)
-    activate UI
     UI->>C: submitProviderResponse(requestId, responseData)
-    activate C
-
     C->>RQ: checkRequestStillOpen(requestId)
-    activate RQ
     RQ-->>C: requestState
-    deactivate RQ
-
     C->>PR: findActiveResponse(providerId, requestId)
-    activate PR
     PR-->>C: activeResponseOrNone
-    deactivate PR
 
     alt Eligible + Request Open + no active response
         C->>PR: createActiveResponse(responseData)
-        activate PR
         PR-->>C: responseCreated(responseId)
-        deactivate PR
         C-->>UI: responseSubmitted(responseId)
-        deactivate C
         UI-->>P: showSubmissionConfirmation()
-        deactivate UI
+
+        loop Zero or more edits while Request is Open and before Provider selection
+            P->>UI: editProviderResponse(responseId, changes)
+            UI->>C: editProviderResponse(responseId, changes)
+            C->>PR: updateActiveResponse(changes)
+            PR-->>C: responseUpdated()
+            C-->>UI: editConfirmed()
+            UI-->>P: showUpdatedResponse()
+        end
+
+        opt Provider withdraws while Request is Open and before selection
+            P->>UI: withdrawProviderResponse(responseId)
+            UI->>C: withdrawProviderResponse(responseId)
+            C->>PR: markWithdrawn()
+            PR-->>C: responseWithdrawn()
+            C-->>UI: withdrawalConfirmed()
+            UI-->>P: showWithdrawnStatus()
+        end
     else Provider not eligible or Request not Open
         C-->>UI: submissionRejected(reason)
-        deactivate C
         UI-->>P: showSubmissionError()
-        deactivate UI
     else Active response already exists
         C-->>UI: activeResponseAlreadyExists(responseId)
-        deactivate C
         UI-->>P: showExistingResponseForEdit()
-        deactivate UI
-    end
-
-    loop Zero or more edits while Request is Open and before Provider selection
-        P->>UI: editProviderResponse(responseId, changes)
-        activate UI
-        UI->>C: editProviderResponse(responseId, changes)
-        activate C
-        C->>PR: updateActiveResponse(changes)
-        activate PR
-        PR-->>C: responseUpdated()
-        deactivate PR
-        C-->>UI: editConfirmed()
-        deactivate C
-        UI-->>P: showUpdatedResponse()
-        deactivate UI
-    end
-
-    opt Provider withdraws while Request is Open and before selection
-        P->>UI: withdrawProviderResponse(responseId)
-        activate UI
-        UI->>C: withdrawProviderResponse(responseId)
-        activate C
-        C->>PR: markWithdrawn()
-        activate PR
-        PR-->>C: responseWithdrawn()
-        deactivate PR
-        C-->>UI: withdrawalConfirmed()
-        deactivate C
-        UI-->>P: showWithdrawnStatus()
-        deactivate UI
     end
 ```
 
