@@ -1,8 +1,8 @@
 # نماذج UML — YADD Preliminary Defense
 
-> **الحالة:** `DRAFT FOR PRELIMINARY DEFENSE — UML PACKAGE ORGANIZED 2026-09-11`
+> **الحالة:** `DRAFT FOR PRELIMINARY DEFENSE — CLASS PACKAGE SYNCHRONIZED 2026-09-11`
 >
-> **المراجع الحاكمة:** DEC-046/047/048/050/051/063/064/066/067/068/069/070/071/072/073 + `05-SRS.md` + `06-business-rules.md` + `07-lifecycles.md` + `08-use-cases.md`.
+> **المراجع الحاكمة:** DEC-046/047/048/050/051/053/054/063/064/066/067/068/069/070/071/072/073 + `05-SRS.md` + `06-business-rules.md` + `07-lifecycles.md` + `08-use-cases.md` + `11-ERD.md`.
 >
 > يستخدم YADD كلًا من DFD وUML وفق `DEC-060`. يجب أن تكون جميع التسميات داخل المخططات الأكاديمية النهائية باللغة الإنجليزية وفق `DEC-072`.
 
@@ -238,31 +238,29 @@ flowchart LR
 
 ## 5. Class Diagram Package — Conceptual Domain Model
 
-الـWorking Class Diagram مبني الآن من الـConceptual ERD المتزامن في `11-ERD.md` وموجود في:
+بعد مراجعة Class model مقابل Decision Register وSRS/Business Rules/Lifecycles/Use Cases والـConceptual ERD، تمت مزامنة `11-ERD.md` مع المفاهيم المعتمدة الناقصة ثم أعيد اشتقاق Class package منه.
 
-`diagrams/03-analysis/uml/class/class-domain-model.md`
+قاعدة التنظيم هنا هي: **one rendered Class Diagram = one working source file**، مع `README.md` يجمع الـViews الثلاث لأنها تمثل Conceptual Domain Model واحدًا:
 
-وهو مقسم إلى ثلاث Views قابلة للمراجعة والطباعة: Account/Provider/Discovery، Communication/Transaction/Invoice/Ratings، وVerification/Subscription/Trust. هذا التقسيم Presentation choice فقط؛ جميعها تمثل Conceptual Domain Model واحدًا.
+| View | Working file | Current status |
+|---|---|---|
+| Account, Provider, Discovery, Location, Request and Portfolio | `diagrams/03-analysis/uml/class/01-account-provider-discovery.md` | `REVIEW DRAFT — NOT BASELINED` |
+| Communication, Transaction, Invoice and Ratings | `diagrams/03-analysis/uml/class/02-transaction-invoice-ratings.md` | `REVIEW DRAFT — NOT BASELINED` |
+| Verification, Subscription and Trust / Administration | `diagrams/03-analysis/uml/class/03-verification-subscription-trust.md` | `REVIEW DRAFT — NOT BASELINED` |
 
-الحد الأدنى من Domain classes/concepts الحالية:
-- User
-- ProviderProfile
-- ProviderActivity
-- Category
-- Area / ProviderServiceArea
-- ShowcaseItem
-- Request
-- ProviderResponse
-- Conversation / Message
-- Transaction
-- Invoice / InvoiceVersion / InvoiceItem according to chosen class abstraction
-- ProviderRating
-- BeneficiaryRating
-- VerificationCase / VerificationArtifact
-- Subscription
-- Report
+Package index: `diagrams/03-analysis/uml/class/README.md`.
 
-خيارات قاعدة البيانات الفيزيائية مثل بنية جدول Media أو `InvoiceVersion` مقابل `Invoice + Revision` وComposition/lifecycle ownership هي قرارات تصميم في Chapter Four، ولا يجوز اختلاقها كحقائق تحليلية.
+المفاهيم المتزامنة تشمل بالإضافة إلى Core السابق: `AreaAdjacency`, `UserBlock`, Cancellation actor/reason/time, Verification review note, وConceptual `SafetyFlag` / `AdminAuditRecord`. هذه إضافات Synchronization مشتقة من قرارات/قواعد معتمدة وليست Scope expansion.
+
+### Class modeling boundaries
+
+- Attributes المعروضة Conceptual وغير exhaustive؛ لا تستخدم visibility markers لأنها ليست Design Decisions معتمدة.
+- لا تستخدم Composition إلا إذا اعتمد lifecycle ownership صراحة.
+- `InvoiceVersion` يمثل requirement حفظ تاريخ النسخ؛ الشكل الفيزيائي النهائي مؤجل.
+- `Report`/Flag/Audit polymorphic target mapping مؤجل للتصميم الفيزيائي.
+- `Conversation ↔ Transaction` multiplicity الحالية ما تزال `Needs Verification` قبل Relation Schema النهائي.
+- minimum cardinality لـ`ProviderProfile → ProviderActivity` تحتاج Reconciliation بين الـCore ERD وProvider Activity model قبل Relation Schema النهائي.
+- لا توجد Payment/Refund/Escrow/Settlement entities داخل معاملات Beneficiary↔Provider.
 
 ---
 
@@ -282,7 +280,10 @@ flowchart LR
 - [x] Activity package منظمة كمسارات مستقلة قابلة للتتبع بدل تكرار Activity لكل UC.
 - [x] Sequence package مفككة إلى Scenarios مستقلة قابلة للتتبع بدل Giant Route Sequence.
 - [x] أسماء UI/Controller في Sequence Diagrams موسومة كـDerived modeling roles وليست Implementation Classes معتمدة.
-- [x] Working Class Diagram package مشتقة من ERD الحالي وموجودة في المسار المنظم.
+- [x] Class package مفككة إلى ثلاث Views مستقلة بصريًا ومشتقة من ERD المصحح.
+- [x] Area adjacency وBlock ممثلان في النموذج المفاهيمي.
+- [x] Cancellation actor/reason/time وVerification review note ممثلة مفاهيميًا.
+- [x] Safety Flag/Admin Audit ممثلان كمفاهيم دون اختلاق physical schema أو thresholds.
 - [x] اعتماد الفاتورة يؤدي إلى `Completed`.
 - [x] لا توجد حالة `Transaction` باسم `Closed`.
 - [x] Complaint لا تحول Transaction تلقائيًا إلى `Disputed`؛ النزاع غير المحلول دون اتفاق قبل الاعتماد هو الذي يؤدي إلى `Disputed`.
@@ -290,5 +291,7 @@ flowchart LR
 - [x] تحدث `Ratings` فقط بعد `Completed`، وليس بعد `Cancelled` أو `Disputed`.
 - [x] تقييم `Beneficiary→Provider` إلزامي؛ وتقييم `Provider→Beneficiary` اختياري.
 - [x] `Block User` و`Report User / Content` منفصلتان في الرسم الرئيسي.
+- [ ] `Conversation ↔ Transaction` multiplicity تحتاج Verification قبل Relation Schema النهائي.
+- [ ] minimum cardinality لـ`ProviderProfile → ProviderActivity` تحتاج Reconciliation قبل Relation Schema النهائي.
 - [ ] ما يزال مطلوبًا اختبار Render لكل Mermaid standalone file ومراجعة Visual/A4 قبل الـbaseline.
 - [ ] ما يزال مطلوبًا اعتماد/تصدير الرسم البصري النهائي وفق ترميز UML القياسي بعد مراجعة الفريق.
