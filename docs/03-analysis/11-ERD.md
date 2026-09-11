@@ -60,7 +60,6 @@ erDiagram
 
     USER ||--o{ CONVERSATION : beneficiary_party
     PROVIDER_PROFILE ||--o{ CONVERSATION : provider_party
-    REQUEST o|--o{ CONVERSATION : may_contextualize
     CONVERSATION ||--o{ MESSAGE : contains
     USER ||--o{ MESSAGE : sends
 
@@ -266,7 +265,7 @@ erDiagram
 
 وفق DEC-075، تبقى Conversation واحدة مستمرة بين نفس Beneficiary ونفس Provider، ويمكن أن تضم صفرًا أو عدة Transactions عبر الزمن. يجب أن تظهر داخلها فواصل/أحداث نظام واضحة لبدء وانتهاء كل Transaction.
 
-> ربط الرسائل أو System Events بمعاملة محددة وطريقة تمثيل Request contexts المتعددة داخل Conversation واحدة هما تفاصيل Physical/Interaction Design يجب حسمها في Chapter Four دون كسر القرار المفاهيمي أعلاه.
+> لا يفرض Core ERD علاقة مباشرة بين `REQUEST` و`CONVERSATION`: قد تبدأ أو تستمر المحادثة في سياق Request، لكن نفس Conversation المستمرة قد تمر بعدة Request contexts عبر الزمن. طريقة تمثيل وربط تلك السياقات، وكذلك ربط Message/System Event بمعاملة محددة، تؤجل إلى Physical/Interaction Design في Chapter Four دون كسر القرار المفاهيمي أعلاه.
 
 ### TRANSACTION
 هو الكيان المركزي بعد بدء التعامل الرسمي.
