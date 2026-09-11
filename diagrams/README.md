@@ -1,6 +1,6 @@
 # YADD Diagrams — Working Sources and Governance
 
-> **Diagram drafting status:** `UML WORKING PACKAGE ORGANIZED — 2026-09-11`
+> **Diagram drafting status:** `UML WORKING PACKAGE ORGANIZED — SYNCHRONIZED 2026-09-11`
 >
 > هذه الصفحة تحدد مصادر السلطة، بنية ملفات الرسم، وقواعد التصدير حتى لا تختلط Semantic Models مع Editable Diagram Sources أو Generated Exports.
 
@@ -114,12 +114,16 @@ Every current diagram must preserve these rules:
 - Main actors: `Beneficiary`, `Provider`, `YADD Administrator`.
 - `Service Provider` and `Product Provider` are Provider specializations when useful.
 - No current `Guest` actor.
-- One User account; optional single Provider Profile; Service Activity/Product Activity/both.
+- One User account; optional single Provider Profile.
+- In MVP, each Provider Profile is exactly one provider type: `SERVICE` or `PRODUCT`; both cannot be active on the same profile — DEC-074.
+- Number of activities/categories inside the chosen provider type remains `PROV-ACT-Q01 — Needs Analysis`.
 - Request route: `Request → Provider Response → Selection → Transaction`.
 - No standalone `Agreement` entity/process/store.
 - One active Provider Response per Provider per Request; edit/withdraw before selection while Request is Open.
 - Direct Search: `Request Transaction Start → Other Party Confirmation → Active Transaction`.
 - Chat alone never creates Transaction.
+- Between the same Beneficiary and Provider, one continuing Conversation may contain multiple Transactions over time — DEC-075.
+- Transaction boundaries inside that Conversation must be represented by clear system events/separators; physical message-to-transaction linking is a Chapter Four decision.
 - `RequiresDeposit` is Yes/No data inside Provider Response only; no deposit amount/payment/refund state.
 - Invoice approval makes Transaction `Completed`.
 - `Completed` is the successful terminal Transaction state; there is no Transaction state named `Closed`.
@@ -144,8 +148,8 @@ Open policy/detail questions do not block the core diagrams, but their unresolve
 - AI provider/retention/appeal details;
 - subscription packages/prices/payment-proof procedure and some expiry effects;
 - any numeric cap on concurrent Transactions;
-- whether a single Conversation may later link to more than one Transaction;
-- minimum ProviderActivity cardinality during ProviderProfile onboarding/draft state.
+- number of Provider Activities/categories allowed inside the single chosen provider type;
+- physical linking of Message/System Event records to specific Transactions within the continuing Conversation.
 
 Represent the approved concept generically or omit the unresolved numeric/policy detail.
 
