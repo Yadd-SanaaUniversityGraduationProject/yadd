@@ -1,13 +1,13 @@
 # Class Diagram — Communication, Transaction, Invoice and Ratings
 
-> **Status:** `REVIEW DRAFT — NOT BASELINED`
+> **Status:** `REVIEW DRAFT — NOT BASELINED — SYNCHRONIZED 2026-09-11`
 >
 > **Type:** View 2 of one Conceptual Domain Model.
 
 ## Source basis
 
 - `docs/03-analysis/11-ERD.md` — corrected Conceptual ERD.
-- `DEC-015/016/023..025/046..056/063/066/068..073`.
+- `DEC-015/016/023..025/046..056/063/066/068..075`.
 - Current Business Rules, Lifecycles, Use Cases and In-App Communication model.
 
 ## Diagram
@@ -89,7 +89,7 @@ classDiagram
     ProviderProfile "1" --> "0..*" Transaction : provider party
     Request "0..1" --> "0..1" Transaction : may originate
     ProviderResponse "0..1" --> "0..1" Transaction : may start
-    Conversation "0..1" --> "0..1" Transaction : may link
+    Conversation "1" --> "0..*" Transaction : groups
 
     Transaction "1" --> "0..*" InvoiceVersion : has
     InvoiceVersion "1" --> "1..*" InvoiceItem : contains
@@ -106,9 +106,11 @@ classDiagram
 ## Constraints and interpretation
 
 - `Conversation` قد توجد قبل Transaction؛ Chat وحدها لا تنشئ Transaction.
+- بين نفس Beneficiary ونفس Provider تبقى محادثة واحدة مستمرة، ويمكن أن تضم عدة Transactions عبر الزمن — DEC-075.
+- يجب أن تعرض المحادثة فواصل/أحداث نظام واضحة عند بدء وانتهاء كل Transaction حتى لا تختلط حدود التعاملات السابقة واللاحقة.
+- الربط الفيزيائي بين Message/System Event وTransaction محددة لم يُحسم بعد؛ يؤجل إلى Chapter Four مع الحفاظ على قابلية التتبع.
 - Request Route يبدأ Transaction عند اختيار Provider، بينما Direct Search يحتاج Request Transaction Start ثم confirmation من الطرف الآخر.
 - Request واحدة تنتج صفر أو Transaction واحدة فقط.
-- `Conversation ↔ Transaction` موضحة حاليًا كـ`0..1 ↔ 0..1` لمزامنة الـERD الحالي، لكن إعادة استخدام Conversation نفسها لمعاملة ثانية مستقبلًا لم تُحسم في القرارات، لذلك تبقى هذه multiplicity بحاجة Verification قبل Relation Schema النهائي.
 - عند الإلغاء يحتفظ النموذج مفاهيميًا بـActor Role + Reason + Time وفق DEC-048/BR-019.
 - `Completed` النهاية الناجحة؛ `Cancelled` و`Disputed` نهايات بديلة، ولا توجد حالة `Closed`.
 - `InvoiceVersion` يحفظ تاريخ التعديلات؛ الشكل الفيزيائي قد يصبح `Invoice + InvoiceRevision` لاحقًا مع الحفاظ على التاريخ.
