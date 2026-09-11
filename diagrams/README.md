@@ -43,13 +43,17 @@ diagrams/
         ├── sequence/
         │   └── uc-*-sequence.md
         └── class/
-            └── class-domain-model.md
+            ├── README.md
+            ├── 01-account-provider-discovery.md
+            ├── 02-transaction-invoice-ratings.md
+            └── 03-verification-subscription-trust.md
 ```
 
 القواعد الحالية:
 
 - `docs/` يحكم معنى المشروع والتحليل والمتطلبات.
 - `diagrams/03-analysis/uml/` يحتوي Working Diagram Sources المشتقة من تلك الوثائق.
+- قاعدة التنظيم الحالية: **one rendered diagram = one working source file**، مع README/index للحزمة عندما توجد عدة Views لنموذج واحد.
 - لا ننشئ نسخًا مكررة من DFD/ERD/Use Case فقط لأجل التنظيم؛ تبقى مصادرها الحالية في وثائق التحليل إلى أن يتم إعداد editable visual source نهائي.
 - عند إنشاء ملفات `.puml` أو `.drawio` أو ما يعادلها لاحقًا، توضع تحت نوع المخطط المناسب داخل `diagrams/` مع الحفاظ على التتبع إلى الوثيقة الحاكمة.
 - Generated exports مثل SVG/PNG/PDF لا تصبح Source of Truth، ولا يجوز تعديلها يدويًا بما يجعلها تختلف عن المصدر القابل للتعديل.
@@ -81,7 +85,12 @@ diagrams/
 
 ### Class
 
-- `03-analysis/uml/class/class-domain-model.md`
+- `03-analysis/uml/class/README.md`
+- `03-analysis/uml/class/01-account-provider-discovery.md`
+- `03-analysis/uml/class/02-transaction-invoice-ratings.md`
+- `03-analysis/uml/class/03-verification-subscription-trust.md`
+
+الـClass files الثلاثة هي Views لنفس Conceptual Domain Model وليست ثلاثة نماذج مستقلة.
 
 كل الملفات أعلاه حاليًا `REVIEW DRAFT — NOT BASELINED` ما لم يذكر خلاف ذلك داخل الملف نفسه.
 
@@ -118,6 +127,9 @@ Every current diagram must preserve these rules:
 - Administration reviews YADD evidence and applies platform policy; it does **not** decide financial/commercial entitlement and must not be modeled as ordering Payment, Refund or Compensation.
 - Ratings happen only after `Completed`; no Ratings for `Cancelled` or `Disputed` Transactions.
 - Beneficiary→Provider rating is mandatory; Provider→Beneficiary rating is optional.
+- Block and Report are separate concepts; neither implies the other.
+- Neighborhood adjacency is managed data, not GPS-radius logic.
+- Transaction cancellation records actor, reason and time.
 - No Beneficiary↔Provider Payment/Escrow/Refund/Settlement process/entity inside YADD.
 
 ## 6. Open Items That Must Not Be Invented
@@ -131,7 +143,9 @@ Open policy/detail questions do not block the core diagrams, but their unresolve
 - exact accepted identity-document types and retention periods;
 - AI provider/retention/appeal details;
 - subscription packages/prices/payment-proof procedure and some expiry effects;
-- any numeric cap on concurrent Transactions.
+- any numeric cap on concurrent Transactions;
+- whether a single Conversation may later link to more than one Transaction;
+- minimum ProviderActivity cardinality during ProviderProfile onboarding/draft state.
 
 Represent the approved concept generically or omit the unresolved numeric/policy detail.
 
