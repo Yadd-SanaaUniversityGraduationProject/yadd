@@ -7,7 +7,7 @@
 ## Source basis
 
 - `docs/03-analysis/11-ERD.md` — corrected Conceptual ERD.
-- `DEC-008..014`, `DEC-030..033`, `DEC-041`, `DEC-045`, `DEC-064`, `DEC-066`, `DEC-070`, `DEC-074`.
+- `DEC-008..014`, `DEC-030..033`, `DEC-041`, `DEC-045`, `DEC-064`, `DEC-066`, `DEC-070`, `DEC-074`, `DEC-076`.
 - Current Account/Portal, Provider Activity and Location models.
 
 ## Diagram
@@ -68,7 +68,7 @@ classDiagram
     }
 
     User "1" --> "0..1" ProviderProfile : may own
-    ProviderProfile "1" --> "0..*" ProviderActivity : may define
+    ProviderProfile "1" --> "0..*" ProviderActivity : defines
     Category "1" --> "0..*" ProviderActivity : classifies
 
     Area "0..1" --> "0..*" Area : parent of
@@ -91,8 +91,9 @@ classDiagram
 
 - `User` واحد يمكنه امتلاك صفر أو `ProviderProfile` واحد؛ Beneficiary/Provider ليست Classes لحسابين منفصلين.
 - `ProviderProfile.providerType` في MVP يأخذ نوعًا واحدًا فقط: `SERVICE` أو `PRODUCT`، ولا يمكن الجمع بينهما على الملف نفسه — DEC-074.
-- `ProviderActivity` يبقى Concept لتمثيل النشاط/التصنيف داخل النوع المختار؛ عدد الأنشطة المسموح بها والـcardinality النهائية ما تزال `PROV-ACT-Q01 — Needs Analysis`.
-- `0..*` الحالية بين ProviderProfile وProviderActivity ليست Constraint نهائيًا؛ هي تمثيل مؤقت إلى أن يحسم عدد الأنشطة وإمكانية Draft profile بلا نشاط.
+- يمكن لـProviderProfile امتلاك عدة `ProviderActivity`، وكل Activity تمثل تصنيفًا داخل نوع المقدم نفسه — DEC-076.
+- `0..*` بين ProviderProfile وProviderActivity تسمح بوجود Draft Provider Profile دون تصنيفات مؤقتًا؛ قبل أهلية وظائف التقديم يجب وجود Activity واحدة على الأقل.
+- يجب أن يكون `Category.categoryType` متوافقًا مع `ProviderProfile.providerType` لكل ProviderActivity.
 - `Area` يمثل District/Neighborhood hierarchy بصورة مفاهيمية.
 - `AreaAdjacency` يمثل قائمة جوار مُدارة وفق DEC-033، وليس GPS Radius. اتجاه/تناظر العلاقة وكيفية منع duplicates قرار Physical Design لاحق.
 - `ProviderServiceArea` يمثل تغطية Provider للمناطق.
