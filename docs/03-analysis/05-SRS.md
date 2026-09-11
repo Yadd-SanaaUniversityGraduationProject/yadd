@@ -1,10 +1,10 @@
 # Software Requirements Specification — YADD MVP
 
-> **الإصدار:** v0.9.6
+> **الإصدار:** v0.9.7
 >
 > **الحالة:** `PARTIALLY ANALYZED — NOT BASELINED`
 >
-> هذه النسخة تزامن المتطلبات مع قرارات الإغلاق حتى 2026-09-11، بما في ذلك DEC-073 الخاص بحدود صلاحية الإدارة في النزاعات وDEC-074 الخاص بحصرية نوع المقدم في MVP. البنود المفتوحة صريحة ولا تعتبر متطلبات نهائية.
+> هذه النسخة تزامن المتطلبات مع قرارات الإغلاق حتى 2026-09-11، بما في ذلك DEC-073 الخاص بحدود صلاحية الإدارة في النزاعات، وDEC-074 الخاص بحصرية نوع المقدم، وDEC-076 الخاص بتعدد التصنيفات داخل نوع المقدم. البنود المفتوحة صريحة ولا تعتبر متطلبات نهائية.
 
 ## 1. Scope
 
@@ -24,12 +24,14 @@
 - استخدام بوابة المقدم يحتاج `Provider Profile` داخل الحساب نفسه.
 - يمكن الانتقال بين البوابتين؛ وظائف التقديم لا تعمل قبل تحقق Provider.
 
-## 3. Provider Type / Activity Model — Approved / Partial
+## 3. Provider Type / Activity Model — Approved
 
 - Provider Profile واحد للحساب.
 - في MVP يكون كل Provider Profile من نوع واحد فقط: `SERVICE` أو `PRODUCT`؛ لا يمكن تفعيل النوعين معًا على الملف نفسه — DEC-074.
+- يمكن للمقدم اختيار تصنيف واحد أو أكثر داخل نوعه فقط — DEC-076.
+- يسمح Draft Provider Profile مؤقتًا بصفر تصنيفات، لكن لا يصبح الملف مؤهلًا لوظائف التقديم قبل وجود تصنيف واحد على الأقل — DEC-076.
+- لا يجوز ربط Provider Activity/Category من النوع الآخر بنوع Provider Profile المختار.
 - الهوية والتحقق مشتركان على مستوى Provider Profile.
-- عدد `Provider Activities`/التصنيفات التي يمكن للمقدم امتلاكها داخل النوع المختار وطريقة تمثيلها النهائية ما تزال تحت التحليل (`PROV-ACT-Q01`) ولا يفترض فيها حد أو cardinality نهائي.
 
 ## 4. Location & Neighborhood Model — Approved
 
@@ -86,6 +88,7 @@
 | UR-ACC-01 | استخدام حساب واحد للاستفادة والتقديم. | `ANALYZED_APPROVED` | DEC-008 |
 | UR-ACC-02 | اختيار بوابة البداية مع إمكانية الانتقال للبوابة الأخرى. | `ANALYZED_APPROVED` | DEC-009/011 |
 | UR-PROV-01 | اختيار نوع واحد فقط للـProvider Profile في MVP: خدمة أو منتج، دون تفعيل النوعين معًا على الملف نفسه. | `ANALYZED_APPROVED` | DEC-074/030 |
+| UR-PROV-02 | اختيار تصنيف واحد أو أكثر داخل نوع المقدم نفسه، مع اشتراط تصنيف واحد على الأقل قبل أهلية وظائف التقديم. | `ANALYZED_APPROVED` | DEC-076 |
 | UR-VER-01 | تقديم متطلبات تحقق وانتظار اعتماد YADD قبل العمل كمقدم. | `ANALYZED_APPROVED` | DEC-034/035 |
 | UR-DIS-01 | البحث المباشر عن مقدم حسب التصنيف والمنطقة. | `ANALYZED_APPROVED` | DEC-012/031..033 |
 | UR-PORT-01 | استعراض معرض أعمال/كتالوج المقدم داخل Provider Profile. | `ANALYZED_APPROVED` | DEC-064 |
@@ -118,7 +121,8 @@
 - `FR-002` `ANALYZED_APPROVED`: يسمح بإنشاء وإدارة Provider Profile.
 - `FR-002A` `ANALYZED_APPROVED`: لا تتاح وظائف التقديم قبل Provider Verified.
 - `FR-002B` `ANALYZED_APPROVED`: يسمح للـProvider Profile باختيار نوع مقدم واحد فقط `SERVICE` أو `PRODUCT` في MVP، ويمنع تفعيل النوعين معًا على الملف نفسه.
-- `FR-002C` `NEEDS_ANALYSIS/BLOCKED BY PROV-ACT-Q01`: عدد الأنشطة/التصنيفات التي يسمح بها داخل النوع المختار وطريقة تمثيلها النهائية لم تعتمد بعد.
+- `FR-002C` `ANALYZED_APPROVED`: يسمح للمقدم باختيار تصنيف واحد أو أكثر داخل نوعه المختار فقط.
+- `FR-002D` `ANALYZED_APPROVED`: يسمح Draft Provider Profile مؤقتًا بصفر تصنيفات، لكن يتطلب تفعيل وظائف التقديم وجود تصنيف واحد على الأقل.
 
 ### Provider Portfolio / Catalog
 - `FR-PORT-01` `ANALYZED_APPROVED`: يسمح للمقدم بإضافة عناصر صور لأعماله أو منتجاته داخل Provider Profile مع وصف اختياري.
@@ -149,7 +153,7 @@
 - `FR-005C` `ANALYZED_APPROVED`: يسمح للمستفيد بإغلاق Request Open قبل اختيار مقدم دون إنشاء Transaction Cancellation.
 - `FR-005D` `ANALYZED_APPROVED` في المبدأ: يذكّر النظام صاحب الطلب المفتوح لتأكيد استمرار الحاجة ويمكن أن يحوله إلى Expired بعد عدم النشاط.
 - `FR-005E` `PROPOSED/BLOCKED BY REQ-EXP-Q01`: مدة عدم النشاط وعدد/توقيت التذكيرات لم تعتمد.
-- `FR-006` `ANALYZED_APPROVED`: يعرض الطلب للمقدمين المؤهلين حسب النوع/النشاط والتصنيف والمنطقة.
+- `FR-006` `ANALYZED_APPROVED`: يعرض الطلب للمقدمين المؤهلين حسب نوع Provider Profile والتصنيف والمنطقة.
 
 ### Provider Response / Selection / Communication
 - `FR-007` `ANALYZED_APPROVED`: يسمح للمقدم المؤهل ذي الاشتراك Active بإرسال `Provider Response` لطلب Open.
@@ -265,6 +269,6 @@
 
 ## 13. Open Decisions Before v1.0
 
-`REQ-EXP-Q01`, `INV-PENDING-Q01`, `SAFE-REQ-Q01`, `TX-CONC-Q01`, `UX-VAL-Q01`, `LOC-DATA-Q01`, `LOC-OPS-TIME-Q01`, `VER-DOC-Q01`, `VER-RET-Q01`, `VER-LIC-Q01`, `AI-MOD-Q01`, `AI-MOD-Q02`, `AI-PROV-Q01`, `AI-RET-Q01`, `AI-APPEAL-Q01`, `SUB-PLAN-Q01`, `SUB-PAY-Q01`, `SUB-OPS-Q01`, `PROV-ACT-Q01`.
+`REQ-EXP-Q01`, `INV-PENDING-Q01`, `SAFE-REQ-Q01`, `TX-CONC-Q01`, `UX-VAL-Q01`, `LOC-DATA-Q01`, `LOC-OPS-TIME-Q01`, `VER-DOC-Q01`, `VER-RET-Q01`, `VER-LIC-Q01`, `AI-MOD-Q01`, `AI-MOD-Q02`, `AI-PROV-Q01`, `AI-RET-Q01`, `AI-APPEAL-Q01`, `SUB-PLAN-Q01`, `SUB-PAY-Q01`, `SUB-OPS-Q01`.
 
 > **Baseline note:** إغلاق P0 الحالي يجعل Core Flow قابلًا للنمذجة، لكنه لا يحول هذه النسخة إلى Baselined SRS تلقائيًا؛ ما تزال مراجعة الاتساق والتتبع والاعتماد النهائي مطلوبة.
