@@ -1,13 +1,13 @@
 # Class Diagram — Account, Provider, Discovery and Portfolio
 
-> **Status:** `REVIEW DRAFT — NOT BASELINED`
+> **Status:** `REVIEW DRAFT — NOT BASELINED — SYNCHRONIZED 2026-09-11`
 >
 > **Type:** View 1 of one Conceptual Domain Model.
 
 ## Source basis
 
 - `docs/03-analysis/11-ERD.md` — corrected Conceptual ERD.
-- `DEC-008..014`, `DEC-029..033`, `DEC-041`, `DEC-045`, `DEC-064`, `DEC-066`, `DEC-070`.
+- `DEC-008..014`, `DEC-030..033`, `DEC-041`, `DEC-045`, `DEC-064`, `DEC-066`, `DEC-070`, `DEC-074`.
 - Current Account/Portal, Provider Activity and Location models.
 
 ## Diagram
@@ -23,12 +23,12 @@ classDiagram
     }
 
     class ProviderProfile {
+        String providerType
         String verificationStatus
         String profileStatus
     }
 
     class ProviderActivity {
-        String activityType
         String status
     }
 
@@ -68,7 +68,7 @@ classDiagram
     }
 
     User "1" --> "0..1" ProviderProfile : may own
-    ProviderProfile "1" --> "0..*" ProviderActivity : activates
+    ProviderProfile "1" --> "0..*" ProviderActivity : may define
     Category "1" --> "0..*" ProviderActivity : classifies
 
     Area "0..1" --> "0..*" Area : parent of
@@ -90,12 +90,13 @@ classDiagram
 ## Constraints and interpretation
 
 - `User` واحد يمكنه امتلاك صفر أو `ProviderProfile` واحد؛ Beneficiary/Provider ليست Classes لحسابين منفصلين.
-- `ProviderActivity` يسمح بـService Activity أو Product Activity أو كليهما.
-- الحد الأدنى الدقيق لعدد Provider Activities عند وجود Provider Profile ما يزال بحاجة Reconciliation: الـCore ERD يسمح `0..*` بينما Provider Activity model يرسم `1..*`.
+- `ProviderProfile.providerType` في MVP يأخذ نوعًا واحدًا فقط: `SERVICE` أو `PRODUCT`، ولا يمكن الجمع بينهما على الملف نفسه — DEC-074.
+- `ProviderActivity` يبقى Concept لتمثيل النشاط/التصنيف داخل النوع المختار؛ عدد الأنشطة المسموح بها والـcardinality النهائية ما تزال `PROV-ACT-Q01 — Needs Analysis`.
+- `0..*` الحالية بين ProviderProfile وProviderActivity ليست Constraint نهائيًا؛ هي تمثيل مؤقت إلى أن يحسم عدد الأنشطة وإمكانية Draft profile بلا نشاط.
 - `Area` يمثل District/Neighborhood hierarchy بصورة مفاهيمية.
 - `AreaAdjacency` يمثل قائمة جوار مُدارة وفق DEC-033، وليس GPS Radius. اتجاه/تناظر العلاقة وكيفية منع duplicates قرار Physical Design لاحق.
 - `ProviderServiceArea` يمثل تغطية Provider للمناطق.
-- `ShowcaseItem` يوحد Portfolio/Catalog مفاهيميًا.
+- `ShowcaseItem` يمثل Portfolio إذا كان النوع SERVICE وProduct Catalog إذا كان النوع PRODUCT باستخدام مفهوم عرض موحد.
 - `Request.indicativePrice` اختياري وغير ملزم على مستوى المتطلبات.
 - لكل Provider استجابة فعالة واحدة فقط لكل Request؛ هذا Business Constraint وليس مجرد multiplicity.
 - `requiresDeposit` Boolean فقط ولا ينشئ Payment/Deposit lifecycle.
