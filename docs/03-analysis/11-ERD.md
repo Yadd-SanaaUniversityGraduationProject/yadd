@@ -4,7 +4,7 @@
 >
 > هذا ERD **مفاهيمي للفصل الثالث** وليس Relation Schema أو Database Design نهائيًا. الأنواع الفيزيائية، PK/FK التفصيلية، الفهارس، القيود التنفيذية وأسماء الجداول النهائية تنتقل إلى Chapter Four.
 >
-> **المراجع الحاكمة:** DEC-008..016/018/019/021/023..025/030..043/046..056/063..075 + `05-SRS.md` + `06-business-rules.md` + `07-lifecycles.md` + `08-use-cases.md`.
+> **المراجع الحاكمة:** DEC-008..016/018/019/021/023..025/030..043/046..056/063..076 + `05-SRS.md` + `06-business-rules.md` + `07-lifecycles.md` + `08-use-cases.md`.
 >
 > جميع التسميات داخل الرسم النهائي تكون باللغة الإنجليزية وفق DEC-072.
 
@@ -15,7 +15,7 @@
 1. يوجد `USER` واحد للشخص؛ Beneficiary وProvider ليسا حسابين منفصلين.
 2. يصبح المستخدم Provider عندما يمتلك `PROVIDER_PROFILE` مستوفيًا شروط التفعيل.
 3. في MVP يكون كل Provider Profile من نوع واحد فقط: `SERVICE` أو `PRODUCT`، ولا يجمع النوعين معًا — DEC-074.
-4. يبقى `PROVIDER_ACTIVITY` مفهومًا مرشحًا لتمثيل النشاط/التصنيف داخل نوع المقدم؛ عدد الأنشطة والـcardinality النهائية ما تزال `PROV-ACT-Q01 — Needs Analysis`.
+4. يمكن لـProvider Profile اختيار تصنيف واحد أو أكثر داخل نوعه عبر `PROVIDER_ACTIVITY`; يسمح Draft مؤقتًا بصفر Activities، لكن أهلية وظائف التقديم تتطلب Activity واحدة على الأقل، وكل Category يجب أن تتوافق مع Provider Type — DEC-076.
 5. يستخدم مسار الطلب النموذج `REQUEST → PROVIDER_RESPONSE → SELECTION → TRANSACTION` ولا يوجد `AGREEMENT` مستقل.
 6. البحث المباشر يمكن أن ينشئ `TRANSACTION` دون `REQUEST` أو `PROVIDER_RESPONSE`، لكن فقط بعد `Request Transaction Start` وتأكيد الطرف الآخر.
 7. الخدمة والمنتج يستخدمان Core Transaction واحدًا؛ الاختلاف يمثل عبر نوع المقدم/الطلب والبيانات المرتبطة به.
@@ -41,7 +41,7 @@
 erDiagram
     USER ||--o| PROVIDER_PROFILE : may_have
 
-    PROVIDER_PROFILE ||--o{ PROVIDER_ACTIVITY : may_define
+    PROVIDER_PROFILE ||--o{ PROVIDER_ACTIVITY : defines
     CATEGORY ||--o{ PROVIDER_ACTIVITY : classifies
 
     PROVIDER_PROFILE ||--o{ PROVIDER_SERVICE_AREA : serves
@@ -236,10 +236,10 @@ erDiagram
 يمثل هوية Provider داخل الحساب نفسه. يحدد `provider_type` نوعًا واحدًا فقط في MVP: `SERVICE` أو `PRODUCT` وفق DEC-074. ترتبط به Verification، الأنشطة/التصنيفات، مناطق الخدمة، Portfolio/Catalog والاشتراك.
 
 ### PROVIDER_ACTIVITY
-يبقى مفهومًا تحليليًا لتمثيل النشاط/التصنيف داخل نوع المقدم المختار. لا يمثل اختيار Service/Product نفسه بعد DEC-074، ولا يعتمد هذا ERD عدد Activities النهائي. `PROV-ACT-Q01` ما يزال مفتوحًا.
+يمثل ارتباط Provider Profile بتصنيف داخل نوعه المختار. يمكن للملف أن يمتلك عدة Provider Activities، لكن يجب أن تتوافق جميع Categories مع `provider_type`. يسمح Draft بصفر Activities مؤقتًا، بينما أهلية وظائف التقديم تتطلب Activity واحدة على الأقل وفق DEC-076.
 
 ### CATEGORY / AREA / PROVIDER_SERVICE_AREA / AREA_ADJACENCY
-- `CATEGORY` تصنيف النشاط/الطلب.
+- `CATEGORY` تصنيف النشاط/الطلب، وله `category_type` يجب أن يتوافق مع نوع Provider Profile عند استخدامه في ProviderActivity.
 - `AREA` تمثل District/Neighborhood بصورة مفاهيمية parent-child.
 - `PROVIDER_SERVICE_AREA` تمثل المناطق التي يخدمها Provider.
 - `AREA_ADJACENCY` تمثل قائمة الجوار المُدارة بين الأحياء وفق DEC-033؛ العلاقة المنطقية جوار متبادل، بينما طريقة فرض symmetry/uniqueness في قاعدة البيانات تؤجل إلى Chapter Four.
@@ -249,13 +249,13 @@ erDiagram
 يوحد Portfolio وCatalog مفاهيميًا. إذا كان Provider Type = SERVICE يعرض كPortfolio، وإذا كان PRODUCT يعرض كProduct Catalog. يحتوي مرجعًا للأصل غير العام ومرجعًا لنسخة العرض ذات العلامة المائية.
 
 ### REQUEST
-يمثل طلب Service أو Product. يجب أن يتوافق `request_type` مع نوع Provider المؤهل. يحتوي التصنيف والمنطقة والوصف والسعر الاسترشادي الاختياري. الصور/المرفقات مطلوبة وظيفيًا، لكن نموذج Media الفيزيائي يؤجل إلى Chapter Four.
+يمثل طلب Service أو Product. يجب أن يتوافق `request_type` مع نوع Provider المؤهل، ويجب أن يملك Provider تصنيف الطلب ضمن Provider Activities. يحتوي التصنيف والمنطقة والوصف والسعر الاسترشادي الاختياري.
 
 ### PROVIDER_RESPONSE
 المصطلح القياسي بدل `OFFER`.
 
 - يرتبط بـRequest واحد وProvider Profile واحد.
-- يجب أن يكون نوع Provider Profile متوافقًا مع نوع Request.
+- يجب أن يكون نوع Provider Profile متوافقًا مع نوع Request، وأن يكون Provider مؤهلًا لتصنيف الطلب.
 - يمكن أن يحتوي proposed price وملاحظة و`requires_deposit`.
 - لا يوجد DepositAmount أو PaymentStatus أو Refund Entity.
 - لكل Provider Response فعالة واحدة لكل Request.
@@ -401,22 +401,24 @@ erDiagram
 
 1. `USER ↔ PROVIDER_PROFILE`: User يمتلك صفر أو Provider Profile واحدًا.
 2. Provider Profile له نوع واحد فقط `SERVICE` أو `PRODUCT` — DEC-074.
-3. كل `REQUEST` ينشئه Beneficiary واحد ويرتبط بتصنيف ومنطقة عامة واحدة.
-4. كل `PROVIDER_RESPONSE` ترتبط بـRequest واحد وProvider Profile واحد ويجب أن يتوافق نوعهما.
-5. لكل Provider استجابة فعالة واحدة فقط لكل Request — DEC-070.
-6. في Request Route تصبح Provider Response واحدة فقط `Selected`.
-7. Request واحد ينتج صفر أو Transaction واحدة فقط.
-8. كل `TRANSACTION` لها Beneficiary واحد وProvider واحد وConversation واحدة.
-9. Conversation واحدة بين نفس الطرفين يمكن أن ترتبط بعدة Transactions عبر الزمن — DEC-075.
-10. Direct Search Transaction قد تكون بلا Request/Provider Response — DEC-066/069.
-11. Transaction الناتجة من Direct Search لا تنشأ إلا بعد Mutual Start Confirmation — DEC-069.
-12. كل Invoice Version تنتمي إلى Transaction واحدة وتحتوي بندًا واحدًا على الأقل.
-13. Transaction `Completed` تسمح Provider Rating واحدة بحد أقصى من Beneficiary.
-14. Transaction `Completed` تسمح Beneficiary Rating واحدة بحد أقصى من Provider، وهي اختيارية.
-15. Transaction `Disputed` لا تسمح Ratings — DEC-073.
-16. `AREA_ADJACENCY` يمثل علاقة جوار مُدارة بين الأحياء.
-17. `USER_BLOCK` و`REPORT` مستقلان — DEC-053.
-18. Transaction Cancellation تسجل Actor/Reason/Time — DEC-048 / BR-019.
+3. Draft Provider Profile يمكن أن يمتلك صفر أو عدة Provider Activities، لكن أهلية وظائف التقديم تتطلب Provider Activity واحدة على الأقل — DEC-076.
+4. يمكن لـProvider Profile امتلاك عدة Provider Activities/تصنيفات داخل نوعه، وكل Provider Activity ترتبط بـCategory واحدة متوافقة مع Provider Type — DEC-076.
+5. كل `REQUEST` ينشئه Beneficiary واحد ويرتبط بتصنيف ومنطقة عامة واحدة.
+6. كل `PROVIDER_RESPONSE` ترتبط بـRequest واحد وProvider Profile واحد ويجب أن يتوافق نوعهما وتصنيفهما.
+7. لكل Provider استجابة فعالة واحدة فقط لكل Request — DEC-070.
+8. في Request Route تصبح Provider Response واحدة فقط `Selected`.
+9. Request واحد ينتج صفر أو Transaction واحدة فقط.
+10. كل `TRANSACTION` لها Beneficiary واحد وProvider واحد وConversation واحدة.
+11. Conversation واحدة بين نفس الطرفين يمكن أن ترتبط بعدة Transactions عبر الزمن — DEC-075.
+12. Direct Search Transaction قد تكون بلا Request/Provider Response — DEC-066/069.
+13. Transaction الناتجة من Direct Search لا تنشأ إلا بعد Mutual Start Confirmation — DEC-069.
+14. كل Invoice Version تنتمي إلى Transaction واحدة وتحتوي بندًا واحدًا على الأقل.
+15. Transaction `Completed` تسمح Provider Rating واحدة بحد أقصى من Beneficiary.
+16. Transaction `Completed` تسمح Beneficiary Rating واحدة بحد أقصى من Provider، وهي اختيارية.
+17. Transaction `Disputed` لا تسمح Ratings — DEC-073.
+18. `AREA_ADJACENCY` يمثل علاقة جوار مُدارة بين الأحياء.
+19. `USER_BLOCK` و`REPORT` مستقلان — DEC-053.
+20. Transaction Cancellation تسجل Actor/Reason/Time — DEC-048 / BR-019.
 
 ---
 
@@ -430,7 +432,8 @@ erDiagram
 - Physical administrative authorization model.
 - Shared `Media` table vs entity-specific media relations/references.
 - Physical invoice-history implementation: `InvoiceVersion` vs `Invoice + InvoiceRevision`.
-- **PROV-ACT-Q01:** عدد Provider Activities/التصنيفات داخل النوع الواحد وطريقة تمثيلها النهائية، بما فيها minimum cardinality أثناء Draft/Activation.
+- ProviderActivity physical uniqueness/normalization and enforcement of `provider_type/category_type` consistency.
+- Any numeric maximum for categories per Provider Profile, if later justified by usability/operations evidence.
 - طريقة ربط Message/System Event بمعاملة محددة داخل Conversation متعددة المعاملات.
 - طريقة تمثيل عدة Request contexts محتملة داخل Conversation المستمرة دون وضع `request_id` واحد داخل Conversation.
 - Physical implementation and symmetry/uniqueness constraint for `AREA_ADJACENCY`.
@@ -446,11 +449,11 @@ erDiagram
 |---|---|
 | USER + optional ProviderProfile | DEC-008..011 |
 | Exclusive Provider Type | DEC-074 |
-| Provider Activity / Category | DEC-030/074 + PROV-ACT-Q01 |
+| Provider Activity / Category | DEC-030/074/076 |
 | Category/Area/Service Areas | DEC-031..033/045 |
 | Area Adjacency | DEC-033/045 + Location Model |
 | Request | DEC-012/013/048/049 |
-| Provider Response | DEC-013/014/041/047/066/070/074 |
+| Provider Response | DEC-013/014/041/047/066/070/074/076 |
 | Conversation/Message | DEC-023/024/046/069/075 |
 | Transaction | DEC-047/048/056/066/068/069/071/073/075 |
 | Invoice versions/items | DEC-015/016/025/050/055/071/073 |
@@ -472,6 +475,7 @@ erDiagram
 - [x] Provider Response هو المصطلح القياسي.
 - [x] حساب User واحد + optional Provider Profile.
 - [x] Provider Profile نوعه حصري: SERVICE أو PRODUCT فقط في MVP — DEC-074.
+- [x] Provider يمكنه اختيار عدة تصنيفات داخل نوعه، مع اشتراط تصنيف واحد على الأقل قبل أهلية التقديم — DEC-076.
 - [x] Conversation الواحدة يمكن أن تضم عدة Transactions عبر الزمن — DEC-075.
 - [x] Direct Search can start Transaction without Request only after mutual confirmation.
 - [x] RequiresDeposit Boolean only; no payment entities.
@@ -484,8 +488,7 @@ erDiagram
 - [x] Portfolio/Catalog unified concept represented.
 - [x] Verification/Subscription/Report represented as supporting model.
 - [x] Area adjacency and Block concepts are represented.
-- [ ] `PROV-ACT-Q01` must be resolved before final ProviderActivity cardinality/physical design.
 - [ ] Final visual ERD redraw in standard notation for supervisor delivery.
 - [ ] Relation Schema/Data Dictionary derivation in Chapter Four.
 
-> **الحكم:** Core Conceptual ERD متزامن مع DEC-074 وDEC-075، مع إبقاء عدد الأنشطة داخل نوع المقدم وطريقة الربط الفيزيائي داخل المحادثة متعددة المعاملات صريحة كقرارات لاحقة.
+> **الحكم:** Core Conceptual ERD متزامن مع DEC-074 وDEC-075 وDEC-076. عدد التصنيفات المتعدد داخل نوع المقدم أصبح قرارًا تحليليًا معتمدًا، بينما تبقى تفاصيل القيود الفيزيائية في Chapter Four.
