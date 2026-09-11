@@ -1,6 +1,6 @@
 # Conceptual ERD — YADD Preliminary Defense
 
-> **الحالة:** `DRAFT FOR PRELIMINARY DEFENSE — CORE SYNCHRONIZED 2026-09-05`
+> **الحالة:** `DRAFT FOR PRELIMINARY DEFENSE — CORE SYNCHRONIZED 2026-09-11`
 >
 > هذا ERD **مفاهيمي للفصل الثالث** وليس Relation Schema أو Database Design نهائيًا. الأنواع الفيزيائية، PK/FK التفصيلية، الفهارس، القيود التنفيذية وأسماء الجداول النهائية تنتقل إلى Chapter Four.
 >
@@ -26,6 +26,10 @@
 12. لكل Provider استجابة فعالة واحدة فقط لكل Request؛ يمكن تعديلها أو سحبها قبل الاختيار وفق DEC-070.
 13. Request واحد يمكن أن ينتج **صفر أو Transaction واحدة فقط**؛ لأن اختيار Provider واحد يغلق Request أمام الاستجابات الجديدة.
 14. مراجعة النزاع إداريًا تستخدم `REPORT`/complaint context ولا تنشئ كيان Payment/Refund/Compensation أو سلطة تسوية مالية داخل YADD.
+15. علاقات الأحياء المجاورة مفهوم معتمد ومُدار داخل YADD؛ يمثلها `AREA_ADJACENCY` دون افتراض GPS Radius.
+16. `Block User` و`Report` مفهومان مستقلان؛ يمثل `USER_BLOCK` علاقة الحظر المباشر ولا يعني إنشاء Report أو إدانة الطرف الآخر.
+17. عند Transaction Cancellation يجب الاحتفاظ بالطرف الذي ألغى والسبب والتوقيت؛ تبقى طريقة التخزين الفيزيائية قرار تصميم لاحق.
+18. `SAFETY_FLAG` و`ADMIN_AUDIT_RECORD` مفهومان داعمان معتمدان من Trust & Safety / D8؛ تمثيلهما هنا مفاهيمي فقط، بينما schema التخزين والاحتفاظ والـthresholds تبقى قرارات تصميم/سياسة مفتوحة.
 
 ---
 
@@ -40,6 +44,8 @@ erDiagram
 
     PROVIDER_PROFILE ||--o{ PROVIDER_SERVICE_AREA : serves
     AREA ||--o{ PROVIDER_SERVICE_AREA : covered_by
+    AREA ||--o{ AREA_ADJACENCY : source_area
+    AREA ||--o{ AREA_ADJACENCY : adjacent_area
 
     PROVIDER_PROFILE ||--o{ SHOWCASE_ITEM : publishes
 
@@ -113,6 +119,11 @@ erDiagram
       identifier area_id FK
     }
 
+    AREA_ADJACENCY {
+      identifier source_area_id FK
+      identifier adjacent_area_id FK
+    }
+
     SHOWCASE_ITEM {
       identifier showcase_item_id PK
       identifier provider_profile_id FK
@@ -169,7 +180,9 @@ erDiagram
       identifier selected_response_id FK_optional
       string origin_type
       string status
+      string cancellation_actor_role
       string cancellation_reason
+      datetime cancelled_at
     }
 
     INVOICE_VERSION {
@@ -224,10 +237,11 @@ erDiagram
 ### PROVIDER_ACTIVITY
 يمثل نشاط Provider بدل `provider_type` مفرد يمنع الجمع بين Service وProduct. الشكل الفيزيائي النهائي لعدد السجلات يحسم في Chapter Four.
 
-### CATEGORY / AREA / PROVIDER_SERVICE_AREA
+### CATEGORY / AREA / PROVIDER_SERVICE_AREA / AREA_ADJACENCY
 - `CATEGORY` تصنيف النشاط/الطلب.
 - `AREA` تمثل District/Neighborhood بصورة مفاهيمية parent-child.
 - `PROVIDER_SERVICE_AREA` تمثل المناطق التي يخدمها Provider.
+- `AREA_ADJACENCY` تمثل قائمة الجوار المُدارة بين الأحياء وفق DEC-033؛ العلاقة المنطقية جوار متبادل، بينما طريقة فرض symmetry/uniqueness في قاعدة البيانات تؤجل إلى Chapter Four.
 - الموقع الدقيق/GPS ليس بيانات عامة في هذا النموذج.
 
 ### SHOWCASE_ITEM
@@ -248,6 +262,8 @@ erDiagram
 ### CONVERSATION / MESSAGE
 المحادثة يمكن أن تبدأ قبل Transaction من Direct Search أو Request context. Chat وحدها لا تنشئ Transaction. في Direct Search يبدأ Transaction فقط بعد طلب بدء صريح وتأكيد الطرف الآخر.
 
+> **Cardinality note:** النموذج الحالي يربط Conversation بحد أقصى Transaction واحدة، لكن القرارات الأعلى لا تحسم صراحة هل يمكن إعادة استخدام Conversation نفسها لبدء Transaction أخرى مستقبلًا. تبقى هذه multiplicity بحاجة Verification قبل Relation Schema النهائي.
+
 ### TRANSACTION
 هو الكيان المركزي بعد بدء التعامل الرسمي.
 
@@ -263,6 +279,8 @@ erDiagram
 - `Completed` للنجاح بعد اعتماد الفاتورة.
 - `Cancelled` عند الإلغاء وفق القواعد.
 - `Disputed` عند استمرار الخلاف قبل اعتماد الفاتورة وعدم الوصول إلى اتفاق — DEC-073.
+
+عند الإلغاء يسجل YADD الطرف الذي ألغى والسبب والتوقيت وفق DEC-048/BR-019؛ تمثل هنا مفاهيميًا بـ`cancellation_actor_role`, `cancellation_reason`, و`cancelled_at` دون حسم schema الفيزيائي النهائي.
 
 لا توجد حالة Transaction باسم `Closed`. لا Ratings إلا بعد `Completed`.
 
@@ -303,7 +321,11 @@ erDiagram
 
     PROVIDER_PROFILE ||--o{ SUBSCRIPTION : has
 
+    USER ||--o{ USER_BLOCK : creates
+    USER ||--o{ USER_BLOCK : is_target_of
+
     USER ||--o{ REPORT : submits
+    USER o|--o{ REPORT : may_target_user
     PROVIDER_PROFILE o|--o{ REPORT : may_target_provider
     SHOWCASE_ITEM o|--o{ REPORT : may_target_content
     CONVERSATION o|--o{ REPORT : may_contextualize
@@ -313,6 +335,7 @@ erDiagram
       identifier verification_case_id PK
       identifier provider_profile_id FK
       string status
+      string review_note
       datetime submitted_at
       datetime reviewed_at
     }
@@ -333,6 +356,12 @@ erDiagram
       date end_date
     }
 
+    USER_BLOCK {
+      identifier block_id PK
+      identifier blocker_user_id FK
+      identifier blocked_user_id FK
+    }
+
     REPORT {
       identifier report_id PK
       identifier reporter_user_id FK
@@ -342,15 +371,34 @@ erDiagram
       string status
       datetime created_at
     }
+
+    SAFETY_FLAG {
+      identifier flag_id PK
+      string target_type
+      identifier target_reference
+      string risk_level
+    }
+
+    ADMIN_AUDIT_RECORD {
+      identifier audit_record_id PK
+      string subject_type
+      identifier subject_reference
+      string event_type
+      datetime recorded_at
+    }
 ```
 
 ### Supporting-model notes
 
+- `USER_BLOCK` يمثل Block كعلاقة حماية مباشرة مستقلة عن `REPORT`; لا يعني الحظر إدانة أو عقوبة إدارية.
+- `REPORT.target_reference` تمثيل مفاهيمي polymorphic؛ التنفيذ الفيزيائي قد يفصله إلى علاقات أكثر صرامة. يمكن أن يكون الهدف User/Provider context/Conversation/Behavior/Showcase Item وفق UC-08 والسياسة الحالية.
+- `VERIFICATION_CASE.review_note` يمثل الملاحظة/السبب الذي يجب أن يستطيع الموظف تسجيله عند طلب إعادة التقديم أو الرفض.
+- `SAFETY_FLAG` يمثل Concept للـAI/behavioral flags المعتمدة. `risk_level` مفهومي ولا يثبت threshold رقميًا أو provider أو storage policy.
+- `ADMIN_AUDIT_RECORD` يمثل Concept لسجل التدقيق المطلوب في المراجعات/الوصولات الحساسة. الحقول هنا مفاهيمية، وليست Relation Schema نهائية.
 - أنواع وثائق الهوية الدقيقة: `VER-DOC-Q01 — Needs Verification`.
 - مدة الاحتفاظ ببيانات التحقق: `VER-RET-Q01 — Needs Legal Verification`.
 - تفاصيل باقات/أسعار/إثبات دفع الاشتراك: `SUB-PLAN-Q01 / SUB-PAY-Q01` مفتوحة.
-- AI Flags/Audit physical tables لا تثبت قبل حسم provider/retention/threshold policies.
-- `REPORT.target_reference` تمثيل مفاهيمي polymorphic؛ التنفيذ الفيزيائي قد يفصله إلى علاقات أكثر صرامة.
+- Physical schema للـFlags/Audit لا يعتمد قبل حسم provider/retention/threshold/authorization policies.
 - Transaction complaint under DEC-073 can use the REPORT/complaint concept and Transaction status; it does not justify a financial settlement entity.
 
 ---
@@ -371,7 +419,7 @@ erDiagram
 
 ## 6. Cardinality / Constraint Decisions for Chapter Four
 
-هذه القواعد مستقرة بما يكفي لتتحول إلى Constraints عند Relation Schema:
+هذه القواعد مستقرة بما يكفي لتتحول إلى Constraints عند Relation Schema، باستثناء البنود الموسومة صراحة بأنها تحتاج Verification:
 
 1. `USER ↔ PROVIDER_PROFILE`: User يمتلك صفر أو Provider Profile واحدًا.
 2. كل `REQUEST` ينشئه Beneficiary واحد ويرتبط بتصنيف ومنطقة عامة واحدة.
@@ -389,6 +437,10 @@ erDiagram
 14. Ratings لا تغير Transaction status بعد Completed — DEC-071.
 15. Transaction `Disputed` لا تسمح Ratings — DEC-073.
 16. لا توجد علاقة مالية للعربون أو النزاع داخل ERD — DEC-041/073.
+17. `AREA_ADJACENCY` يمثل علاقة جوار مُدارة بين الأحياء؛ كيفية فرض symmetry/uniqueness في Relation Schema مؤجلة للتصميم.
+18. `USER_BLOCK` و`REPORT` مستقلان؛ لا يشترط أحدهما الآخر — DEC-053.
+19. Transaction Cancellation تسجل Actor/Reason/Time — DEC-048 / BR-019.
+20. Verification resubmission/rejection review supports a recorded note/reason — VER-BR-04 / verification model.
 
 ---
 
@@ -405,7 +457,12 @@ erDiagram
 - Shared `Media` table vs entity-specific media relations/references.
 - Physical invoice-history implementation: `InvoiceVersion` vs `Invoice + InvoiceRevision`.
 - Physical normalization of ProviderActivity.
+- **ProviderProfile → ProviderActivity minimum cardinality:** current Core ERD permits `0..*`, while `19-provider-activity-model.md` illustrates `1..*`; whether Draft/onboarding ProviderProfile may temporarily have zero activities needs reconciliation before final Relation Schema.
+- **Conversation ↔ Transaction multiplicity:** current ERD uses at most one linked Transaction per Conversation, but approved decisions do not explicitly settle reuse of the same Conversation for a later second Transaction.
+- Physical implementation and symmetry/uniqueness constraint for `AREA_ADJACENCY`.
+- Physical implementation of `USER_BLOCK` pair uniqueness/unblock history if such behavior is later required.
 - Physical implementation of polymorphic Reports.
+- Physical persistence/linking model for `SAFETY_FLAG` and `ADMIN_AUDIT_RECORD`.
 
 ---
 
@@ -416,6 +473,7 @@ erDiagram
 | USER + optional ProviderProfile | DEC-008..011 |
 | Service/Product Activity | DEC-029/030 |
 | Category/Area/Service Areas | DEC-031..033/045 |
+| Area Adjacency | DEC-033/045 + Location Model |
 | Request | DEC-012/013/048/049 |
 | Provider Response | DEC-013/014/041/047/066/070 |
 | Conversation/Message | DEC-023/024/046/069 |
@@ -424,9 +482,11 @@ erDiagram
 | Provider Rating | DEC-051/052/071/073 |
 | Beneficiary Rating | DEC-063/071/073 |
 | Showcase Item | DEC-064 |
-| Verification Case | DEC-034..036 |
+| Verification Case / Artifact | DEC-034..036 |
 | Subscription | DEC-021/042/043 |
+| User Block | DEC-053 / FR-SAFE-01 |
 | Report / Complaint Context | DEC-053/054/073 |
+| Safety Flag / Admin Audit | DEC-036/037..040/054 + AI Trust & Safety + D8 |
 
 ---
 
@@ -447,9 +507,12 @@ erDiagram
 - [x] Request produces at most one Transaction.
 - [x] Portfolio/Catalog unified concept represented.
 - [x] Verification/Subscription/Report represented as supporting model.
+- [x] Area adjacency and Block concepts are represented.
+- [x] Cancellation Actor/Reason/Time and Verification review note are represented conceptually.
+- [x] Safety Flag/Admin Audit concepts are represented without inventing final physical schema.
 - [x] No financial settlement entity introduced for complaints/disputes.
 - [ ] Final visual ERD redraw in standard notation for supervisor delivery.
-- [ ] Class Diagram derivation from this synchronized ERD.
+- [ ] Class Diagram re-synchronization against this corrected ERD.
 - [ ] Relation Schema/Data Dictionary derivation in Chapter Four.
 
-> **الحكم:** Core Conceptual ERD أصبح مستقرًا بما يكفي لاشتقاق Class Diagram والبدء في Relation Schema، مع إبقاء Design Decisions الفيزيائية المحددة في القسم 7 صريحة وغير مخمّنة.
+> **الحكم:** Core Conceptual ERD متزامن الآن مع الفجوات الدلالية التي كانت موجودة في Location/Safety/Cancellation/Verification، مع إبقاء الـcardinalities والتفاصيل الفيزيائية غير المحسومة صريحة قبل Chapter Four.
