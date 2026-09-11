@@ -81,7 +81,6 @@ classDiagram
 
     User "1" --> "0..*" Conversation : beneficiary party
     ProviderProfile "1" --> "0..*" Conversation : provider party
-    Request "0..1" --> "0..*" Conversation : may contextualize
     Conversation "1" --> "0..*" Message : contains
     User "1" --> "0..*" Message : sends
 
@@ -107,6 +106,7 @@ classDiagram
 
 - `Conversation` قد توجد قبل Transaction؛ Chat وحدها لا تنشئ Transaction.
 - بين نفس Beneficiary ونفس Provider تبقى محادثة واحدة مستمرة، ويمكن أن تضم عدة Transactions عبر الزمن — DEC-075.
+- قد تبدأ أو تستمر Conversation في سياق Request، لكن هذا الـClass View لا يفرض علاقة مباشرة `Request ↔ Conversation` لأن Conversation المستمرة قد تمر بعدة Request contexts عبر الزمن؛ طريقة تمثيل وربط تلك السياقات تؤجل إلى Chapter Four.
 - يجب أن تعرض المحادثة فواصل/أحداث نظام واضحة عند بدء وانتهاء كل Transaction حتى لا تختلط حدود التعاملات السابقة واللاحقة.
 - الربط الفيزيائي بين Message/System Event وTransaction محددة لم يُحسم بعد؛ يؤجل إلى Chapter Four مع الحفاظ على قابلية التتبع.
 - Request Route يبدأ Transaction عند اختيار Provider، بينما Direct Search يحتاج Request Transaction Start ثم confirmation من الطرف الآخر.
