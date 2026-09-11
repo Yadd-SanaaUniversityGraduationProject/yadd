@@ -1,6 +1,6 @@
 # مصفوفة الدراسات السابقة والأنظمة المشابهة
 
-> **الحالة:** `ACTIVE — RESEARCH IN PROGRESS`
+> **الحالة:** `ACTIVE — RESEARCH IN PROGRESS — DECISION SYNC 2026-09-11`
 >
 > هذه المصفوفة أداة تحليل وليست الفصل الأكاديمي النهائي. تفصل بين: مشاريع جامعية سابقة، أنظمة/منصات تشغيلية، والاستنتاجات التحليلية الخاصة بـYADD.
 
@@ -46,7 +46,7 @@
 
 **علاقة YADD:** YADD يسمح بالتواصل الخاص قبل وبعد بدء المعاملة، مع بقاء الفاتورة النهائية هي السجل المعتمد لبنود وأسعار المعاملة.
 
-**ما لا نستنتجه:** عدم وجود Payment داخل المشروع ليس فجوة لصالح YADD؛ لأن YADD نفسه لا يدير حاليًا حركة دفع مالية بين المستفيد والمقدم، وموضوع العربون ما يزال مفتوحًا في `DEP-Q02`.
+**ما لا نستنتجه:** عدم وجود Payment داخل المشروع ليس فجوة لصالح YADD؛ لأن YADD نفسه لا يدير حركة دفع مالية بين المستفيد والمقدم. وفق `DEC-041` يمكن أن تحدد Provider Response فقط ما إذا كانت تتطلب عربونًا (`RequiresDeposit = Yes/No`) دون تسجيل قيمة العربون أو دفعه أو استرداده داخل YADD.
 
 **حالة الاستمرارية:** `COMMERCIALIZATION NOT VERIFIED` — لا يوجد حاليًا دليل كافٍ يسمح بوصف المشروع بأنه فشل أو نجح تشغيليًا بعد المرحلة الأكاديمية.
 
@@ -100,7 +100,7 @@
 
 **Inference — Scope:** اتساع نطاق أشغال وعدد أنواع الجهات والخدمات يزيد عدد المفاهيم والمسارات التي يجب على المستخدم والمنصة التعامل معها. لا يثبت ذلك أن استراتيجية أشغال خاطئة؛ لكنه يبرز اختلافًا مع YADD، الذي يقيد MVP على فئات وتدفقات أقل بهدف جعل نطاق التحليل والتنفيذ والاختبار أكثر قابلية للإدارة لفريق التخرج.
 
-**علاقة YADD:** الفرق الحالي ليس أن YADD اخترع اكتشاف مقدمي الخدمات؛ أشغال يثبت وجود هذا النمط في اليمن. الاختلاف الأقوى الذي يحتاج YADD اختباره هو الانتقال من `Discovery/Directory` إلى نموذج يضم `Direct Search OR Create Request → Responses → Selection/Agreement → Transaction → Final Invoice → Provider Rating`.
+**علاقة YADD:** الفرق الحالي ليس أن YADD اخترع اكتشاف مقدمي الخدمات؛ أشغال يثبت وجود هذا النمط في اليمن. الاختلاف الأقوى الذي يحتاج YADD اختباره هو الانتقال من `Discovery/Directory` إلى نموذج يضم `Direct Search OR Create Request → Responses → Selection/confirmation-to-start → Transaction → Final Invoice → Ratings`.
 
 ---
 
@@ -167,7 +167,7 @@ inDrive ليس منافسًا مباشرًا لـYADD لأن مجاله الأس
 
 | الملاحظة/الفجوة | معالجة YADD الحالية | التصنيف |
 |---|---|---|
-| بعض النماذج تعمل كدليل/اكتشاف دون دورة تعامل كاملة موثقة؛ الفحص المباشر لأشغال دعم هذا النمط في المسارات التي اختبرها الفريق | Request/Direct Search → private inquiry → selection/agreement → Transaction → Invoice → Rating | `RESEARCH_FINDING + E1-OBS` |
+| بعض النماذج تعمل كدليل/اكتشاف دون دورة تعامل كاملة موثقة؛ الفحص المباشر لأشغال دعم هذا النمط في المسارات التي اختبرها الفريق | Request/Direct Search → private inquiry → selection/confirmation-to-start → Transaction → Invoice → Ratings | `RESEARCH_FINDING + E1-OBS` |
 | لم يظهر في فحص أشغال للمستفيد الفردي نموذج Request → Responses/Offers → Choice | Create Request → eligible provider responses → beneficiary compares/selects | `E1-OBS; scoped to tested flows` |
 | لم يظهر في فحص أشغال نظام تقييم لمقدم الخدمة ضمن الملفات/التدفقات المفحوصة | تقييم YADD يفتحه فقط مستفيد مرتبط بمعاملة Completed بفاتورة معتمدة | `E1-OBS + TEAM_DECISION` |
 | انتقال التواصل خارج النظام في بعض النماذج | يسمح YADD بالتواصل الخاص قبل وبعد بدء Transaction | `TEAM_DECISION` |
@@ -175,9 +175,9 @@ inDrive ليس منافسًا مباشرًا لـYADD لأن مجاله الأس
 | ضعف الاستجابة في النطاق الأول | التوسع إلى الأحياء المجاورة يحتاج موافقة المستفيد؛ التوقيت مفتوح | `TEAM_DECISION + NEEDS VERIFICATION` |
 | كشف الموقع الدقيق للعامة قد يرفع مخاطر الخصوصية | العام = مديرية + حي؛ الموقع الأدق يمكن مشاركته في التواصل الخاص عند الحاجة | `TEAM_DECISION` |
 | التقييم غير المرتبط بمعاملة فعلية قد يكون أضعف في الدلالة | تقييم YADD يفتحه فقط مستفيد مرتبط بمعاملة Completed بفاتورة معتمدة | `TEAM_DECISION` |
-| تقييم المستفيد من المقدم | **غير موجود في نموذج YADD الحالي** | `SUPERSEDED OLD MODEL` |
+| تقييم المستفيد من المقدم | Beneficiary→Provider إلزامي بعد `Completed`، وProvider→Beneficiary اختياري وفق مؤشرات سلوكية محددة ودون عقوبة آلية في MVP | `TEAM_DECISION — DEC-051/063` |
 | عدم الرد على الفاتورة | تبقى Pending Customer Approval ولا يوجد Auto-Approval | `TEAM_DECISION` |
-| العربون/الدفع المقدم | لم يحسم؛ `DEP-Q02` | `NEEDS SUPERVISOR DECISION` |
+| العربون/الدفع المقدم | Provider Response تسجل فقط `RequiresDeposit = Yes/No`؛ قيمة العربون وطريقة دفعه وأي Refund خارج YADD | `TEAM_DECISION — DEC-041` |
 | Usability/low-connectivity | يحتاج اختبارًا ميدانيًا؛ لا يدعى أنه محلول | `NEEDS EVIDENCE` |
 
 ---
