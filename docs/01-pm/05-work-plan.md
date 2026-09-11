@@ -2,9 +2,11 @@
 
 > **الحالة:** `ACTIVE — PRELIMINARY DEFENSE ROADMAP v3`
 >
-> **آخر مزامنة للحالة:** 2026-09-05
+> **آخر مزامنة للحالة:** 2026-09-11
 >
 > تبدأ فترة المناقشات الأولية من **12 سبتمبر 2026**، لكن يوم مناقشة فريق YADD داخل هذه الفترة غير مثبت بعد. يعتمد الفريق **11 سبتمبر 2026 كموعد جاهزية داخلي نهائي** للفصول الأربعة الأولى والعرض التقديمي. بوابة **5 سبتمبر 2026** هي مراجعة المخططات الرئيسية للمشرف الرئيسي.
+>
+> **تنبيه PM:** Task Schedule وGantt موجودان في هذه الخطة. متطلب PERT الأكاديمي ما يزال `OPEN`؛ وجود كلمة PERT في العنوان أو WBS لا يعني أن PERT Diagram أُنجز.
 
 ## 0. فريق المشروع والإشراف
 
@@ -76,7 +78,7 @@
 6. Sequence Diagram لتدفق Core Flow.
 7. Class Diagram إذا سمح الوقت بعد اكتمال الستة السابقة دون تناقضات.
 
-> **حالة 2026-09-05:** النماذج الدلالية/Working representations للـUse Case وDFD وActivity/Sequence وERD متزامنة مع Core Model الحالي وDEC-073. يبقى **الرسم/التصدير النهائي بالترميز القياسي وقابلية الطباعة والمراجعة البشرية** قبل اعتبار Gate A مغلقًا. Class Diagram النهائي ما يزال مطلوبًا.
+> **الحالة المزامنة حتى 2026-09-11:** توجد Working representations للـUse Case وDFD وActivity/Sequence، وERD متزامن مع Core Model، كما توجد Class Diagram package مشتقة ومزامنة مفاهيميًا حتى DEC-076. يبقى **الرسم/التصدير النهائي بالترميز القياسي، قابلية الطباعة، والمراجعة البشرية عبر الحزمة كاملة** قبل اعتبار Gate A مغلقًا.
 
 ### Gate B — 11 September 2026: Preliminary Defense Freeze
 يجب أن تكون جاهزة:
@@ -104,33 +106,35 @@
 | `DEP-Q02` العربون | عمرو ناجي + الفريق | 3 سبتمبر | `CLOSED` | RequiresDeposit نعم/لا فقط؛ كل المال خارج YADD |
 | `RAT-CUST-Q01` تقييم المستفيد | عمرو ناجي + الفريق | 3 سبتمبر | `CLOSED` | Provider→Beneficiary اختياري بمؤشرات سلوكية؛ لا عقوبة آلية |
 | `PROP-003` Portfolio/Catalog | الفريق | 3 سبتمبر | `CLOSED` | مع علامة مائية تعريفية وإبلاغ عن الانتحال |
+| `PROV-ACT-Q01` | الفريق | 11 سبتمبر | `CLOSED` | DEC-074/076: Provider type حصري SERVICE/PRODUCT؛ تصنيف واحد أو أكثر داخل النوع؛ Draft قد يبدأ بصفر |
 | Actors الأساسية | محمد حميد | 3 سبتمبر | `CLOSED` | Beneficiary / Provider / YADD Administrator للمخطط الرئيسي |
 | Core Flow | محمد حميد + الفريق | 3 سبتمبر | `CLOSED` | Discovery→Transaction→Invoice→Completed→Ratings مع Disputed كمسار غير ناجح |
 | Request/Response/Selection Model | محمد حميد | 3 سبتمبر | `CLOSED` | لا Agreement entity مستقل |
-| Architecture Direction | محمد عبدالرحمن + الفريق | 3 سبتمبر | `CLOSED AS DIRECTION` | Web/Backend-first؛ Flutter client لاحق؛ frameworks التفصيلية ما تزال Feasibility |
+| Architecture Direction | محمد عبدالرحمن + الفريق | 3 سبتمبر | `CLOSED AS DIRECTION` | Web/Backend-first؛ Flutter client لاحق؛ framework التفصيلي للBackend ما يزال Feasibility |
 | `DISPUTE-AUTH-Q01` | الفريق | 4 سبتمبر | `CLOSED` | DEC-073: Disputed terminal unsuccessful; Admin policy review بلا financial arbitration |
 | تحديث الدراسات السابقة | عمرو ناجي | 4 سبتمبر | `IN PROGRESS` | Chapter 2 v1.1 Core Sources Verified؛ يبقى الإغلاق النهائي للمراجع/الفجوة |
-| SRS blockers الحرجة | محمد حميد | 4 سبتمبر | `CORE P0 CLOSED — SRS v0.9.5 CURRENT, NOT BASELINED` | الباقي P1/P2 NV وغير مانع للنمذجة الحالية |
-| Business Rules + Lifecycles | محمد حميد | 4 سبتمبر | `CURRENT THROUGH DEC-073` | Core transaction/dispute/rating semantics متزامنة |
-| Use Cases الأساسية | محمد حميد | 4 سبتمبر | `CURRENT — FINAL VISUAL REVIEW PENDING` | specifications متزامنة؛ main use case visual still needs standard redraw/review |
+| SRS blockers الحرجة | محمد حميد | 4 سبتمبر | `CORE P0 CLOSED — SRS v0.9.6 CURRENT, NOT BASELINED` | SRS متزامن عبر DEC-076؛ الباقي P1/P2 NV وغير مانع للنمذجة الحالية |
+| Business Rules + Lifecycles | محمد حميد | 4 سبتمبر | `BR SYNCHRONIZED THROUGH DEC-076 — LIFECYCLES CURRENT THROUGH DEC-073` | Provider model synchronized؛ Lifecycles تحتاج فقط أي أثر صريح من القرارات الأحدث إن وجد |
+| Use Cases الأساسية | محمد حميد | 4 سبتمبر | `CURRENT — FINAL VISUAL REVIEW PENDING` | specifications current؛ main use case visual still needs standard redraw/review |
 | Use Case Diagram | محمد حميد | 5 سبتمبر | `WORKING MODEL READY — STANDARD UML REDRAW/EXPORT OPEN` | Actors/use cases current؛ لا Guest/Agreement |
-| DFD Context + Level 0 | محمد حميد | 5 سبتمبر | `WORKING MODEL READY — STANDARD DFD REDRAW/EXPORT OPEN` | current processes/stores + DEC-073 semantics |
-| ERD التحليلي | محمد عبدالرحمن + مراجعة محمد حميد | 5 سبتمبر | `CORE SYNCHRONIZED — FINAL VISUAL REVIEW OPEN` | no Payment/Agreement; Disputed/report traceability current |
-| Activity Diagram — Core Flow | محمد حميد | 5 سبتمبر | `WORKING MODEL READY — VISUAL REVIEW OPEN` | Includes Completed/Disputed and current ratings |
-| Sequence Diagram — Core Flow | محمد حميد + مراجعة محمد عبدالرحمن | 5 سبتمبر | `WORKING MODEL READY — MERMAID FIXED — VISUAL REVIEW OPEN` | section 5 syntax corrected; dispute/admin branch synchronized |
-| Class Diagram | محمد حميد + محمد عبدالرحمن | 5 سبتمبر | `OPEN` | يشتق من current ERD؛ لا يعاد legacy Offer/Agreement/Review model |
+| DFD Context + Level 0 | محمد حميد | 5 سبتمبر | `WORKING MODEL READY — STANDARD DFD REDRAW/EXPORT OPEN` | consistency check against DEC-074..076 still required before freeze |
+| ERD التحليلي | محمد عبدالرحمن + مراجعة محمد حميد | 5 سبتمبر | `CORE SYNCHRONIZED THROUGH DEC-076 — FINAL VISUAL REVIEW OPEN` | Provider model and conversation cardinality synchronized; physical derivation remains Ch4 |
+| Activity Diagram — Core Flow | محمد حميد | 5 سبتمبر | `WORKING MODEL READY — VISUAL REVIEW OPEN` | core transaction/rating flow represented; final visual review open |
+| Sequence Diagram — Core Flow | محمد حميد + مراجعة محمد عبدالرحمن | 5 سبتمبر | `WORKING MODEL READY — VISUAL REVIEW OPEN` | sequence package exists; final visual/A4 review remains open |
+| Class Diagram | محمد حميد + محمد عبدالرحمن | 5 سبتمبر | `SEMANTIC PACKAGE READY — FINAL VISUAL REVIEW/EXPORT OPEN` | 3 class views exist and are synchronized through DEC-076; standard UML export still pending |
 | Main Diagrams Review Package | الثلاثة | 5 سبتمبر | `OPEN` | يحتاج final exports + cross-review + supervisor delivery |
-| Relation Schema Draft | محمد عبدالرحمن | 8 سبتمبر | `CURRENT-MODEL DRAFT — PHYSICAL REVIEW OPEN` | مشتق من current ERD؛ no Agreement/Payment relations |
-| Data Dictionary | محمد عبدالرحمن | 8 سبتمبر | `CURRENT-MODEL SKELETON — TYPES/CONSTRAINTS REVIEW OPEN` | old Offer/Agreement/Review rows removed |
-| Interface Design / Figma Review | عمرو ناجي | 8 سبتمبر | `CURRENT USE-CASE HIERARCHY DRAFT — FIGMA/UX REVIEW OPEN` | no Agreement screen; dual ratings/current transaction flow represented |
+| Relation Schema Draft | محمد عبدالرحمن | 8 سبتمبر | `RE-SYNC REQUIRED AFTER DEC-074..076` | ProviderActivity/Conversation constraints must be re-derived before physical review closure |
+| Data Dictionary | محمد عبدالرحمن | 8 سبتمبر | `RE-SYNC REQUIRED AFTER DEC-074..076` | current skeleton needs updated fields/constraints before closure |
+| Interface Design / Figma Review | عمرو ناجي | 8 سبتمبر | `CURRENT USE-CASE HIERARCHY DRAFT — CONSISTENCY/FIGMA REVIEW OPEN` | review impact of exclusive provider type and multiple categories |
 | Queries & Reports | محمد عبدالرحمن + عمرو ناجي | 8 سبتمبر | `REQUIREMENTS-ALIGNED DRAFT — REPORT DETAILS OPEN` | no invented KPIs; queries traced to current requirements |
-| Technical Feasibility | محمد عبدالرحمن | 8 سبتمبر | `OPEN` | التقنيات والاعتماديات والتكلفة/المخاطر دون ادعاء غير مثبت |
+| Technical Feasibility | محمد عبدالرحمن | 8 سبتمبر | `OPEN` | Architecture direction is approved; framework/provider/cost/dependency feasibility remains open |
 | Operational/UX Feasibility | عمرو ناجي + محمد حميد | 8 سبتمبر | `OPEN` | لا ادعاء نجاح UX قبل الاختبار |
-| Chapter 1 | عمرو ناجي | 9 سبتمبر | `v1.1 — READY FOR PRELIMINARY DEFENSE REVIEW` | مشتق من Sources of Truth؛ final formatting/review pending |
+| PERT Diagram | عمرو ناجي + الفريق | 11 سبتمبر | `OPEN — REQUIRED BY UNIVERSITY STRUCTURE` | يحتاج مددًا واعتماديات موثقة؛ لا يُنشأ بتقديرات مخترعة |
+| Chapter 1 | عمرو ناجي | 9 سبتمبر | `v1.1 — READY FOR PRELIMINARY DEFENSE REVIEW` | مشتق من Sources of Truth؛ PERT/feasibility/final formatting review still affect closure |
 | Chapter 2 | عمرو ناجي | 9 سبتمبر | `v1.1 — CORE SOURCES VERIFIED — REVIEW OPEN` | final research/reference closure pending |
-| Chapter 3 | محمد حميد | 9 سبتمبر | `v1.2 — CORE MODEL CURRENT — WORKING DIAGRAMS AVAILABLE` | final diagram redraw/export + design traceability + review pending |
-| Chapter 4 | محمد عبدالرحمن + عمرو ناجي | 9 سبتمبر | `IN PROGRESS — CURRENT-MODEL DRAFTS SYNCHRONIZED` | physical DB details, Figma/forms/report details and review remain open |
-| Traceability/Consistency Audit | الثلاثة | 10 سبتمبر | `IN PROGRESS EARLY PASS` | core traceability current; design traceability/final scan pending |
+| Chapter 3 | محمد حميد | 9 سبتمبر | `v1.2 — WORKING DRAFT — RE-SYNC REQUIRED AFTER DEC-074..076` | final diagram redraw/export + derived chapter sync + review pending |
+| Chapter 4 | محمد عبدالرحمن + عمرو ناجي | 9 سبتمبر | `IN PROGRESS — RE-SYNC REQUIRED AFTER DEC-074..076` | physical DB constraints and interface consistency need refresh before claiming current |
+| Traceability/Consistency Audit | الثلاثة | 10 سبتمبر | `IN PROGRESS` | core traceability synchronized through DEC-076; design traceability/final scan pending |
 | References + Formatting + Print Check | عمرو ناجي | 11 سبتمبر | `OPEN` | الرسومات واضحة والمراجع والترقيم موحدة |
 | PowerPoint + Defense Rehearsal | عمرو ناجي + الفريق | 11 سبتمبر | `OPEN` | العرض من الفصول نفسها والفريق قادر على شرح القرارات والمخططات |
 | Preliminary Defense Snapshot | عمرو ناجي | 11 سبتمبر | `OPEN` | نسخة مستقرة محفوظة ولا يبدأ تحليل جديد إلا لتصحيح حرج |
@@ -161,7 +165,7 @@
 - **6–8 Sep:** استكمال/تصحيح النمذجة بعد ملاحظات المشرف + Database Design + Interfaces + Feasibility.
 - **9 Sep:** تجميع Chapters 1–4.
 - **10 Sep:** Traceability and Consistency Audit النهائي.
-- **11 Sep:** لا تحليل جديد؛ قراءة بشرية، تنسيق، مراجع، PowerPoint، تدريب، PDF/Print، 3 نسخ، Snapshot.
+- **11 Sep:** مزامنة وتصحيح حرج فقط؛ PERT إذا توفرت مدد/اعتماديات موثقة، ثم قراءة بشرية، تنسيق، مراجع، PowerPoint، تدريب، PDF/Print، 3 نسخ، Snapshot.
 
 ## 6. Gantt المختصر
 
