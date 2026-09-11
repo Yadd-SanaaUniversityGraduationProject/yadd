@@ -16,12 +16,12 @@
 | Legacy SRS Placeholder (`docs/99-legacy/analysis/01-SRS.md`) | Placeholder قديم | `LEGACY — CLEANUP CANDIDATE AFTER STABILIZATION` | لا حذف دون Cleanup قرار واضح |
 | Legacy Tech ERD Redirect (`docs/99-legacy/tech/01-ERD.md`) | Redirect تاريخي | `LEGACY — CLEANUP CANDIDATE AFTER STABILIZATION` | المرجع الحالي `docs/03-analysis/11-ERD.md` |
 | Academic Progress Report 2026-08-16 (`docs/99-legacy/governance/`) | لقطة مرحلية مؤرخة | `LEGACY SNAPSHOT` | لا يستخدم عند تعارضه مع الأحدث |
+| Two-week Plan (`docs/99-legacy/governance/two-week-plan.md`) | خطة تاريخية سابقة | `LEGACY / SUPERSEDED — ARCHIVED 2026-09-11` | لا تستخدم للتخطيط الحالي؛ البديل `docs/01-pm/05-work-plan.md` Roadmap v3 |
 | Charter | تأسيس إداري | `SYNCHRONIZED — TEAM REVIEW STILL REQUIRED` | لا يعتمد التقنية أو المتطلبات بذاته |
 | WBS | تجزئة العمل | `ALIGNED WITH ROADMAP v3 — SYNCHRONIZED 2026-09-05` | GOV-Q02 مغلق؛ DFD+UML معًا |
 | Risk Register | المخاطر والتغيير | `ACTIVE — SYNCHRONIZED WITH ROADMAP v3 — 2026-09-05` | يراجع مع أي تغيرات لاحقة |
 | Feasibility Study | اقتصادي/تقني/تشغيلي | `SKELETON` | لا إعلان Feasible قبل التحليل |
-| Work Plan | Schedule/Gantt/PERT + Closure Tracker | `ACTIVE — PRELIMINARY DEFENSE ROADMAP v3 — STATE SYNC 2026-09-05` | PERT ما يزال يحتاج تحققًا فعليًا داخل الملف قبل اعتبار البند مغلقًا |
-| Two-week Plan (`05-two-week-plan.md`) | خطة تاريخية سابقة | `LEGACY / SUPERSEDED` | لا تستخدم للتخطيط الحالي؛ بقيت في Governance للتتبع الصريح |
+| Work Plan | Task Schedule + Gantt + Closure Tracker؛ PERT مفتوح | `ACTIVE — PRELIMINARY DEFENSE ROADMAP v3 — STATE SYNC 2026-09-05` | PERT غير مثبت فعليًا داخل الملف ويجب استكماله/مراجعته قبل إغلاق متطلب الجامعة |
 | GitHub Issues #1..#10 | مهام خطة قديمة | `CLOSED — NOT PLANNED` | Work Plan Closure Tracker هو لوحة المتابعة |
 | Research Plan | خطة الدراسات السابقة | `READY_FOR_USE` | — |
 | Similar Systems Matrix | مقارنة الأنظمة | `ACTIVE — RESEARCH IN PROGRESS` | الإغلاق النهائي للمراجع/الفجوة قبل Chapter 2 final |
