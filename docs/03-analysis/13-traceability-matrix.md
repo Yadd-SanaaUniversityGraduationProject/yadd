@@ -1,6 +1,6 @@
 # Requirements Traceability Matrix — Core Diagram Model
 
-> **الحالة:** `CORE TRACEABILITY SYNCHRONIZED 2026-09-04 — DESIGN TRACEABILITY PENDING`
+> **الحالة:** `CORE TRACEABILITY SYNCHRONIZED 2026-09-11 — DESIGN TRACEABILITY PENDING`
 >
 > الغرض من هذه النسخة هو منع اعتماد المخططات على FR/Entities تاريخية. المرجع الأعلى يبقى Decision Register ثم SRS وBusiness Rules.
 >
@@ -11,8 +11,8 @@
 | UR-ACC-01 | DEC-008 | Account/Portal Model | Manage Account | 1.0 | USER | `ANALYZED_APPROVED` |
 | UR-ACC-02 | DEC-009/011 | Account/Portal Model | Manage Account / Switch Portal | 1.0 | USER, PROVIDER_PROFILE | `ANALYZED_APPROVED` |
 | UR-PROV-01 | DEC-029/030 | Provider Activity Model | Manage Provider Profile / Manage Service Areas | 1.0 | PROVIDER_PROFILE, PROVIDER_ACTIVITY | `ANALYZED_APPROVED` |
-| UR-VER-01 | DEC-034/035 | BR-027/028 | UC-09 → Submit Verification / Review Provider Verification | 6.0 | VERIFICATION_CASE, VERIFICATION_ARTIFACT | `ANALYZED_APPROVED` |
-| UR-DIS-01 | DEC-012/031..033 | BR-001/031 | UC-01 → Search Providers / View Provider Profile | 2.0 | CATEGORY, AREA, PROVIDER_SERVICE_AREA, PROVIDER_PROFILE | `ANALYZED_APPROVED` |
+| UR-VER-01 | DEC-034/035 | BR-027/028 | UC-09 → Submit Verification / Review Provider Verification | 6.0 | VERIFICATION_CASE, VERIFICATION_ARTIFACT, ADMIN_AUDIT_RECORD (conceptual) | `ANALYZED_APPROVED` |
+| UR-DIS-01 | DEC-012/031..033 | BR-001/031 | UC-01 → Search Providers / View Provider Profile | 2.0 | CATEGORY, AREA, AREA_ADJACENCY, PROVIDER_SERVICE_AREA, PROVIDER_PROFILE | `ANALYZED_APPROVED` |
 | UR-PORT-01 | DEC-064 | BR-035/036 | UC-01 / UC-10 → View Provider Profile / Manage Portfolio-Catalog | 1.0 / 2.0 | SHOWCASE_ITEM | `ANALYZED_APPROVED` |
 | UR-REQ-01 | DEC-012 | BR-001 | UC-02 → Create Request | 2.0 | REQUEST | `ANALYZED_APPROVED` |
 | UR-REQ-02 | DEC-013 | BR-002/003 | UC-02 → Create Request | 2.0 | REQUEST | `ANALYZED_APPROVED` |
@@ -22,15 +22,15 @@
 | UR-OFF-02 | DEC-014/047 | BR-004/006 | UC-04 → Compare Provider Responses / Select Provider / Create Active Transaction | 3.0 / 4.0 | REQUEST, PROVIDER_RESPONSE, TRANSACTION | `ANALYZED_APPROVED` |
 | UR-OFF-03 | DEC-070 | BR-039 | UC-03 → Edit Provider Response / Withdraw Provider Response | 3.0 | PROVIDER_RESPONSE | `ANALYZED_APPROVED` |
 | UR-TX-01 | DEC-046/047/066/069 | BR-006/007/037 | UC-01 direct route → Request Transaction Start / Confirm Transaction Start / Create Active Transaction; UC-04 request route → Select Provider / Create Active Transaction | 3.0 / 4.0 | TRANSACTION, CONVERSATION, PROVIDER_RESPONSE | `ANALYZED_APPROVED` |
-| UR-TX-02 | DEC-056 | BR-023 | Transaction management / Cancel Transaction | 4.0 | TRANSACTION | `ANALYZED_APPROVED` |
+| UR-TX-02 | DEC-056 | BR-023 | Transaction management / Cancel Transaction | 4.0 | TRANSACTION (including cancellation actor/reason/time concept) | `ANALYZED_APPROVED` |
 | UR-TX-03 | DEC-071 | BR-010/016 | UC-06 → Approve Final Invoice / Complete Transaction; UC-07/07B post-transaction ratings | 4.0 / 5.0 | TRANSACTION | `ANALYZED_APPROVED` |
 | UR-TX-04 | DEC-073 | BR-040 | UC-06 dispute branch → Raise Transaction Complaint / Review Transaction Complaint | 4.0 / 6.0 | TRANSACTION, REPORT / complaint record | `ANALYZED_APPROVED` |
 | UR-INV-01 | DEC-015/025/050/071 | BR-009..013 | UC-06 → Create Final Invoice / Review Final Invoice / Approve Final Invoice / Request Invoice Revision / Revise Final Invoice | 4.0 | INVOICE_VERSION, INVOICE_ITEM, TRANSACTION | `ANALYZED_APPROVED` |
-| UR-DSP-01 | DEC-073 | BR-040 | UC-06 dispute branch → Raise Transaction Complaint / Review Transaction Complaint | 4.0 / 6.0 | REPORT / complaint record, TRANSACTION | `ANALYZED_APPROVED` |
+| UR-DSP-01 | DEC-073 | BR-040 | UC-06 dispute branch → Raise Transaction Complaint / Review Transaction Complaint | 4.0 / 6.0 | REPORT / complaint record, TRANSACTION, ADMIN_AUDIT_RECORD (conceptual) | `ANALYZED_APPROVED` |
 | UR-REV-01 | DEC-051 | BR-014/016 | UC-07 → Rate Provider; Precondition: Transaction Completed | 5.0 | PROVIDER_RATING | `ANALYZED_APPROVED` |
 | UR-REV-02 | DEC-063 | BR-015/016 | UC-07B → Rate Beneficiary; Precondition: Transaction Completed | 5.0 | BENEFICIARY_RATING | `ANALYZED_APPROVED` |
 | UR-REP-01 | DEC-063 | BR-034 | UC-07B / provider interaction context | 5.0 | BENEFICIARY_RATING / interaction record | `ANALYZED_APPROVED` |
-| UR-SAFE-01 | DEC-053/054 | BR-021/022 | UC-08 → Block User / Report User-Content / Review Reports-Flags | 6.0 | REPORT / moderation records | `ANALYZED_APPROVED` |
+| UR-SAFE-01 | DEC-053/054 | BR-021/022 | UC-08 → Block User / Report User-Content / Review Reports-Flags | 6.0 | USER_BLOCK, REPORT, SAFETY_FLAG, ADMIN_AUDIT_RECORD (conceptual) | `ANALYZED_APPROVED` |
 | UR-PAY-01 | DEC-018/041/073 | BR-024/033/040 | Scope constraint on Provider Response / Invoice / Complaint flows | — | **No Payment/Escrow/Refund/Settlement entity** | `ANALYZED_APPROVED` |
 | UR-SUB-01 | DEC-042/043 | BR-029/030 | Manage Provider Subscription + Validate Response Eligibility | 6.0 | SUBSCRIPTION | `ANALYZED_APPROVED` |
 
@@ -70,13 +70,22 @@ The following must remain consistent across Use Case, DFD, Activity, Sequence, E
 10. Administration reviews platform evidence and applies YADD policy; it does not arbitrate financial/commercial rights or order Payment/Refund/Compensation.
 11. Ratings occur only after Completed; no Ratings for Cancelled or Disputed Transactions.
 12. `Rate Provider` and `Rate Beneficiary` are Post-Transaction actor goals with `Transaction = Completed` preconditions; this lifecycle dependency is not represented as `include/extend` merely because it occurs later.
-13. `Block User` and `Report User / Content` are separate actor goals; neither is mandatory for the other.
-14. `Close Open Request` is distinct from `Cancel Transaction`.
-15. No Beneficiary↔Provider Payment, Escrow, Refund or Settlement entity/process inside YADD.
-16. Diagram labels are English only according to DEC-072.
+13. `Block User` and `Report User / Content` are separate actor goals; neither is mandatory for the other. Static model may represent them separately as `USER_BLOCK` and `REPORT`.
+14. Neighborhood adjacency is managed YADD reference data and is not modeled as GPS-radius eligibility logic.
+15. Transaction Cancellation records actor, reason and time.
+16. Verification resubmission/rejection review supports a recorded note/reason.
+17. Safety Flags and sensitive administrative review/access events require conceptual traceability without inventing thresholds or a final physical schema.
+18. `Close Open Request` is distinct from `Cancel Transaction`.
+19. No Beneficiary↔Provider Payment, Escrow, Refund or Settlement entity/process inside YADD.
+20. Diagram labels are English only according to DEC-072.
 
 ## Open Items and Traceability Scope
 
 Open numeric/policy items such as expiry timing, AI thresholds, exact identity-document types, geographic seed lists and subscription plan pricing remain `Needs Verification`. They must not be invented in diagrams and do not block the core diagram structure above.
+
+Two structural cardinalities remain explicitly unresolved before final Relation Schema:
+
+- whether one `Conversation` may later be reused for more than one `Transaction`;
+- whether a Draft/onboarding `ProviderProfile` may temporarily exist with zero `ProviderActivity` records (`0..*`) or must always have at least one (`1..*`).
 
 Chapter Four design columns (Relation Schema, final PK/FK/Constraints, Data Dictionary, interface IDs, query IDs) are intentionally deferred until the design work is produced; this does not make the core analysis traceability provisional.
