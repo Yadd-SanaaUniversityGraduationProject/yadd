@@ -35,7 +35,7 @@ flowchart TD
     I --> G
     H -- No --> J{Select Provider?}
     J -- No --> D
-    J -- Yes --> K[Close Request to New Responses]
+    J -- Yes --> K[Set Request = Matched and Close to New Responses]
 
     K --> L[Mark Selected Response and Others NotSelected]
     L --> M[Create Active Transaction]
@@ -71,6 +71,7 @@ flowchart TD
 
 - Chat alone does not create a Transaction.
 - Request Route creates `Active Transaction` only after Provider selection.
+- عند اختيار Provider ينتقل Request من `Open` إلى `Matched`; يعني ذلك توقفه عن استقبال Responses جديدة وبدء المعاملة الرسمية مع Provider المختار.
 - Beneficiary may close an `Open` Request before selection; this is `Request Closure`, not `Transaction Cancellation`.
 - Request expiry is represented conceptually only. Exact inactivity duration and reminder timing remain open and are not invented here.
 - Final Invoice approval makes Transaction `Completed`.
