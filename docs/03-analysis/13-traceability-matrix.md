@@ -1,6 +1,6 @@
 # Requirements Traceability Matrix — Core Diagram Model
 
-> **الحالة:** `CORE TRACEABILITY SYNCHRONIZED 2026-09-11 — DESIGN TRACEABILITY PENDING`
+> **الحالة:** `CORE TRACEABILITY SYNCHRONIZED 2026-09-12 — DESIGN TRACEABILITY PENDING`
 >
 > الغرض من هذه النسخة هو منع اعتماد المخططات على FR/Entities تاريخية. المرجع الأعلى يبقى Decision Register ثم SRS وBusiness Rules.
 >
@@ -18,7 +18,8 @@
 | UR-REQ-01 | DEC-012 | BR-001 | UC-02 → Create Request | 2.0 | REQUEST | `ANALYZED_APPROVED` |
 | UR-REQ-02 | DEC-013 | BR-002/003 | UC-02 → Create Request | 2.0 | REQUEST | `ANALYZED_APPROVED` |
 | UR-REQ-03 | DEC-048 | BR-018/020 | UC-02 alternative → Close Open Request | 2.0 | REQUEST | `ANALYZED_APPROVED` |
-| UR-COM-01 | DEC-046/075 | BR-005/008/042 | UC-01 / UC-03 / UC-04 → Communicate / Inquire | 3.0 | CONVERSATION, MESSAGE, TRANSACTION context | `ANALYZED_APPROVED` |
+| UR-COM-01 | DEC-046 | BR-005/008 | UC-01 / UC-03 / UC-04 → Communicate / Inquire | 3.0 | CONVERSATION, MESSAGE | `ANALYZED_APPROVED` |
+| UR-COM-02 | DEC-075 | BR-042 / In-App Communication Model | UC-01 / UC-03 / UC-04 communication context; persistent conversation invariant | 3.0 / 4.0 | CONVERSATION, SYSTEM_EVENT, TRANSACTION context | `DERIVED_FROM_APPROVED_DECISION` |
 | UR-OFF-01 | DEC-013/041 | BR-003/033 | UC-03 → Submit Provider Response | 3.0 | PROVIDER_RESPONSE | `ANALYZED_APPROVED` |
 | UR-OFF-02 | DEC-014/047 | BR-004/006 | UC-04 → Compare Provider Responses / Select Provider / Create Active Transaction | 3.0 / 4.0 | REQUEST, PROVIDER_RESPONSE, TRANSACTION | `ANALYZED_APPROVED` |
 | UR-OFF-03 | DEC-070 | BR-039 | UC-03 → Edit Provider Response / Withdraw Provider Response | 3.0 | PROVIDER_RESPONSE | `ANALYZED_APPROVED` |
@@ -68,30 +69,34 @@ The following must remain consistent across Use Case, DFD, Activity, Sequence, E
 7. One active Provider Response per Provider per Request; edit/withdraw allowed before selection while Request is Open.
 8. `RequiresDeposit` is a boolean attribute of Provider Response, not a Payment use case/entity/process.
 9. Between the same Beneficiary and Provider, one persistent Conversation may contain multiple Transactions over time; transaction boundaries must be visible through system separators/events — DEC-075.
-10. Invoice approval makes Transaction `Completed`.
-11. `Completed` is the successful terminal Transaction state; there is no Transaction state `Closed`.
-12. Unresolved pre-approval invoice dispute makes Transaction `Disputed`, a terminal unsuccessful state.
-13. Administration reviews platform evidence and applies YADD policy; it does not arbitrate financial/commercial rights or order Payment/Refund/Compensation.
-14. Ratings occur only after Completed; no Ratings for Cancelled or Disputed Transactions.
-15. `Rate Provider` and `Rate Beneficiary` are Post-Transaction actor goals with `Transaction = Completed` preconditions; this lifecycle dependency is not represented as `include/extend` merely because it occurs later.
-16. `Block User` and `Report User / Content` are separate actor goals; neither is mandatory for the other. Static model may represent them separately as `USER_BLOCK` and `REPORT`.
-17. Neighborhood adjacency is managed YADD reference data and is not modeled as GPS-radius eligibility logic.
-18. Transaction Cancellation records actor, reason and time.
-19. Verification resubmission/rejection review supports a recorded note/reason.
-20. Safety Flags and sensitive administrative review/access events require conceptual traceability without inventing thresholds or a final physical schema.
-21. `Close Open Request` is distinct from `Cancel Transaction`.
-22. No Beneficiary↔Provider Payment, Escrow, Refund or Settlement entity/process inside YADD.
-23. Diagram labels are English only according to DEC-072.
+10. The persistent-conversation Class constraint is `{unique Conversation per Beneficiary–Provider pair}`; physical enforcement is Chapter Four work.
+11. Invoice approval makes Transaction `Completed`.
+12. `Completed` is the successful terminal Transaction state; there is no Transaction state `Closed`.
+13. Unresolved pre-approval invoice dispute makes Transaction `Disputed`, a terminal unsuccessful state.
+14. Administration reviews platform evidence and applies YADD policy; it does not arbitrate financial/commercial rights or order Payment/Refund/Compensation.
+15. Ratings occur only after Completed; no Ratings for Cancelled or Disputed Transactions.
+16. `Rate Provider` and `Rate Beneficiary` are Post-Transaction actor goals with `Transaction = Completed` preconditions; this lifecycle dependency is not represented as `include/extend` merely because it occurs later.
+17. `Block User` and `Report User / Content` are separate actor goals; neither is mandatory for the other. Static model may represent them separately as `USER_BLOCK` and `REPORT`.
+18. Neighborhood adjacency is managed YADD reference data and is not modeled as GPS-radius eligibility logic.
+19. Transaction Cancellation records actor, reason and time.
+20. Verification resubmission/rejection review supports a recorded note/reason.
+21. Safety Flags and sensitive administrative review/access events require conceptual traceability without inventing thresholds or a final physical schema; a Flag must preserve enough reason/category information for human review.
+22. `Close Open Request` is distinct from `Cancel Transaction`.
+23. No Beneficiary↔Provider Payment, Escrow, Refund or Settlement entity/process inside YADD.
+24. Diagram labels are English only according to DEC-072.
 
 ## Open Items and Traceability Scope
 
 Open numeric/policy items such as expiry timing, AI thresholds, exact identity-document types, geographic seed lists and subscription plan pricing remain `Needs Verification`. They must not be invented in diagrams and do not block the core diagram structure above.
 
-The two structural questions previously open are now resolved at the analysis level:
+The structural questions previously open are now resolved at the analysis level:
 
 - Conversation reuse is resolved by DEC-075: one persistent Conversation between the same parties can group multiple Transactions.
 - Provider Activity multiplicity is resolved by DEC-076: multiple Categories are allowed inside one Provider Type; Draft may have zero temporarily, while provider-function eligibility requires at least one.
 
-Physical implementation details remain for Chapter Four, including uniqueness of `(ProviderProfile, Category)`, enforcement of Provider Type/Category Type compatibility, and linking messages/system events to a specific Transaction inside a persistent Conversation.
+Still open:
+
+- Provider Type switching after initial selection remains unresolved and must not be inferred from class operations.
+- Physical enforcement of Conversation pair uniqueness and linking messages/system events to a specific Transaction remains Chapter Four work.
 
 Chapter Four design columns (Relation Schema, final PK/FK/Constraints, Data Dictionary, interface IDs, query IDs) are intentionally deferred until the design work is produced; this does not make the core analysis traceability provisional.
