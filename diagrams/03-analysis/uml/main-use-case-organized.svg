@@ -1,0 +1,166 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="1450" viewBox="0 0 1400 1450">
+<defs>
+  <marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="3.5" orient="auto" markerUnits="strokeWidth">
+    <path d="M0,0 L7,3.5 L0,7 Z" fill="#5F5F5F"/>
+  </marker>
+  <style>
+    .uc { fill:#ADD8E6; stroke:#9ABFCB; stroke-width:1.2; }
+    .assoc { stroke:#9A9A9A; stroke-width:0.8; fill:none; }
+    .dep { stroke:#5F5F5F; stroke-width:1.1; stroke-dasharray:6 4; fill:none; marker-end:url(#arrow); }
+    .label { font: 13px Arial, sans-serif; fill:#1F2933; text-anchor:middle; dominant-baseline:middle; }
+    .actor { font: bold 15px Arial, sans-serif; fill:#222; text-anchor:middle; dominant-baseline:middle; }
+    .deptext { font: 11px Arial, sans-serif; fill:#4A4A4A; text-anchor:middle; paint-order:stroke; stroke:#fff; stroke-width:4px; stroke-linejoin:round; }
+    .sys { fill:#fff; stroke:#B7B7B7; stroke-width:1.5; }
+    .systitle { font: 13px Arial, sans-serif; fill:#333; text-anchor:middle; }
+  </style>
+</defs>
+<rect x="140" y="35" width="1090" height="1325" rx="2" class="sys"/>
+<text x="685" y="58" class="systitle">YADD System</text>
+
+<line x1="115" y1="650" x2="590" y2="100" class="assoc"/>
+<line x1="115" y1="650" x2="260" y2="100" class="assoc"/>
+<line x1="115" y1="650" x2="260" y2="200" class="assoc"/>
+<line x1="115" y1="650" x2="260" y2="300" class="assoc"/>
+<line x1="115" y1="650" x2="260" y2="400" class="assoc"/>
+<line x1="115" y1="650" x2="260" y2="500" class="assoc"/>
+<line x1="115" y1="650" x2="590" y2="230" class="assoc"/>
+<line x1="115" y1="650" x2="260" y2="600" class="assoc"/>
+<line x1="115" y1="650" x2="590" y2="360" class="assoc"/>
+<line x1="115" y1="650" x2="590" y2="490" class="assoc"/>
+<line x1="115" y1="650" x2="590" y2="750" class="assoc"/>
+<line x1="115" y1="650" x2="260" y2="700" class="assoc"/>
+<line x1="115" y1="650" x2="260" y2="800" class="assoc"/>
+<line x1="115" y1="650" x2="260" y2="900" class="assoc"/>
+<line x1="115" y1="650" x2="260" y2="1000" class="assoc"/>
+<line x1="115" y1="650" x2="260" y2="1100" class="assoc"/>
+<line x1="115" y1="650" x2="590" y2="1010" class="assoc"/>
+<line x1="115" y1="650" x2="590" y2="1140" class="assoc"/>
+<line x1="1305" y1="650" x2="590" y2="100" class="assoc"/>
+<line x1="1305" y1="650" x2="590" y2="230" class="assoc"/>
+<line x1="1305" y1="650" x2="590" y2="360" class="assoc"/>
+<line x1="1305" y1="650" x2="590" y2="490" class="assoc"/>
+<line x1="1305" y1="650" x2="590" y2="750" class="assoc"/>
+<line x1="1305" y1="650" x2="920" y2="100" class="assoc"/>
+<line x1="1305" y1="650" x2="920" y2="200" class="assoc"/>
+<line x1="1305" y1="650" x2="920" y2="300" class="assoc"/>
+<line x1="1305" y1="650" x2="920" y2="400" class="assoc"/>
+<line x1="1305" y1="650" x2="920" y2="500" class="assoc"/>
+<line x1="1305" y1="650" x2="920" y2="600" class="assoc"/>
+<line x1="1305" y1="650" x2="920" y2="700" class="assoc"/>
+<line x1="1305" y1="650" x2="920" y2="800" class="assoc"/>
+<line x1="1305" y1="650" x2="920" y2="1000" class="assoc"/>
+<line x1="1305" y1="650" x2="920" y2="1100" class="assoc"/>
+<line x1="1305" y1="650" x2="920" y2="1200" class="assoc"/>
+<line x1="1305" y1="650" x2="590" y2="1010" class="assoc"/>
+<line x1="1305" y1="650" x2="590" y2="1140" class="assoc"/>
+<line x1="1245" y1="1030" x2="1160" y2="760" class="assoc"/>
+<line x1="1245" y1="1030" x2="1160" y2="880" class="assoc"/>
+<line x1="1245" y1="1030" x2="1160" y2="1000" class="assoc"/>
+<line x1="1245" y1="1030" x2="1160" y2="1120" class="assoc"/>
+<line x1="260" y1="200" x2="260" y2="100" class="dep"/>
+<text x="292.0" y="150.0" class="deptext">«extend»</text>
+<line x1="590" y1="230" x2="260" y2="200" class="dep"/>
+<text x="425.0" y="207.0" class="deptext">«extend»</text>
+<line x1="590" y1="230" x2="260" y2="500" class="dep"/>
+<text x="425.0" y="357.0" class="deptext">«extend»</text>
+<line x1="260" y1="600" x2="260" y2="500" class="dep"/>
+<text x="292.0" y="550.0" class="deptext">«extend»</text>
+<line x1="920" y1="600" x2="920" y2="500" class="dep"/>
+<text x="952.0" y="550.0" class="deptext">«extend»</text>
+<line x1="590" y1="360" x2="590" y2="230" class="dep"/>
+<text x="622.0" y="295.0" class="deptext">«extend»</text>
+<line x1="920" y1="600" x2="920" y2="900" class="dep"/>
+<text x="952.0" y="750.0" class="deptext">«include»</text>
+<line x1="260" y1="600" x2="590" y2="620" class="dep"/>
+<text x="425.0" y="602.0" class="deptext">«include»</text>
+<line x1="590" y1="490" x2="590" y2="620" class="dep"/>
+<text x="622.0" y="555.0" class="deptext">«include»</text>
+<line x1="260" y1="800" x2="260" y2="700" class="dep"/>
+<text x="292.0" y="750.0" class="deptext">«extend»</text>
+<line x1="260" y1="900" x2="260" y2="700" class="dep"/>
+<text x="292.0" y="800.0" class="deptext">«extend»</text>
+<line x1="260" y1="1000" x2="260" y2="700" class="dep"/>
+<text x="292.0" y="850.0" class="deptext">«extend»</text>
+<line x1="260" y1="800" x2="590" y2="880" class="dep"/>
+<text x="425.0" y="832.0" class="deptext">«include»</text>
+<text x="70" y="650" class="actor">Beneficiary</text>
+<text x="1340" y="650" class="actor">Provider</text>
+<text x="1320" y="1030" class="actor">YADD Administrator</text>
+<ellipse cx="260" cy="100" rx="92" ry="27" class="uc"/>
+<text x="260" y="100" class="label">Search Providers</text>
+<ellipse cx="260" cy="200" rx="92" ry="27" class="uc"/>
+<text x="260" y="200" class="label">View Provider Profile</text>
+<ellipse cx="260" cy="300" rx="92" ry="27" class="uc"/>
+<text x="260" y="300" class="label">Create Request</text>
+<ellipse cx="260" cy="400" rx="92" ry="27" class="uc"/>
+<text x="260" y="400" class="label">Close Open Request</text>
+<ellipse cx="260" cy="500" rx="92" ry="27" class="uc"/>
+<text x="260" y="493" class="label">Compare Provider</text>
+<text x="260" y="508" class="label">Responses</text>
+<ellipse cx="260" cy="600" rx="92" ry="27" class="uc"/>
+<text x="260" y="600" class="label">Select Provider</text>
+<ellipse cx="260" cy="700" rx="92" ry="27" class="uc"/>
+<text x="260" y="700" class="label">Review Final Invoice</text>
+<ellipse cx="260" cy="800" rx="92" ry="27" class="uc"/>
+<text x="260" y="800" class="label">Approve Final Invoice</text>
+<ellipse cx="260" cy="900" rx="92" ry="27" class="uc"/>
+<text x="260" y="900" class="label">Request Invoice Revision</text>
+<ellipse cx="260" cy="1000" rx="92" ry="27" class="uc"/>
+<text x="260" y="993" class="label">Raise Transaction</text>
+<text x="260" y="1008" class="label">Complaint</text>
+<ellipse cx="260" cy="1100" rx="92" ry="27" class="uc"/>
+<text x="260" y="1100" class="label">Rate Provider</text>
+<ellipse cx="590" cy="100" rx="92" ry="27" class="uc"/>
+<text x="590" y="100" class="label">Manage Account</text>
+<ellipse cx="590" cy="230" rx="92" ry="27" class="uc"/>
+<text x="590" y="230" class="label">Communicate / Inquire</text>
+<ellipse cx="590" cy="360" rx="92" ry="27" class="uc"/>
+<text x="590" y="360" class="label">Request Transaction Start</text>
+<ellipse cx="590" cy="490" rx="92" ry="27" class="uc"/>
+<text x="590" y="490" class="label">Confirm Transaction Start</text>
+<ellipse cx="590" cy="620" rx="92" ry="27" class="uc"/>
+<text x="590" y="620" class="label">Create Active Transaction</text>
+<ellipse cx="590" cy="750" rx="92" ry="27" class="uc"/>
+<text x="590" y="750" class="label">Cancel Transaction</text>
+<ellipse cx="590" cy="880" rx="92" ry="27" class="uc"/>
+<text x="590" y="880" class="label">Complete Transaction</text>
+<ellipse cx="590" cy="1010" rx="92" ry="27" class="uc"/>
+<text x="590" y="1010" class="label">Block User</text>
+<ellipse cx="590" cy="1140" rx="92" ry="27" class="uc"/>
+<text x="590" y="1140" class="label">Report User / Content</text>
+<ellipse cx="920" cy="100" rx="92" ry="27" class="uc"/>
+<text x="920" y="100" class="label">Manage Provider Profile</text>
+<ellipse cx="920" cy="200" rx="92" ry="27" class="uc"/>
+<text x="920" y="200" class="label">Manage Portfolio / Catalog</text>
+<ellipse cx="920" cy="300" rx="92" ry="27" class="uc"/>
+<text x="920" y="300" class="label">Manage Service Areas</text>
+<ellipse cx="920" cy="400" rx="92" ry="27" class="uc"/>
+<text x="920" y="400" class="label">Submit Verification</text>
+<ellipse cx="920" cy="500" rx="92" ry="27" class="uc"/>
+<text x="920" y="500" class="label">View Matching Requests</text>
+<ellipse cx="920" cy="600" rx="92" ry="27" class="uc"/>
+<text x="920" y="600" class="label">Submit Provider Response</text>
+<ellipse cx="920" cy="700" rx="92" ry="27" class="uc"/>
+<text x="920" y="700" class="label">Edit Provider Response</text>
+<ellipse cx="920" cy="800" rx="92" ry="27" class="uc"/>
+<text x="920" y="793" class="label">Withdraw Provider</text>
+<text x="920" y="808" class="label">Response</text>
+<ellipse cx="920" cy="900" rx="92" ry="27" class="uc"/>
+<text x="920" y="900" class="label">Validate Response Eligibility</text>
+<ellipse cx="920" cy="1000" rx="92" ry="27" class="uc"/>
+<text x="920" y="1000" class="label">Create Final Invoice</text>
+<ellipse cx="920" cy="1100" rx="92" ry="27" class="uc"/>
+<text x="920" y="1100" class="label">Revise Final Invoice</text>
+<ellipse cx="920" cy="1200" rx="92" ry="27" class="uc"/>
+<text x="920" y="1200" class="label">Rate Beneficiary</text>
+<ellipse cx="1160" cy="760" rx="92" ry="27" class="uc"/>
+<text x="1160" y="760" class="label">Review Provider Verification</text>
+<ellipse cx="1160" cy="880" rx="92" ry="27" class="uc"/>
+<text x="1160" y="880" class="label">Review Reports / Flags</text>
+<ellipse cx="1160" cy="1000" rx="92" ry="27" class="uc"/>
+<text x="1160" y="993" class="label">Review Transaction</text>
+<text x="1160" y="1008" class="label">Complaint</text>
+<ellipse cx="1160" cy="1120" rx="92" ry="27" class="uc"/>
+<text x="1160" y="1113" class="label">Manage Provider</text>
+<text x="1160" y="1128" class="label">Subscription</text>
+</svg>
