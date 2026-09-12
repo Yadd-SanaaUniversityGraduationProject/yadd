@@ -1,6 +1,6 @@
 # Class Diagram — Communication, Transaction, Invoice and Ratings
 
-> **Status:** `REVIEW DRAFT — NOT BASELINED — DETAILED ANALYSIS REVIEW 2026-09-12`
+> **Status:** `SEMANTICALLY VERIFIED — TEAM APPROVED — NOT BASELINED — VISUAL/A4 FINALIZATION PENDING`
 >
 > **Type:** View 2 of one Detailed Analysis Class Model.
 
@@ -12,8 +12,6 @@
 - `docs/03-analysis/15-invoice-approval-and-dispute.md` — invoice revision/history/approval/dispute rules.
 - `docs/03-analysis/18-rating-reputation-model.md` — current rating rules.
 - `DEC-015/016/023..025/046..056/063/066/068..075`.
-
-> `docs/03-analysis/16-in-app-transaction-communication.md` remains useful for approved communication capabilities, but its decision references stop before DEC-075. For continuing-Conversation semantics, DEC-075 and the synchronized ERD/Class sources take precedence until that document is synchronized.
 
 ## Diagram
 
@@ -151,6 +149,7 @@ classDiagram
 
 - `Conversation` قد توجد قبل Transaction؛ Chat وحدها لا تنشئ Transaction.
 - بين نفس Beneficiary ونفس Provider تبقى Conversation واحدة مستمرة، ويمكن أن تضم صفرًا أو عدة Transactions عبر الزمن — DEC-075.
+- القيد المفاهيمي الحاكم هو: **`{unique Conversation per Beneficiary–Provider pair}`**. الـmultiplicities العامة تسمح لكل User ولكل ProviderProfile بعدة Conversations مع أطراف مختلفة، بينما هذا القيد يمنع إنشاء محادثتين مستقلتين لنفس الزوج.
 - `SystemEvent` عنصر تحليل مشتق من DEC-075 لتمثيل الفواصل/الأحداث الواضحة عند بدء وانتهاء Transactions داخل Conversation المستمرة. الربط الفيزيائي الدقيق بين System Event أو Message وTransaction محددة لم يُحسم، لذلك لا يفرض هذا الرسم Association مباشرة من `SystemEvent` إلى `Transaction`.
 - `Message.textContent` يمثل الرسائل النصية المعتمدة، و`MessageAttachment` يمثل الصور/المرفقات المدعومة في التواصل. لا يثبت هذا الرسم storage provider أو file format أو retention policy.
 - قد تبدأ أو تستمر Conversation في سياق Request، لكن هذا الـView لا يفرض علاقة مباشرة `Request ↔ Conversation` لأن Conversation المستمرة قد تمر بعدة Request contexts عبر الزمن؛ طريقة تمثيل تلك السياقات تؤجل إلى Chapter Four.
@@ -183,4 +182,4 @@ classDiagram
 - Visibility markers and operations are used here to satisfy the academic target of a **detailed Class Diagram**; they do not approve programming-language access modifiers or exact implementation signatures.
 - Classes repeated from another View, such as `User`, `ProviderProfile`, `Request`, and `ProviderResponse`, are the same conceptual classes. This View shows only the attributes needed to understand the communication/transaction context.
 - Plain associations are used intentionally. No Composition is asserted because object-lifetime/deletion ownership has not been proven by the approved analysis sources.
-- Detailed PK/FK mapping, indexes, SQL constraints, exact media schema, physical Message/SystemEvent↔Transaction mapping, and storage/retention policies remain Chapter Four design concerns.
+- Detailed PK/FK mapping, indexes, SQL constraints, exact media schema, physical enforcement of Conversation pair uniqueness, physical Message/SystemEvent↔Transaction mapping, and storage/retention policies remain Chapter Four design concerns.
