@@ -27,13 +27,6 @@
 ## 2. Main Use Case Diagram — Working UML Decomposition
 
 > هذا الرسم يعيد تفكيك السيناريوهات المركبة إلى Actor goals أصغر حتى تكون علاقات `<<include>>` و`<<extend>>` ذات معنى UML واضح. لا تستخدم العلاقات لتمثيل مجرد التسلسل الزمني؛ التبعيات الزمنية/الحالية تمثل كـPreconditions/Postconditions في المواصفات. اللون والأسلوب البصري يحاكيان القالب المرجعي الذي وفره الفريق، بينما Actors القياسية النهائية تحتاج إعادة رسم/تصدير بصري لاحق.
->
-> **Visual organization correction — 2026-09-12:** النسخة المنظمة أدناه هي إعادة ترتيب بصري فقط لنفس المخطط؛ لم يُحذف أو يُضف أي Actor أو Use Case أو Association أو علاقة `<<include>>`/`<<extend>>`. يبقى Mermaid أدناه هو الـWorking Semantic Source، بينما ملف SVG مجرد Presentation Artifact لتقليل تقاطع الخطوط وتحسين القراءة.
-
-![Main Use Case Diagram — Organized Visual](../../diagrams/03-analysis/uml/main-use-case-organized.svg)
-
-<details>
-<summary>Working semantic Mermaid source — same semantics</summary>
 
 ```mermaid
 %%{init: {"theme":"base","themeVariables":{"background":"#FFFFFF","primaryColor":"#ADD8E6","primaryTextColor":"#1F2933","primaryBorderColor":"#9ABFCB","lineColor":"#737373","clusterBkg":"#FFFFFF","clusterBorder":"#B7B7B7","fontFamily":"Arial"}}}%%
@@ -151,8 +144,6 @@ flowchart LR
     class UC1,UC2,UC3,UC4,UC5,UC6,UC7,UC8,UC9,UC10,UC11,UC12,UC13,UC14,UC15,UC16,UC17,UC18,UC19,UC20,UC21,UC22,UC23,UC24,UC25,UC26,UC27,UC28,UC29,UC30,UC31,UC32,UC33,UC34,UC35,UC36 usecase;
     style YADD fill:#FFFFFF,stroke:#B7B7B7,stroke-width:1.5px,color:#222222;
 ```
-
-</details>
 
 ### دلالات Main Use Case
 
