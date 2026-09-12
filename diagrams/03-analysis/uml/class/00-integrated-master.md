@@ -1,6 +1,6 @@
 # Class Diagram — Integrated Master View
 
-> **Status:** `REVIEW DRAFT — NOT BASELINED — INTEGRATED MASTER 2026-09-12`
+> **Status:** `SEMANTICALLY VERIFIED — TEAM APPROVED — NOT BASELINED — VISUAL/A4 FINALIZATION PENDING`
 >
 > **Type:** Integrated Master View of the same Detailed Analysis Class Model represented by Views 1–3.
 
@@ -42,7 +42,7 @@ classDiagram
         -String providerType
         -String verificationStatus
         -String profileStatus
-        +setProviderType(type)
+        +selectProviderType(type)
         +addActivity(category)
         +setServiceAreas(areas)
         +addShowcaseItem()
@@ -229,6 +229,7 @@ classDiagram
         -String targetType
         -Identifier targetReference
         -String riskLevel
+        -String reasonCategory
     }
 
     class AdminAuditRecord {
@@ -316,7 +317,11 @@ classDiagram
 ## Important interpretation
 
 - الـMaster هو **اتحاد متسق** للـViews الثلاثة، وليس مصدرًا يعلو على Decision Register/SRS/Business Rules.
+- `selectProviderType(type)` يمثل اختيار النوع أثناء إعداد Provider Profile؛ سياسة تغيير النوع لاحقًا لم تعتمد بعد.
+- `Conversation` واحدة فقط لنفس زوج Beneficiary/Provider: **`{unique Conversation per Beneficiary–Provider pair}`**. multiplicities العامة تبقى `0..*` لأن الطرف الواحد يمكنه محادثة أطراف مختلفة.
 - `RequestImage`, `MessageAttachment`, `InvoiceImage`, و`SystemEvent` تبقى Derived Analysis Elements، ولا تعتمد storage/schema details نهائية.
+- `SafetyFlag.reasonCategory` يمثل سبب/فئة الاشتباه المطلوبة للمراجعة البشرية؛ قائمة القيم والـthresholds ما تزال مفتوحة.
+- `ProviderProfile ↔ Area` و`Area ↔ Area` Associations تقابل مفاهيميًا `PROVIDER_SERVICE_AREA` و`AREA_ADJACENCY` في الـERD. اختلاف التمثيل مقصود لأن الـERD يركز على بنية البيانات، بينما لا توجد حاليًا Attributes/Operations مستقلة تبرر Association Classes في مخطط الفئات.
 - `SafetyFlag` و`AdminAuditRecord` تظهران دون speculative associations لأن target mapping/retention/storage لم تعتمد بعد.
 - لا توجد Composition لأن object-lifetime/deletion ownership لم يثبت بعد.
 - لا توجد Payment/Refund/Escrow/Settlement entities في معاملات Beneficiary↔Provider.
@@ -330,4 +335,4 @@ classDiagram
 
 ## Review note
 
-هذا الـMaster يحتاج **Visual/A4 Review** قبل اعتباره جاهزًا للتقرير النهائي. وجوده في المستودع لا يعني أن الـlayout النهائي قد تم اعتماده.
+تمت مراجعة الـMaster دلاليًا مقابل Decision Register وSRS وBusiness Rules وUse Cases وERD وTraceability Matrix. ما يزال مطلوبًا **Visual/A4 Review** قبل اعتباره جاهزًا للتقرير النهائي، كما أن SRS نفسه ما يزال `NOT BASELINED`.
