@@ -1,10 +1,10 @@
 # Software Requirements Specification — YADD MVP
 
-> **الإصدار:** v0.9.7
+> **الإصدار:** v0.9.8
 >
 > **الحالة:** `PARTIALLY ANALYZED — NOT BASELINED`
 >
-> هذه النسخة تزامن المتطلبات مع قرارات الإغلاق حتى 2026-09-11، بما في ذلك DEC-073 الخاص بحدود صلاحية الإدارة في النزاعات، وDEC-074 الخاص بحصرية نوع المقدم، وDEC-076 الخاص بتعدد التصنيفات داخل نوع المقدم. البنود المفتوحة صريحة ولا تعتبر متطلبات نهائية.
+> هذه النسخة تزامن المتطلبات مع قرارات الإغلاق حتى 2026-09-11، بما في ذلك DEC-073 الخاص بحدود صلاحية الإدارة في النزاعات، وDEC-074 الخاص بحصرية نوع المقدم، وDEC-075 الخاص بالمحادثة المستمرة بين نفس الطرفين، وDEC-076 الخاص بتعدد التصنيفات داخل نوع المقدم. البنود المفتوحة صريحة ولا تعتبر متطلبات نهائية.
 
 ## 1. Scope
 
@@ -32,6 +32,7 @@
 - يسمح Draft Provider Profile مؤقتًا بصفر تصنيفات، لكن لا يصبح الملف مؤهلًا لوظائف التقديم قبل وجود تصنيف واحد على الأقل — DEC-076.
 - لا يجوز ربط Provider Activity/Category من النوع الآخر بنوع Provider Profile المختار.
 - الهوية والتحقق مشتركان على مستوى Provider Profile.
+- سياسة تغيير Provider Type بعد اختياره لم تعتمد بعد؛ لا يفترض النظام الحالي السماح أو المنع دون قرار لاحق.
 
 ## 4. Location & Neighborhood Model — Approved
 
@@ -53,6 +54,7 @@
 
 - AI يدعم Provider Verification وTrust & Safety Moderation.
 - AI Flags ليست إثباتًا قطعيًا ولا تصدر وحدها عقوبة نهائية عالية الأثر.
+- يجب أن يستطيع الموظف المخول معرفة سبب/فئة الاشتباه التي ولدت Flag؛ تفاصيل الفئات والعتبات ما تزال مفتوحة.
 - يدعم النظام Block + Report، وتخضع البلاغات للمراجعة الإدارية.
 - يمكن رصد أنماط إساءة استخدام الطلبات كـFlags دون عقوبة آلية لمجرد التكرار.
 - السياسة التفصيلية والعتبات والمزود والاحتفاظ بالنتائج مفتوحة.
@@ -95,6 +97,7 @@
 | UR-REQ-01 | إنشاء طلب خدمة/منتج ونشره للمقدمين المناسبين. | `ANALYZED_APPROVED` | DEC-012 |
 | UR-REQ-02 | إضافة وصف وصور اختيارية وسعر استرشادي اختياري. | `ANALYZED_APPROVED` | DEC-013 |
 | UR-COM-01 | الاستفسار من مقدم قبل بدء المعاملة دون أن تعتبر المحادثة وحدها Transaction. | `ANALYZED_APPROVED` | DEC-046 |
+| UR-COM-02 | الاحتفاظ بمحادثة واحدة مستمرة بين نفس Beneficiary وProvider يمكن أن تضم عدة Transactions مع فواصل/أحداث نظام واضحة لحدود كل Transaction. | `DERIVED_FROM_APPROVED_DECISION` | DEC-075 |
 | UR-OFF-01 | استجابة المقدم للطلب واقتراح سعر عند الحاجة وتحديد ما إذا كان يتطلب عربونًا. | `ANALYZED_APPROVED` | DEC-013/041 |
 | UR-OFF-02 | مقارنة الاستجابات واختيار مقدم واحد. | `ANALYZED_APPROVED` | DEC-014/047 |
 | UR-OFF-03 | تعديل أو سحب الاستجابة قبل الاختيار مع بقاء استجابة فعالة واحدة للمقدم لكل طلب. | `ANALYZED_APPROVED` | DEC-070 |
@@ -165,6 +168,8 @@
 - `FR-008A` `ANALYZED_APPROVED`: المحادثة وحدها لا تنشئ Transaction.
 - `FR-008B` `ANALYZED_APPROVED`: يحتفظ النظام بسجل المحادثة وفق سياسة الخصوصية والاحتفاظ.
 - `FR-008C` `ANALYZED_APPROVED`: يسمح بمشاركة موقع أدق في التواصل الخاص عند الحاجة دون عرضه للعامة.
+- `FR-008D` `DERIVED_FROM_APPROVED_DECISION`: يحتفظ النظام بـConversation واحدة مستمرة لكل زوج Beneficiary–Provider ويمكن أن ترتبط بصفر أو عدة Transactions عبر الزمن — DEC-075.
+- `FR-008E` `DERIVED_FROM_APPROVED_DECISION`: يعرض النظام فواصل/أحداث نظام واضحة عند بدء وانتهاء كل Transaction داخل Conversation المستمرة — DEC-075.
 - `FR-009` `ANALYZED_APPROVED`: عند اختيار المستفيد مقدمًا من Provider Responses يغلق النظام الطلب أمام استجابات جديدة، يجعل البقية NotSelected، ويبدأ Transaction مع المختار.
 - `FR-009A` `ANALYZED_APPROVED`: في البحث المباشر يمكن لأي طرف إرسال Request Transaction Start من المحادثة، ولا تبدأ Transaction حتى يؤكد الطرف الآخر.
 - `FR-009B` `ANALYZED_APPROVED`: لا يستخدم MVP كيان/نموذج `Agreement` مستقل؛ مصدر بدء Transaction هو Selection في مسار الطلب أو تأكيد الطرفين في البحث المباشر.
@@ -221,6 +226,7 @@
 - `FR-AI-01` `ANALYZED_APPROVED`: AI يساعد في Provider Verification دون قرار نهائي منفرد.
 - `FR-AI-02` `ANALYZED_APPROVED`: يفحص النصوص/الصور/الأنشطة وفق السياسة ويولد Risk Flags.
 - `FR-AI-03` `ANALYZED_APPROVED`: الحالات الحساسة والعقوبات النهائية عالية الأثر تحتاج مراجعة بشرية.
+- `FR-AI-03A` `DERIVED_FROM_APPROVED_MODEL`: يجب أن تعرض بيانات الـFlag سبب/فئة الاشتباه بما يكفي لفهمها أثناء المراجعة البشرية؛ لا يعتمد هذا المتطلب قائمة فئات نهائية أو Thresholds.
 - `FR-AI-04` `PROPOSED/BLOCKED BY AI-MOD-Q01/02`: السياسة والعتبات التفصيلية لم تعتمد.
 
 ### Provider Subscription
@@ -270,5 +276,7 @@
 ## 13. Open Decisions Before v1.0
 
 `REQ-EXP-Q01`, `INV-PENDING-Q01`, `SAFE-REQ-Q01`, `TX-CONC-Q01`, `UX-VAL-Q01`, `LOC-DATA-Q01`, `LOC-OPS-TIME-Q01`, `VER-DOC-Q01`, `VER-RET-Q01`, `VER-LIC-Q01`, `AI-MOD-Q01`, `AI-MOD-Q02`, `AI-PROV-Q01`, `AI-RET-Q01`, `AI-APPEAL-Q01`, `SUB-PLAN-Q01`, `SUB-PAY-Q01`, `SUB-OPS-Q01`.
+
+- Provider Type switching after initial selection remains `Needs Verification / Team Decision`; no switching behavior is approved in the current SRS.
 
 > **Baseline note:** إغلاق P0 الحالي يجعل Core Flow قابلًا للنمذجة، لكنه لا يحول هذه النسخة إلى Baselined SRS تلقائيًا؛ ما تزال مراجعة الاتساق والتتبع والاعتماد النهائي مطلوبة.
