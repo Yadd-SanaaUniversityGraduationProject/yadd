@@ -222,42 +222,104 @@
 
 ---
 
-## 2. Core Use-Case Coverage for Main Diagram
+## 2. Main Diagram Decomposition & UML Relationship Rules
 
-لمنع ازدحام Main Use Case Diagram، يمكن تجميع التفاصيل في الرسم الرئيسي تحت Use Cases وظيفية واضحة، مع بقاء المواصفات أعلاه المرجع التفصيلي. الحد الأدنى المقترح للرسم الرئيسي:
+> **Modeling correction / synchronization:** مواصفات `UC-01..UC-10` أعلاه تبقى مرجع السيناريوهات والتتبع، لكنها ليست خريطة 1:1 للأشكال البيضاوية في Main Use Case Diagram. بعض المواصفات تجمع أكثر من هدف Actor أو أكثر من مرحلة زمنية/Actor واحد، لذلك يفكك الرسم النهائي السيناريو إلى Use Cases أصغر دون تغيير المتطلبات أو القرارات.
 
-### Beneficiary
-- Manage Account
-- Search Providers
-- View Provider Profile
-- Create Request
-- Compare Provider Responses
-- Communicate / Inquire
-- Select Provider
-- Start Transaction
-- Cancel Transaction
-- Review Invoice
-- Rate Provider
-- Block / Report
+### قاعدة اختيار العلاقة
 
-### Provider
-- Manage Account
-- Manage Provider Profile
-- Manage Portfolio / Catalog
-- Submit Verification
-- View Matching Requests
-- Respond to Request
-- Communicate / Inquire
-- Start Transaction
-- Cancel Transaction
-- Create / Revise Final Invoice
-- Rate Beneficiary
-- Block / Report
+- `<<include>>`: يستخدم فقط عندما يكون السلوك المضمّن جزءًا مطلوبًا من تنفيذ الـBase Use Case أو وظيفة مشتركة يجب تنفيذها داخلها.
+- `<<extend>>`: يستخدم عندما يكون السلوك الإضافي شرطيًا/اختياريًا ويمكن للـBase Use Case أن يكتمل بدونه عند Extension Point مناسب.
+- **Precondition / Postcondition / Constraint**: تستخدم للتبعيات الزمنية أو المعتمدة على حالة الكيان، ولا تحول تلقائيًا إلى `include` أو `extend`.
+- **Actor Generalization**: `Service Provider` و`Product Provider` تخصصان من `Provider` عند الحاجة، ولا يلزم تكرارهما في Main Diagram وفق DEC-067.
 
-### YADD Administrator
-- Review Provider Verification
-- Review Reports / Flags
-- Manage Provider Subscription
+### Decomposed Use Cases for the Main Diagram
+
+#### Beneficiary
+- `Manage Account`
+- `Search Providers`
+- `View Provider Profile`
+- `Create Request`
+- `Close Open Request`
+- `Compare Provider Responses`
+- `Communicate / Inquire`
+- `Select Provider`
+- `Request Transaction Start`
+- `Confirm Transaction Start`
+- `Cancel Transaction`
+- `Review Final Invoice`
+- `Approve Final Invoice`
+- `Request Invoice Revision`
+- `Raise Transaction Complaint`
+- `Rate Provider`
+- `Block User`
+- `Report User / Content`
+
+#### Provider
+- `Manage Account`
+- `Manage Provider Profile`
+- `Manage Portfolio / Catalog`
+- `Manage Service Areas`
+- `Submit Verification`
+- `View Matching Requests`
+- `Submit Provider Response`
+- `Edit Provider Response`
+- `Withdraw Provider Response`
+- `Communicate / Inquire`
+- `Request Transaction Start`
+- `Confirm Transaction Start`
+- `Cancel Transaction`
+- `Create Final Invoice`
+- `Revise Final Invoice`
+- `Rate Beneficiary`
+- `Block User`
+- `Report User / Content`
+
+#### YADD Administrator
+- `Review Provider Verification`
+- `Review Reports / Flags`
+- `Review Transaction Complaint`
+- `Manage Provider Subscription`
+
+#### Included system behavior (not independent actor goals)
+- `Validate Response Eligibility`
+- `Create Active Transaction`
+- `Complete Transaction`
+
+### Approved/Derived Diagram Relationships
+
+| Relationship | UML Type | Why | Basis |
+|---|---|---|---|
+| `View Provider Profile → Search Providers` | `<<extend>>` | فتح ملف نتيجة بحث اختياري بعد ظهور النتائج | UC-01 / DEC-012/064 |
+| `Communicate / Inquire → View Provider Profile` | `<<extend>>` | الاستفسار في Direct Search اختياري بعد استعراض الملف | UC-01 / DEC-046 |
+| `Communicate / Inquire → Compare Provider Responses` | `<<extend>>` | الاستفسار قبل اختيار مقدم من الطلب اختياري | UC-03/04 / DEC-046 |
+| `Select Provider → Compare Provider Responses` | `<<extend>>` | المقارنة يمكن أن تنتهي دون اختيار؛ الاختيار يحدث عند قرار Beneficiary | UC-04 / DEC-014/047 |
+| `Submit Provider Response → View Matching Requests` | `<<extend>>` | مشاهدة Request لا تلزم Provider بإرسال استجابة | UC-03 / DEC-043/070 |
+| `Request Transaction Start → Communicate / Inquire` | `<<extend>>` | في Direct Search يمكن أن تستمر المحادثة دون طلب بدء Transaction | UC-01 / DEC-046/069 |
+| `Submit Provider Response → Validate Response Eligibility` | `<<include>>` | إرسال استجابة جديدة يتطلب دائمًا Verified Provider + Active Subscription + Open Request | UC-03 / DEC-043 / BR-030 |
+| `Select Provider → Create Active Transaction` | `<<include>>` | اختيار مقدم في Request Route يبدأ Transaction واحدة دائمًا | UC-04 / DEC-047/066 |
+| `Confirm Transaction Start → Create Active Transaction` | `<<include>>` | التأكيد الإيجابي في Direct Search ينشئ Active Transaction | UC-01 / DEC-069 |
+| `Approve Final Invoice → Review Final Invoice` | `<<extend>>` | الاعتماد قرار من قرارات مراجعة الفاتورة وليس كل Review ينتهي فورًا بالاعتماد | UC-06 / DEC-050/071 |
+| `Request Invoice Revision → Review Final Invoice` | `<<extend>>` | طلب التعديل فرع شرطي من مراجعة الفاتورة | UC-06 / DEC-025/050 |
+| `Raise Transaction Complaint → Review Final Invoice` | `<<extend>>` | الشكوى تحدث عند استمرار الخلاف قبل الاعتماد | UC-06 / DEC-025/073 |
+| `Approve Final Invoice → Complete Transaction` | `<<include>>` | اعتماد الفاتورة يجعل Transaction = Completed إلزاميًا | DEC-071 / BR-010 |
+
+### Dependencies that are **not** `include` / `extend`
+
+| Use Case | Dependency | Modeling |
+|---|---|---|
+| `Rate Provider` | Transaction must already be `Completed`; rating then becomes required | `Precondition: Transaction = Completed` + Post-Transaction workflow |
+| `Rate Beneficiary` | Transaction must already be `Completed`; Provider may skip | `Precondition: Transaction = Completed` |
+| `Cancel Transaction` | Transaction must exist and be in a cancellable active state | Precondition / lifecycle rule |
+| `Close Open Request` | Request is Open and no Provider has been selected | Precondition; not Transaction cancellation |
+| `Edit Provider Response` / `Withdraw Provider Response` | Active response exists; Request Open; before selection | Precondition from DEC-070 |
+| `Review Final Invoice` | Final Invoice is `Pending Customer Approval` | Precondition from DEC-050 |
+| `Revise Final Invoice` | Beneficiary previously requested revision | Precondition / previous-event dependency |
+| `Review Provider Verification` | Verification submission exists | Precondition; separate Admin goal, not included inside Provider submission |
+| `Review Transaction Complaint` | Complaint exists | Precondition; asynchronous Admin goal |
+| `Submit Provider Response` | Provider Verified + Subscription Active | enforced by included `Validate Response Eligibility` and business rules |
+
+> **Important:** وجود `Rate Provider` أو `Rate Beneficiary` كـUse Case مستقلة لا يعني أنهما متاحتان في أي وقت. استقلال الـActor goal عن الرسم الزمني شيء مختلف عن Lifecycle dependency؛ لذلك تمثل تبعية `Completed` كـPrecondition صريحة بدل استخدام `include/extend` بصورة غير صحيحة.
 
 ## 3. Open Use-Case Policies — Non-blocking for Core Diagrams
 

@@ -1,10 +1,10 @@
 # Software Requirements Specification — YADD MVP
 
-> **الإصدار:** v0.9.5
+> **الإصدار:** v0.9.8
 >
 > **الحالة:** `PARTIALLY ANALYZED — NOT BASELINED`
 >
-> هذه النسخة تزامن المتطلبات مع قرارات الإغلاق حتى 2026-09-04، بما في ذلك DEC-073 الخاص بحدود صلاحية الإدارة في النزاعات. البنود المفتوحة صريحة ولا تعتبر متطلبات نهائية.
+> هذه النسخة تزامن المتطلبات مع قرارات الإغلاق حتى 2026-09-11، بما في ذلك DEC-073 الخاص بحدود صلاحية الإدارة في النزاعات، وDEC-074 الخاص بحصرية نوع المقدم، وDEC-075 الخاص بالمحادثة المستمرة بين نفس الطرفين، وDEC-076 الخاص بتعدد التصنيفات داخل نوع المقدم. البنود المفتوحة صريحة ولا تعتبر متطلبات نهائية.
 
 ## 1. Scope
 
@@ -24,11 +24,15 @@
 - استخدام بوابة المقدم يحتاج `Provider Profile` داخل الحساب نفسه.
 - يمكن الانتقال بين البوابتين؛ وظائف التقديم لا تعمل قبل تحقق Provider.
 
-## 3. Provider Activity Model — Approved
+## 3. Provider Type / Activity Model — Approved
 
 - Provider Profile واحد للحساب.
-- يمكن تفعيل Service Activity أو Product Activity أو كليهما.
+- في MVP يكون كل Provider Profile من نوع واحد فقط: `SERVICE` أو `PRODUCT`؛ لا يمكن تفعيل النوعين معًا على الملف نفسه — DEC-074.
+- يمكن للمقدم اختيار تصنيف واحد أو أكثر داخل نوعه فقط — DEC-076.
+- يسمح Draft Provider Profile مؤقتًا بصفر تصنيفات، لكن لا يصبح الملف مؤهلًا لوظائف التقديم قبل وجود تصنيف واحد على الأقل — DEC-076.
+- لا يجوز ربط Provider Activity/Category من النوع الآخر بنوع Provider Profile المختار.
 - الهوية والتحقق مشتركان على مستوى Provider Profile.
+- سياسة تغيير Provider Type بعد اختياره لم تعتمد بعد؛ لا يفترض النظام الحالي السماح أو المنع دون قرار لاحق.
 
 ## 4. Location & Neighborhood Model — Approved
 
@@ -50,6 +54,7 @@
 
 - AI يدعم Provider Verification وTrust & Safety Moderation.
 - AI Flags ليست إثباتًا قطعيًا ولا تصدر وحدها عقوبة نهائية عالية الأثر.
+- يجب أن يستطيع الموظف المخول معرفة سبب/فئة الاشتباه التي ولدت Flag؛ تفاصيل الفئات والعتبات ما تزال مفتوحة.
 - يدعم النظام Block + Report، وتخضع البلاغات للمراجعة الإدارية.
 - يمكن رصد أنماط إساءة استخدام الطلبات كـFlags دون عقوبة آلية لمجرد التكرار.
 - السياسة التفصيلية والعتبات والمزود والاحتفاظ بالنتائج مفتوحة.
@@ -69,6 +74,8 @@
   - `Product Provider` — تخصص من Provider عند الحاجة.
 - `YADD Administrator` — `ANALYZED_APPROVED_AS_MODELING_ACTOR` للمخطط الرئيسي.
 
+> وفق DEC-074، يكون Provider Profile الواحد في MVP إما Service Provider أو Product Provider، ولا يجمع النوعين معًا.
+
 ### أدوار إدارية متخصصة للصلاحيات والتفاصيل
 - `Verification Reviewer` — `ANALYZED_APPROVED` في أصل الدور.
 - `Content Moderator` — `ANALYZED_APPROVED` في أصل الدور.
@@ -82,13 +89,15 @@
 |---|---|---|---|
 | UR-ACC-01 | استخدام حساب واحد للاستفادة والتقديم. | `ANALYZED_APPROVED` | DEC-008 |
 | UR-ACC-02 | اختيار بوابة البداية مع إمكانية الانتقال للبوابة الأخرى. | `ANALYZED_APPROVED` | DEC-009/011 |
-| UR-PROV-01 | تفعيل نشاط خدمة أو منتج أو كليهما من Provider Profile نفسه. | `ANALYZED_APPROVED` | DEC-029/030 |
+| UR-PROV-01 | اختيار نوع واحد فقط للـProvider Profile في MVP: خدمة أو منتج، دون تفعيل النوعين معًا على الملف نفسه. | `ANALYZED_APPROVED` | DEC-074/030 |
+| UR-PROV-02 | اختيار تصنيف واحد أو أكثر داخل نوع المقدم نفسه، مع اشتراط تصنيف واحد على الأقل قبل أهلية وظائف التقديم. | `ANALYZED_APPROVED` | DEC-076 |
 | UR-VER-01 | تقديم متطلبات تحقق وانتظار اعتماد YADD قبل العمل كمقدم. | `ANALYZED_APPROVED` | DEC-034/035 |
 | UR-DIS-01 | البحث المباشر عن مقدم حسب التصنيف والمنطقة. | `ANALYZED_APPROVED` | DEC-012/031..033 |
 | UR-PORT-01 | استعراض معرض أعمال/كتالوج المقدم داخل Provider Profile. | `ANALYZED_APPROVED` | DEC-064 |
 | UR-REQ-01 | إنشاء طلب خدمة/منتج ونشره للمقدمين المناسبين. | `ANALYZED_APPROVED` | DEC-012 |
 | UR-REQ-02 | إضافة وصف وصور اختيارية وسعر استرشادي اختياري. | `ANALYZED_APPROVED` | DEC-013 |
 | UR-COM-01 | الاستفسار من مقدم قبل بدء المعاملة دون أن تعتبر المحادثة وحدها Transaction. | `ANALYZED_APPROVED` | DEC-046 |
+| UR-COM-02 | الاحتفاظ بمحادثة واحدة مستمرة بين نفس Beneficiary وProvider يمكن أن تضم عدة Transactions مع فواصل/أحداث نظام واضحة لحدود كل Transaction. | `DERIVED_FROM_APPROVED_DECISION` | DEC-075 |
 | UR-OFF-01 | استجابة المقدم للطلب واقتراح سعر عند الحاجة وتحديد ما إذا كان يتطلب عربونًا. | `ANALYZED_APPROVED` | DEC-013/041 |
 | UR-OFF-02 | مقارنة الاستجابات واختيار مقدم واحد. | `ANALYZED_APPROVED` | DEC-014/047 |
 | UR-OFF-03 | تعديل أو سحب الاستجابة قبل الاختيار مع بقاء استجابة فعالة واحدة للمقدم لكل طلب. | `ANALYZED_APPROVED` | DEC-070 |
@@ -114,7 +123,9 @@
 - `FR-001B` `ANALYZED_APPROVED`: يسمح بالانتقال بين البوابتين بالحساب نفسه عند استيفاء الشروط.
 - `FR-002` `ANALYZED_APPROVED`: يسمح بإنشاء وإدارة Provider Profile.
 - `FR-002A` `ANALYZED_APPROVED`: لا تتاح وظائف التقديم قبل Provider Verified.
-- `FR-002B` `ANALYZED_APPROVED`: يسمح بتفعيل Service Activity أو Product Activity أو كليهما.
+- `FR-002B` `ANALYZED_APPROVED`: يسمح للـProvider Profile باختيار نوع مقدم واحد فقط `SERVICE` أو `PRODUCT` في MVP، ويمنع تفعيل النوعين معًا على الملف نفسه.
+- `FR-002C` `ANALYZED_APPROVED`: يسمح للمقدم باختيار تصنيف واحد أو أكثر داخل نوعه المختار فقط.
+- `FR-002D` `ANALYZED_APPROVED`: يسمح Draft Provider Profile مؤقتًا بصفر تصنيفات، لكن يتطلب تفعيل وظائف التقديم وجود تصنيف واحد على الأقل.
 
 ### Provider Portfolio / Catalog
 - `FR-PORT-01` `ANALYZED_APPROVED`: يسمح للمقدم بإضافة عناصر صور لأعماله أو منتجاته داخل Provider Profile مع وصف اختياري.
@@ -145,7 +156,7 @@
 - `FR-005C` `ANALYZED_APPROVED`: يسمح للمستفيد بإغلاق Request Open قبل اختيار مقدم دون إنشاء Transaction Cancellation.
 - `FR-005D` `ANALYZED_APPROVED` في المبدأ: يذكّر النظام صاحب الطلب المفتوح لتأكيد استمرار الحاجة ويمكن أن يحوله إلى Expired بعد عدم النشاط.
 - `FR-005E` `PROPOSED/BLOCKED BY REQ-EXP-Q01`: مدة عدم النشاط وعدد/توقيت التذكيرات لم تعتمد.
-- `FR-006` `ANALYZED_APPROVED`: يعرض الطلب للمقدمين المؤهلين حسب النشاط والمنطقة.
+- `FR-006` `ANALYZED_APPROVED`: يعرض الطلب للمقدمين المؤهلين حسب نوع Provider Profile والتصنيف والمنطقة.
 
 ### Provider Response / Selection / Communication
 - `FR-007` `ANALYZED_APPROVED`: يسمح للمقدم المؤهل ذي الاشتراك Active بإرسال `Provider Response` لطلب Open.
@@ -157,6 +168,8 @@
 - `FR-008A` `ANALYZED_APPROVED`: المحادثة وحدها لا تنشئ Transaction.
 - `FR-008B` `ANALYZED_APPROVED`: يحتفظ النظام بسجل المحادثة وفق سياسة الخصوصية والاحتفاظ.
 - `FR-008C` `ANALYZED_APPROVED`: يسمح بمشاركة موقع أدق في التواصل الخاص عند الحاجة دون عرضه للعامة.
+- `FR-008D` `DERIVED_FROM_APPROVED_DECISION`: يحتفظ النظام بـConversation واحدة مستمرة لكل زوج Beneficiary–Provider ويمكن أن ترتبط بصفر أو عدة Transactions عبر الزمن — DEC-075.
+- `FR-008E` `DERIVED_FROM_APPROVED_DECISION`: يعرض النظام فواصل/أحداث نظام واضحة عند بدء وانتهاء كل Transaction داخل Conversation المستمرة — DEC-075.
 - `FR-009` `ANALYZED_APPROVED`: عند اختيار المستفيد مقدمًا من Provider Responses يغلق النظام الطلب أمام استجابات جديدة، يجعل البقية NotSelected، ويبدأ Transaction مع المختار.
 - `FR-009A` `ANALYZED_APPROVED`: في البحث المباشر يمكن لأي طرف إرسال Request Transaction Start من المحادثة، ولا تبدأ Transaction حتى يؤكد الطرف الآخر.
 - `FR-009B` `ANALYZED_APPROVED`: لا يستخدم MVP كيان/نموذج `Agreement` مستقل؛ مصدر بدء Transaction هو Selection في مسار الطلب أو تأكيد الطرفين في البحث المباشر.
@@ -213,6 +226,7 @@
 - `FR-AI-01` `ANALYZED_APPROVED`: AI يساعد في Provider Verification دون قرار نهائي منفرد.
 - `FR-AI-02` `ANALYZED_APPROVED`: يفحص النصوص/الصور/الأنشطة وفق السياسة ويولد Risk Flags.
 - `FR-AI-03` `ANALYZED_APPROVED`: الحالات الحساسة والعقوبات النهائية عالية الأثر تحتاج مراجعة بشرية.
+- `FR-AI-03A` `DERIVED_FROM_APPROVED_MODEL`: يجب أن تعرض بيانات الـFlag سبب/فئة الاشتباه بما يكفي لفهمها أثناء المراجعة البشرية؛ لا يعتمد هذا المتطلب قائمة فئات نهائية أو Thresholds.
 - `FR-AI-04` `PROPOSED/BLOCKED BY AI-MOD-Q01/02`: السياسة والعتبات التفصيلية لم تعتمد.
 
 ### Provider Subscription
@@ -262,5 +276,7 @@
 ## 13. Open Decisions Before v1.0
 
 `REQ-EXP-Q01`, `INV-PENDING-Q01`, `SAFE-REQ-Q01`, `TX-CONC-Q01`, `UX-VAL-Q01`, `LOC-DATA-Q01`, `LOC-OPS-TIME-Q01`, `VER-DOC-Q01`, `VER-RET-Q01`, `VER-LIC-Q01`, `AI-MOD-Q01`, `AI-MOD-Q02`, `AI-PROV-Q01`, `AI-RET-Q01`, `AI-APPEAL-Q01`, `SUB-PLAN-Q01`, `SUB-PAY-Q01`, `SUB-OPS-Q01`.
+
+- Provider Type switching after initial selection remains `Needs Verification / Team Decision`; no switching behavior is approved in the current SRS.
 
 > **Baseline note:** إغلاق P0 الحالي يجعل Core Flow قابلًا للنمذجة، لكنه لا يحول هذه النسخة إلى Baselined SRS تلقائيًا؛ ما تزال مراجعة الاتساق والتتبع والاعتماد النهائي مطلوبة.

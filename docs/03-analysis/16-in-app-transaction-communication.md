@@ -1,14 +1,16 @@
 # نموذج التواصل داخل التطبيق — In-App Communication Model
 
-> **الحالة:** `ANALYZED_APPROVED — SYNCHRONIZED 2026-09-04`
+> **الحالة:** `ANALYZED_APPROVED — SYNCHRONIZED 2026-09-12`
 >
-> **القرارات المرجعية:** DEC-023/024/046/047/053/055/069.
+> **القرارات المرجعية:** DEC-023/024/046/047/053/055/069/075.
 
 ## 1. القرار الأساسي
 
 يوفر YADD تواصلًا خاصًا داخل التطبيق بين `Beneficiary` و`Provider`. يمكن أن يبدأ التواصل **قبل وجود Transaction** لأغراض الاستفسار والتفاوض. المحادثة وحدها لا تنشئ `Transaction`.
 
-بعد بدء `Transaction`، يمكن أن يستمر سياق التواصل الخاص نفسه لتفاصيل التنفيذ. لا يتطلب التواصل الأساسي داخل التطبيق كشف رقم الهاتف للطرف الآخر.
+بين نفس Beneficiary ونفس Provider يحتفظ YADD **Conversation واحدة مستمرة** يمكن أن ترتبط بصفر أو عدة Transactions عبر الزمن. بعد بدء Transaction يستمر سياق التواصل نفسه، مع فواصل/أحداث نظام واضحة عند بدء وانتهاء كل Transaction حتى تبقى حدود التعاملات قابلة للفهم والتتبع — DEC-075.
+
+لا يتطلب التواصل الأساسي داخل التطبيق كشف رقم الهاتف للطرف الآخر.
 
 ## 2. مسارات التواصل
 
@@ -18,6 +20,8 @@
 
 يؤدي اختيار المقدم إلى إغلاق `Request` أمام الاستجابات الجديدة وبدء `Transaction` مع الـ`Provider` المختار. لا يوجد في هذا المسار `Agreement` entity إضافية أو نموذج اتفاق إلزامي.
 
+يمكن أن تكون Conversation المستمرة قائمة قبل هذا الطلب أو تبدأ أثناءه. لا يفرض نموذج التحليل علاقة مباشرة دائمة `Request ↔ Conversation` لأن نفس Conversation قد تمر بعدة Request contexts عبر الزمن؛ طريقة الربط الفيزيائي تؤجل إلى Chapter Four.
+
 ### مسار البحث المباشر — Direct Search Route
 
 `Search → Provider Profile → Inquiry / Chat → Request Transaction Start → Other Party Confirmation → Active Transaction`
@@ -26,7 +30,8 @@
 - يمكن لأي من `Beneficiary` أو `Provider` إرسال `Request Transaction Start`؛
 - يطلب YADD من الطرف الآخر التأكيد؛
 - التأكيد الصريح وحده ينشئ `Active Transaction`؛
-- الرفض أو عدم التأكيد يترك المحادثة دون `Transaction`.
+- الرفض أو عدم التأكيد يترك المحادثة دون `Transaction`؛
+- بدء Transaction جديد لاحقًا بين الطرفين لا ينشئ Conversation جديدة؛ بل يستخدم نفس Conversation المستمرة مع حدث/فاصل واضح لحدود المعاملة.
 
 ## 3. نطاق التواصل في MVP
 
@@ -34,6 +39,8 @@
 - رسائل نصية؛
 - صور/مرفقات مرتبطة بالطلب أو التنفيذ عند الحاجة؛
 - إشعارات الرسائل؛
+- Conversation مستمرة واحدة لكل زوج Beneficiary/Provider؛
+- فواصل/أحداث نظام واضحة لبدء وانتهاء Transactions داخل Conversation؛
 - الاحتفاظ بالمحادثة وفق سياسة الخصوصية/الاحتفاظ؛
 - `Block + Report`.
 
@@ -61,11 +68,15 @@
 - `COM-BR-07`: يمكن للمحادثة أن تدعم مراجعة الشكوى.
 - `COM-BR-08`: الفاتورة النهائية المعتمدة هي سجل YADD النهائي للعناصر/الأسعار.
 - `COM-BR-09`: يدعم النظام `Block + Report`، وتحتاج البلاغات إلى مراجعة.
+- `COM-BR-10`: بين نفس Beneficiary ونفس Provider توجد Conversation مستمرة واحدة يمكن أن ترتبط بعدة Transactions عبر الزمن — DEC-075.
+- `COM-BR-11`: يجب إظهار فواصل/أحداث نظام واضحة عند بدء وانتهاء Transactions داخل Conversation المستمرة.
 
 ## 7. إرشادات المخططات — Diagram Guidance
 
 في مخططات `Activity/Sequence`، لا تستبدل مسار بدء `Direct Search` بعبارة عامة مثل `Both Agree to Start`. يجب إظهار التفاعلين الصريحين:
 
 `Request Transaction Start → Other Party Confirmation → Active Transaction`.
+
+كما يجب أن تبقى Conversation نفسها قابلة لإعادة الاستخدام بين نفس الطرفين، مع System Event/Separator يوضح حدود كل Transaction. الربط الفيزيائي بين Message/System Event وTransaction محددة ما يزال Design concern في Chapter Four.
 
 عنصر الواجهة الدقيق المستخدم لطلب/تأكيد البدء هو تفصيل تصميمي ولا يعيق مخططات التحليل.

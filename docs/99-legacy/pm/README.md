@@ -1,4 +1,4 @@
-# Legacy Project Management Path — `docs/1-pm/`
+# Legacy Project Management Path — `docs/99-legacy/pm/`
 
 > **الحالة:** `LEGACY / NON-CANONICAL — DO NOT USE AS CURRENT PROJECT STATE`
 
@@ -18,6 +18,6 @@
 
 ## لماذا لم تُحذف الملفات القديمة؟
 
-يُحتفظ بها مؤقتًا للتتبع التاريخي ولعدم كسر الروابط القديمة في commits/issues. وجود محتوى داخلها — بما في ذلك أسماء أو Features أو نسب نجاح أو صياغات تجارية قديمة — **لا يجعله Fact أو Team Decision أو Requirement حاليًا**.
+يُحتفظ بها للتتبع التاريخي. وجود محتوى داخلها — بما في ذلك أسماء أو Features أو نسب نجاح أو صياغات تجارية قديمة — **لا يجعله Fact أو Team Decision أو Requirement حاليًا**.
 
-عند أي تعارض بين `docs/1-pm/` و`docs/01-pm/` أو مصادر الحقيقة الأعلى، تعامل محتوى `docs/1-pm/` باعتباره `LEGACY`.
+عند أي تعارض بين هذا المسار و`docs/01-pm/` أو مصادر الحقيقة الأعلى، تعامل محتوى هذا المسار باعتباره `LEGACY`.

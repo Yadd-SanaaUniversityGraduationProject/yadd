@@ -1,6 +1,6 @@
 # بوابة الجاهزية قبل اعتماد الفصول الأربعة للمناقشة الأولية
 
-> **الحالة:** `ACTIVE — SYNCHRONIZED 2026-09-05`
+> **الحالة:** `ACTIVE — SYNCHRONIZED 2026-09-11`
 >
 > وجود مسودة فصل أو مخطط لا يعني اجتياز هذه البوابة. تستخدم القائمة لمنع اعتبار التحليل/التصميم نهائيًا أو جاهزًا للتسليم قبل تحقق البنود فعليًا.
 
@@ -9,7 +9,7 @@
 - [x] حسم GOV-Q02: منهج التحليل والمخططات — DFD + UML معًا وفق `DEC-060`.
 - [x] حسم GOV-Q03: لغة التقرير — العربية مع المصطلحات التقنية عند الحاجة وفق `DEC-061`.
 - [x] حسم GOV-Q04: أداة جمع بيانات المستخدمين — Survey-only مقبول وفق `DEC-062` دون ادعاء مقابلات/Observation غير منفذة.
-- [x] توثيق قرارات Core الحالية في Decision Register حتى `DEC-073`.
+- [x] توثيق قرارات Core الحالية في Decision Register حتى `DEC-076`.
 
 ## Research
 - [ ] ثلاثة أنظمة مشابهة على الأقل بمصادر موثقة ومراجعة نهائية صالحة للفصل.
@@ -21,13 +21,14 @@
 - [ ] User Requirements مراجعة مراجعة Baseline نهائية.
 - [x] FR مرقمة وحالاتها ظاهرة في SRS الحالي.
 - [ ] NFR قابلة للقياس قدر الإمكان؛ البنود التي تحتاج Prototype/Evidence تبقى صريحة.
-- [x] Business Rules للعمليات الحرجة متزامنة مع Core Decisions الحالية، بما فيها `DEC-073`.
+- [x] Business Rules للعمليات الحرجة متزامنة مع Core Decisions الحالية حتى `DEC-076` في نطاقها.
 - [ ] AI detailed policy/provider/threshold/retention ما تزال Needs Verification؛ لا تعتبر محسومة.
 - [x] الاستثناءات الأساسية والإلغاء والنزاعات موثقة؛ السياسات الرقمية الثانوية المفتوحة تبقى Needs Verification.
 
 ## Modeling
 - [ ] Main Use Case Diagram بصيغة UML قياسية نهائية + Specifications مراجعة.
-- [ ] Activity/Sequence/Class بصيغها النهائية للمناقشة؛ Working Activity/Sequence موجودة وClass derivation ما يزال مطلوبًا.
+- [ ] Activity/Sequence بصيغها النهائية للمناقشة؛ Working sources موجودة وتحتاج Visual/A4 review.
+- [x] Class Diagram package مشتق ومزامن دلاليًا مع ERD والقرارات حتى `DEC-076`؛ يبقى التصدير/المراجعة البصرية النهائية مفتوحًا.
 - [ ] DFD Context + Level 0 بصيغة نهائية قابلة للطباعة وفق `DEC-060`.
 - [ ] ERD متتبع إلى المتطلبات ومراجع بصريًا للنسخة المقدمة.
 - [x] Process/Data Flow/Data Store descriptions موجودة ومزامنة مع Core Model.
@@ -40,7 +41,8 @@
 
 ## Project Management
 - [ ] Economic/Technical/Operational Feasibility مكتملة ومدعومة.
-- [x] Work Plan الحالي يتضمن Task Schedule/Gantt/PERT/Closure Tracker وفق Roadmap v3.
+- [x] Work Plan الحالي يتضمن Task Schedule وGantt وClosure Tracker وفق Roadmap v3.
+- [ ] PERT Diagram/Network موجود ومراجع داخل Work Plan أو كمخرج مرتبط به؛ لا يعتبر مكتملًا حتى يظهر فعليًا وفق متطلب الجامعة.
 - [x] Risk Register محدث مع Roadmap v3.
 
 ## Consistency

@@ -1,8 +1,8 @@
 # نموذج الحساب والبوابات — Account & Portal Model
 
-> **الحالة:** `ANALYZED_APPROVED — SYNCHRONIZED 2026-09-04`
+> **الحالة:** `ANALYZED_APPROVED — SYNCHRONIZED 2026-09-12`
 >
-> **أساس القرارات:** DEC-008..011, DEC-029/030, DEC-034/035.
+> **أساس القرارات:** DEC-008..011, DEC-030, DEC-034/035, DEC-074/076.
 
 ## 1. القرار الأساسي للحساب
 
@@ -27,14 +27,17 @@
 
 القواعد الحالية:
 - يمكن لـ`User` امتلاك صفر أو `Provider Profile` واحد؛
-- يمكن لـ`Provider Profile` تفعيل `Service Activity` أو `Product Activity` أو كليهما؛
+- في MVP يكون `Provider Profile` من نوع واحد فقط: `SERVICE` أو `PRODUCT`، ولا يمكن تفعيل النوعين معًا على الملف نفسه — DEC-074؛
+- داخل النوع المختار يمكن للمقدم اختيار تصنيف واحد أو أكثر عبر `ProviderActivity`، مع السماح مؤقتًا بصفر تصنيفات أثناء Draft، واشتراط تصنيف واحد على الأقل قبل أهلية وظائف التقديم — DEC-076؛
 - يجب أن يجتاز `Provider Profile` عملية `Provider Verification` قبل وظائف التقديم الخاصة بالمقدم؛
 - يتطلب إرسال `Provider Responses` جديدة بالإضافة إلى ذلك اشتراكًا `Active`.
+
+> **Open:** سياسة تغيير `ProviderProfile.providerType` بعد الاختيار/التفعيل لم تعتمد بعد، ولا يجوز استنتاج السماح بالتبديل من هذا النموذج.
 
 ## 4. التبديل بين البوابات — Portal Switching
 
 - يمكن لـ`Beneficiary` إنشاء/استكمال `Provider Profile` من الحساب نفسه؛
-- بعد تفعيل `Provider Profile`، يمكن لـ`User` التبديل بين `Beneficiary Portal` و`Provider Portal`؛
+- بعد استيفاء شروط بوابة المقدم، يمكن لـ`User` التبديل بين `Beneficiary Portal` و`Provider Portal`؛
 - يمكن لـ`User` الذي بدأ كمقدم استخدام إمكانات `Beneficiary` دون إنشاء حساب آخر.
 
 ## 5. النموذج المفاهيمي
@@ -45,10 +48,11 @@ flowchart TD
     CHOOSE -->|Beneficiary| U[Create or Use User Account]
     CHOOSE -->|Provider| U
     U --> B[Beneficiary Portal]
-    U --> HAS{Provider Profile Active?}
+    U --> HAS{Provider Profile Eligible?}
     HAS -->|No| CREATE[Create or Complete Provider Profile]
-    CREATE --> VERIFY[Provider Verification]
-    VERIFY -->|Approved| P[Provider Portal]
+    CREATE --> TYPE[Select Provider Type and Categories]
+    TYPE --> VERIFY[Provider Verification]
+    VERIFY -->|Approved and Other Conditions Met| P[Provider Portal]
     HAS -->|Yes| P
     B <-->|Switch Portal| P
 ```
@@ -64,8 +68,9 @@ flowchart TD
 | ACC-BR-03 | يرتبط `Provider Profile` بـ`User` ولا يمثل حسابًا منفصلًا. | `ANALYZED_APPROVED` |
 | ACC-BR-04 | التبديل إلى `Beneficiary Portal` لا يحتاج أبدًا إلى حساب آخر. | `ANALYZED_APPROVED` |
 | ACC-BR-05 | يمكن لـ`Beneficiary` بدء إنشاء `Provider Profile` من الحساب نفسه. | `ANALYZED_APPROVED` |
-| ACC-BR-06 | تتطلب وظائف التقديم الخاصة بالمقدم `Provider Profile` مفعّلًا/متحققًا. | `ANALYZED_APPROVED` |
-| ACC-BR-07 | يمكن لـ`Provider Profile` تفعيل `Service Activity` أو `Product Activity` أو كليهما. | `ANALYZED_APPROVED` |
+| ACC-BR-06 | تتطلب وظائف التقديم الخاصة بالمقدم `Provider Profile` متحققًا ومستوفيًا شروط الأهلية ذات الصلة. | `ANALYZED_APPROVED` |
+| ACC-BR-07 | في MVP يختار `Provider Profile` نوعًا واحدًا فقط: `SERVICE` أو `PRODUCT`، ولا يجمع النوعين معًا. | `ANALYZED_APPROVED` |
+| ACC-BR-08 | يمكن اختيار تصنيف واحد أو أكثر داخل نوع Provider نفسه؛ Draft قد يحتوي صفرًا مؤقتًا، لكن الأهلية تتطلب تصنيفًا صالحًا واحدًا على الأقل. | `ANALYZED_APPROVED` |
 
 ## 7. حدود تفاصيل التحقق — Verification Detail Boundary
 
@@ -84,5 +89,7 @@ flowchart TD
 - لا تنشئ كيانين منفصلين باسم `Customer Account` و`Provider Account`؛
 - مثّل `Beneficiary` و`Provider` كـActors سلوكيين يستخدمان هوية `User` نفسها؛
 - استخدم مفاهيميًا `USER 1 → 0..1 PROVIDER_PROFILE`؛
+- لا تمثل Service وProduct كنوعين فعالين معًا على Provider Profile نفسه؛
+- مثّل تعدد التصنيفات داخل النوع عبر `ProviderActivity`/`Category`؛
 - يمكن إظهار `Service Provider` و`Product Provider` كتخصصين (`specializations`) للـ`Provider` العام عندما يضيف ذلك وضوحًا؛
 - لا يوجد `Guest` actor معتمد.

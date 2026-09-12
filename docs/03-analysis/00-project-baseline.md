@@ -1,6 +1,6 @@
 # خط أساس مشروع يَد | YADD
 
-> **الحالة:** `DRAFT — CORE MODEL SYNCHRONIZED 2026-09-05 — TEAM REVIEW REQUIRED`
+> **الحالة:** `DRAFT — CORE MODEL SYNCHRONIZED 2026-09-12 — TEAM REVIEW REQUIRED`
 >
 > **الغرض:** توحيد الحالة الحالية قبل تحويلها إلى متطلبات ونماذج. عند التعارض تكون الأولوية لـDecision Register ثم SRS ثم Business Rules.
 
@@ -47,13 +47,13 @@ YADD منصة رقمية تستهدف تسهيل اكتشاف وطلب الخد�
 Discovery
   ├─ Direct Search
   │    → Provider Profile / Portfolio or Catalog
-  │    → Private Chat
+  │    → Persistent Private Conversation
   │    → Either Party Requests Transaction Start
   │    → Other Party Confirms
   │
   └─ Create Request
        → Provider Responses
-       → Compare / Chat
+       → Compare / Persistent Conversation
        → Beneficiary Selects One Provider
 
                          ↓
@@ -77,6 +77,8 @@ Discovery
 ### Core invariants
 
 - Chat alone does not create Transaction.
+- Between the same Beneficiary and Provider there is one persistent Conversation that can contain zero or multiple Transactions over time — DEC-075.
+- Clear system separators/events indicate the start and end of each Transaction inside the persistent Conversation.
 - In Direct Search, explicit `Request Transaction Start` + other-party confirmation are required before Active Transaction.
 - In Request route, selecting one Provider starts one Transaction and closes the Request to new responses.
 - One active Provider Response per Provider per Request; edit/withdraw allowed while Request is Open and before selection.
@@ -108,9 +110,11 @@ No independent `Guest` actor is approved for the current model.
 
 - One `User` account per person.
 - A User may have zero or one Provider Profile.
-- Provider Profile may activate Service Activity, Product Activity, or both.
+- In MVP, Provider Profile has exactly one provider type: `SERVICE` or `PRODUCT`; the two types cannot be active together on the same profile — DEC-074.
+- A Provider Profile may choose one or more Categories inside its selected type through ProviderActivity; Draft may temporarily contain zero, but provider-function eligibility requires at least one valid Activity — DEC-076.
 - Provider Verification is required before provider submission functions.
 - Response submission also requires Active Subscription.
+- Provider Type switching after initial selection remains unresolved and must not be inferred.
 
 ## 7. Technical Direction — Approved / Technology Details Partial
 
@@ -130,17 +134,19 @@ No independent `Guest` actor is approved for the current model.
 
 ## 9. Open Items — Non-Blocking for Core Diagrams
 
-Open items remain documented in `docs/00-governance/03-open-questions.md`, including exact timings, thresholds, identity-document lists/retention, detailed AI provider/policy settings, geographic seed data and subscription packages.
+Open items remain documented in `docs/00-governance/03-open-questions.md`, including exact timings, thresholds, identity-document lists/retention, detailed AI provider/policy settings, geographic seed data, subscription packages, and Provider Type switching policy.
 
 These items must not be invented in diagrams. They **do not block** the current Main Use Case, DFD Context/Level 0, core Activity/Sequence diagrams, conceptual ERD, or core Class Diagram because their structural concepts are already approved.
 
 ## 10. Modeling Readiness
 
-- SRS v0.9.5: `PARTIALLY ANALYZED — NOT BASELINED`, with core modeling requirements synchronized through 2026-09-04 including `DEC-073`.
-- Business Rules, Lifecycles and Use Cases: synchronized with current Core Decisions through `DEC-073` in their applicable scope.
-- DFD working model: synchronized to current Core Model; final standard visual export remains a delivery task.
-- UML working Activity/Sequence model: synchronized including `Disputed`; final standard UML redraw/Class Diagram remains a delivery task.
-- Conceptual ERD: core synchronized; physical schema remains Chapter Four work.
-- Process/Data Specifications and Core Traceability: synchronized for diagram drafting; design traceability remains pending.
+- SRS remains `PARTIALLY ANALYZED — NOT BASELINED`; synchronized core requirements through DEC-076 require continued controlled review.
+- Business Rules and Core Traceability are synchronized through DEC-076 in their applicable scope.
+- Provider Activity semantics are synchronized through DEC-076.
+- Persistent Conversation semantics are resolved through DEC-075 at the analysis level; physical message/system-event linking remains Chapter Four work.
+- DFD working model reflects the current Core Model; final standard visual export remains a delivery task.
+- UML working Activity/Sequence model is synchronized with the approved core flow; final visual/A4 review remains.
+- Conceptual ERD is core synchronized; physical schema remains Chapter Four work.
+- Detailed Analysis Class package is semantically verified and team approved, while remaining `NOT BASELINED` and pending Visual/A4 finalization.
 
 The fact that the SRS is not yet formally Baselined means later supervisor feedback may trigger controlled changes; it does not create a current blocker for the approved core diagram model.

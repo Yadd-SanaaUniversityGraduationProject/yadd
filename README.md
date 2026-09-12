@@ -19,22 +19,32 @@ docs/
 ├── 02-research/         # الدراسات السابقة والخلفية النظرية وسجل المراجع
 ├── 03-analysis/         # جمع البيانات، SRS، قواعد العمل، حالات الاستخدام، DFD/UML/ERD
 ├── 04-design/           # تصميم قاعدة البيانات والواجهات والاستعلامات والتقارير
-└── 05-report-drafts/    # مسودات فصول مشتقة للمراجعة؛ ليست Source of Truth
+├── 05-report-drafts/    # مسودات فصول مشتقة للمراجعة؛ ليست Source of Truth
+└── 99-legacy/           # أرشيف تاريخي غير Canonical؛ لا يستخدم كمصدر حقيقة
 
-diagrams/                # تصديرات PNG/draw.io عند الحاجة؛ المصدر القابل للتعديل يبقى في Markdown/Mermaid
+diagrams/
+├── README.md            # حوكمة المخططات وفهرس مصادر الرسم
+└── 03-analysis/
+    └── uml/
+        ├── activity/    # Working Activity Diagram sources
+        ├── sequence/    # Working Sequence Diagram sources
+        └── class/       # Working Class Diagram source/package
 ```
 
-## مسارات Legacy
+وثائق `docs/` canonical تحكم معنى المشروع والمتطلبات والتحليل بحسب ترتيب السلطة. ملفات `diagrams/` هي تمثيلات رسمية مشتقة وقابلة للمراجعة، ولا تتغلب على مصادر الحقيقة الأعلى. التصديرات النهائية SVG/PNG/PDF تُنشأ لاحقًا من مصادر الرسم ولا تعامل كمصدر مستقل للمعنى.
 
-قد تظهر في المستودع مسارات قديمة مثل:
+## Legacy Archive
 
-- `docs/1-pm/`
-- `docs/2-analysis/`
-- `docs/3-tech/`
+الوثائق التاريخية غير الحالية مجمعة الآن تحت [`docs/99-legacy/`](docs/99-legacy/README.md)، ومنها:
 
-هذه المسارات `LEGACY / NON-CANONICAL` ولا تستخدم لتحديد الحالة الحالية للمشروع. وجود Feature أو نسبة أو اسم أو قرار داخلها لا يجعله Fact أو Team Decision أو Requirement حاليًا. تستخدم فقط للتتبع التاريخي أو للحفاظ على الروابط القديمة حتى يقرر الفريق لاحقًا طريقة التعامل معها.
+- `docs/99-legacy/pm/` — نسخ إدارة المشروع التاريخية.
+- `docs/99-legacy/analysis/` — نسخ/Placeholders تحليل تاريخية.
+- `docs/99-legacy/tech/` — Redirects أو وثائق تقنية تاريخية.
+- `docs/99-legacy/governance/` — تقارير/لقطات حوكمة مرحلية مؤرخة.
 
-عند التعارض استخدم البنية الحالية ذات الأرقام الثنائية (`01-pm`, `03-analysis`, إلخ) ثم طبق ترتيب مصادر الحقيقة المحدد في الحوكمة.
+هذه الملفات `LEGACY / NON-CANONICAL`. وجود Feature أو نسبة أو اسم أو قرار داخلها لا يجعله Fact أو Team Decision أو Requirement حاليًا. تستخدم فقط للتتبع التاريخي، ولا تحذف أثناء Stabilization دون قرار Cleanup منفصل.
+
+عند التعارض استخدم البنية canonical ثم طبق ترتيب مصادر الحقيقة المحدد في الحوكمة.
 
 ## حالات المعلومات
 
@@ -47,6 +57,7 @@ diagrams/                # تصديرات PNG/draw.io عند الحاجة؛ ال
 - `RESEARCH_FINDING` — استنتاج تدعمه مصادر خارجية موثقة.
 - `NEEDS_VERIFICATION` — معلومة لا يوجد ما يكفي لإثباتها.
 - `OUT_OF_SCOPE` — عنصر مستبعد من MVP.
+- `LEGACY` — معلومة/وثيقة تاريخية لا تمثل الحالة الحالية.
 
 وجود معلومة في README أو Issue أو وثيقة قديمة لا يحولها تلقائيًا إلى قرار أو متطلب نهائي.
 
