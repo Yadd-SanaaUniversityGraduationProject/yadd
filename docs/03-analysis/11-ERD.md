@@ -1,6 +1,6 @@
 # Conceptual ERD — YADD Preliminary Defense
 
-> **الحالة:** `DRAFT FOR PRELIMINARY DEFENSE — CORE SYNCHRONIZED 2026-09-11`
+> **الحالة:** `DRAFT FOR PRELIMINARY DEFENSE — CORE SYNCHRONIZED 2026-09-12`
 >
 > هذا ERD **مفاهيمي للفصل الثالث** وليس Relation Schema أو Database Design نهائيًا. الأنواع الفيزيائية، PK/FK التفصيلية، الفهارس، القيود التنفيذية وأسماء الجداول النهائية تنتقل إلى Chapter Four.
 >
@@ -32,6 +32,7 @@
 18. `Block User` و`Report` مفهومان مستقلان؛ يمثل `USER_BLOCK` علاقة الحظر المباشر ولا يعني إنشاء Report أو إدانة الطرف الآخر.
 19. عند Transaction Cancellation يجب الاحتفاظ بالطرف الذي ألغى والسبب والتوقيت؛ تبقى طريقة التخزين الفيزيائية قرار تصميم لاحق.
 20. `SAFETY_FLAG` و`ADMIN_AUDIT_RECORD` مفهومان داعمان معتمدان من Trust & Safety / D8؛ تمثيلهما هنا مفاهيمي فقط، بينما schema التخزين والاحتفاظ والـthresholds تبقى قرارات تصميم/سياسة مفتوحة.
+21. يجب أن يحفظ `SAFETY_FLAG` سبب/فئة الاشتباه بما يكفي للمراجعة البشرية؛ قائمة الفئات وقيم المخاطر والعتبات التفصيلية لا تزال مفتوحة.
 
 ---
 
@@ -232,7 +233,7 @@ erDiagram
 يمثل حساب الشخص الواحد في YADD. يمكن أن يعمل الشخص كمستفيد مباشرة، ويمكنه امتلاك Provider Profile واحد كحد أقصى.
 
 ### PROVIDER_PROFILE
-يمثل هوية Provider داخل الحساب نفسه. يحدد `provider_type` نوعًا واحدًا فقط في MVP: `SERVICE` أو `PRODUCT` وفق DEC-074. ترتبط به Verification، الأنشطة/التصنيفات، مناطق الخدمة، Portfolio/Catalog والاشتراك.
+يمثل هوية Provider داخل الحساب نفسه. يحدد `provider_type` نوعًا واحدًا فقط في MVP: `SERVICE` أو `PRODUCT` وفق DEC-074. ترتبط به Verification، الأنشطة/التصنيفات، مناطق الخدمة، Portfolio/Catalog والاشتراك. سياسة تغيير النوع بعد اختياره لم تعتمد بعد.
 
 ### PROVIDER_ACTIVITY
 يمثل ارتباط Provider Profile بتصنيف داخل نوعه المختار. يمكن للملف أن يمتلك عدة Provider Activities، لكن يجب أن تتوافق جميع Categories مع `provider_type`. يسمح Draft بصفر Activities مؤقتًا، بينما أهلية وظائف التقديم تتطلب Activity واحدة على الأقل وفق DEC-076.
@@ -265,7 +266,9 @@ erDiagram
 
 وفق DEC-075، تبقى Conversation واحدة مستمرة بين نفس Beneficiary ونفس Provider، ويمكن أن تضم صفرًا أو عدة Transactions عبر الزمن. يجب أن تظهر داخلها فواصل/أحداث نظام واضحة لبدء وانتهاء كل Transaction.
 
-> لا يفرض Core ERD علاقة مباشرة بين `REQUEST` و`CONVERSATION`: قد تبدأ أو تستمر المحادثة في سياق Request، لكن نفس Conversation المستمرة قد تمر بعدة Request contexts عبر الزمن. طريقة تمثيل وربط تلك السياقات، وكذلك ربط Message/System Event بمعاملة محددة، تؤجل إلى Physical/Interaction Design في Chapter Four دون كسر القرار المفاهيمي أعلاه.
+القيد المفاهيمي هو **`{unique Conversation per Beneficiary–Provider pair}`**. طريقة فرض uniqueness فعليًا، وكذلك ربط Message/System Event بمعاملة محددة، تؤجل إلى Chapter Four.
+
+> لا يفرض Core ERD علاقة مباشرة بين `REQUEST` و`CONVERSATION`: قد تبدأ أو تستمر المحادثة في سياق Request، لكن نفس Conversation المستمرة قد تمر بعدة Request contexts عبر الزمن. طريقة تمثيل وربط تلك السياقات تؤجل إلى Physical/Interaction Design في Chapter Four دون كسر القرار المفاهيمي أعلاه.
 
 ### TRANSACTION
 هو الكيان المركزي بعد بدء التعامل الرسمي.
@@ -361,6 +364,7 @@ erDiagram
       string target_type
       identifier target_reference
       string risk_level
+      string reason_category
     }
 
     ADMIN_AUDIT_RECORD {
@@ -377,6 +381,7 @@ erDiagram
 - `USER_BLOCK` يمثل Block كعلاقة حماية مباشرة مستقلة عن `REPORT`.
 - `REPORT.target_reference` تمثيل مفاهيمي polymorphic؛ التنفيذ الفيزيائي قد يفصله إلى علاقات أكثر صرامة.
 - `VERIFICATION_CASE.review_note` يمثل الملاحظة/السبب عند طلب إعادة التقديم أو الرفض.
+- `SAFETY_FLAG.reason_category` يمثل سبب/فئة الاشتباه المطلوبة للمراجعة البشرية؛ taxonomy والـthresholds لم تعتمد بعد.
 - `SAFETY_FLAG` و`ADMIN_AUDIT_RECORD` مفاهيم تحليلية؛ schema/retention/thresholds لم تعتمد بعد.
 
 ---
@@ -409,85 +414,25 @@ erDiagram
 9. Request واحد ينتج صفر أو Transaction واحدة فقط.
 10. كل `TRANSACTION` لها Beneficiary واحد وProvider واحد وConversation واحدة.
 11. Conversation واحدة بين نفس الطرفين يمكن أن ترتبط بعدة Transactions عبر الزمن — DEC-075.
-12. Direct Search Transaction قد تكون بلا Request/Provider Response — DEC-066/069.
-13. Transaction الناتجة من Direct Search لا تنشأ إلا بعد Mutual Start Confirmation — DEC-069.
-14. كل Invoice Version تنتمي إلى Transaction واحدة وتحتوي بندًا واحدًا على الأقل.
-15. Transaction `Completed` تسمح Provider Rating واحدة بحد أقصى من Beneficiary.
-16. Transaction `Completed` تسمح Beneficiary Rating واحدة بحد أقصى من Provider، وهي اختيارية.
-17. Transaction `Disputed` لا تسمح Ratings — DEC-073.
-18. `AREA_ADJACENCY` يمثل علاقة جوار مُدارة بين الأحياء.
-19. `USER_BLOCK` و`REPORT` مستقلان — DEC-053.
-20. Transaction Cancellation تسجل Actor/Reason/Time — DEC-048 / BR-019.
+12. يجب أن يكون زوج `(beneficiary_user_id, provider_profile_id)` فريدًا مفاهيميًا داخل `CONVERSATION`; آلية فرضه الفيزيائية تحسم في Chapter Four.
+13. Direct Search Transaction قد تكون بلا Request/Provider Response — DEC-066/069.
+14. Transaction الناتجة من Direct Search لا تنشأ إلا بعد Mutual Start Confirmation — DEC-069.
+15. كل Invoice Version تنتمي إلى Transaction واحدة وتحتوي بندًا واحدًا على الأقل.
+16. Transaction `Completed` تسمح Provider Rating واحدة بحد أقصى من Beneficiary.
+17. Transaction `Completed` تسمح Beneficiary Rating واحدة بحد أقصى من Provider، وهي اختيارية.
+18. Transaction `Disputed` لا تسمح Ratings — DEC-073.
+19. `AREA_ADJACENCY` يمثل علاقة جوار مُدارة بين الأحياء.
+20. `USER_BLOCK` و`REPORT` مستقلان — DEC-053.
+21. Transaction Cancellation تسجل Actor/Reason/Time — DEC-048 / BR-019.
 
 ---
 
 ## 7. Remaining Design Decisions / Needs Verification
 
+- Provider Type switching policy after initial selection.
 - Accepted identity document types / Verification Artifact details.
 - Retention period for verification data, conversations and AI flags.
 - Subscription plans/prices/payment-proof details.
-- AI provider/threshold/storage model.
+- AI provider/threshold/storage model and final reason-category taxonomy.
 - Numeric request-expiry/reminder timing.
-- Physical administrative authorization model.
-- Shared `Media` table vs entity-specific media relations/references.
-- Physical invoice-history implementation: `InvoiceVersion` vs `Invoice + InvoiceRevision`.
-- ProviderActivity physical uniqueness/normalization and enforcement of `provider_type/category_type` consistency.
-- Any numeric maximum for categories per Provider Profile, if later justified by usability/operations evidence.
-- طريقة ربط Message/System Event بمعاملة محددة داخل Conversation متعددة المعاملات.
-- طريقة تمثيل عدة Request contexts محتملة داخل Conversation المستمرة دون وضع `request_id` واحد داخل Conversation.
-- Physical implementation and symmetry/uniqueness constraint for `AREA_ADJACENCY`.
-- Physical implementation of `USER_BLOCK` pair uniqueness/unblock history إذا لزم.
-- Physical implementation of polymorphic Reports.
-- Physical persistence/linking model for `SAFETY_FLAG` and `ADMIN_AUDIT_RECORD`.
-
----
-
-## 8. Traceability Summary
-
-| Concept | Requirement / Decision Basis |
-|---|---|
-| USER + optional ProviderProfile | DEC-008..011 |
-| Exclusive Provider Type | DEC-074 |
-| Provider Activity / Category | DEC-030/074/076 |
-| Category/Area/Service Areas | DEC-031..033/045 |
-| Area Adjacency | DEC-033/045 + Location Model |
-| Request | DEC-012/013/048/049 |
-| Provider Response | DEC-013/014/041/047/066/070/074/076 |
-| Conversation/Message | DEC-023/024/046/069/075 |
-| Transaction | DEC-047/048/056/066/068/069/071/073/075 |
-| Invoice versions/items | DEC-015/016/025/050/055/071/073 |
-| Provider Rating | DEC-051/052/071/073 |
-| Beneficiary Rating | DEC-063/071/073 |
-| Showcase Item | DEC-064/074 |
-| Verification Case / Artifact | DEC-034..036 |
-| Subscription | DEC-021/042/043 |
-| User Block | DEC-053 / FR-SAFE-01 |
-| Report / Complaint Context | DEC-053/054/073 |
-| Safety Flag / Admin Audit | DEC-036/037..040/054 + AI Trust & Safety + D8 |
-
----
-
-## 9. Core Analysis Gate Status
-
-- [x] No `Agreement` entity.
-- [x] Request موحد للخدمة والمنتج.
-- [x] Provider Response هو المصطلح القياسي.
-- [x] حساب User واحد + optional Provider Profile.
-- [x] Provider Profile نوعه حصري: SERVICE أو PRODUCT فقط في MVP — DEC-074.
-- [x] Provider يمكنه اختيار عدة تصنيفات داخل نوعه، مع اشتراط تصنيف واحد على الأقل قبل أهلية التقديم — DEC-076.
-- [x] Conversation الواحدة يمكن أن تضم عدة Transactions عبر الزمن — DEC-075.
-- [x] Direct Search can start Transaction without Request only after mutual confirmation.
-- [x] RequiresDeposit Boolean only; no payment entities.
-- [x] Invoice history represented conceptually.
-- [x] Both rating directions represented separately.
-- [x] `Completed` is terminal successful Transaction state; no `Closed` state.
-- [x] `Disputed` is terminal unsuccessful and produces no Ratings.
-- [x] One active Provider Response per Provider/Request is approved.
-- [x] Request produces at most one Transaction.
-- [x] Portfolio/Catalog unified concept represented.
-- [x] Verification/Subscription/Report represented as supporting model.
-- [x] Area adjacency and Block concepts are represented.
-- [ ] Final visual ERD redraw in standard notation for supervisor delivery.
-- [ ] Relation Schema/Data Dictionary derivation in Chapter Four.
-
-> **الحكم:** Core Conceptual ERD متزامن مع DEC-074 وDEC-075 وDEC-076. عدد التصنيفات المتعدد داخل نوع المقدم أصبح قرارًا تحليليًا معتمدًا، بينما تبقى تفاصيل القيود الفيزيائية في Chapter Four.
+- Physical enforcement of Conversation pair uniqueness and Message/SystemEvent↔Transaction mapping.
