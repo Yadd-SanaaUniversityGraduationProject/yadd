@@ -1,6 +1,6 @@
 # Class Diagram — Verification, Subscription and Trust / Administration
 
-> **Status:** `REVIEW DRAFT — NOT BASELINED — DETAILED ANALYSIS REVIEW 2026-09-12`
+> **Status:** `SEMANTICALLY VERIFIED — TEAM APPROVED — NOT BASELINED — VISUAL/A4 FINALIZATION PENDING`
 >
 > **Type:** View 3 of one Detailed Analysis Class Model.
 
@@ -81,6 +81,7 @@ classDiagram
         -String targetType
         -Identifier targetReference
         -String riskLevel
+        -String reasonCategory
     }
 
     class AdminAuditRecord {
@@ -133,6 +134,7 @@ classDiagram
 - لا يضيف هذا الـView حقولًا مثل `blockedAt`, `unblockedAt`, `status` أو عملية `unblock()` إلى `UserBlock` لأن lifecycle/history الخاصة بفك الحظر لم تُحسم بعد.
 - `Report` يمكن أن يرتبط بمستخدم، Provider context، Showcase Item، Conversation أو Transaction context. يبقى `targetReference` تمثيلًا polymorphic مفاهيميًا إلى أن يحسم Chapter Four mapping.
 - `SafetyFlag` مفهوم تحليلي لنتيجة Rules/AI checks أو Behavioral signals، ولا يعني أن المخالفة مؤكدة أو أن العقوبة النهائية آلية.
+- `SafetyFlag.reasonCategory` مشتق من متطلب الحوكمة الذي يلزم أن يستطيع الموظف معرفة سبب/فئة الاشتباه التي ولدت الـFlag؛ لا يثبت هذا الرسم قائمة قيم نهائية أو threshold أو provider تقني.
 - `AdminAuditRecord` يمثل سجل التدقيق المطلوب للقرارات/المراجعات الحساسة. طريقة الربط الفيزيائي بالـVerification/Report/Flag/Access events تبقى Design concern.
 - `ShowcaseItem`, `Conversation`, و`Transaction` Cross-view references إلى نفس الـClasses الموجودة في Views الأخرى؛ أضيفت identifiers/status فقط حتى لا تظهر كصناديق فارغة.
 - Transaction Complaint يمكن أن تستخدم `Report`/complaint context، لكنها لا تنشئ Payment/Refund/Compensation entity ولا تمنح الإدارة سلطة تحكيم مالي.
