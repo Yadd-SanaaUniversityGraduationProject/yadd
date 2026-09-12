@@ -1,8 +1,8 @@
 # Data Flow Diagrams — YADD Preliminary Defense
 
-> **الحالة:** `DRAFT FOR PRELIMINARY DEFENSE — CORE SYNCHRONIZED 2026-09-05`
+> **الحالة:** `DRAFT FOR PRELIMINARY DEFENSE — CORE SYNCHRONIZED 2026-09-12`
 >
-> **المراجع الحاكمة:** DEC-012/029/041/046/047/048/050/051/053/063/064/066/067/068/069/070/071/072/073 + `05-SRS.md` + `06-business-rules.md` + `07-lifecycles.md` + `08-use-cases.md`.
+> **المراجع الحاكمة:** DEC-012/041/046/047/048/050/051/053/063/064/066/067/068/069/070/071/072/073/074/075/076 + `05-SRS.md` + `06-business-rules.md` + `07-lifecycles.md` + `08-use-cases.md`.
 >
 > يستخدم المشروع DFD وUML معًا وفق DEC-060. يمثل DFD أدناه **تدفقات البيانات**، ولا يستخدم لوصف حالات الكائنات أو تسلسل الرسائل التفصيلي. جميع التسميات داخل الرسم النهائي باللغة الإنجليزية وفق DEC-072.
 
@@ -34,7 +34,7 @@ flowchart LR
 ### Context Boundaries
 
 - `Beneficiary` and `Provider` are behavioral actors; the same person may use both roles through one User account.
-- `Service Provider` and `Product Provider` are specializations of Provider and need not appear as separate Context entities.
+- `Service Provider` and `Product Provider` are specializations of Provider and need not appear as separate Context entities; a single Provider Profile is one type only in MVP — DEC-074.
 - `YADD Administrator` is the main external administrative actor; detailed roles may be decomposed later.
 - No `Guest` actor is currently approved.
 - No Payment Gateway, Escrow service or Delivery service appears because these are outside YADD's current Beneficiary↔Provider transaction scope.
@@ -145,8 +145,9 @@ flowchart LR
 
 Manages:
 - one User account per person;
-- Provider Profile;
-- Service/Product Activity;
+- one optional Provider Profile per User;
+- exactly one Provider Type (`SERVICE` or `PRODUCT`) per Provider Profile in MVP — DEC-074;
+- multiple Provider Activities/Categories inside that type, with at least one required before provider-function eligibility — DEC-076;
 - service areas;
 - Portfolio/Catalog metadata and watermarked display copy.
 
@@ -155,7 +156,7 @@ Manages:
 Manages:
 - Direct Search by category/area;
 - creation/publication of Request;
-- discovery of eligible Providers;
+- discovery of eligible Providers using provider type/category/area constraints;
 - Request closure before Provider selection;
 - Request expiry in principle.
 
@@ -170,10 +171,12 @@ Manages:
 - optional proposed price/note;
 - `RequiresDeposit = Yes/No` only;
 - private communication before Transaction;
+- one persistent Conversation per Beneficiary–Provider pair — DEC-075;
+- system separators/events that mark Transaction boundaries inside the persistent Conversation;
 - Provider selection in Request route;
 - `Transaction Start Request` and `Start Confirmation` in Direct Search route.
 
-Chat alone does not create Transaction.
+Chat alone does not create Transaction. A persistent Conversation may contain zero or multiple Transactions over time.
 
 ### 4.0 Manage Transactions & Invoices
 
@@ -181,8 +184,10 @@ Transaction becomes Active through either:
 1. Beneficiary selects one Provider in Request route; or
 2. one party sends a Transaction Start Request and the other confirms in Direct Search route.
 
+Each Transaction belongs to the persistent Conversation between the same Beneficiary and Provider. Physical linking of individual messages/system events to a specific Transaction remains Chapter Four work.
+
 This process also manages:
-- Transaction cancellation with recorded reason;
+- Transaction cancellation with recorded actor/reason/time;
 - final/revised invoice;
 - Pending Customer Approval;
 - Approve / Request Revision / Complaint;
@@ -213,7 +218,7 @@ Manages:
 - Transaction complaint review according to `DEC-073`;
 - administrative audit records.
 
-AI is an internal assistance mechanism, not an external actor in the main DFD. Transaction complaint review is limited to YADD policy/administrative action and does not create Payment, Refund, Compensation or Settlement processes.
+AI is an internal assistance mechanism, not an external actor in the main DFD. Safety Flags must preserve enough reason/category information for an authorized reviewer to understand the suspicion; exact categories/thresholds remain open. Transaction complaint review is limited to YADD policy/administrative action and does not create Payment, Refund, Compensation or Settlement processes.
 
 ---
 
@@ -236,16 +241,18 @@ AI is an internal assistance mechanism, not an external actor in the main DFD. T
 - `Agreement` process/store/entity.
 - Guest actor.
 - numeric values that remain open such as expiry timing and AI thresholds.
+- Provider Type switching behavior not yet approved.
 
 ---
 
 ## 6. Diagram Readiness Checklist
 
 - [x] Context and Level 0 use the same three main external entities.
-- [x] Processes and stores are aligned with current SRS/Business Rules.
+- [x] Processes and stores are aligned with current SRS/Business Rules through DEC-076 in their applicable scope.
 - [x] `Provider Response` is the canonical term; no Offer store/process.
 - [x] edit/withdraw response rule is represented.
 - [x] Direct Search start request + confirmation is represented.
+- [x] persistent Conversation semantics are aligned with DEC-075.
 - [x] no Agreement Data Store or Record Agreement process.
 - [x] `RequiresDeposit` is data within Provider Response only.
 - [x] `Completed` is terminal successful Transaction state.
