@@ -1,6 +1,6 @@
 # Class Diagram — Account, Provider, Discovery and Portfolio
 
-> **Status:** `REVIEW DRAFT — NOT BASELINED — DETAILED ANALYSIS REVIEW 2026-09-12`
+> **Status:** `SEMANTICALLY VERIFIED — TEAM APPROVED — NOT BASELINED — VISUAL/A4 FINALIZATION PENDING`
 >
 > **Type:** View 1 of one Detailed Analysis Class Model.
 
@@ -12,8 +12,6 @@
 - `docs/03-analysis/19-provider-activity-model.md` — current Provider Type / Activity rules.
 - `docs/03-analysis/20-location-and-neighborhood-model.md` — current Area / adjacency / service-area rules.
 - `DEC-008..014`, `DEC-030..033`, `DEC-041`, `DEC-045`, `DEC-064`, `DEC-066`, `DEC-070`, `DEC-074`, `DEC-076`.
-
-> `docs/03-analysis/14-account-portal-model.md` contains legacy wording that allows Service + Product together. That wording is superseded by DEC-074 and is not used as authority for this view until the document is synchronized.
 
 ## Diagram
 
@@ -35,7 +33,7 @@ classDiagram
         -String providerType
         -String verificationStatus
         -String profileStatus
-        +setProviderType(type)
+        +selectProviderType(type)
         +addActivity(category)
         +setServiceAreas(areas)
         +addShowcaseItem()
@@ -119,12 +117,14 @@ classDiagram
 
 - `User` واحد يمكنه امتلاك صفر أو `ProviderProfile` واحد؛ Beneficiary/Provider ليست Classes لحسابين منفصلين.
 - `ProviderProfile.providerType` في MVP يأخذ نوعًا واحدًا فقط: `SERVICE` أو `PRODUCT`، ولا يمكن الجمع بينهما على الملف نفسه — DEC-074.
+- `selectProviderType(type)` تمثل اختيار نوع Provider Profile أثناء إنشاء/إعداد الملف. **تغيير النوع بعد ذلك غير محسوم حاليًا ولا يستنتج من هذه العملية**.
 - يمكن لـProviderProfile امتلاك عدة `ProviderActivity`، وكل Activity تمثل تصنيفًا داخل نوع المقدم نفسه — DEC-076.
 - `0..*` بين ProviderProfile وProviderActivity تسمح بوجود Draft Provider Profile دون تصنيفات مؤقتًا؛ قبل أهلية وظائف التقديم يجب وجود Activity واحدة على الأقل.
 - يجب أن يكون `Category.categoryType` متوافقًا مع `ProviderProfile.providerType` لكل ProviderActivity.
 - `Area` يمثل District/Neighborhood hierarchy بصورة تحليلية. علاقة `adjacent to` تمثل الجوار المدار داخل YADD، وليس GPS Radius.
-- تمثل علاقة `ProviderProfile ↔ Area` مفهوم مناطق الخدمة مباشرة في Class View بدل إبقاء `ProviderServiceArea` كصندوق Class فارغ. إذا احتاجت علاقة منطقة الخدمة Attributes مستقلة في التصميم الفيزيائي، يمكن إعادة تمثيلها Association Class في Chapter Four.
-- تمثل علاقة `Area ↔ Area : adjacent to` مفهوم `AreaAdjacency` مباشرة في Class View بدل إبقاء Class فارغة. كيفية فرض symmetry/uniqueness تبقى Design concern في Chapter Four.
+- تمثل علاقة `ProviderProfile ↔ Area` مفهوم مناطق الخدمة مباشرة في Class View بدل إبقاء `ProviderServiceArea` كصندوق Class بلا سلوك أو Attributes مستقلة على مستوى التحليل. إذا احتاجت العلاقة Attributes مستقلة في التصميم الفيزيائي، يمكن إعادة تمثيلها Association Class في Chapter Four.
+- تمثل علاقة `Area ↔ Area : adjacent to` مفهوم `AreaAdjacency` مباشرة في Class View بدل إبقاء Class بلا سلوك أو Attributes مستقلة. كيفية فرض symmetry/uniqueness تبقى Design concern في Chapter Four.
+- اختلاف هذا التمثيل عن الـConceptual ERD مقصود: الـERD يستخدم associative entities `PROVIDER_SERVICE_AREA` و`AREA_ADJACENCY` لإظهار بنية البيانات، بينما الـClass View يعرضهما Associations لأن التحليل الحالي لا يثبت لهما state/behavior مستقلًا.
 - `ShowcaseItem` يمثل Portfolio إذا كان النوع SERVICE وProduct Catalog إذا كان النوع PRODUCT باستخدام مفهوم عرض موحد.
 - `Request.indicativePrice` اختياري وغير ملزم على مستوى المتطلبات.
 - `RequestImage` عنصر مشتق من المتطلب المعتمد الذي يسمح بإضافة صور اختيارية عند إنشاء Request. لا يثبت هذا الرسم storage provider أو file format أو retention policy.
@@ -138,7 +138,7 @@ classDiagram
 
 - `User.createRequest()` ← UC-02.
 - `User.createProviderProfile()` ← UC-09.
-- `ProviderProfile.setProviderType()` / `addActivity()` / `setServiceAreas()` ← UC-09 + DEC-074/076 + Location model.
+- `ProviderProfile.selectProviderType()` / `addActivity()` / `setServiceAreas()` ← UC-09 + DEC-074/076 + Location model. لا تعتمد `selectProviderType()` سياسة تغيير النوع بعد الإنشاء.
 - `ProviderProfile.addShowcaseItem()` و`ShowcaseItem.publish()` ← UC-10.
 - `Request.publish()` / `close()` / `markMatched()` ← UC-02/UC-04 + Request lifecycle.
 - `ProviderResponse.submit()` / `edit()` / `withdraw()` / `markSelected()` / `markNotSelected()` ← UC-03/UC-04 + DEC-070.
