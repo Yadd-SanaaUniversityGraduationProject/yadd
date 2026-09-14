@@ -53,7 +53,7 @@ sequenceDiagram
     activate PUI
     PUI->>RC: submitProviderResponse(responseData)
     activate RC
-    Note over PUI,RC: Proposed price/note optional; RequiresDeposit = Yes/No only
+    Note over PUI,RC: Proposed price or note optional. RequiresDeposit is Yes or No only.
     RC->>PR: create(responseData, Active)
     activate PR
     PR-->>RC: Provider Response created
