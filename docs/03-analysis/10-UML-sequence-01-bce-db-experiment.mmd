@@ -1,0 +1,162 @@
+%% YADD — EXPERIMENTAL SEQUENCE DIAGRAM ONLY
+%% Purpose: evaluate a Boundary–Control–Entity + Database presentation style
+%% before changing any authoritative/working UML source.
+%%
+%% Scope: Request & Provider Selection portion of the current Published Request Route.
+%% Source semantics: docs/03-analysis/10-UML.md
+%%
+%% IMPORTANT:
+%% - This file is NOT an approved architecture or final diagram.
+%% - *Controller lifelines are experimental logical controls, not approved implementation classes.
+%% - No business rule, state, actor, requirement, or lifecycle is changed by this experiment.
+%% - Diagram labels remain English in accordance with DEC-072.
+
+sequenceDiagram
+    actor B as Beneficiary
+    actor P as Provider
+
+    participant BUI as BeneficiaryUI «boundary»
+    participant PUI as ProviderUI «boundary»
+
+    participant RC as RequestController «control»
+    participant CC as CommunicationController «control»
+
+    participant R as Request «entity»
+    participant PR as ProviderResponse «entity»
+    participant C as Conversation «entity»
+    participant T as Transaction «entity»
+
+    participant DB as Database
+
+    B->>BUI: Create and publish Request
+    activate BUI
+    BUI->>RC: createRequest(requestData)
+    activate RC
+    RC->>R: create(requestData, Open)
+    activate R
+    R-->>RC: Request created
+    deactivate R
+    RC->>DB: Save Request = Open
+    activate DB
+    DB-->>RC: Request saved
+    deactivate DB
+    RC->>PUI: Expose matching Request
+    activate PUI
+    PUI-->>P: Show matching Request
+    deactivate PUI
+    RC-->>BUI: Request published
+    BUI-->>B: Request status = Open
+    deactivate RC
+    deactivate BUI
+
+    P->>PUI: Submit Provider Response
+    activate PUI
+    PUI->>RC: submitProviderResponse(responseData)
+    activate RC
+    Note over PUI,RC: Proposed price/note optional; RequiresDeposit = Yes/No only
+    RC->>PR: create(responseData, Active)
+    activate PR
+    PR-->>RC: Provider Response created
+    deactivate PR
+    RC->>DB: Save active Provider Response
+    activate DB
+    DB-->>RC: Response saved
+    deactivate DB
+    RC->>BUI: Refresh Provider Responses
+    activate BUI
+    BUI-->>B: Show response for comparison
+    deactivate BUI
+    RC-->>PUI: Response submitted
+    deactivate RC
+    PUI-->>P: Response status = Active
+    deactivate PUI
+
+    opt Provider edits or withdraws before selection
+        P->>PUI: Edit / withdraw active response
+        activate PUI
+        PUI->>RC: updateProviderResponse(change)
+        activate RC
+        RC->>PR: update data / status
+        activate PR
+        PR-->>RC: Response updated
+        deactivate PR
+        RC->>DB: Save response changes
+        activate DB
+        DB-->>RC: Changes saved
+        deactivate DB
+        RC->>BUI: Refresh response information
+        activate BUI
+        BUI-->>B: Show updated response
+        deactivate BUI
+        RC-->>PUI: Update confirmed
+        deactivate RC
+        PUI-->>P: Show response status
+        deactivate PUI
+    end
+
+    opt Inquiry before selection
+        B->>BUI: Send inquiry
+        activate BUI
+        BUI->>CC: sendMessage(message)
+        activate CC
+        CC->>C: create/update conversation
+        activate C
+        C-->>CC: Conversation context ready
+        deactivate C
+        CC->>DB: Save message
+        activate DB
+        DB-->>CC: Message saved
+        deactivate DB
+        CC->>PUI: Deliver private message
+        activate PUI
+        PUI-->>P: Show inquiry
+        deactivate PUI
+        CC-->>BUI: Message sent
+        deactivate CC
+        deactivate BUI
+
+        P->>PUI: Reply
+        activate PUI
+        PUI->>CC: sendMessage(reply)
+        activate CC
+        CC->>DB: Save reply
+        activate DB
+        DB-->>CC: Reply saved
+        deactivate DB
+        CC->>BUI: Deliver reply
+        activate BUI
+        BUI-->>B: Show reply
+        deactivate BUI
+        CC-->>PUI: Reply sent
+        deactivate CC
+        deactivate PUI
+    end
+
+    B->>BUI: Select Provider
+    activate BUI
+    BUI->>RC: selectProvider(requestId, responseId)
+    activate RC
+    RC->>R: markMatched()
+    activate R
+    R-->>RC: Request = Matched
+    deactivate R
+    RC->>PR: markOtherResponsesNotSelected()
+    activate PR
+    PR-->>RC: Other responses = NotSelected
+    deactivate PR
+    RC->>T: createActive(requestId, selectedResponseId)
+    activate T
+    T-->>RC: Active Transaction created
+    deactivate T
+    RC->>DB: Save selection + Transaction
+    activate DB
+    DB-->>RC: Changes committed
+    deactivate DB
+    RC->>PUI: Provider selected / Transaction active
+    activate PUI
+    PUI-->>P: Show selection result
+    deactivate PUI
+    RC-->>BUI: Transaction active
+    BUI-->>B: Show active Transaction
+    deactivate RC
+    deactivate BUI
