@@ -1,10 +1,10 @@
 # Software Requirements Specification — YADD MVP
 
-> **الإصدار:** v0.9.8
+> **الإصدار:** v0.9.9
 >
 > **الحالة:** `PARTIALLY ANALYZED — NOT BASELINED`
 >
-> هذه النسخة تزامن المتطلبات مع قرارات الإغلاق حتى 2026-09-11، بما في ذلك DEC-073 الخاص بحدود صلاحية الإدارة في النزاعات، وDEC-074 الخاص بحصرية نوع المقدم، وDEC-075 الخاص بالمحادثة المستمرة بين نفس الطرفين، وDEC-076 الخاص بتعدد التصنيفات داخل نوع المقدم. البنود المفتوحة صريحة ولا تعتبر متطلبات نهائية.
+> هذه النسخة تزامن المتطلبات مع القرارات حتى 2026-09-15، بما في ذلك DEC-073 الخاص بحدود صلاحية الإدارة في النزاعات، وDEC-074 الخاص بحصرية نوع المقدم، وDEC-075 الخاص بالمحادثة المستمرة بين نفس الطرفين، وDEC-076 الخاص بتعدد التصنيفات داخل نوع المقدم، وDEC-077 الخاص بالزائر والتصفح العام مع بوابة المصادقة للوظائف المحمية. البنود المفتوحة صريحة ولا تعتبر متطلبات نهائية.
 
 ## 1. Scope
 
@@ -14,11 +14,13 @@
 - الـBackend/API هو المرجع النهائي لمعالجة البيانات والصلاحيات وBusiness Rules والتعامل مع قاعدة البيانات.
 - واجهة الويب هي واجهة الاستخدام الأساسية الحالية.
 - Flutter اتجاه معتمد كعميل Mobile لاحق يتصل بالـAPI نفسه؛ لا يعد مرجعًا نهائيًا للصلاحيات أو قواعد العمل.
-- لا يعتمد حاليًا Guest/Visitor Actor مستقل أو Web browsing anonymous policy؛ إن احتاج لاحقًا يفتح قرار منفصل.
+- يدعم MVP `Guest` غير مسجل الدخول لتصفح المحتوى العام والبحث عن Providers واستعراض ملفاتهم العامة وPortfolio/Catalog. الوظائف التفاعلية/المعاملاتية المحمية تتطلب Authentication — DEC-077.
 - جميع المخططات الأكاديمية تستخدم تسميات داخل الرسم باللغة الإنجليزية وفق DEC-072؛ لغة التقرير النصية تبقى العربية وفق DEC-061.
 
 ## 2. Account / Portal Model — Approved
 
+- قبل Authentication يستطيع الشخص استخدام المنصة بصفة `Guest` ضمن حدود التصفح العام فقط — DEC-077.
+- عند محاولة Guest تنفيذ وظيفة محمية، يوجّه إلى `Log In` أو `Create Account` قبل متابعة الإجراء.
 - حساب `User` واحد للشخص.
 - اختيار «مستفيد» أو «مقدم» يحدد بوابة البداية لا نوع حساب دائمًا.
 - استخدام بوابة المقدم يحتاج `Provider Profile` داخل الحساب نفسه.
@@ -68,11 +70,14 @@
 ## 8. Actors
 
 ### Actors العامة للمخطط الرئيسي
+- `Guest` — `ANALYZED_APPROVED` للتصفح العام فقط — DEC-077.
 - `Beneficiary` — `ANALYZED_APPROVED`.
 - `Provider` — `ANALYZED_APPROVED` كActor عام.
   - `Service Provider` — تخصص من Provider عند الحاجة.
   - `Product Provider` — تخصص من Provider عند الحاجة.
 - `YADD Administrator` — `ANALYZED_APPROVED_AS_MODELING_ACTOR` للمخطط الرئيسي.
+
+> `Guest` ليس نوع حساب ولا Entity/Class مستقل؛ هو Actor غير authenticated. بعد Log In/Create Account يصبح التفاعل تحت هوية `User` وفق الأدوار المناسبة.
 
 > وفق DEC-074، يكون Provider Profile الواحد في MVP إما Service Provider أو Product Provider، ولا يجمع النوعين معًا.
 
@@ -87,6 +92,9 @@
 
 | ID | User Requirement | Status | Source/Reason |
 |---|---|---|---|
+| UR-GST-01 | يستطيع الزائر غير المسجل تصفح المحتوى العام والبحث عن Providers واستعراض Public Provider Profile وPortfolio/Catalog. | `ANALYZED_APPROVED` | DEC-077 |
+| UR-GST-02 | عند محاولة الزائر تنفيذ وظيفة محمية مثل Create Request أو Chat، يجب توجيهه إلى Log In أو Create Account قبل متابعة الإجراء. | `ANALYZED_APPROVED` | DEC-077 |
+| UR-GST-03 | لا تعرض Public Provider Profile وسائل الاتصال المباشر الخاصة مثل رقم الهاتف، وتبقى البيانات الحساسة/الخاصة غير عامة. | `ANALYZED_APPROVED` | DEC-036/046/077 |
 | UR-ACC-01 | استخدام حساب واحد للاستفادة والتقديم. | `ANALYZED_APPROVED` | DEC-008 |
 | UR-ACC-02 | اختيار بوابة البداية مع إمكانية الانتقال للبوابة الأخرى. | `ANALYZED_APPROVED` | DEC-009/011 |
 | UR-PROV-01 | اختيار نوع واحد فقط للـProvider Profile في MVP: خدمة أو منتج، دون تفعيل النوعين معًا على الملف نفسه. | `ANALYZED_APPROVED` | DEC-074/030 |
@@ -117,6 +125,14 @@
 
 ## 10. Functional Requirements
 
+### Guest / Public Access
+- `FR-GST-01` `ANALYZED_APPROVED`: يسمح النظام للـGuest بتصفح الصفحة العامة ومحتوى الاكتشاف العام.
+- `FR-GST-02` `ANALYZED_APPROVED`: يسمح للـGuest بالبحث/التصفية عن Providers باستخدام البيانات العامة المسموح بها.
+- `FR-GST-03` `ANALYZED_APPROVED`: يسمح للـGuest بفتح Public Provider Profile واستعراض Provider type/category/service-area information وPortfolio/Catalog ومؤشرات الملف العامة المعتمدة.
+- `FR-GST-04` `ANALYZED_APPROVED`: لا يعرض Public Provider Profile رقم الهاتف أو أي وسيلة اتصال مباشر خاصة، ولا بيانات Verification/Subscription/Reports/Transactions أو غيرها من البيانات الحساسة/الخاصة.
+- `FR-GST-05` `ANALYZED_APPROVED`: عند محاولة Guest تنفيذ protected action مثل Create Request أو Private Chat/Inquiry، يطلب النظام Log In أو Create Account قبل السماح بالمتابعة.
+- `FR-GST-06` `ANALYZED_APPROVED_AS_ARCH_PRINCIPLE`: يفرض Backend/API Authentication/Authorization للوظائف المحمية؛ لا يعتمد الأمان على إخفاء الأزرار أو Redirect في الواجهة فقط.
+
 ### Account / Portal
 - `FR-001` `ANALYZED_APPROVED`: يدير النظام حساب User واحدًا للشخص.
 - `FR-001A` `ANALYZED_APPROVED`: يسمح باختيار بوابة البداية: مستفيد أو مقدم.
@@ -143,14 +159,14 @@
 - `FR-VER-06` `PROPOSED/BLOCKED BY VER-DOC-Q01`: أنواع الوثائق وتفاصيلها لاحقًا.
 
 ### Discovery / Location
-- `FR-003` `ANALYZED_APPROVED`: يسمح بالبحث المباشر حسب التصنيف والمديرية/الحي.
+- `FR-003` `ANALYZED_APPROVED`: يسمح بالبحث المباشر حسب التصنيف والمديرية/الحي؛ البحث العام متاح للGuest بينما الأفعال التفاعلية اللاحقة تحتاج Authentication وفق DEC-077.
 - `FR-003A` `ANALYZED_APPROVED`: يبدأ توزيع الطلب في حي الطلب.
 - `FR-003B` `ANALYZED_APPROVED`: التوسع إلى الأحياء المجاورة يحتاج موافقة المستفيد.
 - `FR-003C` `ANALYZED_APPROVED`: يسمح للمقدم بتحديد مناطق خدمته.
 - `FR-003D` `PROPOSED/BLOCKED BY LOC-DATA-Q01`: قائمة الأحياء والجوار تحتاج تحققًا.
 
 ### Request Creation / Closure / Expiry
-- `FR-005` `ANALYZED_APPROVED`: يسمح بإنشاء طلب خدمة أو منتج مع الفئة والوصف والمديرية والحي.
+- `FR-005` `ANALYZED_APPROVED`: يسمح بإنشاء طلب خدمة أو منتج مع الفئة والوصف والمديرية والحي؛ يتطلب Authentication ولا ينفذه Guest مباشرة.
 - `FR-005A` `ANALYZED_APPROVED`: الصور والمعلومات الإضافية اختيارية.
 - `FR-005B` `ANALYZED_APPROVED`: السعر الاسترشادي اختياري وغير ملزم.
 - `FR-005C` `ANALYZED_APPROVED`: يسمح للمستفيد بإغلاق Request Open قبل اختيار مقدم دون إنشاء Transaction Cancellation.
@@ -164,7 +180,7 @@
 - `FR-007B` `ANALYZED_APPROVED`: تسمح Provider Response بتحديد `RequiresDeposit = Yes/No` فقط؛ لا يسجل النظام قيمة العربون أو نسبته أو طريقة دفعه أو حالته.
 - `FR-007C` `ANALYZED_APPROVED`: يسمح للمقدم بتعديل Provider Response أو سحبها ما دام Request في حالة Open ولم يتم اختياره.
 - `FR-007D` `ANALYZED_APPROVED`: يحتفظ النظام باستجابة فعالة واحدة فقط لكل Provider لكل Request؛ لا يحسم هذا المتطلب طريقة حفظ تاريخ التعديلات في قاعدة البيانات.
-- `FR-008` `ANALYZED_APPROVED`: يسمح بمحادثة/استفسار خاص قبل بدء المعاملة من البحث المباشر أو Provider Response.
+- `FR-008` `ANALYZED_APPROVED`: يسمح بمحادثة/استفسار خاص قبل بدء المعاملة من البحث المباشر أو Provider Response، بعد Authentication فقط.
 - `FR-008A` `ANALYZED_APPROVED`: المحادثة وحدها لا تنشئ Transaction.
 - `FR-008B` `ANALYZED_APPROVED`: يحتفظ النظام بسجل المحادثة وفق سياسة الخصوصية والاحتفاظ.
 - `FR-008C` `ANALYZED_APPROVED`: يسمح بمشاركة موقع أدق في التواصل الخاص عند الحاجة دون عرضه للعامة.
@@ -246,8 +262,8 @@
 
 - `NFR-SEC-01` `ANALYZED_APPROVED` في المبدأ: حماية الحساب والمحادثات والمرفقات وبيانات التحقق.
 - `NFR-SEC-02` `ANALYZED_APPROVED`: وصول بيانات التحقق الحساسة مقيد ومسجل.
-- `NFR-SEC-03` `ANALYZED_APPROVED_AS_ARCH_PRINCIPLE`: لا يعتمد Client/Browser/Mobile كمرجع نهائي للصلاحيات أو Business Rules؛ يطبق Backend/API التحقق النهائي من Authorization والمدخلات الحساسة.
-- `NFR-PRV-01` `ANALYZED_APPROVED`: تقليل جمع/إظهار البيانات الشخصية وعدم جعل الموقع الدقيق عامًا.
+- `NFR-SEC-03` `ANALYZED_APPROVED_AS_ARCH_PRINCIPLE`: لا يعتمد Client/Browser/Mobile كمرجع نهائي للصلاحيات أو Business Rules؛ يطبق Backend/API التحقق النهائي من Authentication/Authorization والمدخلات الحساسة، بما في ذلك منع Guest من الوظائف المحمية وفق DEC-077.
+- `NFR-PRV-01` `ANALYZED_APPROVED`: تقليل جمع/إظهار البيانات الشخصية وعدم جعل الموقع الدقيق أو رقم الهاتف جزءًا من Public Provider Profile.
 - `NFR-AI-01` `ANALYZED_APPROVED`: AI Flags ليست إثباتًا قطعيًا.
 - `NFR-USA-01` `ANALYZED_APPROVED` في المبدأ: يجب أن تعرض الواجهة خطوات ومصطلحات بسيطة للفئة المستهدفة، مع التحقق الميداني قبل الادعاء بالملاءمة.
 - `NFR-USA-02` `NEEDS_EVIDENCE/BLOCKED BY UX-VAL-Q01`: معايير نجاح Usability/low-connectivity تحدد وتختبر على الفئة المستهدفة.
