@@ -1,6 +1,6 @@
 # UML Class Diagram Package — Detailed Analysis Class Model
 
-> **Status:** `SEMANTICALLY VERIFIED — TEAM APPROVED — NOT BASELINED — VISUAL/A4 FINALIZATION PENDING`
+> **Status:** `SEMANTICALLY VERIFIED — TEAM APPROVED — NOT BASELINED — SYNCHRONIZED THROUGH DEC-077 — VISUAL/A4 FINALIZATION PENDING`
 >
 > هذه الحزمة تمثل **Detailed Analysis Class Model واحدًا** مشتقًا من مصادر التحليل الحاكمة في المشروع. يوجد **Integrated Master View** للنموذج كاملًا، إضافة إلى ثلاث Detailed Subject-Area Views مستقلة بصريًا لأسباب الوضوح والطباعة على A4. هذا لا يعني وجود أربعة نماذج أو Designs منفصلة.
 
@@ -24,6 +24,7 @@
 ## Modeling rules
 
 - المصدر الأعلى للمعنى يبقى Decision Register ثم SRS/Business Rules/Lifecycles/Use Cases والـConceptual ERD.
+- `Guest` المعتمد في DEC-077 هو **Actor خارجي غير authenticated** وليس Domain Class/Entity؛ لذلك لا يضاف Class باسم `Guest` ولا علاقة لهوية مخزنة قبل Create Account/Log In.
 - لا تمثل `Beneficiary` و`Provider` كحسابات منفصلة؛ كلاهما أدوار سلوكية لنفس `User`.
 - لا يوجد `Agreement` entity مستقل.
 - لا توجد Payment/Escrow/Refund/Settlement entities داخل معاملات Beneficiary↔Provider.
@@ -51,5 +52,6 @@
 - View 1: semantically verified and team approved.
 - View 2: semantically verified and team approved.
 - View 3: semantically verified and team approved.
+- DEC-077 adds a Guest actor/public-access boundary but does not require a new Class/Entity; class semantics remain unchanged except this explicit boundary note.
 - Semantic consistency checked against Decision Register, SRS, Business Rules, Use Cases, ERD and Traceability Matrix.
 - Package remains `NOT BASELINED` because the SRS is not baselined and Visual/A4 finalization is still pending.
