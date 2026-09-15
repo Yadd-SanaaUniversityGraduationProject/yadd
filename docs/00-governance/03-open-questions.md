@@ -29,6 +29,7 @@
 
 | ID | تاريخ الإغلاق/التحديث | القرار | المرجع |
 |---|---|---|---|
+| GUEST-ACCESS-Q01 | 2026-09-15 | اعتمد `Guest` كActor غير authenticated يستطيع Public Browse/Search/View Provider Profile وPortfolio/Catalog فقط. Protected actions تتطلب Log In/Create Account، ولا يعرض Public Provider Profile رقم الهاتف/direct private-contact data أو البيانات الحساسة. لا ينشئ Guest Entity/Class لمجرد التصفح، ويطبق Backend/API المصادقة والصلاحيات. | DEC-077 |
 | PROV-ACT-Q01 | 2026-09-11 | كل Provider Profile يكون إما `SERVICE` أو `PRODUCT` فقط في MVP، ويمكن للمقدم اختيار تصنيف واحد أو أكثر داخل نوعه. يسمح Draft مؤقتًا بصفر تصنيفات، ولا تتاح وظائف التقديم قبل وجود تصنيف واحد على الأقل. | DEC-074/076 |
 | BUS-Q02 | 2026-09-11 | القرار التاريخي الذي سمح Service/Product أو كليهما استُبدل: Provider Profile واحد بنوع حصري `SERVICE` أو `PRODUCT`، مع تعدد التصنيفات داخل النوع نفسه. | DEC-029 (superseded) / DEC-074/076 |
 | DISPUTE-AUTH-Q01 | 2026-09-04 | عند استمرار الخلاف قبل اعتماد الفاتورة تراجع إدارة YADD السجلات لتطبيق سياسة المنصة واتخاذ إجراء إداري عند وجود مخالفة، لكنها لا تفصل ماليًا/تجاريًا ولا تلزم دفعًا أو Refund أو Compensation. إذا لم يتوصل الطرفان لاتفاق تصبح Transaction `Disputed` كحالة نهائية غير ناجحة ولا تفتح Ratings. | DEC-073 |
@@ -40,7 +41,7 @@
 | DEP-Q02 | 2026-09-03 | كل حركة مالية خارج YADD. المقدم يحدد فقط `RequiresDeposit` نعم/لا؛ لا قيمة عربون ولا دفع ولا Refund داخل النظام. | DEC-041 |
 | RAT-CUST-Q01 | 2026-09-03 | تقييم المقدم للمستفيد اختياري وبارز بعد Completed عبر 3 مؤشرات 1–5 + تعليق اختياري، ويكوّن سجل تعامل محدود الظهور للمقدمين دون عقوبات آلية. | DEC-063 |
 | PROP-003 | 2026-09-03 | Portfolio/Catalog داخل Provider Profile مع علامة مائية تعريفية، أصل غير عام، إقرار حق النشر وإمكانية الإبلاغ عن الانتحال. | DEC-064 |
-| ACTOR-MODEL-01 | 2026-09-03 | Actors العامة للمخطط الرئيسي: Beneficiary, Provider, YADD Administrator؛ Provider يتخصص إلى Service/Product Provider عند الحاجة. | DEC-067 |
+| ACTOR-MODEL-01 | 2026-09-15 | القرار الأصلي حدد Beneficiary, Provider, YADD Administrator. بقيت هذه Actors صحيحة للمستخدمين المسجلين والإدارة، لكن **حصر** المخطط بها واستبعاد Guest استبدله DEC-077؛ Main Actor Model الحالي يضيف Guest. | DEC-067 (superseded in part) / DEC-077 |
 | CORE-FLOW-01 | 2026-09-03 | Search/Request → Chat/Selection/Agreement-to-start → Transaction → Fulfillment → Final Invoice → Approval/Revision → Completed → Ratings. | DEC-068 |
 | REQ-RESP-SEL-01 | 2026-09-03 | Request → Provider Response → Selection → Transaction، بلا Agreement entity مستقل في MVP. | DEC-066 |
 | ARCH-DIR-01 | 2026-09-03 | Backend/API مركزي هو المرجع للصلاحيات وقواعد العمل؛ واجهة الويب أساسية حاليًا، وFlutter عميل Mobile لاحق. | DEC-065 |
