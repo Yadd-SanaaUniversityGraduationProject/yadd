@@ -1,6 +1,6 @@
 # وصف النظام المقترح — Proposed System Working Model
 
-> **الحالة:** `ANALYZED — SYNCHRONIZED 2026-09-12`
+> **الحالة:** `ANALYZED — SYNCHRONIZED 2026-09-15 THROUGH DEC-077`
 >
 > هذه الوثيقة وصف تحليلي مشتق من Decision Register وSRS وBusiness Rules الحالية. لا تتغلب على مصادر الحقيقة الأعلى ولا تجعل SRS Baselined.
 
@@ -13,11 +13,15 @@ YADD منصة رقمية محلية ضمن نطاق MVP في أمانة العا
 1. `Direct Search`
 2. `Create Request`
 
+كما يدعم `Guest` غير مسجل الدخول لتصفح المحتوى العام والبحث عن Providers وفتح Public Provider Profile واستعراض Portfolio/Catalog. الوظائف المحمية مثل Create Request وPrivate Chat وTransaction actions تتطلب Authentication — DEC-077.
+
 ولا يدير YADD أي حركة مالية بين Beneficiary وProvider.
 
-## 2. Core Account and Provider Model
+## 2. Core Account, Guest and Provider Model
 
-- يوجد `User Account` واحد للشخص.
+- قبل Authentication يمكن استخدام المنصة بصفة `Guest` للتصفح العام فقط.
+- Guest ليس حسابًا ولا Domain Entity مستقلًا؛ عند محاولة protected action يطلب YADD `Log In` أو `Create Account`.
+- يوجد `User Account` واحد للشخص بعد Authentication.
 - يمكن استخدام Beneficiary Portal مباشرة.
 - يمكن إنشاء `Provider Profile` واحد كحد أقصى داخل الحساب نفسه.
 - في MVP يكون Provider Profile من نوع واحد فقط: `SERVICE` أو `PRODUCT` — DEC-074.
@@ -26,19 +30,30 @@ YADD منصة رقمية محلية ضمن نطاق MVP في أمانة العا
 - إرسال Provider Responses جديدة يحتاج أيضًا Active Subscription.
 - سياسة تغيير Provider Type بعد الاختيار لم تعتمد بعد.
 
-**المرجع:** DEC-008..011/030/034/035/043/074/076.
+**المرجع:** DEC-008..011/030/034/035/043/074/076/077.
 
 ## 3. Discovery Route A — Direct Search
 
-التدفق المفاهيمي:
+التدفق المفاهيمي العام يبدأ من:
 
-`Search Providers → View Provider Profile / Portfolio or Catalog → Private Inquiry / Chat → Request Transaction Start → Other Party Confirmation → Active Transaction`
+`Browse/Search Providers → View Public Provider Profile / Portfolio or Catalog`
+
+وهذه المرحلة متاحة للGuest وللمستخدم authenticated ضمن البيانات العامة المسموح بها.
+
+إذا أراد Guest بدء تفاعل محمي، ينتقل أولًا إلى:
+
+`Log In / Create Account`
+
+بعد Authentication يستكمل المسار الخاص بالمستفيد:
+
+`Private Inquiry / Chat → Request Transaction Start → Other Party Confirmation → Active Transaction`
 
 قواعد المسار:
 
 - البحث يعتمد على التصنيف والمنطقة وفق النموذج الجغرافي الحالي.
-- يمكن للمستفيد استعراض Provider Profile وPortfolio/Catalog.
-- المحادثة قبل Transaction مسموحة.
+- يمكن للGuest والمستفيد استعراض Public Provider Profile وPortfolio/Catalog.
+- Public Provider Profile لا يعرض رقم الهاتف أو direct private-contact data أو بيانات Verification/Subscription/Transactions/Reports/بيانات حساسة.
+- المحادثة قبل Transaction مسموحة للمستخدمين authenticated فقط.
 - Chat وحدها لا تنشئ Transaction.
 - بين نفس Beneficiary ونفس Provider توجد Conversation مستمرة واحدة يمكن أن تضم عدة Transactions عبر الزمن — DEC-075.
 - يمكن لأي من Beneficiary أو Provider إرسال `Request Transaction Start`.
@@ -46,7 +61,7 @@ YADD منصة رقمية محلية ضمن نطاق MVP في أمانة العا
 - إذا لم يوجد تأكيد، تبقى المحادثة دون Transaction.
 - عند بدء/انتهاء أي Transaction داخل Conversation المستمرة تظهر System Event/Separator واضحة لحدود التعامل.
 
-**المرجع:** DEC-012/031..033/046/064/066/069/075.
+**المرجع:** DEC-012/031..033/046/064/066/069/075/077.
 
 ## 4. Discovery Route B — Create Request
 
@@ -56,6 +71,7 @@ YADD منصة رقمية محلية ضمن نطاق MVP في أمانة العا
 
 قواعد المسار:
 
+- `Create Request` وظيفة محمية تتطلب Authentication؛ يمكن أن يظهر CTA للGuest لكنه يوجه إلى Log In/Create Account قبل تنفيذ العملية — DEC-077.
 - Request قد يكون Service أو Product.
 - يحتوي على الفئة والمنطقة والوصف، مع صور/معلومات إضافية اختيارية وسعر استرشادي اختياري.
 - المقدم المؤهل يجب أن يطابق نوع Request وتصنيفه داخل Provider Activities، إضافة إلى بقية شروط الأهلية.
@@ -69,7 +85,7 @@ YADD منصة رقمية محلية ضمن نطاق MVP في أمانة العا
 - إذا كانت Conversation بين الطرفين موجودة مسبقًا، تستخدم نفس Conversation المستمرة ولا تنشئ Conversation جديدة لمجرد بدء Transaction جديدة.
 - لا يوجد `Agreement` entity مستقل في MVP.
 
-**المرجع:** DEC-012..014/041/047/066/070/074/075/076.
+**المرجع:** DEC-012..014/041/047/066/070/074/075/076/077.
 
 ## 5. Common Transaction Flow
 
@@ -85,6 +101,7 @@ YADD منصة رقمية محلية ضمن نطاق MVP في أمانة العا
 
 قواعد أساسية:
 
+- جميع إجراءات Transaction محمية وتتطلب User identity/authentication؛ Guest لا ينفذها.
 - Provider ينفذ الخدمة أو يجهز المنتج خارج منطق الدفع داخل YADD.
 - بعد التنفيذ/التجهيز واستقرار البنود ينشئ Provider الفاتورة النهائية.
 - Beneficiary يختار `Approve` أو `Request Revision` مع ملاحظة، ويمكن رفع Complaint عند استمرار الخلاف.
@@ -95,7 +112,7 @@ YADD منصة رقمية محلية ضمن نطاق MVP في أمانة العا
 - إدارة YADD تراجع السجلات لتطبيق سياسة المنصة واتخاذ إجراء إداري عند وجود مخالفة، لكنها لا تفصل ماليًا/تجاريًا ولا تأمر Payment/Refund/Compensation.
 - Conversation نفسها قد تحتوي عدة Transactions عبر الزمن، مع فواصل/أحداث نظام واضحة لحدود كل Transaction.
 
-**المرجع:** DEC-015/025/048/050/055/068/071/073/075.
+**المرجع:** DEC-015/025/048/050/055/068/071/073/075/077.
 
 ## 6. Post-Transaction Ratings
 
@@ -107,8 +124,9 @@ YADD منصة رقمية محلية ضمن نطاق MVP في أمانة العا
 - التقييمات مرتبطة بمعاملة Completed ولا تغير Transaction إلى حالة أخرى.
 - لا تنتج عقوبات آلية على Beneficiary من انخفاض التقييم في MVP.
 - لا Ratings لمعاملة `Cancelled` أو `Disputed`.
+- Guest لا ينشئ Ratings؛ التقييم يتطلب هوية مرتبطة بالTransaction.
 
-**المرجع:** DEC-051/063/071/073.
+**المرجع:** DEC-051/063/071/073/077.
 
 ## 7. Provider Profile, Portfolio and Catalog
 
@@ -122,7 +140,9 @@ YADD منصة رقمية محلية ضمن نطاق MVP في أمانة العا
 
 يمكن توحيد عناصر Portfolio/Catalog تقنيًا في مفهوم عرض واحد. نسخة العرض للصورة تحمل علامة مائية تعريفية مرتبطة بـYADD/الحساب، بينما الأصل غير عام. العلامة المائية ليست إثبات ملكية قانونية.
 
-**المرجع:** DEC-064/074/076.
+للGuest يعرض فقط **Public Provider Profile projection**: البيانات العامة المعتمدة ونسخة العرض من Portfolio/Catalog. لا يعرض رقم الهاتف أو direct private-contact data أو بيانات Verification/Subscription/Transactions/Reports أو أي بيانات حساسة/خاصة.
+
+**المرجع:** DEC-036/046/064/074/076/077.
 
 ## 8. Verification, Safety and Administration
 
@@ -132,12 +152,12 @@ YADD منصة رقمية محلية ضمن نطاق MVP في أمانة العا
 - مراجعة بشرية نهائية لقرار Verification.
 - AI كمساعد في Verification وTrust & Safety، دون قرار نهائي منفرد عالي الأثر.
 - Safety Flags تحتوي ما يكفي ليفهم الموظف سبب/فئة الاشتباه، بينما قائمة الفئات والـthresholds ما تزال مفتوحة.
-- Block + Report.
+- Block + Report للمستخدم authenticated؛ Guest لا ينفذهما قبل Authentication.
 - مراجعة البلاغات/Flags إداريًا.
 - إدارة سجل اشتراك Provider Profile، مع تحصيل خارجي وتأكيد من موظف مخول.
 - مراجعة Complaint المرتبطة بمعاملة وفق حدود `DEC-073`: تطبيق سياسة المنصة وإجراءاتها الإدارية فقط، دون تحكيم مالي/تجاري.
 
-**المرجع:** DEC-034..043/053/054/073.
+**المرجع:** DEC-034..043/053/054/073/077.
 
 ## 9. Financial and Fulfillment Boundaries
 
@@ -165,28 +185,31 @@ YADD منصة رقمية محلية ضمن نطاق MVP في أمانة العا
 
 والـBackend/API المركزي هو المرجع النهائي للمعالجة والصلاحيات وBusiness Rules والوصول إلى قاعدة البيانات. Flutter عميل Mobile لاحق يتصل بالAPI نفسه.
 
+بالنسبة لـGuest، يمكن للواجهة إظهار protected CTA وتوجيهه إلى Authentication، لكن Backend/API يجب أن يفرض Authentication/Authorization فعليًا لكل protected operation — DEC-065/077.
+
 هذا اتجاه تقني معتمد، لكنه لا يحسم Framework الويب أو Backend النهائي.
 
-**المرجع:** DEC-065.
+**المرجع:** DEC-065/077.
 
 ## 11. Main Capabilities Derived for Analysis
 
-1. Manage Account and Portal Access.
-2. Manage Provider Profile and Activities.
-3. Manage Categories, Areas and Service Areas.
-4. Search and View Providers.
-5. Manage Portfolio / Catalog.
-6. Create and Manage Requests.
-7. Submit, Edit and Withdraw Provider Responses.
-8. Private Communication / Inquiry with one persistent Conversation per Beneficiary–Provider pair.
-9. Select Provider or Confirm Direct Transaction Start.
-10. Manage Transaction and Cancellation.
-11. Create, Revise and Approve Final Invoice.
-12. Raise Complaint / Administrative Review for unresolved pre-approval disputes.
-13. Rate Provider and optionally Rate Beneficiary after Completed.
-14. Provider Verification.
-15. Block, Report and Administrative Review.
-16. Manage Provider Subscription Records.
+1. Guest Public Browse / Search / Public Provider Profile access.
+2. Log In / Create Account and Manage Account / Portal Access.
+3. Manage Provider Profile and Activities.
+4. Manage Categories, Areas and Service Areas.
+5. Search and View Providers.
+6. Manage Portfolio / Catalog.
+7. Create and Manage Requests.
+8. Submit, Edit and Withdraw Provider Responses.
+9. Private Communication / Inquiry with one persistent Conversation per Beneficiary–Provider pair.
+10. Select Provider or Confirm Direct Transaction Start.
+11. Manage Transaction and Cancellation.
+12. Create, Revise and Approve Final Invoice.
+13. Raise Complaint / Administrative Review for unresolved pre-approval disputes.
+14. Rate Provider and optionally Rate Beneficiary after Completed.
+15. Provider Verification.
+16. Block, Report and Administrative Review.
+17. Manage Provider Subscription Records.
 
 هذه القائمة وصف تحليلي للCapabilities وليست بديلًا عن FR IDs في SRS.
 
@@ -203,3 +226,4 @@ YADD منصة رقمية محلية ضمن نطاق MVP في أمانة العا
 - Detailed AI provider/threshold/retention policy.
 - Subscription package prices/payment-proof details and exact expiry effects.
 - Provider Type switching policy after initial selection.
+- Exact UX continuation after Guest authenticates from a protected CTA; this does not change the authorization rule.
