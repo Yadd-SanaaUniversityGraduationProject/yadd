@@ -1,27 +1,50 @@
 # نموذج الحساب والبوابات — Account & Portal Model
 
-> **الحالة:** `ANALYZED_APPROVED — SYNCHRONIZED 2026-09-12`
+> **الحالة:** `ANALYZED_APPROVED — SYNCHRONIZED 2026-09-15 THROUGH DEC-077`
 >
-> **أساس القرارات:** DEC-008..011, DEC-030, DEC-034/035, DEC-074/076.
+> **أساس القرارات:** DEC-008..011, DEC-030, DEC-034/035, DEC-074/076/077.
 
 ## 1. القرار الأساسي للحساب
 
 يعتمد YADD **حساب `User` واحدًا لكل شخص**. لا يمثل `Beneficiary` و`Provider` نوعين منفصلين من الحسابات.
 
-عند الاستخدام الأول، يمكن للشخص اختيار البوابة التي يبدأ منها:
+قبل Authentication يمكن للشخص استخدام المنصة بصفة `Guest` ضمن نطاق التصفح العام فقط. `Guest` ليس حسابًا ولا كيان بيانات مستقلًا؛ عند محاولة وظيفة محمية يجب تنفيذ `Log In` أو `Create Account` قبل متابعة الإجراء — DEC-077.
+
+بعد Authentication، يمكن للمستخدم عند الاستخدام الأول اختيار البوابة التي يبدأ منها:
 
 1. `Beneficiary Portal`
 2. `Provider Portal`
 
 هذا الاختيار يتحكم فقط في تجربة البداية/التهيئة (`onboarding/start experience`) ولا ينشئ نوع حساب دائمًا.
 
-## 2. بوابة المستفيد — Beneficiary Portal
+## 2. Guest / Public Access
 
-يمكن لـ`User` استخدام إمكانات `Beneficiary` دون امتلاك `Provider Profile`.
+يمكن لـ`Guest`:
+- تصفح المحتوى العام؛
+- البحث/التصفية عن Providers؛
+- فتح `Public Provider Profile`؛
+- استعراض Portfolio/Catalog وبيانات النشاط/المناطق العامة ومؤشرات الملف العامة المسموح بها.
+
+لا يمكن لـ`Guest` تنفيذ وظائف محمية مثل:
+- Create/Close Request؛
+- Private Inquiry/Chat؛
+- Provider Response/Selection interactions؛
+- Transaction/Invoice actions؛
+- Ratings؛
+- Block/Report؛
+- Provider management/verification/subscription functions.
+
+يمكن إبقاء أزرار بعض الوظائف المحمية ظاهرة، لكن الضغط عليها يوجّه إلى `Log In` أو `Create Account`. يجب أن يفرض Backend/API Authentication/Authorization فعليًا، ولا يعتمد الأمان على الواجهة وحدها.
+
+لا يعرض Public Provider Profile رقم الهاتف أو وسائل اتصال مباشرة خاصة؛ التواصل الأساسي داخل YADD لا يحتاج كشف رقم الهاتف — DEC-046/077.
+
+## 3. بوابة المستفيد — Beneficiary Portal
+
+يمكن لـ`User` authenticated استخدام إمكانات `Beneficiary` دون امتلاك `Provider Profile`.
 
 تشمل إمكانات المستفيد الأساسية: الاكتشاف، إنشاء `Request`، التواصل، اختيار `Provider`/بدء `Transaction`، مراجعة الفاتورة، تقييم المقدم، و`Block/Report`، مع الخضوع لقواعد العمل ذات الصلة.
 
-## 3. بوابة المقدم — Provider Portal
+## 4. بوابة المقدم — Provider Portal
 
 تستخدم إمكانات `Provider` ملف `Provider Profile` مرتبطًا بحساب `User` نفسه.
 
@@ -34,18 +57,20 @@
 
 > **Open:** سياسة تغيير `ProviderProfile.providerType` بعد الاختيار/التفعيل لم تعتمد بعد، ولا يجوز استنتاج السماح بالتبديل من هذا النموذج.
 
-## 4. التبديل بين البوابات — Portal Switching
+## 5. التبديل بين البوابات — Portal Switching
 
 - يمكن لـ`Beneficiary` إنشاء/استكمال `Provider Profile` من الحساب نفسه؛
 - بعد استيفاء شروط بوابة المقدم، يمكن لـ`User` التبديل بين `Beneficiary Portal` و`Provider Portal`؛
 - يمكن لـ`User` الذي بدأ كمقدم استخدام إمكانات `Beneficiary` دون إنشاء حساب آخر.
 
-## 5. النموذج المفاهيمي
+## 6. النموذج المفاهيمي
 
 ```mermaid
 flowchart TD
-    START([First Use]) --> CHOOSE{Start As}
-    CHOOSE -->|Beneficiary| U[Create or Use User Account]
+    G[Guest] --> PUB[Public Browse / Search / Provider Profile]
+    G --> AUTH[Log In / Create Account]
+    AUTH --> CHOOSE{Start As}
+    CHOOSE -->|Beneficiary| U[User Account]
     CHOOSE -->|Provider| U
     U --> B[Beneficiary Portal]
     U --> HAS{Provider Profile Eligible?}
@@ -59,10 +84,11 @@ flowchart TD
 
 يجب أن تكون جميع التسميات داخل المخطط الأكاديمي النهائي باللغة الإنجليزية وفق `DEC-072`.
 
-## 6. القواعد المعتمدة
+## 7. القواعد المعتمدة
 
 | ID | القاعدة | الحالة |
 |---|---|---|
+| ACC-BR-00 | يسمح للGuest بالتصفح العام فقط قبل Authentication، والوظائف المحمية تحتاج Log In/Create Account. | `ANALYZED_APPROVED` |
 | ACC-BR-01 | حساب `User` واحد لكل شخص. | `ANALYZED_APPROVED` |
 | ACC-BR-02 | اختيار الاستخدام الأول يحدد بوابة البداية، وليس نوع حساب دائمًا. | `ANALYZED_APPROVED` |
 | ACC-BR-03 | يرتبط `Provider Profile` بـ`User` ولا يمثل حسابًا منفصلًا. | `ANALYZED_APPROVED` |
@@ -71,8 +97,9 @@ flowchart TD
 | ACC-BR-06 | تتطلب وظائف التقديم الخاصة بالمقدم `Provider Profile` متحققًا ومستوفيًا شروط الأهلية ذات الصلة. | `ANALYZED_APPROVED` |
 | ACC-BR-07 | في MVP يختار `Provider Profile` نوعًا واحدًا فقط: `SERVICE` أو `PRODUCT`، ولا يجمع النوعين معًا. | `ANALYZED_APPROVED` |
 | ACC-BR-08 | يمكن اختيار تصنيف واحد أو أكثر داخل نوع Provider نفسه؛ Draft قد يحتوي صفرًا مؤقتًا، لكن الأهلية تتطلب تصنيفًا صالحًا واحدًا على الأقل. | `ANALYZED_APPROVED` |
+| ACC-BR-09 | Public Provider Profile لا يكشف رقم الهاتف أو بيانات التحقق/البيانات الحساسة للGuest. | `ANALYZED_APPROVED` |
 
-## 7. حدود تفاصيل التحقق — Verification Detail Boundary
+## 8. حدود تفاصيل التحقق — Verification Detail Boundary
 
 عملية `Provider Verification` نفسها معتمدة، وتتضمن كحد أدنى وثيقة هوية رسمية إضافة إلى صورة شخصية مع الوثيقة ومراجعة بشرية نهائية.
 
@@ -83,13 +110,15 @@ flowchart TD
 
 هذه التفاصيل لا تغير بنية الحساب/البوابات.
 
-## 8. الأثر على المخططات — Diagram Impact
+## 9. الأثر على المخططات — Diagram Impact
 
 بالنسبة للمخططات الحالية:
+- أضف `Guest` كActor في مخططات Use Case/DFD التي تعرض Public Browse؛
+- لا تنشئ Class/Entity باسم `Guest` لمجرد وجود Actor غير authenticated؛
 - لا تنشئ كيانين منفصلين باسم `Customer Account` و`Provider Account`؛
 - مثّل `Beneficiary` و`Provider` كـActors سلوكيين يستخدمان هوية `User` نفسها؛
 - استخدم مفاهيميًا `USER 1 → 0..1 PROVIDER_PROFILE`؛
 - لا تمثل Service وProduct كنوعين فعالين معًا على Provider Profile نفسه؛
 - مثّل تعدد التصنيفات داخل النوع عبر `ProviderActivity`/`Category`؛
 - يمكن إظهار `Service Provider` و`Product Provider` كتخصصين (`specializations`) للـ`Provider` العام عندما يضيف ذلك وضوحًا؛
-- لا يوجد `Guest` actor معتمد.
+- `Create Request`, `Communicate / Inquire` وبقية الأفعال المحمية تحتاج Authentication؛ ظهور CTA للGuest لا يعني منحه صلاحية Use Case المحمية.
