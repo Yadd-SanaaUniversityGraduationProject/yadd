@@ -1,6 +1,6 @@
 # YADD Diagrams — Working Sources and Governance
 
-> **Diagram drafting status:** `UML WORKING PACKAGE ORGANIZED — SYNCHRONIZED 2026-09-11`
+> **Diagram drafting status:** `WORKING PACKAGE SYNCHRONIZED 2026-09-15 THROUGH DEC-077`
 >
 > هذه الصفحة تحدد مصادر السلطة، بنية ملفات الرسم، وقواعد التصدير حتى لا تختلط Semantic Models مع Editable Diagram Sources أو Generated Exports.
 
@@ -44,6 +44,7 @@ diagrams/
         │   └── uc-*-sequence.md
         └── class/
             ├── README.md
+            ├── 00-integrated-master.md
             ├── 01-account-provider-discovery.md
             ├── 02-transaction-invoice-ratings.md
             └── 03-verification-subscription-trust.md
@@ -54,7 +55,7 @@ diagrams/
 - `docs/` يحكم معنى المشروع والتحليل والمتطلبات.
 - `diagrams/03-analysis/uml/` يحتوي Working Diagram Sources المشتقة من تلك الوثائق.
 - قاعدة التنظيم الحالية: **one rendered diagram = one working source file**، مع README/index للحزمة عندما توجد عدة Views لنموذج واحد.
-- لا ننشئ نسخًا مكررة من DFD/ERD/Use Case فقط لأجل التنظيم؛ تبقى مصادرها الحالية في وثائق التحليل إلى أن يتم إعداد editable visual source نهائي.
+- لا ننشئ نسخًا مكررة من DFD/ERD/Use Case فقط لأجل التنظيم؛ تبقى مصادرها الحالية في وثائق التحليل إلى أن يتم إعداد editable visual source نهائي. إعادة تنظيم `diagrams/` لتجميع DFD/ERD/Use Case مستقبلًا تحتاج Repository Structure approval منفصل.
 - عند إنشاء ملفات `.puml` أو `.drawio` أو ما يعادلها لاحقًا، توضع تحت نوع المخطط المناسب داخل `diagrams/` مع الحفاظ على التتبع إلى الوثيقة الحاكمة.
 - Generated exports مثل SVG/PNG/PDF لا تصبح Source of Truth، ولا يجوز تعديلها يدويًا بما يجعلها تختلف عن المصدر القابل للتعديل.
 
@@ -83,16 +84,19 @@ diagrams/
 - `03-analysis/uml/sequence/uc-09-provider-verification-sequence.md`
 - `03-analysis/uml/sequence/uc-10-manage-portfolio-catalog-sequence.md`
 
+`UC-00` Guest browsing/auth-gating behavior is currently specified semantically in `08-use-cases.md`/`10-UML.md`; a standalone Sequence/Activity source may be added only if needed for the final academic package.
+
 ### Class
 
 - `03-analysis/uml/class/README.md`
+- `03-analysis/uml/class/00-integrated-master.md`
 - `03-analysis/uml/class/01-account-provider-discovery.md`
 - `03-analysis/uml/class/02-transaction-invoice-ratings.md`
 - `03-analysis/uml/class/03-verification-subscription-trust.md`
 
-الـClass files الثلاثة هي Views لنفس Conceptual Domain Model وليست ثلاثة نماذج مستقلة.
+هذه الملفات تمثل **Detailed Analysis Class Model واحدًا**: Integrated Master View + ثلاث Detailed Subject-Area Views. الـMaster ليس نموذجًا رابعًا مستقلًا.
 
-كل الملفات أعلاه حاليًا `REVIEW DRAFT — NOT BASELINED` ما لم يذكر خلاف ذلك داخل الملف نفسه.
+كل ملف يحتفظ بحالته داخل الملف نفسه؛ لا تعتبر الحزمة Baselined لمجرد وجود Working Source.
 
 ## 4. Do Not Use as Current Diagram Authority
 
@@ -111,12 +115,14 @@ Legacy material is retained for history during stabilization; it is not the curr
 Every current diagram must preserve these rules:
 
 - Diagram labels are **English only** — DEC-072.
-- Main actors: `Beneficiary`, `Provider`, `YADD Administrator`.
+- Main actors: `Guest`, `Beneficiary`, `Provider`, `YADD Administrator` — DEC-067/077.
+- `Guest` is unauthenticated and may Browse/Search/View public provider content only; protected actions require Authentication — DEC-077.
+- Guest does **not** create a `GUEST` entity/Class solely because it is an Actor.
+- Public Provider Profile does not expose phone/direct private-contact data or sensitive/private records — DEC-036/046/077.
 - `Service Provider` and `Product Provider` are Provider specializations when useful.
-- No current `Guest` actor.
 - One User account; optional single Provider Profile.
 - In MVP, each Provider Profile is exactly one provider type: `SERVICE` or `PRODUCT`; both cannot be active on the same profile — DEC-074.
-- Number of activities/categories inside the chosen provider type remains `PROV-ACT-Q01 — Needs Analysis`.
+- A Provider may select one or more categories within that single Provider Type; Draft may temporarily have zero, but provider-function eligibility requires at least one valid Category — DEC-076.
 - Request route: `Request → Provider Response → Selection → Transaction`.
 - No standalone `Agreement` entity/process/store.
 - One active Provider Response per Provider per Request; edit/withdraw before selection while Request is Open.
@@ -148,14 +154,17 @@ Open policy/detail questions do not block the core diagrams, but their unresolve
 - AI provider/retention/appeal details;
 - subscription packages/prices/payment-proof procedure and some expiry effects;
 - any numeric cap on concurrent Transactions;
-- number of Provider Activities/categories allowed inside the single chosen provider type;
-- physical linking of Message/System Event records to specific Transactions within the continuing Conversation.
+- Provider Type switching after initial selection;
+- physical linking of Message/System Event records to specific Transactions within the continuing Conversation;
+- exact UI continuation behavior after Guest authenticates from a protected CTA.
 
 Represent the approved concept generically or omit the unresolved numeric/policy detail.
 
 ## 7. Editable and Exported Sources
 
 During analysis, Markdown/Mermaid files under the organized package remain working visual/modeling sources derived from the authoritative documents above. Final academic diagrams may be redrawn in PlantUML, draw.io, or another approved diagram tool for standard notation and print quality.
+
+For Use Case Diagrams, the final visual package must preserve the approved DEC-077 Guest boundary and the `include/extend` semantics documented in `08-use-cases.md`/`10-UML.md`; the visual reference supplied by the team controls presentation style, not project semantics.
 
 When exporting later:
 - keep the editable source (`.puml`, `.drawio`, or equivalent);
