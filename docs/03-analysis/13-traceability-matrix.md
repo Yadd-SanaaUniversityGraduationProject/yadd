@@ -1,24 +1,27 @@
 # Requirements Traceability Matrix — Core Diagram Model
 
-> **الحالة:** `CORE TRACEABILITY SYNCHRONIZED 2026-09-12 — DESIGN TRACEABILITY PENDING`
+> **الحالة:** `CORE TRACEABILITY SYNCHRONIZED 2026-09-15 THROUGH DEC-077 — DESIGN TRACEABILITY PENDING`
 >
 > الغرض من هذه النسخة هو منع اعتماد المخططات على FR/Entities تاريخية. المرجع الأعلى يبقى Decision Register ثم SRS وBusiness Rules.
 >
-> **ملاحظة:** معرفات `UR-OFF-*` محفوظة من SRS لأسباب الاستمرارية فقط؛ المصطلح الحالي في النموذج هو `Provider Response` وليس `Offer`. كما أن أسماء `UC-01..UC-10` في `08-use-cases.md` تمثل مواصفات سيناريوهات وقد تفكك إلى أكثر من Oval في Main Use Case Diagram عند الحاجة؛ لذلك عمود `Use Case / Interaction` أدناه يتتبع كلا المستوىين: المواصفة الأصلية + اسم الـActor goal المستخدم في الرسم.
+> **ملاحظة:** معرفات `UR-OFF-*` محفوظة من SRS لأسباب الاستمرارية فقط؛ المصطلح الحالي في النموذج هو `Provider Response` وليس `Offer`. كما أن أسماء `UC-00..UC-10` في `08-use-cases.md` تمثل مواصفات سيناريوهات وقد تفكك إلى أكثر من Oval في Main Use Case Diagram عند الحاجة؛ لذلك عمود `Use Case / Interaction` أدناه يتتبع كلا المستوىين: المواصفة الأصلية + اسم الـActor goal المستخدم في الرسم.
 
 | Requirement | Decision Basis | Business Rule / Model | Use Case / Interaction | DFD Process | Core Entity / Concept | Status |
 |---|---|---|---|---|---|---|
+| UR-GST-01 | DEC-077 | BR-044 / Guest Public Access | UC-00 → Browse Public Content / Search Providers / View Provider Profile / View Portfolio-Catalog | 2.0 | Public projection of PROVIDER_PROFILE, CATEGORY, AREA, SHOWCASE_ITEM; **no GUEST entity** | `ANALYZED_APPROVED` |
+| UR-GST-02 | DEC-077 | BR-045/046 / Account-Portal Model | UC-00 protected-action alternative → Log In / Create Account; protected actor goals have Authentication precondition | 1.0 / protected processes | Authentication boundary; no protected domain record before auth | `ANALYZED_APPROVED` |
+| UR-GST-03 | DEC-036/046/077 | BR-047 | UC-00 Public Provider Profile | 2.0 | Public/private field boundary; phone not public | `ANALYZED_APPROVED` |
 | UR-ACC-01 | DEC-008 | Account/Portal Model | Manage Account | 1.0 | USER | `ANALYZED_APPROVED` |
 | UR-ACC-02 | DEC-009/011 | Account/Portal Model | Manage Account / Switch Portal | 1.0 | USER, PROVIDER_PROFILE | `ANALYZED_APPROVED` |
 | UR-PROV-01 | DEC-074/030 | BR-041 | Manage Provider Profile / Manage Service Areas | 1.0 | PROVIDER_PROFILE | `ANALYZED_APPROVED` |
 | UR-PROV-02 | DEC-076 | BR-043 / Provider Activity Model | Manage Provider Profile / Manage Provider Categories | 1.0 | PROVIDER_ACTIVITY, CATEGORY | `ANALYZED_APPROVED` |
 | UR-VER-01 | DEC-034/035 | BR-027/028 | UC-09 → Submit Verification / Review Provider Verification | 6.0 | VERIFICATION_CASE, VERIFICATION_ARTIFACT, ADMIN_AUDIT_RECORD (conceptual) | `ANALYZED_APPROVED` |
-| UR-DIS-01 | DEC-012/031..033 | BR-001/031 | UC-01 → Search Providers / View Provider Profile | 2.0 | CATEGORY, AREA, AREA_ADJACENCY, PROVIDER_SERVICE_AREA, PROVIDER_PROFILE | `ANALYZED_APPROVED` |
-| UR-PORT-01 | DEC-064 | BR-035/036 | UC-01 / UC-10 → View Provider Profile / Manage Portfolio-Catalog | 1.0 / 2.0 | SHOWCASE_ITEM | `ANALYZED_APPROVED` |
-| UR-REQ-01 | DEC-012 | BR-001 | UC-02 → Create Request | 2.0 | REQUEST | `ANALYZED_APPROVED` |
+| UR-DIS-01 | DEC-012/031..033/077 | BR-001/031/044 | UC-00/01 → Search Providers / View Provider Profile | 2.0 | CATEGORY, AREA, AREA_ADJACENCY, PROVIDER_SERVICE_AREA, PROVIDER_PROFILE | `ANALYZED_APPROVED` |
+| UR-PORT-01 | DEC-064/077 | BR-035/036/044 | UC-00/01/10 → View Provider Profile / View Portfolio-Catalog / Manage Portfolio-Catalog | 1.0 / 2.0 | SHOWCASE_ITEM | `ANALYZED_APPROVED` |
+| UR-REQ-01 | DEC-012/077 | BR-001/045 | UC-02 → Create Request; Authentication precondition | 2.0 | REQUEST | `ANALYZED_APPROVED` |
 | UR-REQ-02 | DEC-013 | BR-002/003 | UC-02 → Create Request | 2.0 | REQUEST | `ANALYZED_APPROVED` |
 | UR-REQ-03 | DEC-048 | BR-018/020 | UC-02 alternative → Close Open Request | 2.0 | REQUEST | `ANALYZED_APPROVED` |
-| UR-COM-01 | DEC-046 | BR-005/008 | UC-01 / UC-03 / UC-04 → Communicate / Inquire | 3.0 | CONVERSATION, MESSAGE | `ANALYZED_APPROVED` |
+| UR-COM-01 | DEC-046/077 | BR-005/008/045/047 | UC-01 / UC-03 / UC-04 → Communicate / Inquire; Authentication precondition | 3.0 | CONVERSATION, MESSAGE | `ANALYZED_APPROVED` |
 | UR-COM-02 | DEC-075 | BR-042 / In-App Communication Model | UC-01 / UC-03 / UC-04 communication context; persistent conversation invariant | 3.0 / 4.0 | CONVERSATION, SYSTEM_EVENT, TRANSACTION context | `DERIVED_FROM_APPROVED_DECISION` |
 | UR-OFF-01 | DEC-013/041 | BR-003/033 | UC-03 → Submit Provider Response | 3.0 | PROVIDER_RESPONSE | `ANALYZED_APPROVED` |
 | UR-OFF-02 | DEC-014/047 | BR-004/006 | UC-04 → Compare Provider Responses / Select Provider / Create Active Transaction | 3.0 / 4.0 | REQUEST, PROVIDER_RESPONSE, TRANSACTION | `ANALYZED_APPROVED` |
@@ -32,7 +35,7 @@
 | UR-REV-01 | DEC-051 | BR-014/016 | UC-07 → Rate Provider; Precondition: Transaction Completed | 5.0 | PROVIDER_RATING | `ANALYZED_APPROVED` |
 | UR-REV-02 | DEC-063 | BR-015/016 | UC-07B → Rate Beneficiary; Precondition: Transaction Completed | 5.0 | BENEFICIARY_RATING | `ANALYZED_APPROVED` |
 | UR-REP-01 | DEC-063 | BR-034 | UC-07B / provider interaction context | 5.0 | BENEFICIARY_RATING / interaction record | `ANALYZED_APPROVED` |
-| UR-SAFE-01 | DEC-053/054 | BR-021/022 | UC-08 → Block User / Report User-Content / Review Reports-Flags | 6.0 | USER_BLOCK, REPORT, SAFETY_FLAG, ADMIN_AUDIT_RECORD (conceptual) | `ANALYZED_APPROVED` |
+| UR-SAFE-01 | DEC-053/054/077 | BR-021/022/045 | UC-08 → Block User / Report User-Content / Review Reports-Flags; Authentication precondition | 6.0 | USER_BLOCK, REPORT, SAFETY_FLAG, ADMIN_AUDIT_RECORD (conceptual) | `ANALYZED_APPROVED` |
 | UR-PAY-01 | DEC-018/041/073 | BR-024/033/040 | Scope constraint on Provider Response / Invoice / Complaint flows | — | **No Payment/Escrow/Refund/Settlement entity** | `ANALYZED_APPROVED` |
 | UR-SUB-01 | DEC-042/043 | BR-029/030 | Manage Provider Subscription + Validate Response Eligibility | 6.0 | SUBSCRIPTION | `ANALYZED_APPROVED` |
 
@@ -40,8 +43,9 @@
 
 | UML Relationship | Type | Decision / Rule Basis | Status |
 |---|---|---|---|
-| View Provider Profile → Search Providers | `<<extend>>` | UC-01 / DEC-012/064 | `DERIVED_FROM_APPROVED_FLOW` |
-| Communicate / Inquire → View Provider Profile | `<<extend>>` | DEC-046 | `DERIVED_FROM_APPROVED_FLOW` |
+| View Provider Profile → Search Providers | `<<extend>>` | UC-00/01 / DEC-012/064/077 | `DERIVED_FROM_APPROVED_FLOW` |
+| View Portfolio / Catalog → View Provider Profile | `<<extend>>` | UC-00/10 / DEC-064/077 | `DERIVED_FROM_APPROVED_FLOW` |
+| Communicate / Inquire → View Provider Profile | `<<extend>>` | DEC-046/077 | `DERIVED_FROM_APPROVED_FLOW` |
 | Communicate / Inquire → Compare Provider Responses | `<<extend>>` | UC-03/04 / DEC-046 | `DERIVED_FROM_APPROVED_FLOW` |
 | Select Provider → Compare Provider Responses | `<<extend>>` | DEC-014/047 | `DERIVED_FROM_APPROVED_FLOW` |
 | Submit Provider Response → View Matching Requests | `<<extend>>` | UC-03 / DEC-043/070 | `DERIVED_FROM_APPROVED_FLOW` |
@@ -54,36 +58,40 @@
 | Raise Transaction Complaint → Review Final Invoice | `<<extend>>` | DEC-025/073 | `DERIVED_FROM_APPROVED_FLOW` |
 | Approve Final Invoice → Complete Transaction | `<<include>>` | DEC-071 / BR-010 | `DERIVED_FROM_APPROVED_RULE` |
 
+> `Log In` / `Create Account` are **not** mechanically included in every protected Use Case. Authentication is a Precondition for authenticated actor goals; Guest attempts on protected CTAs redirect to Authentication according to DEC-077. This is a derived modeling rule, not a new Team Decision.
+
 > علاقات الجدول أعلاه **Derived Modeling Relations** وليست Team Decisions جديدة. إذا تغير السيناريو أو Business Rule الحاكم، يجب إعادة تقييم العلاقة بدل معاملتها كقرار مستقل.
 
 ## Diagram-Level Invariants
 
 The following must remain consistent across Use Case, DFD, Activity, Sequence, ERD and Class diagrams:
 
-1. Main actors: `Beneficiary`, `Provider`, `YADD Administrator`; Service/Product Provider are Provider specializations when useful.
-2. No `Guest` actor unless a later decision explicitly adds anonymous browsing.
-3. One User account; optional single Provider Profile; each Provider Profile is exclusively `SERVICE` or `PRODUCT` in MVP — DEC-074.
-4. A Provider may choose one or more Categories inside that type; Draft may temporarily have none, but provider-function eligibility requires at least one valid Category — DEC-076.
-5. Canonical request path: `Request → Provider Response → Selection → Transaction`; no standalone Agreement entity/store.
-6. Direct Search requires `Request Transaction Start → Other Party Confirmation → Active Transaction`.
-7. One active Provider Response per Provider per Request; edit/withdraw allowed before selection while Request is Open.
-8. `RequiresDeposit` is a boolean attribute of Provider Response, not a Payment use case/entity/process.
-9. Between the same Beneficiary and Provider, one persistent Conversation may contain multiple Transactions over time; transaction boundaries must be visible through system separators/events — DEC-075.
-10. The persistent-conversation Class constraint is `{unique Conversation per Beneficiary–Provider pair}`; physical enforcement is Chapter Four work.
-11. Invoice approval makes Transaction `Completed`.
-12. `Completed` is the successful terminal Transaction state; there is no Transaction state `Closed`.
-13. Unresolved pre-approval invoice dispute makes Transaction `Disputed`, a terminal unsuccessful state.
-14. Administration reviews platform evidence and applies YADD policy; it does not arbitrate financial/commercial rights or order Payment/Refund/Compensation.
-15. Ratings occur only after Completed; no Ratings for Cancelled or Disputed Transactions.
-16. `Rate Provider` and `Rate Beneficiary` are Post-Transaction actor goals with `Transaction = Completed` preconditions; this lifecycle dependency is not represented as `include/extend` merely because it occurs later.
-17. `Block User` and `Report User / Content` are separate actor goals; neither is mandatory for the other. Static model may represent them separately as `USER_BLOCK` and `REPORT`.
-18. Neighborhood adjacency is managed YADD reference data and is not modeled as GPS-radius eligibility logic.
-19. Transaction Cancellation records actor, reason and time.
-20. Verification resubmission/rejection review supports a recorded note/reason.
-21. Safety Flags and sensitive administrative review/access events require conceptual traceability without inventing thresholds or a final physical schema; a Flag must preserve enough reason/category information for human review.
-22. `Close Open Request` is distinct from `Cancel Transaction`.
-23. No Beneficiary↔Provider Payment, Escrow, Refund or Settlement entity/process inside YADD.
-24. Diagram labels are English only according to DEC-072.
+1. Main actors now include `Guest`, `Beneficiary`, `Provider`, `YADD Administrator`; Service/Product Provider are Provider specializations when useful — DEC-067/077.
+2. Guest may Browse/Search/View public provider content only; protected interactive/transactional actions require Authentication — DEC-077.
+3. Guest does not create a `GUEST` domain entity/Class solely because anonymous browsing exists.
+4. Public Provider Profile does not expose phone/direct private-contact information or sensitive/private data — DEC-036/046/077.
+5. One User account; optional single Provider Profile; each Provider Profile is exclusively `SERVICE` or `PRODUCT` in MVP — DEC-074.
+6. A Provider may choose one or more Categories inside that type; Draft may temporarily have none, but provider-function eligibility requires at least one valid Category — DEC-076.
+7. Canonical request path: `Request → Provider Response → Selection → Transaction`; no standalone Agreement entity/store.
+8. Direct Search requires `Request Transaction Start → Other Party Confirmation → Active Transaction`.
+9. One active Provider Response per Provider per Request; edit/withdraw allowed before selection while Request is Open.
+10. `RequiresDeposit` is a boolean attribute of Provider Response, not a Payment use case/entity/process.
+11. Between the same Beneficiary and Provider, one persistent Conversation may contain multiple Transactions over time; transaction boundaries must be visible through system separators/events — DEC-075.
+12. The persistent-conversation Class constraint is `{unique Conversation per Beneficiary–Provider pair}`; physical enforcement is Chapter Four work.
+13. Invoice approval makes Transaction `Completed`.
+14. `Completed` is the successful terminal Transaction state; there is no Transaction state `Closed`.
+15. Unresolved pre-approval invoice dispute makes Transaction `Disputed`, a terminal unsuccessful state.
+16. Administration reviews platform evidence and applies YADD policy; it does not arbitrate financial/commercial rights or order Payment/Refund/Compensation.
+17. Ratings occur only after Completed; no Ratings for Cancelled or Disputed Transactions.
+18. `Rate Provider` and `Rate Beneficiary` are Post-Transaction actor goals with `Transaction = Completed` preconditions; this lifecycle dependency is not represented as `include/extend` merely because it occurs later.
+19. `Block User` and `Report User / Content` are separate actor goals; neither is mandatory for the other. Static model may represent them separately as `USER_BLOCK` and `REPORT`.
+20. Neighborhood adjacency is managed YADD reference data and is not modeled as GPS-radius eligibility logic.
+21. Transaction Cancellation records actor, reason and time.
+22. Verification resubmission/rejection review supports a recorded note/reason.
+23. Safety Flags and sensitive administrative review/access events require conceptual traceability without inventing thresholds or a final physical schema; a Flag must preserve enough reason/category information for human review.
+24. `Close Open Request` is distinct from `Cancel Transaction`.
+25. No Beneficiary↔Provider Payment, Escrow, Refund or Settlement entity/process inside YADD.
+26. Diagram labels are English only according to DEC-072.
 
 ## Open Items and Traceability Scope
 
@@ -91,11 +99,13 @@ Open numeric/policy items such as expiry timing, AI thresholds, exact identity-d
 
 The structural questions previously open are now resolved at the analysis level:
 
+- Guest public browsing and Authentication gating are resolved by DEC-077.
 - Conversation reuse is resolved by DEC-075: one persistent Conversation between the same parties can group multiple Transactions.
 - Provider Activity multiplicity is resolved by DEC-076: multiple Categories are allowed inside one Provider Type; Draft may have zero temporarily, while provider-function eligibility requires at least one.
 
 Still open:
 
+- Exact public presentation of optional non-sensitive rating details beyond already-approved provider indicators may be refined in interface design without exposing private beneficiary interaction records.
 - Provider Type switching after initial selection remains unresolved and must not be inferred from class operations.
 - Physical enforcement of Conversation pair uniqueness and linking messages/system events to a specific Transaction remains Chapter Four work.
 
