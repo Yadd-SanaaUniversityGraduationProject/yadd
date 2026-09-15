@@ -37,27 +37,27 @@
 | Business Rules | قواعد النظام | `PARTIALLY ANALYZED — SYNCHRONIZED THROUGH DEC-077` | Guest public/private/auth rules BR-044..047 مضافة؛ السياسات المفتوحة تبقى Needs Verification |
 | Lifecycles | حالات الطلب/المعاملة/الفاتورة/التقييم | `PARTIALLY ANALYZED — CURRENT THROUGH DEC-073` | DEC-077 لا يضيف Domain lifecycle جديدًا؛ Authentication boundary خارج lifecycle الكائنات الحالية |
 | Use Cases | سيناريوهات الاستخدام | `ANALYZED — CORE SYNCHRONIZED THROUGH DEC-077` | UC-00 Guest browsing + protected-action auth boundary؛ final academic visual redraw pending |
-| In-App Communication Model | التواصل قبل/بعد المعاملة | `ANALYZED_APPROVED — SYNCHRONIZED 2026-09-12` | التواصل الأساسي لا يحتاج كشف رقم الهاتف؛ Guest لا يدخل Chat قبل Authentication وفق DEC-077/SRS |
+| In-App Communication Model | التواصل قبل/بعد المعاملة | `ANALYZED_APPROVED — SYNCHRONIZED THROUGH DEC-077` | Guest لا يدخل Private Chat قبل Authentication؛ phone ليس public contact field |
 | Account & Portal Model | الحساب والبوابات | `ANALYZED_APPROVED — SYNCHRONIZED THROUGH DEC-077` | Guest pre-auth public access موثق؛ User واحد بعد Authentication |
 | Provider Activity Model | نوع المقدم وتصنيفاته | `ANALYZED_APPROVED — SYNCHRONIZED THROUGH DEC-074/076` | نوع حصري SERVICE/PRODUCT؛ تصنيف واحد أو أكثر داخل النوع؛ Draft قد يبدأ بصفر |
 | Request Closure/Cancellation/Expiry | إغلاق الطلب والإلغاء والانتهاء | `ANALYZED_APPROVED / PARTIAL POLICY — SYNCHRONIZED 2026-09-04` | REQ-EXP-Q01 وSAFE-REQ-Q01 |
 | Rating & Provider Reputation | التقييم وسمعة المقدم | `ANALYZED_APPROVED — SYNCHRONIZED 2026-09-04` | Guest لا ينشئ Rating؛ الأهلية تبقى Completed Transaction |
 | Location & Neighborhood Model | المطابقة والموقع | `ANALYZED_APPROVED / PARTIAL DATA` | LOC-DATA-Q01 وLOC-OPS-TIME-Q01 |
-| Provider Verification Model | تحقق المقدم | `ANALYZED_APPROVED / PARTIAL POLICY` | أنواع الوثائق/الاحتفاظ/التراخيص ما تزال مفتوحة |
+| Provider Verification Model | تحقق المقدم | `ANALYZED_APPROVED / PARTIAL POLICY` | أنواع الوثائق/الاحتفاظ/التراخيص ما تزال مفتوحة؛ بيانات التحقق غير عامة أصلًا |
 | AI Trust & Safety Model | التحقق والمراقبة المدعومة بالAI | `ANALYZED_APPROVED / PARTIAL POLICY` | السياسة/العتبات/المزود/الاحتفاظ مفتوحة |
-| Provider Subscription Model | اشتراك المقدم | `ANALYZED_APPROVED / PARTIAL COMMERCIAL POLICY` | الباقات/الدفع الخارجي/أثر الانتهاء ما تزال مفتوحة |
-| Process/Data Specifications | مواصفات العمليات والتدفقات والمخازن | `ANALYZED — CURRENT CORE SEMANTICS` | Guest لا ينشئ store/entity؛ راجع DEC-077 عند final freeze |
-| Chapter One v1 | الفصل الأول | `v1.1 — TEXT SYNCHRONIZED — READY FOR PRELIMINARY DEFENSE REVIEW` | Derived Draft؛ final review/formatting pending |
-| Chapter Two v1 | الفصل الثاني | `v1.1 — TEXT SYNCHRONIZED — CORE SOURCES VERIFIED — REVIEW OPEN` | final research/reference closure pending |
-| Chapter Three v1 | الفصل الثالث | `v1.2 — WORKING DRAFT — RE-SYNC REQUIRED THROUGH DEC-077` | مشتق؛ يجب مزامنته مع Guest/Use Case/DFD changes قبل اعتباره current |
+| Provider Subscription Model | اشتراك المقدم | `ANALYZED_APPROVED / PARTIAL COMMERCIAL POLICY` | الباقات/الدفع الخارجي/أثر الانتهاء ما تزال مفتوحة؛ تفاصيل الاشتراك ليست Public Guest data |
+| Process/Data Specifications | مواصفات العمليات والتدفقات والمخازن | `ANALYZED — SYNCHRONIZED THROUGH DEC-077` | Guest public flows + Authentication boundary موثقة؛ لا Guest store/entity |
+| Chapter One v1 | الفصل الأول | `v1.1 — TEXT SYNCHRONIZED — READY FOR PRELIMINARY DEFENSE REVIEW` | Derived Draft؛ final review/formatting pending؛ إن أضيف وصف تفصيلي للـGuest لاحقًا يجب اشتقاقه من DEC-077 لا من الفصل |
+| Chapter Two v1 | الفصل الثاني | `v1.1 — TEXT SYNCHRONIZED — CORE SOURCES VERIFIED — REVIEW OPEN` | final research/reference closure pending؛ DEC-077 قرار منتج ولا يغير الأدلة البحثية التاريخية |
+| Chapter Three v1 | الفصل الثالث | `v1.3 — WORKING DRAFT — TEXT SYNCHRONIZED THROUGH DEC-077` | Guest/Provider type/categories/persistent Conversation محدثة؛ final diagrams/export pending |
 | DFD | تدفقات البيانات | `DRAFT FOR PRELIMINARY DEFENSE — CORE SYNCHRONIZED THROUGH DEC-077` | Guest entity/flows added; standard visual redraw/export pending |
 | UML | Use Case/Activity/Sequence/Class | `DRAFT FOR PRELIMINARY DEFENSE — USE CASE MODEL SYNCHRONIZED THROUGH DEC-077 — CLASS MODEL VALID` | final academic Use Case redraw + Activity/Sequence/Visual/A4 review ما يزال مفتوحًا |
-| ERD | النموذج المفاهيمي | `DRAFT FOR PRELIMINARY DEFENSE — STRUCTURALLY VALID THROUGH DEC-077` | DEC-077 لا يضيف GUEST entity؛ final visual review + Chapter 4 derivation pending |
-| Traceability Matrix | تتبع المتطلبات للمخططات | `CORE TRACEABILITY SYNCHRONIZED THROUGH DEC-077 — DESIGN TRACEABILITY PENDING` | Guest requirements traced to UC/DFD/UI boundary; إكمال Design/final diagram traceability قبل baseline |
+| ERD | النموذج المفاهيمي | `DRAFT FOR PRELIMINARY DEFENSE — CORE SYNCHRONIZED THROUGH DEC-077` | Guest explicitly non-persistent; phone/public-private boundary documented; final visual review pending |
+| Traceability Matrix | تتبع المتطلبات للمخططات | `CORE TRACEABILITY SYNCHRONIZED THROUGH DEC-077 — DESIGN TRACEABILITY PENDING` | Guest requirements traced to UC/DFD/UI/data boundary; إكمال final design traceability قبل baseline |
 | Class Diagram Package | النموذج الكائني التفصيلي | `SEMANTICALLY VERIFIED — TEAM APPROVED — SYNCHRONIZED THROUGH DEC-077 — NOT BASELINED` | DEC-077 لا يضيف Guest Class؛ Visual/A4 finalization pending |
 | Design Gate | ضبط مستوى اعتماد التصميم | `OPEN FOR PRELIMINARY DESIGN — FINAL BASELINE STILL BLOCKED` | Chapter 4 full preliminary design required؛ final baseline later |
-| Database Design / Relation Schema | Relation Schema | `DRAFT FOR PRELIMINARY DEFENSE — RE-SYNC REQUIRED AFTER DEC-074..076` | DEC-077 لا يفرض Guest table؛ auth/public projection design يجب مراعاته لاحقًا |
-| Data Dictionary | الحقول والقيود | `CURRENT-MODEL SKELETON — RE-SYNC REQUIRED AFTER DEC-074..076` | public/private visibility ليست DB entity جديدة؛ SQL types/constraints/design details pending |
+| Database Design / Relation Schema | Relation Schema | `DRAFT FOR PRELIMINARY DEFENSE — RE-SYNCHRONIZED THROUGH DEC-077 — NOT BASELINED` | DEC-074/075/076 structural corrections applied; no Guest table; public/private projection documented; physical mapping still open |
+| Data Dictionary | الحقول والقيود | `DRAFT FOR PRELIMINARY DEFENSE — CURRENT MODEL SKELETON — SYNCHRONIZED THROUGH DEC-077` | Provider type/activity/conversation/cancellation + Guest visibility boundary updated; SQL types/constraints still TBD |
 | Interface Design | hierarchy/wireframes/forms | `DRAFT FOR PRELIMINARY DEFENSE — SYNCHRONIZED THROUGH DEC-077` | Guest public screens + auth gate مضافة؛ Figma/UX validation/final screens pending |
 | Queries & Reports | الاستعلامات والتقارير | `DRAFT FOR PRELIMINARY DEFENSE — REQUIREMENTS-ALIGNED` | report details/SQL pending; no invented KPIs |
 
