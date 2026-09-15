@@ -1,8 +1,8 @@
 # Data Flow Diagrams — YADD Preliminary Defense
 
-> **الحالة:** `DRAFT FOR PRELIMINARY DEFENSE — CORE SYNCHRONIZED 2026-09-12`
+> **الحالة:** `DRAFT FOR PRELIMINARY DEFENSE — CORE SYNCHRONIZED 2026-09-15 THROUGH DEC-077`
 >
-> **المراجع الحاكمة:** DEC-012/041/046/047/048/050/051/053/063/064/066/067/068/069/070/071/072/073/074/075/076 + `05-SRS.md` + `06-business-rules.md` + `07-lifecycles.md` + `08-use-cases.md`.
+> **المراجع الحاكمة:** DEC-012/041/046/047/048/050/051/053/063/064/066/067/068/069/070/071/072/073/074/075/076/077 + `05-SRS.md` + `06-business-rules.md` + `07-lifecycles.md` + `08-use-cases.md`.
 >
 > يستخدم المشروع DFD وUML معًا وفق DEC-060. يمثل DFD أدناه **تدفقات البيانات**، ولا يستخدم لوصف حالات الكائنات أو تسلسل الرسائل التفصيلي. جميع التسميات داخل الرسم النهائي باللغة الإنجليزية وفق DEC-072.
 
@@ -16,10 +16,14 @@
 
 ```mermaid
 flowchart LR
+    G[Guest]
     B[Beneficiary]
     P[Provider]
     A[YADD Administrator]
     Y((YADD System))
+
+    G -->|Public Search Criteria; Public Browse Requests| Y
+    Y -->|Public Search Results; Public Provider Profiles; Public Portfolio or Catalog Data; Authentication Prompt for Protected Actions| G
 
     B -->|Account Data; Search Criteria; Request Data; Messages; Provider Selection; Transaction Start Request or Confirmation; Invoice Response; Complaint Data; Rating Data; Report Data| Y
     Y -->|Search Results; Provider Information; Provider Responses; Messages; Transaction Start Confirmation Request; Transaction Status; Invoice Data; Complaint Status; Notifications; History| B
@@ -33,10 +37,12 @@ flowchart LR
 
 ### Context Boundaries
 
+- `Guest` هو Actor خارجي غير authenticated وله Public Browse/Search/View فقط وفق DEC-077؛ لا ينشئ Request/Chat/Transaction/Rating/Block/Report قبل Authentication.
+- ظهور CTA محمي للGuest لا يعني تنفيذ العملية؛ يعيد النظام Authentication Prompt، ويجب أن يفرض Backend/API الصلاحية فعليًا.
 - `Beneficiary` and `Provider` are behavioral actors; the same person may use both roles through one User account.
 - `Service Provider` and `Product Provider` are specializations of Provider and need not appear as separate Context entities; a single Provider Profile is one type only in MVP — DEC-074.
 - `YADD Administrator` is the main external administrative actor; detailed roles may be decomposed later.
-- No `Guest` actor is currently approved.
+- Public Provider data excludes private direct-contact data such as phone number and excludes verification/sensitive/private records — DEC-036/046/077.
 - No Payment Gateway, Escrow service or Delivery service appears because these are outside YADD's current Beneficiary↔Provider transaction scope.
 - Backend/API and Database are internal to YADD and must not appear as Context external entities.
 - Administration review of a Transaction complaint is limited to platform evidence/policy; YADD is not modeled as a financial/commercial arbitrator.
@@ -67,6 +73,7 @@ flowchart LR
 
 ```mermaid
 flowchart LR
+    G[Guest]
     B[Beneficiary]
     P[Provider]
     A[YADD Administrator]
@@ -87,6 +94,11 @@ flowchart LR
     D7[(D7 Portfolio / Catalog)]
     D8[(D8 Verification / Subscription / Reports & Admin Audit)]
 
+    G -->|Public Search Criteria; Public Browse Request| P2
+    P2 -->|Public Search Results; Public Provider Profile References; Public Portfolio or Catalog References| G
+    G -->|Log In or Create Account Data when chosen| P1
+    P1 -->|Authentication Result / Account Access| G
+
     B -->|Account Data| P1
     P -->|Account and Provider Profile Data; Service Area Data| P1
     P1 <--> D1
@@ -99,6 +111,7 @@ flowchart LR
     P2 <--> D1
     P2 <--> D2
     P2 <--> D3
+    P2 <--> D7
     P2 -->|Search Results; Provider References; Request Status| B
     P2 -->|Matching Request Data| P
 
@@ -144,6 +157,7 @@ flowchart LR
 ### 1.0 Manage Accounts & Provider Profiles
 
 Manages:
+- Guest transition to `Log In / Create Account` when Authentication is required;
 - one User account per person;
 - one optional Provider Profile per User;
 - exactly one Provider Type (`SERVICE` or `PRODUCT`) per Provider Profile in MVP — DEC-074;
@@ -151,14 +165,19 @@ Manages:
 - service areas;
 - Portfolio/Catalog metadata and watermarked display copy.
 
+Guest itself is not stored as a domain account/entity merely because anonymous browsing exists.
+
 ### 2.0 Manage Discovery & Requests
 
 Manages:
-- Direct Search by category/area;
-- creation/publication of Request;
+- public Direct Search/browse for Guest and authenticated Beneficiary;
+- public Provider Profile/Portfolio-Catalog discovery using only approved public fields;
+- creation/publication of Request for authenticated Beneficiary only;
 - discovery of eligible Providers using provider type/category/area constraints;
 - Request closure before Provider selection;
 - Request expiry in principle.
+
+Public responses to Guest must not expose direct private-contact data such as provider phone number or sensitive/private records. If Guest attempts a protected action, UI/API routes to Authentication rather than creating the protected domain action — DEC-077.
 
 Exact expiry/reminder timing is `REQ-EXP-Q01` and must not be shown as a numeric value in the diagram.
 
@@ -170,13 +189,13 @@ Manages:
 - edit/withdraw response while Request is Open and before selection;
 - optional proposed price/note;
 - `RequiresDeposit = Yes/No` only;
-- private communication before Transaction;
+- private communication before Transaction for authenticated Users only;
 - one persistent Conversation per Beneficiary–Provider pair — DEC-075;
 - system separators/events that mark Transaction boundaries inside the persistent Conversation;
 - Provider selection in Request route;
 - `Transaction Start Request` and `Start Confirmation` in Direct Search route.
 
-Chat alone does not create Transaction. A persistent Conversation may contain zero or multiple Transactions over time.
+Chat alone does not create Transaction. A persistent Conversation may contain zero or multiple Transactions over time. Guest cannot create/join the private Conversation before Authentication.
 
 ### 4.0 Manage Transactions & Invoices
 
@@ -206,7 +225,7 @@ Manages Post-Transaction operations **only after `Completed`**:
 - completed-work count and provider reputation indicators;
 - limited beneficiary interaction record.
 
-Ratings do not change Transaction status. No ratings are created for `Cancelled` or `Disputed` Transactions.
+Ratings do not change Transaction status. No ratings are created for `Cancelled` or `Disputed` Transactions. Guest cannot create Ratings.
 
 ### 6.0 Manage Administration, Verification & Safety
 
@@ -226,6 +245,7 @@ AI is an internal assistance mechanism, not an external actor in the main DFD. S
 
 | External Entity | Context data represented in Level 0? |
 |---|---|
+| Guest | Yes — public search/browse input, public provider/profile/portfolio output, optional authentication transition |
 | Beneficiary | Yes — account, discovery, requests, messages, selection/start confirmation, invoice response, complaints, ratings and reports |
 | Provider | Yes — profile, verification, service areas, portfolio/catalog, responses, messages, start confirmation, invoices, ratings and reports |
 | YADD Administrator | Yes — verification, subscription, moderation/reports, complaint review and administrative records |
@@ -239,7 +259,8 @@ AI is an internal assistance mechanism, not an external actor in the main DFD. S
 - Delivery-driver or shipment-management process.
 - Shopping Cart.
 - `Agreement` process/store/entity.
-- Guest actor.
+- Guest-created protected domain actions before Authentication.
+- Public exposure of phone/direct private-contact data or sensitive/private records.
 - numeric values that remain open such as expiry timing and AI thresholds.
 - Provider Type switching behavior not yet approved.
 
@@ -247,8 +268,9 @@ AI is an internal assistance mechanism, not an external actor in the main DFD. S
 
 ## 6. Diagram Readiness Checklist
 
-- [x] Context and Level 0 use the same three main external entities.
-- [x] Processes and stores are aligned with current SRS/Business Rules through DEC-076 in their applicable scope.
+- [x] Context and Level 0 use the same four main external entities: Guest, Beneficiary, Provider, YADD Administrator.
+- [x] Guest public browse and Authentication boundary are aligned with DEC-077.
+- [x] Processes and stores are aligned with current SRS/Business Rules through DEC-077 in their applicable scope.
 - [x] `Provider Response` is the canonical term; no Offer store/process.
 - [x] edit/withdraw response rule is represented.
 - [x] Direct Search start request + confirmation is represented.
