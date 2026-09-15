@@ -1,14 +1,15 @@
 # نماذج UML — YADD Preliminary Defense
 
-> **الحالة:** `DRAFT FOR PRELIMINARY DEFENSE — CLASS PACKAGE SEMANTICALLY VERIFIED 2026-09-12`
+> **الحالة:** `DRAFT FOR PRELIMINARY DEFENSE — SYNCHRONIZED THROUGH DEC-077 — CLASS PACKAGE SEMANTICALLY VERIFIED`
 >
-> **المراجع الحاكمة:** DEC-046/047/048/050/051/053/054/063/064/066/067/068/069/070/071/072/073/074/075/076 + `05-SRS.md` + `06-business-rules.md` + `07-lifecycles.md` + `08-use-cases.md` + `11-ERD.md`.
+> **المراجع الحاكمة:** DEC-046/047/048/050/051/053/054/063/064/066/067/068/069/070/071/072/073/074/075/076/077 + `05-SRS.md` + `06-business-rules.md` + `07-lifecycles.md` + `08-use-cases.md` + `11-ERD.md`.
 >
 > يستخدم YADD كلًا من DFD وUML وفق `DEC-060`. يجب أن تكون جميع التسميات داخل المخططات الأكاديمية النهائية باللغة الإنجليزية وفق `DEC-072`.
 
 ## 1. نموذج الـActors
 
 ### الـActors الرئيسيون
+- `Guest`
 - `Beneficiary`
 - `Provider`
   - تخصص `Service Provider` عند الحاجة
@@ -20,26 +21,31 @@
 - `Content Moderator`
 - `Subscription Administrator`
 
-استخدام `YADD Administrator` في المخطط الرئيسي هو تبسيط نمذجي، ولا يعني أن موظفًا واحدًا يمتلك جميع الصلاحيات الإدارية.
+`Guest` Actor غير authenticated للتصفح العام فقط؛ لا يمثل حسابًا أو Entity/Class. استخدام `YADD Administrator` في المخطط الرئيسي هو تبسيط نمذجي، ولا يعني أن موظفًا واحدًا يمتلك جميع الصلاحيات الإدارية.
 
 ---
 
 ## 2. Main Use Case Diagram — Working UML Decomposition
 
-> هذا الرسم يعيد تفكيك السيناريوهات المركبة إلى Actor goals أصغر حتى تكون علاقات `<<include>>` و`<<extend>>` ذات معنى UML واضح. لا تستخدم العلاقات لتمثيل مجرد التسلسل الزمني؛ التبعيات الزمنية/الحالية تمثل كـPreconditions/Postconditions في المواصفات. اللون والأسلوب البصري يحاكيان القالب المرجعي الذي وفره الفريق، بينما Actors القياسية النهائية تحتاج إعادة رسم/تصدير بصري لاحق.
+> هذا الرسم يعيد تفكيك السيناريوهات المركبة إلى Actor goals أصغر حتى تكون علاقات `<<include>>` و`<<extend>>` ذات معنى UML واضح. لا تستخدم العلاقات لتمثيل مجرد التسلسل الزمني؛ التبعيات الزمنية/الحالية والمصادقة تمثل كـPreconditions/Postconditions في المواصفات. الرسم الحالي Working Semantic Diagram، بينما النسخة النهائية ستعاد صياغتها بصريًا وفق المرجع الأكاديمي المعتمد من الفريق.
 
 ```mermaid
 %%{init: {"theme":"base","themeVariables":{"background":"#FFFFFF","primaryColor":"#ADD8E6","primaryTextColor":"#1F2933","primaryBorderColor":"#9ABFCB","lineColor":"#737373","clusterBkg":"#FFFFFF","clusterBorder":"#B7B7B7","fontFamily":"Arial"}}}%%
 flowchart LR
+    G["Guest"]:::actor
     B["Beneficiary"]:::actor
     P["Provider"]:::actor
     A["YADD Administrator"]:::actor
 
     subgraph YADD["YADD System"]
+        UC0([Browse Public Content])
         UC1([Manage Account])
+        UCL([Log In])
+        UCR([Create Account])
 
         UC2([Search Providers])
         UC3([View Provider Profile])
+        UCP([View Portfolio / Catalog])
         UC4([Create Request])
         UC5([Close Open Request])
         UC6([Compare Provider Responses])
@@ -80,9 +86,17 @@ flowchart LR
         UC36([Manage Provider Subscription])
     end
 
+    G --- UC0
+    G --- UC2
+    G --- UC3
+    G --- UCP
+    G --- UCL
+    G --- UCR
+
     B --- UC1
     B --- UC2
     B --- UC3
+    B --- UCP
     B --- UC4
     B --- UC5
     B --- UC6
@@ -124,6 +138,7 @@ flowchart LR
     A --- UC36
 
     UC3 -.->|«extend»| UC2
+    UCP -.->|«extend»| UC3
     UC7 -.->|«extend»| UC3
     UC7 -.->|«extend»| UC6
     UC8 -.->|«extend»| UC6
@@ -141,32 +156,36 @@ flowchart LR
 
     classDef usecase fill:#ADD8E6,stroke:#9ABFCB,stroke-width:1px,color:#1F2933;
     classDef actor fill:#FFFFFF,stroke:#FFFFFF,color:#222222,font-weight:bold;
-    class UC1,UC2,UC3,UC4,UC5,UC6,UC7,UC8,UC9,UC10,UC11,UC12,UC13,UC14,UC15,UC16,UC17,UC18,UC19,UC20,UC21,UC22,UC23,UC24,UC25,UC26,UC27,UC28,UC29,UC30,UC31,UC32,UC33,UC34,UC35,UC36 usecase;
+    class UC0,UC1,UCL,UCR,UC2,UC3,UCP,UC4,UC5,UC6,UC7,UC8,UC9,UC10,UC11,UC12,UC13,UC14,UC15,UC16,UC17,UC18,UC19,UC20,UC21,UC22,UC23,UC24,UC25,UC26,UC27,UC28,UC29,UC30,UC31,UC32,UC33,UC34,UC35,UC36 usecase;
     style YADD fill:#FFFFFF,stroke:#B7B7B7,stroke-width:1.5px,color:#222222;
 ```
 
 ### دلالات Main Use Case
 
-1. `Service Provider` و`Product Provider` تخصصان من `Provider` وفق `DEC-067`، ولا يلزم تكرارهما داخل الرسم الرئيسي.
-2. لا يوجد Actor مستقل باسم `Guest` حاليًا.
-3. لا توجد Use Case/Entity باسم `Agreement`; المسار القياسي في الطلب هو `Request → Provider Response → Selection → Transaction`.
-4. `View Provider Profile <<extend>> Search Providers` لأن البحث قد ينتهي دون فتح ملف بعينه.
-5. `Communicate / Inquire <<extend>> View Provider Profile` في Direct Search، ويمتد أيضًا من `Compare Provider Responses` في Request Route لأن الاستفسار قبل الاختيار اختياري.
-6. `Select Provider <<extend>> Compare Provider Responses`: المقارنة يمكن أن تنتهي دون اختيار، بينما الاختيار يحدث عند قرار المستفيد. عند حدوث الاختيار فهو **يتضمن** `Create Active Transaction` لأن `DEC-047/066` يفرضان بدء Transaction في Request Route.
-7. `Submit Provider Response <<extend>> View Matching Requests`: مشاهدة الطلب لا تلزم Provider بالاستجابة. وعند الإرسال يجب دائمًا تنفيذ `Validate Response Eligibility` الذي يمثل شرط Verified Provider + Active Subscription + Open Request.
-8. `Request Transaction Start <<extend>> Communicate / Inquire` في Direct Search فقط؛ المحادثة قد تستمر أو تنتهي دون Transaction. أما عند `Confirm Transaction Start` الإيجابي فيتم تضمين `Create Active Transaction` وفق `DEC-069`.
-9. `Review Final Invoice` هو الأساس؛ `Approve Final Invoice` و`Request Invoice Revision` و`Raise Transaction Complaint` امتدادات شرطية لقرار المراجعة. عند الاعتماد فقط يتم `<<include>> Complete Transaction` لأن الاعتماد يجعل Transaction = `Completed` دائمًا.
-10. `Rate Provider` و`Rate Beneficiary` Use Cases مستقلة من ناحية Actor goal، لكنهما تتطلبان `Transaction = Completed`. الأولى إلزامية على Beneficiary بعد Completed، والثانية اختيارية على Provider؛ لذلك لا تمثل تبعية Completed بأسهم `include/extend`.
-11. `Cancel Transaction` تتطلب Transaction قائمة وفي حالة تسمح بالإلغاء. `Close Open Request` مختلفة عنها وتتطلب Request Open قبل الاختيار.
-12. `Edit Provider Response` و`Withdraw Provider Response` تتطلبان استجابة فعالة مع Request Open وقبل selection وفق `DEC-070`; لا تربطان بعلاقة `include/extend` مصطنعة مع `Submit Provider Response`.
-13. `Revise Final Invoice` تتطلب `Revision Requested` سابقة؛ و`Review Provider Verification`/`Review Transaction Complaint` أهداف إدارية لاحقة مستقلة تعتمد على وجود submission/complaint، وليست أجزاء included داخل فعل المرسل.
-14. `Block User` و`Report User / Content` منفصلتان؛ يستطيع المستخدم تنفيذ أحدهما دون الآخر، وReport يخضع لاحقًا لمراجعة إدارية.
-15. `Create Active Transaction`, `Complete Transaction`, و`Validate Response Eligibility` تمثل سلوكًا نظاميًا مشتركًا/إلزاميًا، وليس Actor goals مستقلة؛ لذلك لا ترتبط مباشرة بـActor.
-16. اللون المستخدم لحالات الاستخدام هو `LightBlue (#ADD8E6)` مع خلفية بيضاء وحدود رمادية رفيعة لمحاكاة القالب المرجعي؛ هذا قرار عرض لا Business Rule.
-17. استمرار Conversation وإعادة استخدامها بين نفس Beneficiary/Provider وفق DEC-075 هو قيد Domain/Interaction ولا يحتاج Use Case مستقلة في الرسم الرئيسي؛ يجب أن يبقى محفوظًا في Activity/Sequence/Class models.
+1. `Guest` معتمد وفق `DEC-077` للتصفح العام: `Browse Public Content`, `Search Providers`, `View Provider Profile`, و`View Portfolio / Catalog`، ويمكنه اختيار `Log In` أو `Create Account`.
+2. لا يرتبط Guest مباشرة بـ`Create Request`, `Communicate / Inquire`, Transaction, Ratings, Block/Report أو أي protected Use Case. ظهور CTA له لا يعني منحه الصلاحية؛ الضغط يوجّه إلى Authentication.
+3. `Log In`/`Create Account` لا يمثلان `<<include>>` داخل كل protected Use Case؛ Authentication هو Precondition للـauthenticated actor goals.
+4. `Service Provider` و`Product Provider` تخصصان من `Provider` وفق `DEC-067/074`، ولا يلزم تكرارهما داخل الرسم الرئيسي.
+5. لا توجد Use Case/Entity باسم `Agreement`; المسار القياسي في الطلب هو `Request → Provider Response → Selection → Transaction`.
+6. `View Provider Profile <<extend>> Search Providers` لأن البحث قد ينتهي دون فتح ملف بعينه.
+7. `View Portfolio / Catalog <<extend>> View Provider Profile` لأن فتح محتوى العرض تفصيل اختياري من الملف.
+8. `Communicate / Inquire <<extend>> View Provider Profile` في Direct Search، ويمتد أيضًا من `Compare Provider Responses` في Request Route لأن الاستفسار قبل الاختيار اختياري، ويتطلب Authentication.
+9. `Select Provider <<extend>> Compare Provider Responses`: المقارنة يمكن أن تنتهي دون اختيار، بينما الاختيار يحدث عند قرار المستفيد. عند حدوث الاختيار فهو **يتضمن** `Create Active Transaction` لأن `DEC-047/066` يفرضان بدء Transaction في Request Route.
+10. `Submit Provider Response <<extend>> View Matching Requests`: مشاهدة الطلب لا تلزم Provider بالاستجابة. وعند الإرسال يجب دائمًا تنفيذ `Validate Response Eligibility` الذي يمثل شرط Verified Provider + Active Subscription + Open Request.
+11. `Request Transaction Start <<extend>> Communicate / Inquire` في Direct Search فقط؛ المحادثة قد تستمر أو تنتهي دون Transaction. أما عند `Confirm Transaction Start` الإيجابي فيتم تضمين `Create Active Transaction` وفق `DEC-069`.
+12. `Review Final Invoice` هو الأساس؛ `Approve Final Invoice` و`Request Invoice Revision` و`Raise Transaction Complaint` امتدادات شرطية لقرار المراجعة. عند الاعتماد فقط يتم `<<include>> Complete Transaction` لأن الاعتماد يجعل Transaction = `Completed` دائمًا.
+13. `Rate Provider` و`Rate Beneficiary` Use Cases مستقلة من ناحية Actor goal، لكنهما تتطلبان `Transaction = Completed`. الأولى إلزامية على Beneficiary بعد Completed، والثانية اختيارية على Provider؛ لذلك لا تمثل تبعية Completed بأسهم `include/extend`.
+14. `Cancel Transaction` تتطلب Transaction قائمة وفي حالة تسمح بالإلغاء. `Close Open Request` مختلفة عنها وتتطلب Request Open قبل الاختيار.
+15. `Edit Provider Response` و`Withdraw Provider Response` تتطلبان استجابة فعالة مع Request Open وقبل selection وفق `DEC-070`; لا تربطان بعلاقة `include/extend` مصطنعة مع `Submit Provider Response`.
+16. `Revise Final Invoice` تتطلب `Revision Requested` سابقة؛ و`Review Provider Verification`/`Review Transaction Complaint` أهداف إدارية لاحقة مستقلة تعتمد على وجود submission/complaint، وليست أجزاء included داخل فعل المرسل.
+17. `Block User` و`Report User / Content` منفصلتان؛ يستطيع المستخدم authenticated تنفيذ أحدهما دون الآخر، وReport يخضع لاحقًا لمراجعة إدارية.
+18. `Create Active Transaction`, `Complete Transaction`, و`Validate Response Eligibility` تمثل سلوكًا نظاميًا مشتركًا/إلزاميًا، وليس Actor goals مستقلة؛ لذلك لا ترتبط مباشرة بـActor.
+19. استمرار Conversation وإعادة استخدامها بين نفس Beneficiary/Provider وفق DEC-075 هو قيد Domain/Interaction ولا يحتاج Use Case مستقلة في الرسم الرئيسي؛ يجب أن يبقى محفوظًا في Activity/Sequence/Class models.
+20. Public Provider Profile لا يعرض رقم الهاتف أو direct private-contact data أو البيانات الحساسة/الخاصة وفق DEC-036/046/077.
 
 ### Preconditions / Postconditions التي يجب ألا تُفهم كـ`include`/`extend`
 
+- Protected Beneficiary/Provider actions: Precondition = authenticated User.
 - `Rate Provider`: Precondition = `Transaction Completed`; Post-Transaction required step.
 - `Rate Beneficiary`: Precondition = `Transaction Completed`; optional Provider action.
 - `Cancel Transaction`: Precondition = active/cancellable Transaction.
@@ -191,7 +210,7 @@ flowchart LR
 | Provider Verification and Activation | `diagrams/03-analysis/uml/activity/activity-provider-verification.md` | `REVIEW DRAFT — NOT BASELINED` |
 | Report and Administrative Review | `diagrams/03-analysis/uml/activity/activity-report-administrative-review.md` | `REVIEW DRAFT — NOT BASELINED` |
 
-هذه الحزمة Route/Decision-focused ولا تعني أن لكل Use Case مخطط Activity مستقل. التغييرات في الحالات يجب أن تبقى متسقة مع `07-lifecycles.md`، بينما تفاصيل الرسائل بين المشاركين تبقى في Sequence Package.
+هذه الحزمة Route/Decision-focused ولا تعني أن لكل Use Case مخطط Activity مستقل. إضافة Guest لا تغير Core Transaction Activities الحالية؛ أي Activity خاصة بـ`Guest attempts protected action → Authentication` يمكن إضافتها عند الحاجة للتوثيق البصري ولا تنشئ Domain state جديدًا. التغييرات في الحالات يجب أن تبقى متسقة مع `07-lifecycles.md`، بينما تفاصيل الرسائل بين المشاركين تبقى في Sequence Package.
 
 ---
 
@@ -216,13 +235,16 @@ flowchart LR
 | UC-09 — Provider Verification / Portal Activation | `diagrams/03-analysis/uml/sequence/uc-09-provider-verification-sequence.md` | `REVIEW DRAFT — NOT BASELINED` |
 | UC-10 — Manage Portfolio / Catalog | `diagrams/03-analysis/uml/sequence/uc-10-manage-portfolio-catalog-sequence.md` | `REVIEW DRAFT — NOT BASELINED` |
 
+`UC-00` Guest browsing/auth-gate sequence has not yet been exported as a standalone Sequence Diagram; this is a presentation/documentation item, not a missing requirement. Existing protected-flow sequences assume an authenticated actor unless explicitly showing Authentication.
+
 ### Sequence modeling rules
 
 - التسلسل المرجعي هو: `Decision / Business Rule → Use Case → Main & Alternative Flow → Sequence Diagram`.
 - لا يشترط أن يحتوي كل UC على رسم واحد فقط؛ يمكن تفكيك UC المركبة إلى Scenarios متماسكة إذا كان ذلك يحسن الوضوح وقابلية الطباعة، دون إنشاء متطلبات أو Use Cases جديدة.
-- `Beneficiary`, `Provider`, و`YADD Administrator` هم Actors العامة؛ الأدوار الإدارية المتخصصة تستخدم عند الحاجة.
+- `Guest`, `Beneficiary`, `Provider`, و`YADD Administrator` هم Actors العامة؛ الأدوار الإدارية المتخصصة تستخدم عند الحاجة.
 - أسماء `*UI`, `*Controller`, وRoles المماثلة هي **Derived Interaction Roles** وليست Implementation Classes معتمدة.
 - `alt`, `opt`, و`loop` تستخدم للحالات البديلة/الاختيارية/المتكررة عند الحاجة، مع تجنب أنماط Mermaid الهشة التي تسبب Activation-state errors على GitHub.
+- Guest لا ينفذ protected operation قبل Authentication؛ UI redirect لا يغني عن Backend authorization.
 - لا تنشئ Chat وحدها Transaction؛ في Direct Search يلزم Request Transaction Start ثم Confirmation من الطرف الآخر.
 - بين نفس Beneficiary وProvider يجب إعادة استخدام Conversation المستمرة، مع فواصل/أحداث نظام واضحة لحدود Transactions — DEC-075.
 - في Request Route يبدأ Transaction عند اختيار Provider.
@@ -255,6 +277,7 @@ Package index: `diagrams/03-analysis/uml/class/README.md`.
 
 ### Class modeling boundaries
 
+- `Guest` لا يضاف كClass لمجرد أنه Actor غير authenticated؛ لا توجد له Domain identity قبل إنشاء/استخدام User Account وفق DEC-077.
 - Attributes وData Types وVisibility وOperations تعرض عندما يوجد لها سند تحليلي كافٍ؛ الـOperations Analysis-level responsibilities وليست implementation signatures نهائية.
 - `ProviderProfile.selectProviderType()` يمثل اختيار النوع أثناء الإعداد؛ Type Switching لاحقًا غير محسوم.
 - `Conversation ↔ Transaction` محسومة وفق DEC-075: Conversation واحدة مستمرة لكل Beneficiary–Provider pair يمكن أن تجمع عدة Transactions، مع قيد مفاهيمي `{unique Conversation per Beneficiary–Provider pair}`.
@@ -270,9 +293,9 @@ Package index: `diagrams/03-analysis/uml/class/README.md`.
 
 ## 6. قائمة جاهزية المخططات — Diagram Readiness Checklist
 
-- [x] الـActors متوافقة مع `DEC-067`.
+- [x] الـActors متوافقة مع `DEC-067/077`: Guest, Beneficiary, Provider, YADD Administrator.
+- [x] Guest public browse/authentication boundary ممثلة، ولا يمنح Guest protected Use Cases.
 - [x] التسميات الإنجليزية فقط متوافقة مع `DEC-072`.
-- [x] لا يوجد `Guest` actor.
 - [x] لا توجد `Agreement` مستقلة.
 - [x] المصطلح القياسي هو `Provider Response`.
 - [x] تعديل/سحب `Provider Response` ممثلان كتبعيات مشروطة لا كعلاقات UML مصطنعة.
@@ -280,11 +303,12 @@ Package index: `diagrams/03-analysis/uml/class/README.md`.
 - [x] Request Route وDirect Search يفصلان آليتي بدء Transaction بصورة صحيحة.
 - [x] `<<include>>` يستخدم فقط للسلوك الإلزامي داخل الـBase Use Case.
 - [x] `<<extend>>` يستخدم فقط للسلوك الشرطي/الاختياري.
-- [x] التبعيات الزمنية/الحالية مثل Ratings بعد Completed ممثلة كـPreconditions/Postconditions.
+- [x] Authentication والتبعيات الزمنية/الحالية مثل Ratings after Completed ممثلة كـPreconditions/Postconditions، لا include/extend مصطنع.
 - [x] Activity package منظمة كمسارات مستقلة قابلة للتتبع بدل تكرار Activity لكل UC.
 - [x] Sequence package مفككة إلى Scenarios مستقلة قابلة للتتبع بدل Giant Route Sequence.
 - [x] أسماء UI/Controller في Sequence Diagrams موسومة كـDerived modeling roles وليست Implementation Classes معتمدة.
 - [x] Class package تحتوي Integrated Master + ثلاث Detailed Subject-Area Views لنفس النموذج.
+- [x] Guest لا ينشئ Class/Entity في ERD/Class Model بحد ذاته.
 - [x] Area adjacency وBlock ممثلان في النموذج المفاهيمي.
 - [x] Cancellation actor/reason/time وVerification review note ممثلة مفاهيميًا.
 - [x] Safety Flag/Admin Audit ممثلان دون اختلاق physical schema أو thresholds.
@@ -297,5 +321,5 @@ Package index: `diagrams/03-analysis/uml/class/README.md`.
 - [x] تحدث `Ratings` فقط بعد `Completed`، وليس بعد `Cancelled` أو `Disputed`.
 - [x] تقييم `Beneficiary→Provider` إلزامي؛ وتقييم `Provider→Beneficiary` اختياري.
 - [x] `Block User` و`Report User / Content` منفصلتان في الرسم الرئيسي.
-- [ ] ما يزال مطلوبًا اختبار Render لكل Mermaid standalone file ومراجعة Visual/A4 قبل الـbaseline.
-- [ ] ما يزال مطلوبًا اعتماد/تصدير الرسم البصري النهائي وفق ترميز UML القياسي بعد مراجعة الفريق.
+- [ ] ما يزال مطلوبًا إعادة بناء/تصدير Use Case Diagrams بصريًا وفق النموذج الأكاديمي المرجعي الجديد ومراجعة A4.
+- [ ] ما يزال مطلوبًا اختبار Render لبقية Mermaid standalone files ومراجعة Visual/A4 قبل الـbaseline.
