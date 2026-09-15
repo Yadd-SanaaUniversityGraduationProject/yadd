@@ -1,10 +1,10 @@
 # الفصل الثالث — تحليل المتطلبات ونمذجة النظام
 
-> **الإصدار:** `v1.2`
+> **الإصدار:** `v1.3`
 >
-> **الحالة:** `TEXT SYNCHRONIZED — CORE MODEL CURRENT — WORKING DIAGRAMS AVAILABLE — FINAL VISUAL REVIEW PENDING`
+> **الحالة:** `WORKING DRAFT — TEXT SYNCHRONIZED THROUGH DEC-077 — FINAL VISUAL REVIEW PENDING`
 >
-> هذه النسخة مشتقة من Decision Register وSRS v0.9.5 وBusiness Rules وLifecycles وUse Cases وDFD/UML/ERD الحالية حتى `DEC-073`. لا تتغلب على Sources of Truth ولا تجعل SRS Baselined. Working diagrams موجودة في وثائق التحليل، بينما الرسم/التصدير النهائي بالترميز القياسي والمراجعة البشرية ما يزال مطلوبًا قبل Freeze.
+> هذه النسخة مشتقة من Decision Register وSRS v0.9.9 وBusiness Rules وLifecycles وUse Cases وDFD/UML/ERD الحالية حتى `DEC-077`. لا تتغلب على Sources of Truth ولا تجعل SRS Baselined. Working diagrams موجودة في وثائق التحليل، بينما الرسم/التصدير النهائي بالترميز القياسي والمراجعة البشرية ما يزال مطلوبًا قبل Freeze.
 
 ---
 
@@ -67,6 +67,7 @@
 
 الأطراف الأساسية:
 
+- Guest / الزائر غير المسجل.
 - Beneficiary.
 - Service Provider.
 - Product Provider / Home-business Provider.
@@ -74,20 +75,43 @@
 - Project Team.
 - Supervisor / Academic Department.
 
-### 3.3.2 نموذج الحساب والبوابات
+### 3.3.2 نموذج الزائر والحساب والبوابات
 
-يعتمد YADD حساب `User` واحدًا للشخص.
+قبل Authentication يستطيع الشخص استخدام YADD بصفة `Guest` ضمن حدود التصفح العام فقط وفق `DEC-077`:
+
+- Browse public content.
+- Search Providers.
+- View Public Provider Profile.
+- View Portfolio / Catalog display content and approved public indicators.
+
+لا يستطيع Guest تنفيذ `Create Request`, Private Chat/Inquiry, Transaction, Rating, Block أو Report قبل Authentication. قد تبقى الأزرار المحمية ظاهرة، لكن الضغط عليها يوجه إلى `Log In` أو `Create Account`. كما يجب أن يفرض Backend/API Authentication/Authorization فعليًا؛ لا يعتمد الأمان على الواجهة وحدها.
+
+لا يعرض Public Provider Profile رقم الهاتف أو direct private-contact data أو Verification/Subscription/Transaction/Report data أو غيرها من البيانات الحساسة/الخاصة.
+
+بعد Authentication يعتمد YADD حساب `User` واحدًا للشخص:
 
 - اختيار Beneficiary أو Provider عند البداية يحدد الـOnboarding والبوابة الابتدائية، وليس نوع حساب دائمًا.
 - يمكن استخدام Beneficiary Portal مباشرة.
 - يمكن إنشاء `Provider Profile` داخل الحساب نفسه.
 - Provider Portal يحتاج Provider Profile مستوفيًا شروط التحقق والتفعيل.
-- يمكن لـProvider Profile تفعيل Service Activity أو Product Activity أو كليهما.
+- يمكن الانتقال بين Beneficiary Portal وProvider Portal بالحساب نفسه عند استيفاء الشروط.
 
-### 3.3.3 نموذج Actors الرئيسي
+`Guest` Actor خارجي غير authenticated، وليس Entity/Class مستقلة في Domain Model لمجرد التصفح العام.
 
-Actors الرئيسية في المخطط العام:
+### 3.3.3 نموذج Provider
 
+- يمكن لـUser امتلاك صفر أو Provider Profile واحد.
+- في MVP يكون Provider Profile من نوع واحد فقط: `SERVICE` أو `PRODUCT`، ولا يمكن تفعيل النوعين معًا على الملف نفسه — `DEC-074`.
+- داخل النوع المختار يمكن ربط تصنيف واحد أو أكثر عبر `ProviderActivity` و`Category` — `DEC-076`.
+- يسمح Draft Provider Profile مؤقتًا بصفر تصنيفات، لكن أهلية وظائف التقديم تتطلب تصنيفًا صالحًا واحدًا على الأقل.
+- Provider Verification شرط قبل وظائف التقديم، وإرسال Provider Responses جديدة يحتاج كذلك Active Subscription.
+- سياسة تغيير Provider Type بعد اختياره لم تعتمد بعد.
+
+### 3.3.4 نموذج Actors الرئيسي
+
+Actors الرئيسية في المخطط العام وفق `DEC-067` كما عدله `DEC-077`:
+
+- `Guest`
 - `Beneficiary`
 - `Provider`
 - `YADD Administrator`
@@ -98,34 +122,52 @@ Actors الرئيسية في المخطط العام:
 
 ## 3.4 وصف النظام المقترح — Proposed System
 
-يعتمد YADD مسارين أساسيين للوصول إلى المقدم.
+### 3.4.1 Public Discovery / Guest Boundary
 
-### 3.4.1 Direct Search Route
+المسار العام قبل Authentication:
+
+`Browse / Search Providers → Public Provider Profile / Portfolio or Catalog`
+
+إذا حاول Guest تنفيذ Protected Action مثل `Create Request` أو `Communicate / Inquire`:
+
+`Protected CTA → Log In / Create Account → Authenticated User Context`
+
+Authentication هنا شرط للوصول إلى الوظائف المحمية، وليس معنى ذلك أن كل Use Case محمية يجب أن تحتوي `Log In` بعلاقة `<<include>>`.
+
+### 3.4.2 Direct Search Route
+
+بعد Authentication، المسار التفاعلي:
 
 `Search Providers → View Provider Profile / Portfolio or Catalog → Private Inquiry / Chat → Request Transaction Start → Other Party Confirmation → Active Transaction`
 
 القواعد:
 
 - Chat وحدها لا تنشئ Transaction.
+- Private Chat تتطلب Authentication.
 - يمكن لأي طرف إرسال Request Transaction Start.
 - لا تصبح Transaction `Active` إلا بعد تأكيد الطرف الآخر.
 - عدم التأكيد أو الرفض يبقي المحادثة دون Transaction.
+- بين نفس Beneficiary ونفس Provider توجد Conversation واحدة مستمرة يمكن أن تضم صفرًا أو عدة Transactions عبر الزمن — `DEC-075`.
+- تظهر System Events/Separators واضحة عند بدء وانتهاء كل Transaction داخل Conversation المستمرة.
 
-### 3.4.2 Create Request Route
+### 3.4.3 Create Request Route
 
 `Create Request → Matching Providers → Provider Responses → Compare / Chat → Select Provider → Active Transaction`
 
 القواعد:
 
+- `Create Request` يتطلب Authentication.
 - Request قد يكون Service أو Product.
 - السعر الاسترشادي اختياري وغير ملزم.
 - لكل Provider استجابة فعالة واحدة فقط لكل Request.
 - يمكن تعديل/سحب Provider Response ما دام Request في حالة Open ولم يتم الاختيار.
 - Beneficiary يختار مقدمًا واحدًا.
 - عند الاختيار يغلق Request أمام الاستجابات الجديدة وتصبح البقية `NotSelected`.
+- يبدأ Active Transaction مع Provider المختار.
+- إذا كانت Conversation موجودة مسبقًا بين الطرفين يعاد استخدامها ولا تنشأ Conversation جديدة لمجرد بدء Transaction أخرى.
 - لا يوجد `Agreement` entity مستقل في MVP.
 
-### 3.4.3 Common Transaction Flow
+### 3.4.4 Common Transaction Flow
 
 المسار المشترك:
 
@@ -147,26 +189,31 @@ Actors الرئيسية في المخطط العام:
 
 أهم متطلبات المستخدم المحللة حاليًا:
 
-1. استخدام حساب User واحد للاستفادة والتقديم.
-2. الانتقال بين Beneficiary Portal وProvider Portal وفق الصلاحيات.
-3. إنشاء Provider Profile وتفعيل Service أو Product Activity أو كليهما.
-4. التحقق من Provider قبل وظائف التقديم.
-5. البحث المباشر حسب الفئة والمنطقة.
-6. إنشاء Request لخدمة أو منتج.
-7. تمكين Provider المؤهل من إرسال Provider Response واقتراح سعر مختلف عند الحاجة.
-8. تعديل/سحب Provider Response قبل الاختيار وفق القواعد الحالية.
-9. مقارنة الاستجابات واختيار مقدم واحد.
-10. التواصل الخاص قبل Transaction دون اعتبار Chat معاملة.
-11. بدء Direct Search Transaction بعد طلب صريح وتأكيد الطرف الآخر.
-12. إلغاء Transaction بعد البداية مع سبب مسجل وفق القواعد الحالية.
-13. إنشاء Final Invoice ومراجعتها واعتمادها أو طلب تعديلها.
-14. اعتبار Transaction `Completed` بعد اعتماد الفاتورة.
-15. إنهاء Transaction في `Disputed` إذا بقي خلاف الفاتورة غير محلول قبل الاعتماد، مع Complaint/Admin review بلا تحكيم مالي — `DEC-073`.
-16. تقييم Provider إلزاميًا من Beneficiary بعد Completed.
-17. إتاحة تقييم Beneficiary اختياريًا من Provider بعد Completed.
-18. Block + Report مع مراجعة إدارية.
-19. إدارة Portfolio/Catalog داخل Provider Profile.
-20. إدارة Provider Verification وSubscription records ضمن النظام.
+1. Guest يستطيع تصفح المحتوى العام والبحث عن Providers واستعراض Public Provider Profile وPortfolio/Catalog.
+2. Protected actions للGuest تتطلب `Log In` أو `Create Account` قبل المتابعة.
+3. Public Provider Profile لا يكشف رقم الهاتف/direct private-contact data أو البيانات الحساسة.
+4. استخدام حساب User واحد للاستفادة والتقديم بعد Authentication.
+5. الانتقال بين Beneficiary Portal وProvider Portal وفق الصلاحيات.
+6. إنشاء Provider Profile من نوع واحد فقط: Service أو Product في MVP.
+7. اختيار تصنيف واحد أو أكثر داخل نوع Provider نفسه، مع اشتراط تصنيف صالح واحد على الأقل قبل أهلية وظائف التقديم.
+8. التحقق من Provider قبل وظائف التقديم.
+9. البحث المباشر حسب الفئة والمنطقة.
+10. إنشاء Request لخدمة أو منتج للمستخدم authenticated.
+11. تمكين Provider المؤهل من إرسال Provider Response واقتراح سعر مختلف عند الحاجة.
+12. تعديل/سحب Provider Response قبل الاختيار وفق القواعد الحالية.
+13. مقارنة الاستجابات واختيار مقدم واحد.
+14. التواصل الخاص قبل Transaction دون اعتبار Chat معاملة، بعد Authentication.
+15. بدء Direct Search Transaction بعد طلب صريح وتأكيد الطرف الآخر.
+16. الاحتفاظ بـConversation واحدة مستمرة لكل زوج Beneficiary–Provider مع إمكان ارتباطها بعدة Transactions.
+17. إلغاء Transaction بعد البداية مع سبب مسجل وفق القواعد الحالية.
+18. إنشاء Final Invoice ومراجعتها واعتمادها أو طلب تعديلها.
+19. اعتبار Transaction `Completed` بعد اعتماد الفاتورة.
+20. إنهاء Transaction في `Disputed` إذا بقي خلاف الفاتورة غير محلول قبل الاعتماد، مع Complaint/Admin review بلا تحكيم مالي.
+21. تقييم Provider إلزاميًا من Beneficiary بعد Completed.
+22. إتاحة تقييم Beneficiary اختياريًا من Provider بعد Completed.
+23. Block + Report للمستخدم authenticated مع مراجعة إدارية.
+24. إدارة Portfolio/Catalog داخل Provider Profile.
+25. إدارة Provider Verification وSubscription records ضمن النظام.
 
 السياسات الرقمية الثانوية غير المحسومة تبقى Needs Verification ولا تمنع Core Flow.
 
@@ -174,14 +221,23 @@ Actors الرئيسية في المخطط العام:
 
 ## 3.6 المتطلبات الوظيفية — Functional Requirements Overview
 
-### 3.6.1 Account and Provider Profile
+### 3.6.1 Guest / Public Access
 
-- User Account واحد.
+- Public Browse/Search متاح دون Authentication.
+- Guest يمكنه View Public Provider Profile وPortfolio/Catalog.
+- protected CTAs قد تظهر للGuest، لكن تنفيذ Create Request/Chat/Transaction/Rating/Block/Report يحتاج Authentication.
+- Backend/API يفرض Authentication/Authorization للوظائف المحمية.
+- Public Provider Profile لا يعرض رقم الهاتف أو direct private-contact data أو البيانات الحساسة/الخاصة.
+
+### 3.6.2 Account and Provider Profile
+
+- User Account واحد بعد Create Account/Auth.
 - Provider Profile داخل الحساب نفسه.
 - وظائف التقديم لا تعمل قبل Verification.
-- Service Activity أو Product Activity أو كلاهما.
+- Provider Profile من نوع واحد فقط `SERVICE` أو `PRODUCT`.
+- يمكن اختيار تصنيف واحد أو أكثر داخل النوع المختار؛ Draft قد يبدأ بصفر، لكن أهلية التقديم تحتاج تصنيفًا صالحًا واحدًا على الأقل.
 
-### 3.6.2 Provider Verification
+### 3.6.3 Provider Verification
 
 - تقديم Verification Request.
 - الحد الأدنى الحالي يتضمن وثيقة هوية وصورة شخصية مع الوثيقة.
@@ -190,16 +246,16 @@ Actors الرئيسية في المخطط العام:
 
 **Needs Verification:** أنواع الوثائق الدقيقة، متطلبات الصور التفصيلية، مدة الاحتفاظ.
 
-### 3.6.3 Discovery and Location
+### 3.6.4 Discovery and Location
 
-- البحث حسب الفئة والمديرية/الحي.
+- البحث حسب الفئة والمديرية/الحي، ويمكن للGuest استخدام النسخة العامة منه.
 - Provider يحدد Service Areas.
 - الموقع الدقيق غير ظاهر للعامة.
 - التوسع للأحياء المجاورة يحتاج موافقة Beneficiary.
 
-### 3.6.4 Requests and Provider Responses
+### 3.6.5 Requests and Provider Responses
 
-- إنشاء Service/Product Request.
+- إنشاء Service/Product Request يتطلب Authentication.
 - الصور والمعلومات الإضافية اختيارية.
 - السعر الاسترشادي اختياري.
 - Provider يمكنه اقتراح سعر آخر.
@@ -208,21 +264,23 @@ Actors الرئيسية في المخطط العام:
 - يمكن Edit/Withdraw قبل الاختيار ما دام Request Open.
 - Beneficiary يقارن الاستجابات ويختار Provider واحدًا.
 
-### 3.6.5 Communication and Transaction Start
+### 3.6.6 Communication and Transaction Start
 
-- Private Chat قبل Transaction مسموحة.
+- Private Chat قبل Transaction مسموحة للمستخدمين authenticated.
 - Chat وحدها لا تنشئ Transaction.
+- لا يتطلب التواصل الأساسي داخل YADD كشف رقم الهاتف.
+- Conversation واحدة مستمرة لكل Beneficiary–Provider pair ويمكن أن تضم عدة Transactions مع System Events واضحة للحدود.
 - Request Route: Selection يبدأ Transaction مع Provider المختار.
 - Direct Search Route: أحد الطرفين يرسل Request Transaction Start، والطرف الآخر يؤكد قبل Active Transaction.
 
-### 3.6.6 Transaction and Cancellation
+### 3.6.7 Transaction and Cancellation
 
 - Transaction لها Beneficiary واحد وProvider واحد.
 - يمكن إلغاء Transaction بعد بدئها وفق القواعد الحالية مع سبب مسجل.
 - Request Closure قبل Selection مختلف عن Transaction Cancellation.
 - عدة Transactions متوازية مسموحة حاليًا دون حد رقمي معتمد.
 
-### 3.6.7 Invoice and Dispute
+### 3.6.8 Invoice and Dispute
 
 - Provider ينشئ Final Invoice بعد التنفيذ/التجهيز.
 - تحتوي على البنود والأسعار والإجمالي ويمكن أن تحتوي صورًا اختيارية.
@@ -233,7 +291,7 @@ Actors الرئيسية في المخطط العام:
 - عند استمرار الخلاف قبل الاعتماد يمكن رفع Complaint؛ إذا لم يتوصل الطرفان لاتفاق تنتهي Transaction في `Disputed`.
 - Admin review يطبق YADD policy/admin action ولا يحسم Payment/Refund/Compensation أو الحقوق المالية/التجارية.
 
-### 3.6.8 Ratings and Reputation
+### 3.6.9 Ratings and Reputation
 
 **Beneficiary → Provider**
 - بعد Transaction Completed فقط.
@@ -250,9 +308,9 @@ Actors الرئيسية في المخطط العام:
 - Comment اختياري.
 - لا ينتج عنه منع/عقوبة آلية في MVP.
 
-لا Ratings بعد Cancelled أو Disputed.
+لا Ratings بعد Cancelled أو Disputed، ولا ينشئ Guest Ratings.
 
-### 3.6.9 Portfolio / Catalog
+### 3.6.10 Portfolio / Catalog
 
 - Service Provider يستخدم Portfolio.
 - Product Provider يستخدم Product Catalog.
@@ -260,22 +318,24 @@ Actors الرئيسية في المخطط العام:
 - تحفظ نسخة الأصل بصورة غير عامة.
 - نسخة العرض تحمل Watermark تعريفية مرتبطة بـYADD/Provider.
 - Watermark لا تثبت الملكية القانونية.
+- Guest يمكنه استعراض نسخة العرض العامة، لا الأصل أو البيانات الخاصة.
 
-### 3.6.10 Trust & Safety
+### 3.6.11 Trust & Safety
 
 - Block يوقف التواصل المباشر.
 - Report يرسل الحالة للمراجعة الإدارية.
+- Block/Report يتطلبان User authenticated وفق DEC-077.
 - البلاغ أو AI Flag لا يساوي إدانة أو عقوبة تلقائية.
 - Transaction Complaint تحت DEC-073 يستخدم نفس مبدأ المراجعة الإدارية المحدودة بسياسة المنصة.
 
-### 3.6.11 Subscription
+### 3.6.12 Subscription
 
 - النموذج التجاري الحالي اشتراك دوري من Providers دون عمولة معاملات.
 - YADD يدير Subscription record.
 - التحصيل خارجي ويؤكده موظف مخول.
 - تقديم Provider Responses جديدة يتطلب Provider Verified + Subscription Active.
 
-### 3.6.12 Financial Boundary
+### 3.6.13 Financial Boundary
 
 YADD لا يدير أي حركة مالية بين Beneficiary وProvider.
 
@@ -298,14 +358,17 @@ YADD لا يدير أي حركة مالية بين Beneficiary وProvider.
 
 - حماية الحسابات والمحادثات والمرفقات وبيانات Verification.
 - تقييد الوصول إلى بيانات الهوية الحساسة.
+- Backend/API هو المرجع النهائي لـAuthentication/Authorization ولا يعتمد على إخفاء الأزرار في الواجهة.
 - تسجيل الوصول/الإجراءات الإدارية المناسبة وفق التصميم النهائي.
 - عدم نشر الموقع الدقيق للعامة.
+- عدم عرض رقم الهاتف/direct private-contact data في Public Provider Profile.
 - تقليل جمع وإظهار البيانات الشخصية إلى ما يلزم الوظيفة.
 
 ### 3.7.2 Usability
 
 - خطوات ومصطلحات بسيطة وواضحة للمستخدم.
 - إخفاء الحالات الداخلية التقنية غير اللازمة للمستخدم.
+- يمكن إظهار protected CTAs للGuest مع Authentication Gate واضح، دون إعطائه صلاحية العملية قبل المصادقة.
 
 `UX-VAL-Q01`: ملاءمة التدفق للمستخدم المستهدف والاتصال الضعيف تحتاج Usability Validation فعلية.
 
@@ -325,33 +388,40 @@ YADD لا يدير أي حركة مالية بين Beneficiary وProvider.
 
 ## 3.8 قواعد العمل الأساسية — Business Rules
 
-1. يوجد Direct Search وCreate Request.
-2. السعر في Request اختياري واسترشادي.
-3. Provider يمكنه اقتراح سعر مختلف.
-4. لكل Provider استجابة فعالة واحدة لكل Request؛ يمكن تعديلها أو سحبها قبل Selection.
-5. Beneficiary يختار Provider واحدًا.
-6. Chat قبل Transaction مسموحة لكنها ليست Transaction.
-7. Direct Search Transaction تحتاج Request Start + confirmation من الطرف الآخر.
-8. Selection من Request يغلق الطلب أمام استجابات جديدة ويبدأ Transaction.
-9. لا يوجد Agreement entity مستقل.
-10. `RequiresDeposit` Boolean فقط، والدفع الخارجي خارج YADD.
-11. Final Invoice هي السجل النهائي للبنود والأسعار داخل YADD.
-12. لا يوجد Auto-Approval.
-13. Request Closure قبل Selection مختلف عن Transaction Cancellation.
-14. `Completed` هي الحالة النهائية الناجحة للTransaction.
-15. unresolved pre-approval dispute يؤدي إلى `Disputed` كحالة نهائية غير ناجحة.
-16. YADD Administration لا تحكم Payment/Refund/Compensation في النزاع.
-17. Beneficiary Rating للمقدم إلزامي بعد Completed.
-18. Provider Rating للمستفيد اختياري بعد Completed.
-19. Ratings لا تنقل Transaction إلى Closed ولا تفتح لـCancelled/Disputed.
-20. عدة Transactions متوازية مسموحة دون حد رقمي معتمد.
-21. التوصيل ليس عملية يديرها YADD.
-22. Provider Responses جديدة تتطلب Verification + Active Subscription.
-23. AI يدعم Verification/Safety ولا يصدر وحده قرارًا نهائيًا عالي الأثر.
+1. Guest يستطيع Public Browse/Search/View فقط قبل Authentication.
+2. protected actions تتطلب Authentication، ويطبق Backend/API الحماية فعليًا.
+3. Public Provider Profile لا يعرض phone/direct private-contact data أو البيانات الحساسة.
+4. يوجد Direct Search وCreate Request.
+5. السعر في Request اختياري واسترشادي.
+6. Provider يمكنه اقتراح سعر مختلف.
+7. لكل Provider استجابة فعالة واحدة لكل Request؛ يمكن تعديلها أو سحبها قبل Selection.
+8. Beneficiary يختار Provider واحدًا.
+9. Chat قبل Transaction مسموحة للمستخدم authenticated لكنها ليست Transaction.
+10. Direct Search Transaction تحتاج Request Start + confirmation من الطرف الآخر.
+11. Selection من Request يغلق الطلب أمام استجابات جديدة ويبدأ Transaction.
+12. Conversation واحدة مستمرة بين نفس Beneficiary وProvider ويمكن أن تضم عدة Transactions عبر الزمن.
+13. لا يوجد Agreement entity مستقل.
+14. `RequiresDeposit` Boolean فقط، والدفع الخارجي خارج YADD.
+15. Final Invoice هي السجل النهائي للبنود والأسعار داخل YADD.
+16. لا يوجد Auto-Approval.
+17. Request Closure قبل Selection مختلف عن Transaction Cancellation.
+18. `Completed` هي الحالة النهائية الناجحة للTransaction.
+19. unresolved pre-approval dispute يؤدي إلى `Disputed` كحالة نهائية غير ناجحة.
+20. YADD Administration لا تحكم Payment/Refund/Compensation في النزاع.
+21. Beneficiary Rating للمقدم إلزامي بعد Completed.
+22. Provider Rating للمستفيد اختياري بعد Completed.
+23. Ratings لا تنقل Transaction إلى Closed ولا تفتح لـCancelled/Disputed.
+24. عدة Transactions متوازية مسموحة دون حد رقمي معتمد.
+25. التوصيل ليس عملية يديرها YADD.
+26. Provider Responses جديدة تتطلب Verification + Active Subscription.
+27. Provider Profile من نوع واحد فقط SERVICE أو PRODUCT، مع تصنيف واحد أو أكثر داخل النوع عند الأهلية.
+28. AI يدعم Verification/Safety ولا يصدر وحده قرارًا نهائيًا عالي الأثر.
 
 ---
 
 ## 3.9 دورات الحالة — Lifecycles
+
+إضافة Guest لا تنشئ Domain Lifecycle جديدًا؛ الانتقال من Guest إلى User context هو Authentication/Account interaction، وليس حالة لـRequest أو Transaction.
 
 ### 3.9.1 Request Lifecycle
 
@@ -401,7 +471,8 @@ YADD لا يدير أي حركة مالية بين Beneficiary وProvider.
 
 حالات الاستخدام الحالية:
 
-- `UC-01` Search and Inquire Directly.
+- `UC-00` Browse Public Provider Information — Guest.
+- `UC-01` Search and Inquire Directly — الجزء التفاعلي الخاص يتطلب Authentication.
 - `UC-02` Create Request.
 - `UC-03` Respond to Request.
 - `UC-04` Select Provider from Request.
@@ -413,7 +484,9 @@ YADD لا يدير أي حركة مالية بين Beneficiary وProvider.
 - `UC-09` Provider Verification / Portal Activation.
 - `UC-10` Manage Portfolio / Catalog.
 
-Direct Search وProvider Response specifications تعكس DEC-069/070، والتقييمات تعكس DEC-063/071، والنزاع يعكس DEC-073.
+الـMain Use Case Diagram يفكك هذه المواصفات إلى Actor goals أصغر عند الحاجة. `Log In` و`Create Account` لا يستخدمان كـ`<<include>>` ميكانيكي داخل كل protected Use Case؛ Authentication يمثل Precondition، بينما محاولة Guest لفعل محمي توجهه إلى Authentication Gate وفق DEC-077.
+
+علاقات `<<include>>` و`<<extend>>` الحالية موثقة في `08-use-cases.md` و`13-traceability-matrix.md` ويجب أن تبقى مستندة إلى سلوك إلزامي/اختياري حقيقي، لا مجرد ترتيب زمني.
 
 ---
 
@@ -430,9 +503,11 @@ Direct Search وProvider Response specifications تعكس DEC-069/070، والت
 
 **الحالة الحالية:**
 
-- `09-DFD.md`: Working Context + Level 0 semantics متزامنة حتى DEC-073؛ final standard redraw/export pending.
-- `10-UML.md`: Working Use Case/Activity/Sequence semantics متزامنة؛ Sequence section 5 Mermaid syntax مصححة في 2026-09-05؛ final standard UML redraw/Class Diagram pending.
-- `11-ERD.md`: Core Conceptual ERD متزامن حتى DEC-073؛ final visual review pending.
+- `09-DFD.md`: Working Context + Level 0 semantics متزامنة حتى DEC-077 وتشمل Guest كExternal Entity؛ final standard redraw/export pending.
+- `10-UML.md`: Working Use Case model متزامن حتى DEC-077؛ Guest/Public/Auth boundary مضافة؛ النسخة البصرية النهائية تحتاج إعادة رسم وفق المرجع الأكاديمي المعتمد ومراجعة A4.
+- Activity/Sequence core protected flows تبقى صالحة بافتراض actor authenticated؛ يمكن إضافة Guest auth-gate scenario عند الحاجة الأكاديمية دون تغيير Domain semantics.
+- Class package: Detailed Analysis Class Model واحد مع Integrated Master + ثلاث Detailed Views؛ Guest لا يضيف Class.
+- `11-ERD.md`: Core Conceptual ERD يبقى صحيحًا بنيويًا؛ Guest لا يضيف Entity لمجرد التصفح العام، ويلزم فقط إبقاء public/private visibility في التصميم.
 
 جميع التسميات داخل الرسم النهائي باللغة الإنجليزية وفق DEC-072.
 
@@ -442,8 +517,8 @@ Direct Search وProvider Response specifications تعكس DEC-069/070، والت
 
 المجالات المنطقية الحالية:
 
-1. Accounts & Provider Profiles.
-2. Discovery & Requests.
+1. Accounts & Provider Profiles / Authentication boundary.
+2. Discovery & Requests، بما فيها Public Guest Discovery.
 3. Provider Responses & Communication.
 4. Transactions & Invoices.
 5. Ratings & Reputation.
@@ -451,7 +526,7 @@ Direct Search وProvider Response specifications تعكس DEC-069/070، والت
 
 لا تستخدم مصطلحات `Offer` أو `Agreement` كمخزن/كيان قياسي؛ المصطلح الحالي هو `Provider Response` ولا يوجد Agreement entity مستقل.
 
-مخازن البيانات المنطقية تتبع النموذج الحالي مثل Users/Profiles، Requests/Responses، Conversations/Transactions، Invoices، Ratings، Portfolio/Catalog، Verification/Subscriptions/Reports. Complaint/Dispute يستخدم Transaction + Report context ولا يضيف Settlement store.
+مخازن البيانات المنطقية تتبع النموذج الحالي مثل Users/Profiles، Requests/Responses، Conversations/Transactions، Invoices، Ratings، Portfolio/Catalog، Verification/Subscriptions/Reports. Guest لا يحتاج Store مستقلًا لمجرد public browsing. Complaint/Dispute يستخدم Transaction + Report context ولا يضيف Settlement store.
 
 ---
 
@@ -463,7 +538,7 @@ Direct Search وProvider Response specifications تعكس DEC-069/070، والت
 
 وجود Requirement داخل SRS لا يعني تلقائيًا أنه Approved Requirement. البنود التي تعتمد على قيم تشغيلية غير محسومة تبقى Needs Verification حتى يتم إثباتها أو اعتمادها.
 
-Core Traceability الحالية متزامنة حتى `DEC-073`; Design Traceability لChapter Four والمخططات النهائية ما يزال مطلوبًا قبل Freeze/Baseline.
+Core Traceability الحالية متزامنة حتى `DEC-077`، وتشمل UR-GST-* وربطها بـUC-00 وDFD/UI/public-private boundary. Design Traceability لChapter Four والمخططات النهائية ما يزال مطلوبًا قبل Freeze/Baseline.
 
 ---
 
@@ -480,6 +555,8 @@ Core Traceability الحالية متزامنة حتى `DEC-073`; Design Traceab
 - `VER-DOC-Q01`, `VER-RET-Q01`, `VER-LIC-Q01`.
 - `AI-MOD-Q01/02`, `AI-PROV-Q01`, `AI-RET-Q01`, `AI-APPEAL-Q01`.
 - `SUB-PLAN-Q01`, `SUB-PAY-Q01`, `SUB-OPS-Q01`.
+- Provider Type switching after initial selection.
+- exact UX continuation after Guest authenticates from a protected CTA.
 
 هذه لا تتحول إلى Facts أو Requirements رقمية نهائية دون Evidence.
 
@@ -487,12 +564,15 @@ Core Traceability الحالية متزامنة حتى `DEC-073`; Design Traceab
 
 ## 3.15 خلاصة الفصل
 
-أصبح Core Analysis متسقًا نصيًا مع القرارات الحالية حتى DEC-073:
+أصبح Core Analysis متسقًا نصيًا مع القرارات الحالية حتى DEC-077:
 
-- User Account واحد.
-- Provider Profile واحد اختياري لكل User.
-- Service/Product Activities يمكن تفعيلها معًا.
+- Guest يستطيع Public Browse/Search/View فقط قبل Authentication، والوظائف المحمية تتطلب Login/Create Account.
+- Public Provider Profile لا يكشف phone/direct private-contact data أو البيانات الحساسة.
+- User Account واحد بعد Authentication.
+- Provider Profile واحد اختياري لكل User ومن نوع واحد فقط SERVICE أو PRODUCT.
+- يمكن للمقدم امتلاك عدة تصنيفات داخل النوع، مع اشتراط واحد صالح على الأقل للأهلية.
 - Direct Search وCreate Request مساران أساسيان.
+- Conversation واحدة مستمرة لكل Beneficiary–Provider pair ويمكن أن تضم عدة Transactions.
 - Provider Response واحدة فعالة قابلة للتعديل/السحب قبل Selection.
 - Direct Search Transaction تبدأ فقط بطلب + تأكيد الطرف الآخر.
 - لا يوجد Agreement entity مستقل.
@@ -505,4 +585,4 @@ Core Traceability الحالية متزامنة حتى `DEC-073`; Design Traceab
 - لا Ratings لـCancelled/Disputed.
 - Portfolio/Catalog وVerification وBlock/Report وSubscriptions جزء من النموذج الحالي.
 
-**الحكم:** الجانب النصي وWorking Models متزامنة للمراجعة الأولية، لكن الفصل لا يصبح Baselined أو جاهزًا نهائيًا إلا بعد final diagram redraw/export، إكمال Design Traceability، ومراجعة الفريق/المشرف.
+**الحكم:** الجانب النصي وWorking Models متزامنة للمراجعة الأولية عبر DEC-077، لكن الفصل لا يصبح Baselined أو جاهزًا نهائيًا إلا بعد final diagram redraw/export، إكمال Design Traceability، ومراجعة الفريق/المشرف.
