@@ -1,0 +1,413 @@
+' YADD — Academic Use Case Diagram Package
+' Status: REVIEW CANDIDATE — NOT BASELINED
+' Branch: review/use-case-academic-standard-v2
+'
+' Semantic sources:
+' - docs/00-governance/02-decision-register.md through DEC-077
+' - docs/03-analysis/05-SRS.md v0.9.9
+' - docs/03-analysis/06-business-rules.md
+' - docs/03-analysis/08-use-cases.md
+' - docs/03-analysis/10-UML.md
+' - docs/03-analysis/21-provider-verification-model.md
+'
+' Academic presentation basis:
+' - Standard UML actors outside the system boundary.
+' - Use cases as ovals inside a blue system boundary.
+' - Solid Actor–Use Case associations.
+' - Dashed directed <<include>> / <<extend>> relationships.
+' - <<include>> only for mandatory reused behavior inside the base use case.
+' - <<extend>> only for optional/conditional behavior around a valid base use case.
+' - Authentication/lifecycle dependencies remain Preconditions when they are not
+'   actually executed as reusable included behavior.
+' - Diagram labels are English only according to DEC-072.
+'
+' NOTE: Multiple figures below are views of ONE YADD use-case model. Repeated
+' actors/use cases refer to the same model elements and are repeated only to keep
+' each academic figure readable and printable.
+
+@startuml YADD_UseCase_01_Public_Beneficiary
+left to right direction
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam dpi 150
+skinparam ArrowColor #5B5B5B
+skinparam ArrowThickness 1
+skinparam actor {
+  BorderColor #222222
+  FontColor #222222
+  BackgroundColor white
+}
+skinparam usecase {
+  BackgroundColor #D9EAF7
+  BorderColor #4472C4
+  FontColor #1F1F1F
+  BorderThickness 1.2
+}
+skinparam rectangle {
+  BackgroundColor white
+  BorderColor #2F75B5
+  FontColor #1F1F1F
+  BorderThickness 2
+}
+skinparam note {
+  BackgroundColor #FFFBEA
+  BorderColor #A6A6A6
+  FontColor #333333
+}
+
+title YADD — Public Access, Discovery and Request Use Cases
+
+actor Guest as G
+actor Beneficiary as B
+actor Provider as P
+
+rectangle "YADD System" as SYS1 {
+  usecase "Browse Public Content" as UC_BROWSE
+  usecase "Log In" as UC_LOGIN
+  usecase "Create Account" as UC_REGISTER
+
+  usecase "Search Providers" as UC_SEARCH
+  usecase "View Provider Profile" as UC_PROFILE
+  usecase "View Portfolio / Catalog" as UC_SHOWCASE
+
+  usecase "Create Request" as UC_CREATE_REQ
+  usecase "Add Request Images" as UC_REQ_IMAGES
+  usecase "Add Indicative Price" as UC_REQ_PRICE
+  usecase "Close Open Request" as UC_CLOSE_REQ
+
+  usecase "Compare Provider Responses" as UC_COMPARE
+  usecase "Communicate / Inquire" as UC_CHAT
+  usecase "Select Provider" as UC_SELECT
+  usecase "Create Active Transaction" as UC_CREATE_TX
+}
+
+G -- UC_BROWSE
+G -- UC_LOGIN
+G -- UC_REGISTER
+G -- UC_SEARCH
+G -- UC_PROFILE
+G -- UC_SHOWCASE
+
+B -- UC_SEARCH
+B -- UC_PROFILE
+B -- UC_SHOWCASE
+B -- UC_CREATE_REQ
+B -- UC_CLOSE_REQ
+B -- UC_COMPARE
+B -- UC_CHAT
+B -- UC_SELECT
+
+P -- UC_CHAT
+
+UC_PROFILE ..> UC_SEARCH : <<extend>>
+UC_SHOWCASE ..> UC_PROFILE : <<extend>>
+
+UC_REQ_IMAGES ..> UC_CREATE_REQ : <<extend>>
+UC_REQ_PRICE ..> UC_CREATE_REQ : <<extend>>
+
+UC_CHAT ..> UC_PROFILE : <<extend>>
+UC_CHAT ..> UC_COMPARE : <<extend>>
+UC_SELECT ..> UC_COMPARE : <<extend>>
+UC_SELECT ..> UC_CREATE_TX : <<include>>
+
+note bottom of UC_LOGIN
+Authentication is a precondition for protected
+Beneficiary/Provider actions. It is intentionally
+not modeled as <<include>> in every protected use case.
+Guest protected-action CTAs redirect to Log In or
+Create Account before the requested action continues.
+end note
+
+note bottom of UC_PROFILE
+Public profile excludes phone/direct private-contact
+data and all sensitive/private data.
+end note
+
+@enduml
+
+
+@startuml YADD_UseCase_02_Transaction_Invoice
+left to right direction
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam dpi 150
+skinparam ArrowColor #5B5B5B
+skinparam ArrowThickness 1
+skinparam actor {
+  BorderColor #222222
+  FontColor #222222
+  BackgroundColor white
+}
+skinparam usecase {
+  BackgroundColor #D9EAF7
+  BorderColor #4472C4
+  FontColor #1F1F1F
+  BorderThickness 1.2
+}
+skinparam rectangle {
+  BackgroundColor white
+  BorderColor #2F75B5
+  FontColor #1F1F1F
+  BorderThickness 2
+}
+skinparam note {
+  BackgroundColor #FFFBEA
+  BorderColor #A6A6A6
+  FontColor #333333
+}
+
+title YADD — Transaction, Invoice and Rating Use Cases
+
+actor Beneficiary as B2
+actor Provider as P2
+actor "YADD Administrator" as A2
+
+rectangle "YADD System" as SYS2 {
+  usecase "Communicate / Inquire" as UC_CHAT2
+  usecase "Request Transaction Start" as UC_REQ_START
+  usecase "Confirm Transaction Start" as UC_CONFIRM_START
+  usecase "Create Active Transaction" as UC_CREATE_TX2
+  usecase "Cancel Transaction" as UC_CANCEL_TX
+
+  usecase "Create Final Invoice" as UC_CREATE_INV
+  usecase "Review Final Invoice" as UC_REVIEW_INV
+  usecase "Approve Final Invoice" as UC_APPROVE_INV
+  usecase "Request Invoice Revision" as UC_REQUEST_REV
+  usecase "Revise Final Invoice" as UC_REVISE_INV
+  usecase "Raise Transaction Complaint" as UC_COMPLAINT
+  usecase "Review Transaction Complaint" as UC_REVIEW_COMPLAINT
+  usecase "Complete Transaction" as UC_COMPLETE_TX
+
+  usecase "Rate Provider" as UC_RATE_PROVIDER
+  usecase "Rate Beneficiary" as UC_RATE_BENEFICIARY
+}
+
+B2 -- UC_CHAT2
+B2 -- UC_REQ_START
+B2 -- UC_CONFIRM_START
+B2 -- UC_CANCEL_TX
+B2 -- UC_REVIEW_INV
+B2 -- UC_APPROVE_INV
+B2 -- UC_REQUEST_REV
+B2 -- UC_COMPLAINT
+B2 -- UC_RATE_PROVIDER
+
+P2 -- UC_CHAT2
+P2 -- UC_REQ_START
+P2 -- UC_CONFIRM_START
+P2 -- UC_CANCEL_TX
+P2 -- UC_CREATE_INV
+P2 -- UC_REVISE_INV
+P2 -- UC_RATE_BENEFICIARY
+
+A2 -- UC_REVIEW_COMPLAINT
+
+UC_REQ_START ..> UC_CHAT2 : <<extend>>
+UC_CONFIRM_START ..> UC_CREATE_TX2 : <<include>>
+
+UC_APPROVE_INV ..> UC_REVIEW_INV : <<extend>>
+UC_REQUEST_REV ..> UC_REVIEW_INV : <<extend>>
+UC_COMPLAINT ..> UC_REVIEW_INV : <<extend>>
+UC_APPROVE_INV ..> UC_COMPLETE_TX : <<include>>
+
+note bottom of UC_REVISE_INV
+Precondition: a revision was previously requested.
+This is a lifecycle dependency, not a forced
+<<include>> / <<extend>> relation.
+end note
+
+note bottom of UC_RATE_PROVIDER
+Precondition: Transaction = Completed.
+Required Beneficiary post-transaction action.
+end note
+
+note bottom of UC_RATE_BENEFICIARY
+Precondition: Transaction = Completed.
+Optional Provider post-transaction action.
+end note
+
+note bottom of UC_REVIEW_COMPLAINT
+Precondition: a complaint exists.
+Administrative review is asynchronous and therefore
+is not included inside the actor's complaint submission.
+end note
+
+@enduml
+
+
+@startuml YADD_UseCase_03_Provider
+left to right direction
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam dpi 150
+skinparam ArrowColor #5B5B5B
+skinparam ArrowThickness 1
+skinparam actor {
+  BorderColor #222222
+  FontColor #222222
+  BackgroundColor white
+}
+skinparam usecase {
+  BackgroundColor #D9EAF7
+  BorderColor #4472C4
+  FontColor #1F1F1F
+  BorderThickness 1.2
+}
+skinparam rectangle {
+  BackgroundColor white
+  BorderColor #2F75B5
+  FontColor #1F1F1F
+  BorderThickness 2
+}
+skinparam note {
+  BackgroundColor #FFFBEA
+  BorderColor #A6A6A6
+  FontColor #333333
+}
+
+title YADD — Provider Profile and Request-Response Use Cases
+
+actor Provider as P3
+actor "Service Provider" as SP3
+actor "Product Provider" as PP3
+
+SP3 -|> P3
+PP3 -|> P3
+
+rectangle "YADD System" as SYS3 {
+  usecase "Manage Account" as UC_ACCOUNT
+  usecase "Manage Provider Profile" as UC_PROVIDER_PROFILE
+  usecase "Manage Service Areas" as UC_SERVICE_AREAS
+  usecase "Manage Portfolio / Catalog" as UC_PORTFOLIO
+  usecase "Submit Verification" as UC_SUBMIT_VER
+
+  usecase "View Matching Requests" as UC_MATCHING
+  usecase "Submit Provider Response" as UC_SUBMIT_RESPONSE
+  usecase "Validate Response Eligibility" as UC_VALIDATE_RESPONSE
+
+  usecase "Manage Active Provider Response" as UC_MANAGE_RESPONSE
+  usecase "Edit Provider Response" as UC_EDIT_RESPONSE
+  usecase "Withdraw Provider Response" as UC_WITHDRAW_RESPONSE
+}
+
+P3 -- UC_ACCOUNT
+P3 -- UC_PROVIDER_PROFILE
+P3 -- UC_SERVICE_AREAS
+P3 -- UC_PORTFOLIO
+P3 -- UC_SUBMIT_VER
+P3 -- UC_MATCHING
+P3 -- UC_SUBMIT_RESPONSE
+P3 -- UC_MANAGE_RESPONSE
+P3 -- UC_EDIT_RESPONSE
+P3 -- UC_WITHDRAW_RESPONSE
+
+UC_SUBMIT_RESPONSE ..> UC_MATCHING : <<extend>>
+UC_SUBMIT_RESPONSE ..> UC_VALIDATE_RESPONSE : <<include>>
+
+UC_EDIT_RESPONSE ..> UC_MANAGE_RESPONSE : <<extend>>
+UC_WITHDRAW_RESPONSE ..> UC_MANAGE_RESPONSE : <<extend>>
+
+note bottom of UC_VALIDATE_RESPONSE
+Mandatory behavior when a Provider submits a new
+response: Verified Provider + Active Subscription +
+Open Request and current eligibility rules.
+end note
+
+note bottom of UC_MANAGE_RESPONSE
+Derived UML grouping only; it introduces no new
+requirement. Edit/Withdraw remain allowed only while
+the Request is Open and before Provider selection.
+end note
+
+note bottom of UC_SUBMIT_VER
+Provider Profile may remain Draft before verification.
+Verification/eligibility are state Preconditions; they
+are not modeled as artificial include/extend chains.
+end note
+
+@enduml
+
+
+@startuml YADD_UseCase_04_Administration
+left to right direction
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam dpi 150
+skinparam ArrowColor #5B5B5B
+skinparam ArrowThickness 1
+skinparam actor {
+  BorderColor #222222
+  FontColor #222222
+  BackgroundColor white
+}
+skinparam usecase {
+  BackgroundColor #D9EAF7
+  BorderColor #4472C4
+  FontColor #1F1F1F
+  BorderThickness 1.2
+}
+skinparam rectangle {
+  BackgroundColor white
+  BorderColor #2F75B5
+  FontColor #1F1F1F
+  BorderThickness 2
+}
+skinparam note {
+  BackgroundColor #FFFBEA
+  BorderColor #A6A6A6
+  FontColor #333333
+}
+
+title YADD — Administration, Verification and Safety Use Cases
+
+actor "YADD Administrator" as A4
+actor "Verification Reviewer" as VR4
+actor "Content Moderator" as CM4
+actor "Subscription Administrator" as SA4
+
+rectangle "YADD System" as SYS4 {
+  usecase "Review Provider Verification" as UC_REVIEW_VER
+  usecase "Approve Verification" as UC_APPROVE_VER
+  usecase "Request Verification Resubmission" as UC_RESUBMIT_VER
+  usecase "Reject Verification" as UC_REJECT_VER
+  usecase "Record Review Note" as UC_REVIEW_NOTE
+
+  usecase "Review Reports / Flags" as UC_REVIEW_REPORTS
+  usecase "Review Transaction Complaint" as UC_REVIEW_TX_COMPLAINT
+  usecase "Apply Administrative Action" as UC_ADMIN_ACTION
+
+  usecase "Manage Provider Subscription" as UC_SUBSCRIPTION
+}
+
+A4 -- UC_REVIEW_VER
+A4 -- UC_REVIEW_REPORTS
+A4 -- UC_REVIEW_TX_COMPLAINT
+A4 -- UC_SUBSCRIPTION
+
+VR4 -- UC_REVIEW_VER
+CM4 -- UC_REVIEW_REPORTS
+CM4 -- UC_REVIEW_TX_COMPLAINT
+SA4 -- UC_SUBSCRIPTION
+
+UC_APPROVE_VER ..> UC_REVIEW_VER : <<extend>>
+UC_RESUBMIT_VER ..> UC_REVIEW_VER : <<extend>>
+UC_REJECT_VER ..> UC_REVIEW_VER : <<extend>>
+
+UC_RESUBMIT_VER ..> UC_REVIEW_NOTE : <<include>>
+UC_REJECT_VER ..> UC_REVIEW_NOTE : <<include>>
+
+UC_ADMIN_ACTION ..> UC_REVIEW_REPORTS : <<extend>>
+UC_ADMIN_ACTION ..> UC_REVIEW_TX_COMPLAINT : <<extend>>
+
+note bottom of UC_REVIEW_NOTE
+A reason/note is required when verification requires
+resubmission or is rejected.
+end note
+
+note bottom of UC_ADMIN_ACTION
+Administrative action is conditional on platform policy
+and reviewed evidence. YADD does not decide financial
+entitlement and does not order Payment/Refund/Compensation.
+end note
+
+@enduml
