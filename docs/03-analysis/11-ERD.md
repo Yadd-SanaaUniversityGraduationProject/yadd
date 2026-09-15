@@ -1,10 +1,10 @@
 # Conceptual ERD — YADD Preliminary Defense
 
-> **الحالة:** `DRAFT FOR PRELIMINARY DEFENSE — CORE SYNCHRONIZED 2026-09-12`
+> **الحالة:** `DRAFT FOR PRELIMINARY DEFENSE — CORE SYNCHRONIZED 2026-09-15 THROUGH DEC-077`
 >
 > هذا ERD **مفاهيمي للفصل الثالث** وليس Relation Schema أو Database Design نهائيًا. الأنواع الفيزيائية، PK/FK التفصيلية، الفهارس، القيود التنفيذية وأسماء الجداول النهائية تنتقل إلى Chapter Four.
 >
-> **المراجع الحاكمة:** DEC-008..016/018/019/021/023..025/030..043/046..056/063..076 + `05-SRS.md` + `06-business-rules.md` + `07-lifecycles.md` + `08-use-cases.md`.
+> **المراجع الحاكمة:** DEC-008..016/018/019/021/023..025/030..043/046..056/063..077 + `05-SRS.md` + `06-business-rules.md` + `07-lifecycles.md` + `08-use-cases.md`.
 >
 > جميع التسميات داخل الرسم النهائي تكون باللغة الإنجليزية وفق DEC-072.
 
@@ -12,27 +12,29 @@
 
 ## 1. مبادئ النمذجة الحالية
 
-1. يوجد `USER` واحد للشخص؛ Beneficiary وProvider ليسا حسابين منفصلين.
-2. يصبح المستخدم Provider عندما يمتلك `PROVIDER_PROFILE` مستوفيًا شروط التفعيل.
-3. في MVP يكون كل Provider Profile من نوع واحد فقط: `SERVICE` أو `PRODUCT`، ولا يجمع النوعين معًا — DEC-074.
-4. يمكن لـProvider Profile اختيار تصنيف واحد أو أكثر داخل نوعه عبر `PROVIDER_ACTIVITY`; يسمح Draft مؤقتًا بصفر Activities، لكن أهلية وظائف التقديم تتطلب Activity واحدة على الأقل، وكل Category يجب أن تتوافق مع Provider Type — DEC-076.
-5. يستخدم مسار الطلب النموذج `REQUEST → PROVIDER_RESPONSE → SELECTION → TRANSACTION` ولا يوجد `AGREEMENT` مستقل.
-6. البحث المباشر يمكن أن ينشئ `TRANSACTION` دون `REQUEST` أو `PROVIDER_RESPONSE`، لكن فقط بعد `Request Transaction Start` وتأكيد الطرف الآخر.
-7. الخدمة والمنتج يستخدمان Core Transaction واحدًا؛ الاختلاف يمثل عبر نوع المقدم/الطلب والبيانات المرتبطة به.
-8. العربون لا يمثل كيانًا ماليًا؛ يوجد فقط `requires_deposit` ضمن Provider Response.
-9. تقييم Beneficiary للمقدم وتقييم Provider للمستفيد نموذجان مختلفان في الحقول والقواعد، لذلك يمثَّلان ككيانين منفصلين مفاهيميًا.
-10. Portfolio/Catalog يمثلان مفهوم عرض موحدًا عبر `SHOWCASE_ITEM` مع اختلاف العرض حسب Provider Type.
-11. `Completed` هي النهاية الناجحة للTransaction ولا توجد حالة Transaction باسم `Closed`.
-12. `Disputed` نهاية غير ناجحة للTransaction عند استمرار خلاف الفاتورة قبل الاعتماد دون اتفاق؛ لا تفتح Ratings — DEC-073.
-13. لكل Provider استجابة فعالة واحدة فقط لكل Request؛ يمكن تعديلها أو سحبها قبل الاختيار وفق DEC-070.
-14. Request واحد يمكن أن ينتج **صفر أو Transaction واحدة فقط**؛ لأن اختيار Provider واحد يغلق Request أمام الاستجابات الجديدة.
-15. بين نفس Beneficiary ونفس Provider توجد Conversation واحدة مستمرة يمكن أن ترتبط بعدة Transactions عبر الزمن، مع فواصل/أحداث واضحة داخل المحادثة — DEC-075.
-16. مراجعة النزاع إداريًا تستخدم `REPORT`/complaint context ولا تنشئ كيان Payment/Refund/Compensation أو سلطة تسوية مالية داخل YADD.
-17. علاقات الأحياء المجاورة مفهوم معتمد ومُدار داخل YADD؛ يمثلها `AREA_ADJACENCY` دون افتراض GPS Radius.
-18. `Block User` و`Report` مفهومان مستقلان؛ يمثل `USER_BLOCK` علاقة الحظر المباشر ولا يعني إنشاء Report أو إدانة الطرف الآخر.
-19. عند Transaction Cancellation يجب الاحتفاظ بالطرف الذي ألغى والسبب والتوقيت؛ تبقى طريقة التخزين الفيزيائية قرار تصميم لاحق.
-20. `SAFETY_FLAG` و`ADMIN_AUDIT_RECORD` مفهومان داعمان معتمدان من Trust & Safety / D8؛ تمثيلهما هنا مفاهيمي فقط، بينما schema التخزين والاحتفاظ والـthresholds تبقى قرارات تصميم/سياسة مفتوحة.
-21. يجب أن يحفظ `SAFETY_FLAG` سبب/فئة الاشتباه بما يكفي للمراجعة البشرية؛ قائمة الفئات وقيم المخاطر والعتبات التفصيلية لا تزال مفتوحة.
+1. `Guest` في DEC-077 Actor خارجي غير authenticated للتصفح العام، وليس Domain Entity؛ لا ينشأ `GUEST` record لمجرد التصفح. عندما ينشئ الشخص حسابًا/يسجل الدخول يطبق نموذج `USER` الحالي.
+2. يوجد `USER` واحد للشخص؛ Beneficiary وProvider ليسا حسابين منفصلين.
+3. يصبح المستخدم Provider عندما يمتلك `PROVIDER_PROFILE` مستوفيًا شروط التفعيل.
+4. في MVP يكون كل Provider Profile من نوع واحد فقط: `SERVICE` أو `PRODUCT`، ولا يجمع النوعين معًا — DEC-074.
+5. يمكن لـProvider Profile اختيار تصنيف واحد أو أكثر داخل نوعه عبر `PROVIDER_ACTIVITY`; يسمح Draft مؤقتًا بصفر Activities، لكن أهلية وظائف التقديم تتطلب Activity واحدة على الأقل، وكل Category يجب أن تتوافق مع Provider Type — DEC-076.
+6. يستخدم مسار الطلب النموذج `REQUEST → PROVIDER_RESPONSE → SELECTION → TRANSACTION` ولا يوجد `AGREEMENT` مستقل.
+7. البحث المباشر يمكن أن ينشئ `TRANSACTION` دون `REQUEST` أو `PROVIDER_RESPONSE`، لكن فقط بعد `Request Transaction Start` وتأكيد الطرف الآخر.
+8. الخدمة والمنتج يستخدمان Core Transaction واحدًا؛ الاختلاف يمثل عبر نوع المقدم/الطلب والبيانات المرتبطة به.
+9. العربون لا يمثل كيانًا ماليًا؛ يوجد فقط `requires_deposit` ضمن Provider Response.
+10. تقييم Beneficiary للمقدم وتقييم Provider للمستفيد نموذجان مختلفان في الحقول والقواعد، لذلك يمثَّلان ككيانين منفصلين مفاهيميًا.
+11. Portfolio/Catalog يمثلان مفهوم عرض موحدًا عبر `SHOWCASE_ITEM` مع اختلاف العرض حسب Provider Type.
+12. `Completed` هي النهاية الناجحة للTransaction ولا توجد حالة Transaction باسم `Closed`.
+13. `Disputed` نهاية غير ناجحة للTransaction عند استمرار خلاف الفاتورة قبل الاعتماد دون اتفاق؛ لا تفتح Ratings — DEC-073.
+14. لكل Provider استجابة فعالة واحدة فقط لكل Request؛ يمكن تعديلها أو سحبها قبل الاختيار وفق DEC-070.
+15. Request واحد يمكن أن ينتج **صفر أو Transaction واحدة فقط**؛ لأن اختيار Provider واحد يغلق Request أمام الاستجابات الجديدة.
+16. بين نفس Beneficiary ونفس Provider توجد Conversation واحدة مستمرة يمكن أن ترتبط بعدة Transactions عبر الزمن، مع فواصل/أحداث واضحة داخل المحادثة — DEC-075.
+17. مراجعة النزاع إداريًا تستخدم `REPORT`/complaint context ولا تنشئ كيان Payment/Refund/Compensation أو سلطة تسوية مالية داخل YADD.
+18. علاقات الأحياء المجاورة مفهوم معتمد ومُدار داخل YADD؛ يمثلها `AREA_ADJACENCY` دون افتراض GPS Radius.
+19. `Block User` و`Report` مفهومان مستقلان؛ يمثل `USER_BLOCK` علاقة الحظر المباشر ولا يعني إنشاء Report أو إدانة الطرف الآخر.
+20. عند Transaction Cancellation يجب الاحتفاظ بالطرف الذي ألغى والسبب والتوقيت؛ تبقى طريقة التخزين الفيزيائية قرار تصميم لاحق.
+21. `SAFETY_FLAG` و`ADMIN_AUDIT_RECORD` مفهومان داعمان معتمدان من Trust & Safety / D8؛ تمثيلهما هنا مفاهيمي فقط، بينما schema التخزين والاحتفاظ والـthresholds تبقى قرارات تصميم/سياسة مفتوحة.
+22. يجب أن يحفظ `SAFETY_FLAG` سبب/فئة الاشتباه بما يكفي للمراجعة البشرية؛ قائمة الفئات وقيم المخاطر والعتبات التفصيلية لا تزال مفتوحة.
+23. وجود `USER.phone` في النموذج لا يعني أنه حقل عام؛ وفق DEC-077 لا يعرض رقم الهاتف ضمن Public Provider Profile للGuest.
 
 ---
 
@@ -230,7 +232,7 @@ erDiagram
 ## 3. Core Entity Semantics
 
 ### USER
-يمثل حساب الشخص الواحد في YADD. يمكن أن يعمل الشخص كمستفيد مباشرة، ويمكنه امتلاك Provider Profile واحد كحد أقصى.
+يمثل حساب الشخص الواحد في YADD بعد إنشاء/استخدام الحساب. يمكن أن يعمل الشخص كمستفيد مباشرة، ويمكنه امتلاك Provider Profile واحد كحد أقصى. `Guest` لا يمثل USER قبل Authentication/Create Account لمجرد التصفح العام. `phone` بيانات حساب/تحقق وليست Public Provider Profile field وفق DEC-077.
 
 ### PROVIDER_PROFILE
 يمثل هوية Provider داخل الحساب نفسه. يحدد `provider_type` نوعًا واحدًا فقط في MVP: `SERVICE` أو `PRODUCT` وفق DEC-074. ترتبط به Verification، الأنشطة/التصنيفات، مناطق الخدمة، Portfolio/Catalog والاشتراك. سياسة تغيير النوع بعد اختياره لم تعتمد بعد.
@@ -246,10 +248,10 @@ erDiagram
 - الموقع الدقيق/GPS ليس بيانات عامة في هذا النموذج.
 
 ### SHOWCASE_ITEM
-يوحد Portfolio وCatalog مفاهيميًا. إذا كان Provider Type = SERVICE يعرض كPortfolio، وإذا كان PRODUCT يعرض كProduct Catalog. يحتوي مرجعًا للأصل غير العام ومرجعًا لنسخة العرض ذات العلامة المائية.
+يوحد Portfolio وCatalog مفاهيميًا. إذا كان Provider Type = SERVICE يعرض كPortfolio، وإذا كان PRODUCT يعرض كProduct Catalog. يحتوي مرجعًا للأصل غير العام ومرجعًا لنسخة العرض ذات العلامة المائية. يمكن عرض نسخة العرض العامة للGuest وفق DEC-077، بينما الأصل يبقى غير عام.
 
 ### REQUEST
-يمثل طلب Service أو Product. يجب أن يتوافق `request_type` مع نوع Provider المؤهل، ويجب أن يملك Provider تصنيف الطلب ضمن Provider Activities. يحتوي التصنيف والمنطقة والوصف والسعر الاسترشادي الاختياري.
+يمثل طلب Service أو Product. يجب أن يتوافق `request_type` مع نوع Provider المؤهل، ويجب أن يملك Provider تصنيف الطلب ضمن Provider Activities. يحتوي التصنيف والمنطقة والوصف والسعر الاسترشادي الاختياري. إنشاء Request يتطلب authenticated User؛ Guest لا ينشئ Request قبل Authentication.
 
 ### PROVIDER_RESPONSE
 المصطلح القياسي بدل `OFFER`.
@@ -262,7 +264,7 @@ erDiagram
 - يجوز تعديلها أو سحبها فقط ما دام Request Open ولم يتم اختيار Provider.
 
 ### CONVERSATION / MESSAGE
-المحادثة يمكن أن تبدأ قبل Transaction من Direct Search أو Request context. Chat وحدها لا تنشئ Transaction. في Direct Search يبدأ Transaction فقط بعد طلب بدء صريح وتأكيد الطرف الآخر.
+المحادثة يمكن أن تبدأ قبل Transaction من Direct Search أو Request context للمستخدم authenticated. Guest لا ينشئ Message/Conversation خاصة قبل Authentication. Chat وحدها لا تنشئ Transaction. في Direct Search يبدأ Transaction فقط بعد طلب بدء صريح وتأكيد الطرف الآخر.
 
 وفق DEC-075، تبقى Conversation واحدة مستمرة بين نفس Beneficiary ونفس Provider، ويمكن أن تضم صفرًا أو عدة Transactions عبر الزمن. يجب أن تظهر داخلها فواصل/أحداث نظام واضحة لبدء وانتهاء كل Transaction.
 
@@ -290,10 +292,10 @@ erDiagram
 يمثلان الاحتفاظ بتاريخ نسخ الفاتورة بدل الكتابة فوق نسخة واحدة.
 
 ### PROVIDER_RATING
-تقييم Beneficiary للمقدم بعد Transaction Completed: 1–5 stars، comment optional، وبحد أقصى تقييم واحد لكل Transaction.
+تقييم Beneficiary للمقدم بعد Transaction Completed: 1–5 stars، comment optional، وبحد أقصى تقييم واحد لكل Transaction. لا ينشئه Guest.
 
 ### BENEFICIARY_RATING
-تقييم Provider للمستفيد بعد Transaction Completed: optional، ثلاثة مؤشرات 1–5، comment optional، وبحد أقصى تقييم واحد لكل Transaction.
+تقييم Provider للمستفيد بعد Transaction Completed: optional، ثلاثة مؤشرات 1–5، comment optional، وبحد أقصى تقييم واحد لكل Transaction. سجل التفاعل ليس Public Guest data.
 
 ---
 
@@ -378,11 +380,12 @@ erDiagram
 
 ### Supporting-model notes
 
-- `USER_BLOCK` يمثل Block كعلاقة حماية مباشرة مستقلة عن `REPORT`.
+- `USER_BLOCK` يمثل Block كعلاقة حماية مباشرة مستقلة عن `REPORT`، وكلاهما يتطلب authenticated User؛ Guest لا ينشئهما قبل Authentication.
 - `REPORT.target_reference` تمثيل مفاهيمي polymorphic؛ التنفيذ الفيزيائي قد يفصله إلى علاقات أكثر صرامة.
 - `VERIFICATION_CASE.review_note` يمثل الملاحظة/السبب عند طلب إعادة التقديم أو الرفض.
 - `SAFETY_FLAG.reason_category` يمثل سبب/فئة الاشتباه المطلوبة للمراجعة البشرية؛ taxonomy والـthresholds لم تعتمد بعد.
 - `SAFETY_FLAG` و`ADMIN_AUDIT_RECORD` مفاهيم تحليلية؛ schema/retention/thresholds لم تعتمد بعد.
+- Verification, Subscription, Reports, Flags and Audit are not public Guest data.
 
 ---
 
@@ -398,6 +401,7 @@ erDiagram
 | Generic `REVIEW` | `PROVIDER_RATING` + `BENEFICIARY_RATING`. |
 | `PORTFOLIO_ITEM` فقط | `SHOWCASE_ITEM` يدعم Portfolio/Catalog وفق Provider Type. |
 | Service + Product active together on one Provider Profile | غير مسموح في MVP وفق DEC-074. |
+| `GUEST` ككيان بيانات لمجرد anonymous browsing | غير مطلوب؛ Guest Actor فقط حتى Create Account/Authentication — DEC-077. |
 
 ---
 
@@ -424,6 +428,7 @@ erDiagram
 19. `AREA_ADJACENCY` يمثل علاقة جوار مُدارة بين الأحياء.
 20. `USER_BLOCK` و`REPORT` مستقلان — DEC-053.
 21. Transaction Cancellation تسجل Actor/Reason/Time — DEC-048 / BR-019.
+22. DEC-077 لا يضيف جدول/كيان Guest؛ يجب أن تراعى public/private field exposure في API/query/interface design بدل اختراع persistence غير مطلوب.
 
 ---
 
@@ -436,3 +441,4 @@ erDiagram
 - AI provider/threshold/storage model and final reason-category taxonomy.
 - Numeric request-expiry/reminder timing.
 - Physical enforcement of Conversation pair uniqueness and Message/SystemEvent↔Transaction mapping.
+- Exact technical implementation of public Provider Profile projection and authentication continuation after a protected Guest CTA; the semantic boundary is already fixed by DEC-077.
