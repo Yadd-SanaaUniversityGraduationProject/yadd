@@ -1,6 +1,6 @@
 # Business Rules — YADD Core Flow
 
-> **الحالة:** `PARTIALLY ANALYZED`
+> **الحالة:** `PARTIALLY ANALYZED — SYNCHRONIZED 2026-09-15 THROUGH DEC-077`
 >
 > القواعد `ANALYZED_APPROVED` مستمدة من Decision Register. البنود الرقمية/السياسات المفتوحة لا تعتبر معتمدة.
 
@@ -48,6 +48,13 @@
 | BR-038 | Backend/API هو المرجع النهائي للصلاحيات وقواعد العمل؛ لا يعتمد Web/Mobile Client كمرجع Authorization نهائي. | `APPROVED_AS_ARCH_PRINCIPLE` | DEC-065 |
 | BR-039 | لكل Provider استجابة فعالة واحدة فقط لكل Request؛ يجوز تعديلها أو سحبها قبل الاختيار ما دام Request مفتوحًا. | `ANALYZED_APPROVED` | DEC-070 |
 | BR-040 | عند استمرار الخلاف قبل اعتماد الفاتورة، تراجع إدارة YADD الشكوى والأدلة داخل المنصة لتطبيق سياسات YADD واتخاذ إجراء إداري عند وجود مخالفة، لكنها لا تفصل في الحقوق المالية/التجارية ولا تلزم دفعًا أو استردادًا أو تعويضًا. إذا بقي الخلاف دون اتفاق تصبح Transaction `Disputed` كحالة نهائية غير ناجحة ولا تفتح Ratings. | `ANALYZED_APPROVED` | DEC-073 |
+| BR-041 | كل Provider Profile في MVP يعمل تحت نوع واحد فقط: `SERVICE` أو `PRODUCT`، ولا يجوز تفعيل النوعين معًا على الملف نفسه. | `ANALYZED_APPROVED` | DEC-074 |
+| BR-042 | بين نفس Beneficiary ونفس Provider تبقى محادثة واحدة مستمرة، ويمكن أن ترتبط بعدة Transactions عبر الزمن؛ يجب إظهار فواصل/أحداث نظام واضحة لبدء وانتهاء كل Transaction داخل المحادثة. | `ANALYZED_APPROVED` | DEC-075 |
+| BR-043 | يمكن للمقدم اختيار تصنيف واحد أو أكثر داخل نوع Provider Profile نفسه. يسمح Draft Provider Profile مؤقتًا بصفر تصنيفات، لكن أهلية وظائف التقديم تتطلب تصنيفًا واحدًا على الأقل، ولا يجوز ربط تصنيف من النوع الآخر. | `ANALYZED_APPROVED` | DEC-076 |
+| BR-044 | يسمح YADD للـGuest غير المسجل بتصفح المحتوى العام والبحث عن Providers وفتح Public Provider Profile واستعراض Portfolio/Catalog والمعلومات العامة المسموح بها. | `ANALYZED_APPROVED` | DEC-077 |
+| BR-045 | لا يستطيع Guest تنفيذ وظيفة تفاعلية أو معاملاتیة تتطلب هوية User، بما في ذلك Create Request وChat/Inquiry وTransaction وRating وBlock وReport، قبل Authentication. | `ANALYZED_APPROVED` | DEC-077 |
+| BR-046 | قد تظهر أزرار الوظائف المحمية للـGuest، لكن استخدامها يوجّه إلى `Log In` أو `Create Account`؛ ويجب على Backend/API فرض Authentication/Authorization، فلا يعد إخفاء الزر أو إعادة التوجيه في الواجهة حماية كافية. | `ANALYZED_APPROVED` | DEC-065/077 |
+| BR-047 | لا يعرض Public Provider Profile رقم الهاتف أو وسيلة اتصال مباشرة خاصة؛ التواصل الأساسي يتم داخل YADD بعد Authentication، وتبقى البيانات الحساسة والخاصة غير عامة. | `ANALYZED_APPROVED` | DEC-036/046/077 |
 
 ## قواعد مفتوحة تحتاج قرارًا/تحققًا
 
@@ -81,3 +88,5 @@
 - الإدارة تطبق سياسات YADD على الشكاوى ولا تعمل كجهة تحكيم مالي/تجاري بين الطرفين.
 - `Disputed` نهاية غير ناجحة للTransaction عند عدم التوصل لاتفاق، ولا تفتح Ratings.
 - التذكيرات آلية مساندة، ولا ينبغي أن يعتمد فهم التدفق عليها وحدها.
+- في MVP نوع المقدم حصري وفق DEC-074، لكن يمكنه امتلاك عدة تصنيفات داخل ذلك النوع وفق DEC-076.
+- Guest هو Actor خارجي غير authenticated ولا يخلق `GUEST` entity/Class؛ أي بيانات User شخصية أو تفاعلية لا تنشأ إلا بعد Authentication/Account creation وفق DEC-077.

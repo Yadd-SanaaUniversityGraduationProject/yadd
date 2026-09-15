@@ -29,6 +29,9 @@
 
 | ID | تاريخ الإغلاق/التحديث | القرار | المرجع |
 |---|---|---|---|
+| GUEST-ACCESS-Q01 | 2026-09-15 | اعتمد `Guest` كActor غير authenticated يستطيع Public Browse/Search/View Provider Profile وPortfolio/Catalog فقط. Protected actions تتطلب Log In/Create Account، ولا يعرض Public Provider Profile رقم الهاتف/direct private-contact data أو البيانات الحساسة. لا ينشئ Guest Entity/Class لمجرد التصفح، ويطبق Backend/API المصادقة والصلاحيات. | DEC-077 |
+| PROV-ACT-Q01 | 2026-09-11 | كل Provider Profile يكون إما `SERVICE` أو `PRODUCT` فقط في MVP، ويمكن للمقدم اختيار تصنيف واحد أو أكثر داخل نوعه. يسمح Draft مؤقتًا بصفر تصنيفات، ولا تتاح وظائف التقديم قبل وجود تصنيف واحد على الأقل. | DEC-074/076 |
+| BUS-Q02 | 2026-09-11 | القرار التاريخي الذي سمح Service/Product أو كليهما استُبدل: Provider Profile واحد بنوع حصري `SERVICE` أو `PRODUCT`، مع تعدد التصنيفات داخل النوع نفسه. | DEC-029 (superseded) / DEC-074/076 |
 | DISPUTE-AUTH-Q01 | 2026-09-04 | عند استمرار الخلاف قبل اعتماد الفاتورة تراجع إدارة YADD السجلات لتطبيق سياسة المنصة واتخاذ إجراء إداري عند وجود مخالفة، لكنها لا تفصل ماليًا/تجاريًا ولا تلزم دفعًا أو Refund أو Compensation. إذا لم يتوصل الطرفان لاتفاق تصبح Transaction `Disputed` كحالة نهائية غير ناجحة ولا تفتح Ratings. | DEC-073 |
 | GOV-Q01 | 2026-09-03 | Chapter Four مطلوب بمستوى تصميم كامل للمناقشة الأولية؛ ERD في Chapter Three، وRelation Schema/Data Dictionary/Query Statements والواجهات في Chapter Four. | DEC-059 |
 | GOV-Q02 | 2026-09-03 | يستخدم المشروع DFD وUML معًا في Chapter Three. | DEC-060 |
@@ -38,7 +41,7 @@
 | DEP-Q02 | 2026-09-03 | كل حركة مالية خارج YADD. المقدم يحدد فقط `RequiresDeposit` نعم/لا؛ لا قيمة عربون ولا دفع ولا Refund داخل النظام. | DEC-041 |
 | RAT-CUST-Q01 | 2026-09-03 | تقييم المقدم للمستفيد اختياري وبارز بعد Completed عبر 3 مؤشرات 1–5 + تعليق اختياري، ويكوّن سجل تعامل محدود الظهور للمقدمين دون عقوبات آلية. | DEC-063 |
 | PROP-003 | 2026-09-03 | Portfolio/Catalog داخل Provider Profile مع علامة مائية تعريفية، أصل غير عام، إقرار حق النشر وإمكانية الإبلاغ عن الانتحال. | DEC-064 |
-| ACTOR-MODEL-01 | 2026-09-03 | Actors العامة للمخطط الرئيسي: Beneficiary, Provider, YADD Administrator؛ Provider يتخصص إلى Service/Product Provider عند الحاجة. | DEC-067 |
+| ACTOR-MODEL-01 | 2026-09-15 | القرار الأصلي حدد Beneficiary, Provider, YADD Administrator. بقيت هذه Actors صحيحة للمستخدمين المسجلين والإدارة، لكن **حصر** المخطط بها واستبعاد Guest استبدله DEC-077؛ Main Actor Model الحالي يضيف Guest. | DEC-067 (superseded in part) / DEC-077 |
 | CORE-FLOW-01 | 2026-09-03 | Search/Request → Chat/Selection/Agreement-to-start → Transaction → Fulfillment → Final Invoice → Approval/Revision → Completed → Ratings. | DEC-068 |
 | REQ-RESP-SEL-01 | 2026-09-03 | Request → Provider Response → Selection → Transaction، بلا Agreement entity مستقل في MVP. | DEC-066 |
 | ARCH-DIR-01 | 2026-09-03 | Backend/API مركزي هو المرجع للصلاحيات وقواعد العمل؛ واجهة الويب أساسية حاليًا، وFlutter عميل Mobile لاحق. | DEC-065 |
@@ -54,7 +57,6 @@
 | BUS-Q03 | 2026-08-26 | فصل Request Closure عن Transaction Cancellation؛ الطلب المهجور يخضع لتذكير/Expiry. | DEC-048/049 |
 | RAT-Q01 | 2026-09-02 | تقييم المستفيد للمقدم إلزامي بعد اكتمال المعاملة. | DEC-051 |
 | RAT-VIS-Q01 | 2026-09-03 | نموذج التقييم القديم superseded؛ سجل تعامل المستفيد الحالي وفق DEC-063. | DEC-063 |
-| BUS-Q02 | 2026-08-12 | Provider Profile واحد ويمكن تفعيل Service/Product Activity أو كليهما. | DEC-029/030 |
 | LOC-Q01 | 2026-08-12 | موقع الطلب مديرية + حي؛ الموقع الدقيق غير عام. | DEC-031..033 |
 | LOC-OPS-Q01 | 2026-08-12 | التوسع الجغرافي يحتاج موافقة المستفيد. | DEC-045 |
 | VER-Q01 | 2026-08-12 | Provider Verification رسمي مع مراجعة بشرية نهائية. | DEC-034..036 |
