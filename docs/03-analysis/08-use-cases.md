@@ -1,12 +1,13 @@
 # Use Cases & Specifications
 
-> **الحالة:** `ANALYZED — CORE SYNCHRONIZED 2026-09-04`
+> **الحالة:** `ANALYZED — CORE SYNCHRONIZED 2026-09-15 THROUGH DEC-077`
 >
 > تعكس هذه الوثيقة السيناريوهات المعتمدة حاليًا في Decision Register وSRS وBusiness Rules، مع إبقاء السياسات المفتوحة خارج الافتراض. جميع التسميات داخل المخططات النهائية تكون باللغة الإنجليزية وفق DEC-072.
 
 ## 1. Actor Model
 
 ### Main diagram actors
+- `Guest`
 - `Beneficiary`
 - `Provider`
   - `Service Provider`
@@ -18,9 +19,27 @@
 - `Content Moderator`
 - `Subscription Administrator`
 
-الشخص يستخدم حساب `User` واحدًا وقد يستخدم Beneficiary Portal وProvider Portal حسب حالة Provider Profile. استخدام `YADD Administrator` في المخطط الرئيسي تبسيط نمذجي ولا يلغي فصل الصلاحيات الإدارية داخليًا.
+`Guest` هو Actor غير authenticated للتصفح العام فقط. الشخص بعد Log In/Create Account يستخدم حساب `User` واحدًا وقد يستخدم Beneficiary Portal وProvider Portal حسب حالة Provider Profile. استخدام `YADD Administrator` في المخطط الرئيسي تبسيط نمذجي ولا يلغي فصل الصلاحيات الإدارية داخليًا.
 
-**Related:** DEC-008..011/029/030/067.
+**Related:** DEC-008..011/030/067/074/076/077.
+
+---
+
+## UC-00 — Browse Public Provider Information
+
+- **Status:** `ANALYZED_APPROVED`.
+- **Primary actor:** Guest.
+- **Precondition:** لا تتطلب Authentication.
+- **Main flow:**
+  1. يدخل Guest إلى الواجهة العامة.
+  2. يحدد التصنيف والمنطقة/الفلاتر العامة المتاحة.
+  3. يعرض YADD نتائج Providers العامة.
+  4. يفتح Guest Public Provider Profile.
+  5. يستعرض البيانات العامة المسموح بها وPortfolio/Catalog ومؤشرات الملف العامة المعتمدة.
+- **Protected-action alternative:** إذا ضغط Guest إجراءً محميًا مثل `Create Request` أو `Communicate / Inquire`، يوجّهه YADD إلى `Log In` أو `Create Account` قبل متابعة الإجراء.
+- **Privacy rule:** لا يعرض Public Provider Profile رقم الهاتف أو بيانات Verification/Subscription/Transactions/Reports أو أي بيانات حساسة/خاصة.
+- **Rule:** Guest لا ينشئ Request/Conversation/Transaction/Rating/Block/Report قبل Authentication.
+- **Related:** DEC-036/046/064/065/077.
 
 ---
 
@@ -29,7 +48,7 @@
 - **Status:** `ANALYZED_APPROVED`.
 - **Primary actor:** Beneficiary.
 - **Supporting actor:** Provider.
-- **Preconditions:** Provider Profile المطلوب ظاهر ومؤهل وفق قواعد النظام الحالية.
+- **Preconditions:** Beneficiary authenticated؛ Provider Profile المطلوب ظاهر ومؤهل وفق قواعد النظام الحالية.
 - **Main flow:**
   1. يحدد Beneficiary التصنيف والمنطقة/الفلاتر المتاحة.
   2. يعرض YADD المقدمين المؤهلين.
@@ -41,7 +60,7 @@
   8. إذا أكد الطرف الآخر، ينشئ YADD `Active Transaction` بين الطرفين.
 - **Alternative — No confirmation / rejection:** تبقى المحادثة دون Transaction ويمكن أن تستمر أو تنتهي.
 - **Rule:** Chat وحدها لا تنشئ Transaction.
-- **Related:** DEC-012/031..033/046/047/064/066/069.
+- **Related:** DEC-012/031..033/046/047/064/066/069/077.
 
 ---
 
@@ -49,6 +68,7 @@
 
 - **Status:** `ANALYZED_APPROVED`.
 - **Primary actor:** Beneficiary.
+- **Precondition:** Beneficiary authenticated.
 - **Main flow:**
   1. يحدد Service أو Product والفئة.
   2. يحدد المديرية والحي.
@@ -57,8 +77,9 @@
   5. يمكن إضافة سعر استرشادي اختياري.
   6. ينشر الطلب ويصبح `Open`.
 - **Alternative:** يغلقه Beneficiary قبل اختيار Provider إذا لم يعد يحتاجه؛ هذا `Request Closure` وليس Transaction Cancellation.
+- **Guest boundary:** CTA إنشاء الطلب قد يظهر للGuest، لكن لا ينفذ UC-02 قبل Log In/Create Account.
 - **Open policy:** Expiry/reminder timing في `REQ-EXP-Q01`.
-- **Related:** DEC-012/013/048/049.
+- **Related:** DEC-012/013/048/049/077.
 
 ---
 
@@ -66,7 +87,7 @@
 
 - **Status:** `ANALYZED_APPROVED`.
 - **Primary actor:** Eligible Provider.
-- **Preconditions:** Provider Verified + subscription Active + Request `Open`.
+- **Preconditions:** Provider authenticated + Verified + subscription Active + Request `Open`.
 - **Main flow:**
   1. يراجع Provider الطلب.
   2. يرسل `Provider Response`.
@@ -78,7 +99,7 @@
 - **Alternative — Edit response:** ما دام Request `Open` ولم يتم اختيار Provider، يستطيع Provider تعديل استجابته الفعالة بدل إنشاء استجابة مكررة.
 - **Alternative — Withdraw response:** ما دام Request `Open` ولم يتم اختيار Provider، يستطيع Provider سحب استجابته.
 - **After selection:** لا تعد الاستجابة قابلة للتعديل/السحب كاستجابة مفتوحة بعد اختيار Provider وبدء Transaction.
-- **Related:** DEC-013/041/043/047/066/070.
+- **Related:** DEC-013/041/043/047/066/070/077.
 
 ---
 
@@ -86,7 +107,7 @@
 
 - **Status:** `ANALYZED_APPROVED`.
 - **Primary actor:** Beneficiary.
-- **Precondition:** Request `Open` ويحتوي على Provider Response واحدة أو أكثر قابلة للاختيار.
+- **Precondition:** Beneficiary authenticated؛ Request `Open` ويحتوي على Provider Response واحدة أو أكثر قابلة للاختيار.
 - **Main flow:**
   1. يقارن Beneficiary Provider Responses والمحادثات ذات الصلة، بما في ذلك `RequiresDeposit` إن وجدت.
   2. يختار Provider واحدًا.
@@ -95,7 +116,7 @@
   5. تصبح الاستجابة المختارة `Selected`.
   6. ينشئ YADD `Active Transaction` مع Provider المختار.
 - **Rule:** لا يوجد `Agreement` entity أو form مستقل في MVP.
-- **Related:** DEC-014/047/066/070.
+- **Related:** DEC-014/047/066/070/077.
 
 ---
 
@@ -103,7 +124,7 @@
 
 - **Status:** `ANALYZED_APPROVED`.
 - **Primary actor:** Beneficiary or Provider.
-- **Precondition:** Transaction في حالة تسمح بالإلغاء وفق lifecycle الحالي.
+- **Precondition:** Actor authenticated؛ Transaction في حالة تسمح بالإلغاء وفق lifecycle الحالي.
 - **Main flow:**
   1. يختار الطرف إلغاء المعاملة.
   2. يدخل سببًا إلزاميًا.
@@ -112,7 +133,7 @@
   5. يمكن للإدارة مراجعة النمط عند الحاجة.
 - **Postcondition:** تصبح Transaction `Cancelled`.
 - **Note:** إغلاق Request قبل اختيار Provider ليس هذا Use Case، وأي Deposit/Payment/Refund خارج YADD.
-- **Related:** DEC-048/054.
+- **Related:** DEC-048/054/077.
 
 ---
 
@@ -120,7 +141,7 @@
 
 - **Status:** `ANALYZED_APPROVED`.
 - **Primary actors:** Provider, Beneficiary.
-- **Precondition:** Transaction قائمة ووصلت إلى مرحلة التنفيذ/التجهيز المناسبة.
+- **Precondition:** Actors authenticated؛ Transaction قائمة ووصلت إلى مرحلة التنفيذ/التجهيز المناسبة.
 - **Main flow:**
   1. بعد التنفيذ/التجهيز واستقرار البنود ينشئ Provider الفاتورة النهائية.
   2. يضيف البنود والأسعار والإجمالي وصورًا اختيارية.
@@ -134,7 +155,7 @@
 - **No response:** تبقى الفاتورة Pending وتصل تذكيرات؛ لا Auto-Approval.
 - **Terminal rule:** `Completed` هي النهاية الناجحة للTransaction؛ لا توجد حالة Transaction باسم `Closed`.
 - **Open policy:** التصعيد الطويل `INV-PENDING-Q01`.
-- **Related:** DEC-015/016/025/050/055/071.
+- **Related:** DEC-015/016/025/050/055/071/077.
 
 ---
 
@@ -142,14 +163,14 @@
 
 - **Status:** `ANALYZED_APPROVED`.
 - **Primary actor:** Beneficiary.
-- **Precondition:** Transaction `Completed` مع Provider نفسه وبفاتورة معتمدة.
+- **Precondition:** Beneficiary authenticated؛ Transaction `Completed` مع Provider نفسه وبفاتورة معتمدة.
 - **Main flow:**
   1. يطلب YADD من Beneficiary تقييم Provider.
   2. يختار Beneficiary تقييمًا من 1 إلى 5 نجوم.
   3. يمكن إضافة تعليق اختياري.
   4. يرسل التقييم.
 - **Rule:** التقييم إلزامي بعد Completed وفق تجربة النظام الحالية، لكنه **Post-Transaction operation** ولا يغير Transaction status.
-- **Related:** DEC-051/071.
+- **Related:** DEC-051/071/077.
 
 ---
 
@@ -157,7 +178,7 @@
 
 - **Status:** `ANALYZED_APPROVED`.
 - **Primary actor:** Provider.
-- **Precondition:** Transaction `Completed` مع Beneficiary نفسه.
+- **Precondition:** Provider authenticated؛ Transaction `Completed` مع Beneficiary نفسه.
 - **Main flow:**
   1. يعرض YADD Prompt بارزًا للتقييم.
   2. يستطيع Provider تخطي التقييم لأنه اختياري.
@@ -170,7 +191,7 @@
 - **Visibility:** يظهر سجل التعامل لمقدمي الخدمات/المنتجات فقط عندما يوجد سياق تعامل مشروع مع Beneficiary.
 - **No automatic consequence:** لا يؤدي التقييم إلى منع أو تعليق أو عقوبة آلية في MVP.
 - **Rule:** هذا Post-Transaction operation ولا يغير Transaction status.
-- **Related:** DEC-063/071.
+- **Related:** DEC-063/071/077.
 
 ---
 
@@ -179,13 +200,14 @@
 - **Status:** `ANALYZED_APPROVED`.
 - **Primary actor:** User.
 - **Supporting actor:** YADD Administrator.
+- **Precondition:** User authenticated؛ Guest لا ينفذ Block/Report قبل Authentication.
 - **Main flow:**
   1. يحظر User الطرف الآخر لإيقاف التواصل المباشر.
   2. يستطيع تقديم Report مرتبطًا بمستخدم/محادثة/سلوك أو Portfolio/Catalog Item.
   3. يذهب Report للمراجعة الإدارية.
   4. يقرر الموظف المخول الإجراء وفق السياسة والأدلة.
 - **Rule:** Report وحده لا يساوي إدانة أو حظرًا نهائيًا.
-- **Related:** DEC-053/054.
+- **Related:** DEC-053/054/077.
 
 ---
 
@@ -194,6 +216,7 @@
 - **Status:** `ANALYZED_APPROVED` في الجوهر.
 - **Primary actor:** User / prospective Provider.
 - **Supporting actor:** YADD Administrator / Verification Reviewer.
+- **Precondition:** User authenticated.
 - **Main flow:**
   1. ينشئ User أو يكمل Provider Profile داخل الحساب نفسه.
   2. يحدد النشاط والمجال ومناطق الخدمة المطلوبة.
@@ -202,7 +225,7 @@
   5. يراجع موظف مخول حالة التحقق.
   6. القرار النهائي بشري؛ عند Verified تتاح صلاحيات Provider المناسبة حسب بقية الشروط.
 - **Open:** أنواع الوثائق الدقيقة والاحتفاظ والتراخيص الخاصة في `VER-DOC-Q01 / VER-RET-Q01 / VER-LIC-Q01`.
-- **Related:** DEC-010/034..040.
+- **Related:** DEC-010/034..040/077.
 
 ---
 
@@ -210,30 +233,40 @@
 
 - **Status:** `ANALYZED_APPROVED`.
 - **Primary actor:** Provider.
+- **Precondition:** Provider authenticated.
 - **Main flow:**
   1. يضيف Provider صورة لعمل/منتج مع وصف اختياري.
   2. يقر بحقه في نشر المحتوى.
   3. يحفظ YADD الأصل بصورة غير عامة.
   4. ينشئ نسخة عرض بعلامة مائية تعريفية مرتبطة بـYADD وحساب Provider.
-  5. تظهر نسخة العرض في Provider Profile.
-- **Alternative:** يمكن الإبلاغ عن المحتوى المشتبه في انتحاله للمراجعة الإدارية.
+  5. تظهر نسخة العرض في Provider Profile ويمكن عرض النسخة العامة للGuest وفق DEC-077.
+- **Alternative:** يمكن لمستخدم authenticated الإبلاغ عن المحتوى المشتبه في انتحاله للمراجعة الإدارية.
 - **Rule:** العلامة المائية ليست إثبات ملكية قانونية.
-- **Related:** DEC-064.
+- **Related:** DEC-064/077.
 
 ---
 
 ## 2. Main Diagram Decomposition & UML Relationship Rules
 
-> **Modeling correction / synchronization:** مواصفات `UC-01..UC-10` أعلاه تبقى مرجع السيناريوهات والتتبع، لكنها ليست خريطة 1:1 للأشكال البيضاوية في Main Use Case Diagram. بعض المواصفات تجمع أكثر من هدف Actor أو أكثر من مرحلة زمنية/Actor واحد، لذلك يفكك الرسم النهائي السيناريو إلى Use Cases أصغر دون تغيير المتطلبات أو القرارات.
+> **Modeling correction / synchronization:** مواصفات `UC-00..UC-10` أعلاه تبقى مرجع السيناريوهات والتتبع، لكنها ليست خريطة 1:1 للأشكال البيضاوية في Main Use Case Diagram. بعض المواصفات تجمع أكثر من هدف Actor أو أكثر من مرحلة زمنية/Actor واحد، لذلك يفكك الرسم النهائي السيناريو إلى Use Cases أصغر دون تغيير المتطلبات أو القرارات.
 
 ### قاعدة اختيار العلاقة
 
 - `<<include>>`: يستخدم فقط عندما يكون السلوك المضمّن جزءًا مطلوبًا من تنفيذ الـBase Use Case أو وظيفة مشتركة يجب تنفيذها داخلها.
 - `<<extend>>`: يستخدم عندما يكون السلوك الإضافي شرطيًا/اختياريًا ويمكن للـBase Use Case أن يكتمل بدونه عند Extension Point مناسب.
-- **Precondition / Postcondition / Constraint**: تستخدم للتبعيات الزمنية أو المعتمدة على حالة الكيان، ولا تحول تلقائيًا إلى `include` أو `extend`.
-- **Actor Generalization**: `Service Provider` و`Product Provider` تخصصان من `Provider` عند الحاجة، ولا يلزم تكرارهما في Main Diagram وفق DEC-067.
+- **Precondition / Postcondition / Constraint**: تستخدم للتبعيات الزمنية أو المعتمدة على حالة الكيان، ومنها Authentication للوظائف المحمية؛ ولا تحول تلقائيًا إلى `include` أو `extend`.
+- **Actor Generalization**: `Service Provider` و`Product Provider` تخصصان من `Provider` عند الحاجة، ولا يلزم تكرارهما في Main Diagram وفق DEC-067/074.
+- ظهور زر محمي للGuest هو UI behavior؛ لا يربط Guest مباشرة بالـprotected Use Case كأنه يملك صلاحية تنفيذها.
 
 ### Decomposed Use Cases for the Main Diagram
+
+#### Guest
+- `Browse Public Content`
+- `Search Providers`
+- `View Provider Profile`
+- `View Portfolio / Catalog`
+- `Log In`
+- `Create Account`
 
 #### Beneficiary
 - `Manage Account`
@@ -290,8 +323,9 @@
 
 | Relationship | UML Type | Why | Basis |
 |---|---|---|---|
-| `View Provider Profile → Search Providers` | `<<extend>>` | فتح ملف نتيجة بحث اختياري بعد ظهور النتائج | UC-01 / DEC-012/064 |
-| `Communicate / Inquire → View Provider Profile` | `<<extend>>` | الاستفسار في Direct Search اختياري بعد استعراض الملف | UC-01 / DEC-046 |
+| `View Provider Profile → Search Providers` | `<<extend>>` | فتح ملف نتيجة بحث اختياري بعد ظهور النتائج | UC-00/01 / DEC-012/064/077 |
+| `View Portfolio / Catalog → View Provider Profile` | `<<extend>>` | استعراض المعرض/الكتالوج جزء اختياري من استعراض الملف العام | UC-00/10 / DEC-064/077 |
+| `Communicate / Inquire → View Provider Profile` | `<<extend>>` | الاستفسار في Direct Search اختياري بعد استعراض الملف، لكنه يتطلب Authentication | UC-01 / DEC-046/077 |
 | `Communicate / Inquire → Compare Provider Responses` | `<<extend>>` | الاستفسار قبل اختيار مقدم من الطلب اختياري | UC-03/04 / DEC-046 |
 | `Select Provider → Compare Provider Responses` | `<<extend>>` | المقارنة يمكن أن تنتهي دون اختيار؛ الاختيار يحدث عند قرار Beneficiary | UC-04 / DEC-014/047 |
 | `Submit Provider Response → View Matching Requests` | `<<extend>>` | مشاهدة Request لا تلزم Provider بإرسال استجابة | UC-03 / DEC-043/070 |
@@ -304,10 +338,13 @@
 | `Raise Transaction Complaint → Review Final Invoice` | `<<extend>>` | الشكوى تحدث عند استمرار الخلاف قبل الاعتماد | UC-06 / DEC-025/073 |
 | `Approve Final Invoice → Complete Transaction` | `<<include>>` | اعتماد الفاتورة يجعل Transaction = Completed إلزاميًا | DEC-071 / BR-010 |
 
+> `Log In` و`Create Account` لا يضافان كـ`<<include>>` إلى كل protected Use Case. Authentication يمثل Precondition للـauthenticated actor goals؛ أما عند Guest attempting protected CTA فالواجهة توجهه إلى Authentication وفق DEC-077.
+
 ### Dependencies that are **not** `include` / `extend`
 
 | Use Case | Dependency | Modeling |
 |---|---|---|
+| Protected Beneficiary/Provider actions | User must be authenticated | Authentication Precondition; Guest CTA redirects to Log In/Create Account |
 | `Rate Provider` | Transaction must already be `Completed`; rating then becomes required | `Precondition: Transaction = Completed` + Post-Transaction workflow |
 | `Rate Beneficiary` | Transaction must already be `Completed`; Provider may skip | `Precondition: Transaction = Completed` |
 | `Cancel Transaction` | Transaction must exist and be in a cancellable active state | Precondition / lifecycle rule |
