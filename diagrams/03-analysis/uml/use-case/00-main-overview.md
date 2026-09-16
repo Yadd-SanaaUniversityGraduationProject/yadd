@@ -46,7 +46,8 @@ flowchart LR
 
         subgraph TRUST["Provider & Trust"]
             direction LR
-            UC08(["Block / Report<br/>User or Content"]):::usecase
+            BLOCK(["Block User"]):::usecase
+            REPORT(["Report User / Content"]):::usecase
             UC09(["Provider Verification /<br/>Portal Activation"]):::usecase
             UC10(["Manage Portfolio /<br/>Catalog"]):::usecase
             SUB(["Manage Provider<br/>Subscription"]):::usecase
@@ -66,18 +67,20 @@ flowchart LR
     B --- UC05
     B --- UC06
     B --- UC07
-    B --- UC08
+    B --- BLOCK
+    B --- REPORT
 
     UC01 --- P
     UC03 --- P
     UC05 --- P
     UC06 --- P
     UC07B --- P
-    UC08 --- P
+    BLOCK --- P
+    REPORT --- P
     UC09 --- P
     UC10 --- P
 
-    UC08 --- A
+    REPORT --- A
     UC09 --- A
     SUB --- A
 
@@ -94,3 +97,5 @@ flowchart LR
 ## Reading note
 
 This overview answers only two questions: **Who interacts with YADD?** and **What major goals does each Actor have?** It intentionally avoids relationship-level detail so the diagram remains readable at repository and report scale.
+
+`Block User` and `Report User / Content` remain separate Use Cases because the current model explicitly treats blocking and reporting as independent concepts.
