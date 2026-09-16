@@ -61,6 +61,11 @@ diagrams/
 
 ## 3. Current UML Working Packages
 
+### Use Case
+
+- `03-analysis/uml/use-case/00-main-overview.md` … `04-provider-management-verification-safety.md`
+- `03-analysis/uml/use-case/print-package/` — حزمة طباعة كاملة (PNG/PDF/SVG) لمخططين A4 يوضعان بجانب بعضهما، مع `Log In` كنقطة التحام مشتركة بين المخططين.
+
 ### Activity
 
 - `03-analysis/uml/activity/activity-published-request-route.md`

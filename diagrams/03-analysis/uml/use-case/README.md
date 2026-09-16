@@ -57,6 +57,18 @@ The Mermaid presentation is a working visual source. If the final academic repor
 - Administrative complaint review does not grant financial/commercial settlement authority.
 - No unresolved numeric policy or implementation detail is invented in these diagrams.
 
+## Print Package — نسختان جاهزتان للطباعة (A4 × 2 بجانب بعضهما)
+
+بالإضافة إلى ملفات Markdown + Mermaid أعلاه، تحتوي الحزمة على نسخة رسم نهائية قابلة للطباعة من **نفس** نموذج حالات الاستخدام الواحد:
+
+- المسار: `print-package/` — ويشمل `png/` و`pdf/` و`svg/` و`source/` و`README.md`.
+- المخطط (1 من 2): **Core Service Journey** — الورقة اليمنى.
+- المخطط (2 من 2): **Trust, Administration & Provider Management** — الورقة اليسرى.
+- `Log In` هو العملية الأساسية المشتركة: يظهر في قلب كلا المخططين، وترتبط به بقية المجموعات بشريط **Precondition** رأسي لأن Authentication شرط مسبق لا علاقة `<<include>>` وفق DEC-077.
+- التسميات داخل الشكل إنجليزية وفق DEC-072، مع سطر عربي توضيحي لكل شكل.
+
+هذه الملفات **Generated Exports** مبنية على `docs/03-analysis/08-use-cases.md` و`10-UML.md`، ولا تُعدَّل يدويًا ولا تصبح Source of Truth؛ تفاصيل الطباعة والتوزيع في `print-package/README.md`.
+
 ## Relationship source
 
 Only the `include` / `extend` relationships explicitly documented in `docs/03-analysis/08-use-cases.md` and synchronized in `docs/03-analysis/10-UML.md` are shown. Lifecycle dependencies such as authentication, `Completed` before rating, or an existing submission before administrative review remain preconditions rather than artificial UML relationships.
