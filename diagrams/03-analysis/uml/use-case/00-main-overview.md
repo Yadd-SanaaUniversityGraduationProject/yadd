@@ -108,7 +108,7 @@ This overview answers only two questions: **Who interacts with YADD?** and **Wha
 >
 > **Purpose:** Detailed Actor–goal expansion of the same YADD Use Case Model shown above. This view preserves the decomposed Main Diagram Use Cases and the approved/derived UML relationships currently documented in `08-use-cases.md`.
 >
-> **Presentation basis:** The team-supplied academic Use Case examples guide the presentation style only: Actors remain outside the system boundary, Actor associations are distinct from Use Case relationships, and `<<include>>`, `<<extend>>`, and Actor generalization are shown explicitly only where the YADD model supports them.
+> **Visual convention:** To keep the diagram human-readable, the same Actor may be drawn more than once near different functional areas. These are **visual replicas of the same model Actor**, not different Actors. This prevents long association lines from crossing the full diagram.
 
 ## Detailed source basis
 
@@ -123,152 +123,178 @@ This overview answers only two questions: **Who interacts with YADD?** and **Wha
 ## Detailed Diagram
 
 ```mermaid
-%%{init: {"flowchart": {"curve": "linear", "nodeSpacing": 24, "rankSpacing": 34, "htmlLabels": true}}}%%
-flowchart LR
+%%{init: {"flowchart": {"curve": "linear", "nodeSpacing": 28, "rankSpacing": 36, "htmlLabels": true}}}%%
+flowchart TB
 
-    subgraph LEFT_ACTORS[" "]
-        direction TB
-        G2["Guest"]:::actor
-        B2["Beneficiary"]:::actor
-    end
+    subgraph ACCESS_ROW[" "]
+        direction LR
+        GA["Guest"]:::actor
+        BA["Beneficiary"]:::actor
 
-    subgraph SYS2["YADD System"]
-        direction TB
-
-        subgraph TOP_ROW[" "]
-            direction LR
-
-            subgraph ACCESS2["Access, Account & Discovery"]
-                direction TB
-                LOGIN2(["Log In"]):::usecase
-                REGISTER2(["Create Account"]):::usecase
-                BROWSE2(["Browse Public Content"]):::usecase
-                SEARCH2(["Search Providers"]):::usecase
-                PROFILE2(["View Provider Profile"]):::usecase
-                VIEW_PORTFOLIO2(["View Portfolio / Catalog"]):::usecase
-                MANAGE_ACCOUNT2(["Manage Account"]):::usecase
-                CHAT2(["Communicate / Inquire"]):::usecase
-            end
-
-            subgraph REQUESTS2["Request & Provider Response"]
-                direction TB
-                CREATE_REQ2(["Create Request"]):::usecase
-                CLOSE_REQ2(["Close Open Request"]):::usecase
-                COMPARE2(["Compare Provider Responses"]):::usecase
-                SELECT2(["Select Provider"]):::usecase
-                VIEW_MATCHING2(["View Matching Requests"]):::usecase
-                SUBMIT_RESPONSE2(["Submit Provider Response"]):::usecase
-                EDIT_RESPONSE2(["Edit Provider Response"]):::usecase
-                WITHDRAW_RESPONSE2(["Withdraw Provider Response"]):::usecase
-                VALIDATE_RESPONSE2(["Validate Response Eligibility"]):::systemuc
-            end
-
-            subgraph TRANSACTION2["Transaction Start & Cancellation"]
-                direction TB
-                REQUEST_START2(["Request Transaction Start"]):::usecase
-                CONFIRM_START2(["Confirm Transaction Start"]):::usecase
-                CREATE_TX2(["Create Active Transaction"]):::systemuc
-                CANCEL_TX2(["Cancel Transaction"]):::usecase
-            end
+        subgraph ACCESS2["YADD — Access, Account & Discovery"]
+            direction TB
+            LOGIN2(["Log In"]):::usecase
+            REGISTER2(["Create Account"]):::usecase
+            BROWSE2(["Browse Public Content"]):::usecase
+            SEARCH2(["Search Providers"]):::usecase
+            PROFILE2(["View Provider Profile"]):::usecase
+            VIEW_PORTFOLIO2(["View Portfolio / Catalog"]):::usecase
+            MANAGE_ACCOUNT2(["Manage Account"]):::usecase
+            CHAT2(["Communicate / Inquire"]):::usecase
         end
 
-        subgraph BOTTOM_ROW[" "]
-            direction LR
+        PA["Provider"]:::actor
+    end
 
-            subgraph INVOICE2["Invoice, Complaint & Completion"]
-                direction TB
-                CREATE_INV2(["Create Final Invoice"]):::usecase
-                REVIEW_INV2(["Review Final Invoice"]):::usecase
-                APPROVE_INV2(["Approve Final Invoice"]):::usecase
-                REQUEST_REV2(["Request Invoice Revision"]):::usecase
-                REVISE_INV2(["Revise Final Invoice"]):::usecase
-                COMPLAINT2(["Raise Transaction Complaint"]):::usecase
-                REVIEW_COMPLAINT2(["Review Transaction Complaint"]):::usecase
-                COMPLETE_TX2(["Complete Transaction"]):::systemuc
-                RATE_PROVIDER2(["Rate Provider"]):::usecase
-                RATE_BENEFICIARY2(["Rate Beneficiary"]):::usecase
-            end
+    subgraph REQUEST_ROW[" "]
+        direction LR
+        BR["Beneficiary"]:::actor
 
-            subgraph PROVIDER_TRUST2["Provider Management, Verification & Safety"]
-                direction TB
-                MANAGE_PROFILE2(["Manage Provider Profile"]):::usecase
-                MANAGE_PORTFOLIO2(["Manage Portfolio / Catalog"]):::usecase
-                SERVICE_AREAS2(["Manage Service Areas"]):::usecase
-                SUBMIT_VERIFICATION2(["Submit Verification"]):::usecase
-                REVIEW_VERIFICATION2(["Review Provider Verification"]):::usecase
-                SUBSCRIPTION2(["Manage Provider Subscription"]):::usecase
-                BLOCK2(["Block User"]):::usecase
-                REPORT2(["Report User / Content"]):::usecase
-                REVIEW_REPORTS2(["Review Reports / Flags"]):::usecase
-            end
+        subgraph REQUESTS2["YADD — Request & Provider Response"]
+            direction TB
+            CREATE_REQ2(["Create Request"]):::usecase
+            CLOSE_REQ2(["Close Open Request"]):::usecase
+            COMPARE2(["Compare Provider Responses"]):::usecase
+            SELECT2(["Select Provider"]):::usecase
+            VIEW_MATCHING2(["View Matching Requests"]):::usecase
+            SUBMIT_RESPONSE2(["Submit Provider Response"]):::usecase
+            EDIT_RESPONSE2(["Edit Provider Response"]):::usecase
+            WITHDRAW_RESPONSE2(["Withdraw Provider Response"]):::usecase
+            VALIDATE_RESPONSE2(["Validate Response Eligibility"]):::systemuc
         end
+
+        PR["Provider"]:::actor
     end
 
-    subgraph RIGHT_ACTORS[" "]
-        direction TB
-        SP2["Service Provider"]:::actor
-        P2["Provider"]:::actor
-        PP2["Product Provider"]:::actor
-        A2["YADD Administrator"]:::actor
+    subgraph TRANSACTION_ROW[" "]
+        direction LR
+        BT["Beneficiary"]:::actor
+
+        subgraph TRANSACTION2["YADD — Transaction Start & Cancellation"]
+            direction TB
+            REQUEST_START2(["Request Transaction Start"]):::usecase
+            CONFIRM_START2(["Confirm Transaction Start"]):::usecase
+            CREATE_TX2(["Create Active Transaction"]):::systemuc
+            CANCEL_TX2(["Cancel Transaction"]):::usecase
+        end
+
+        PT["Provider"]:::actor
     end
 
-    %% Guest associations — kept on the public/access side
-    G2 --- LOGIN2
-    G2 --- REGISTER2
-    G2 --- BROWSE2
-    G2 --- SEARCH2
-    G2 --- PROFILE2
-    G2 --- VIEW_PORTFOLIO2
+    subgraph INVOICE_ROW[" "]
+        direction LR
+        BI["Beneficiary"]:::actor
 
-    %% Beneficiary associations — enter the system from the left
-    B2 --- MANAGE_ACCOUNT2
-    B2 --- SEARCH2
-    B2 --- PROFILE2
-    B2 --- CHAT2
-    B2 --- CREATE_REQ2
-    B2 --- CLOSE_REQ2
-    B2 --- COMPARE2
-    B2 --- SELECT2
-    B2 --- REQUEST_START2
-    B2 --- CONFIRM_START2
-    B2 --- CANCEL_TX2
-    B2 --- REVIEW_INV2
-    B2 --- APPROVE_INV2
-    B2 --- REQUEST_REV2
-    B2 --- COMPLAINT2
-    B2 --- RATE_PROVIDER2
-    B2 --- BLOCK2
-    B2 --- REPORT2
+        subgraph INVOICE2["YADD — Invoice, Complaint & Completion"]
+            direction TB
+            CREATE_INV2(["Create Final Invoice"]):::usecase
+            REVIEW_INV2(["Review Final Invoice"]):::usecase
+            APPROVE_INV2(["Approve Final Invoice"]):::usecase
+            REQUEST_REV2(["Request Invoice Revision"]):::usecase
+            REVISE_INV2(["Revise Final Invoice"]):::usecase
+            COMPLAINT2(["Raise Transaction Complaint"]):::usecase
+            REVIEW_COMPLAINT2(["Review Transaction Complaint"]):::usecase
+            COMPLETE_TX2(["Complete Transaction"]):::systemuc
+            RATE_PROVIDER2(["Rate Provider"]):::usecase
+            RATE_BENEFICIARY2(["Rate Beneficiary"]):::usecase
+        end
 
-    %% Provider associations — enter the system from the right
-    P2 --- MANAGE_ACCOUNT2
-    P2 --- CHAT2
-    P2 --- VIEW_MATCHING2
-    P2 --- SUBMIT_RESPONSE2
-    P2 --- EDIT_RESPONSE2
-    P2 --- WITHDRAW_RESPONSE2
-    P2 --- REQUEST_START2
-    P2 --- CONFIRM_START2
-    P2 --- CANCEL_TX2
-    P2 --- CREATE_INV2
-    P2 --- REVISE_INV2
-    P2 --- RATE_BENEFICIARY2
-    P2 --- MANAGE_PROFILE2
-    P2 --- MANAGE_PORTFOLIO2
-    P2 --- SERVICE_AREAS2
-    P2 --- SUBMIT_VERIFICATION2
-    P2 --- BLOCK2
-    P2 --- REPORT2
+        PI["Provider"]:::actor
+        AI["YADD Administrator"]:::actor
+    end
 
-    %% Administrator associations — kept on the administrative/right side
-    A2 --- REVIEW_VERIFICATION2
-    A2 --- SUBSCRIPTION2
-    A2 --- REVIEW_REPORTS2
-    A2 --- REVIEW_COMPLAINT2
+    subgraph TRUST_ROW[" "]
+        direction LR
+        BS["Beneficiary"]:::actor
 
-    %% Actor generalization
-    SP2 -. "«generalization»" .-> P2
-    PP2 -. "«generalization»" .-> P2
+        subgraph PROVIDER_TRUST2["YADD — Provider Management, Verification & Safety"]
+            direction TB
+            MANAGE_PROFILE2(["Manage Provider Profile"]):::usecase
+            MANAGE_PORTFOLIO2(["Manage Portfolio / Catalog"]):::usecase
+            SERVICE_AREAS2(["Manage Service Areas"]):::usecase
+            SUBMIT_VERIFICATION2(["Submit Verification"]):::usecase
+            REVIEW_VERIFICATION2(["Review Provider Verification"]):::usecase
+            SUBSCRIPTION2(["Manage Provider Subscription"]):::usecase
+            BLOCK2(["Block User"]):::usecase
+            REPORT2(["Report User / Content"]):::usecase
+            REVIEW_REPORTS2(["Review Reports / Flags"]):::usecase
+        end
+
+        PS["Provider"]:::actor
+        SPS["Service Provider"]:::actor
+        PPS["Product Provider"]:::actor
+        AS["YADD Administrator"]:::actor
+    end
+
+    %% Access / discovery associations
+    GA --- LOGIN2
+    GA --- REGISTER2
+    GA --- BROWSE2
+    GA --- SEARCH2
+    GA --- PROFILE2
+    GA --- VIEW_PORTFOLIO2
+
+    BA --- MANAGE_ACCOUNT2
+    BA --- SEARCH2
+    BA --- PROFILE2
+    BA --- CHAT2
+
+    CHAT2 --- PA
+    MANAGE_ACCOUNT2 --- PA
+
+    %% Request associations
+    BR --- CREATE_REQ2
+    BR --- CLOSE_REQ2
+    BR --- COMPARE2
+    BR --- SELECT2
+    BR --- CHAT2
+
+    VIEW_MATCHING2 --- PR
+    SUBMIT_RESPONSE2 --- PR
+    EDIT_RESPONSE2 --- PR
+    WITHDRAW_RESPONSE2 --- PR
+    CHAT2 --- PR
+
+    %% Transaction associations
+    BT --- REQUEST_START2
+    BT --- CONFIRM_START2
+    BT --- CANCEL_TX2
+
+    REQUEST_START2 --- PT
+    CONFIRM_START2 --- PT
+    CANCEL_TX2 --- PT
+
+    %% Invoice / completion associations
+    BI --- REVIEW_INV2
+    BI --- APPROVE_INV2
+    BI --- REQUEST_REV2
+    BI --- COMPLAINT2
+    BI --- RATE_PROVIDER2
+
+    CREATE_INV2 --- PI
+    REVISE_INV2 --- PI
+    RATE_BENEFICIARY2 --- PI
+
+    REVIEW_COMPLAINT2 --- AI
+
+    %% Provider management / safety associations
+    BS --- BLOCK2
+    BS --- REPORT2
+
+    MANAGE_PROFILE2 --- PS
+    MANAGE_PORTFOLIO2 --- PS
+    SERVICE_AREAS2 --- PS
+    SUBMIT_VERIFICATION2 --- PS
+    BLOCK2 --- PS
+    REPORT2 --- PS
+
+    REVIEW_VERIFICATION2 --- AS
+    SUBSCRIPTION2 --- AS
+    REVIEW_REPORTS2 --- AS
+
+    %% Actor generalization — local representation of the same Provider specialization
+    SPS -. "«generalization»" .-> PS
+    PPS -. "«generalization»" .-> PS
 
     %% Approved / derived extend relationships
     PROFILE2 -. "«extend»" .-> SEARCH2
@@ -292,25 +318,27 @@ flowchart LR
     classDef usecase fill:#FFFFFF,stroke:#3F6FA5,stroke-width:1.35px,color:#111827;
     classDef systemuc fill:#FFF8E6,stroke:#B7791F,stroke-width:1.35px,color:#111827;
 
-    style SYS2 fill:#FFFFFF,stroke:#2F75B5,stroke-width:2.4px
-    style TOP_ROW fill:transparent,stroke:transparent
-    style BOTTOM_ROW fill:transparent,stroke:transparent
-    style LEFT_ACTORS fill:transparent,stroke:transparent
-    style RIGHT_ACTORS fill:transparent,stroke:transparent
-    style ACCESS2 fill:#FBFDFF,stroke:#CBD5E1,stroke-width:1px
-    style REQUESTS2 fill:#FBFDFF,stroke:#CBD5E1,stroke-width:1px
-    style TRANSACTION2 fill:#FBFDFF,stroke:#CBD5E1,stroke-width:1px
-    style INVOICE2 fill:#FBFDFF,stroke:#CBD5E1,stroke-width:1px
-    style PROVIDER_TRUST2 fill:#FBFDFF,stroke:#CBD5E1,stroke-width:1px
+    style ACCESS_ROW fill:transparent,stroke:transparent
+    style REQUEST_ROW fill:transparent,stroke:transparent
+    style TRANSACTION_ROW fill:transparent,stroke:transparent
+    style INVOICE_ROW fill:transparent,stroke:transparent
+    style TRUST_ROW fill:transparent,stroke:transparent
+
+    style ACCESS2 fill:#FBFDFF,stroke:#2F75B5,stroke-width:2px
+    style REQUESTS2 fill:#FBFDFF,stroke:#2F75B5,stroke-width:2px
+    style TRANSACTION2 fill:#FBFDFF,stroke:#2F75B5,stroke-width:2px
+    style INVOICE2 fill:#FBFDFF,stroke:#2F75B5,stroke-width:2px
+    style PROVIDER_TRUST2 fill:#FBFDFF,stroke:#2F75B5,stroke-width:2px
 ```
 
 ## How to read the detailed view
 
-- Solid lines connect an external Actor to a Use Case that the Actor participates in.
+- The repeated `Beneficiary`, `Provider`, and `YADD Administrator` boxes are **visual replicas of the same Actors** used only to keep associations local and readable.
+- Solid lines connect an Actor representation to a Use Case in the nearby functional area.
 - Dashed relationships labeled `«extend»` represent optional/conditional behavior that extends a base Use Case.
 - Dashed relationships labeled `«include»` represent mandatory included behavior.
 - Gold Use Cases are included system behavior and are **not independent Actor goals**.
-- `Service Provider` and `Product Provider` are specializations of `Provider`. In MVP, one Provider Profile operates under exactly one of these two Provider Types at a time.
+- `Service Provider` and `Product Provider` are specializations of the same `Provider` Actor. In MVP, one Provider Profile operates under exactly one of these two Provider Types at a time.
 
 ## Authentication boundary
 
@@ -334,4 +362,4 @@ flowchart LR
 
 ## Coverage note
 
-The detailed diagram is an **expansion of the overview above**, not a replacement and not a separate model. Views 01–04 reuse these same model elements and relationships to provide focused, easier-to-read diagrams for Public Access & Discovery, Request & Provider Response, Transaction/Invoice/Rating, and Provider Management/Verification/Safety.
+The detailed diagram is an **expansion of the overview above**, not a replacement and not a set of different systems. The repeated blue boxes are local visual segments of the same YADD system used to make the complete Actor–Use Case coverage reviewable in Mermaid. Focused Views 01–04 reuse the same model elements and relationships.
