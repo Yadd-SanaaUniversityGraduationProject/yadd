@@ -108,7 +108,7 @@ This overview answers only two questions: **Who interacts with YADD?** and **Wha
 >
 > **Purpose:** Detailed Actor–goal expansion of the same YADD Use Case Model shown above. This view preserves the decomposed Main Diagram Use Cases and the approved/derived UML relationships currently documented in `08-use-cases.md`.
 >
-> **Visual convention:** The detailed Mermaid view follows the academic reference layout: external Actors are distributed around the system boundary. Guest/Beneficiary are kept on the left, Provider/Administrator on the right, and Provider specializations remain close to Provider. Invisible internal lanes are used only to control layout; they are not model elements.
+> **Visual convention:** The detailed view follows the supplied academic reference: Actors are outside the system boundary and deliberately split across its two sides. Guest/Beneficiary remain on the left; Provider/YADD Administrator remain on the right; Provider specializations stay next to Provider. Internal functional groups are arranged as a 2×3 grid so the diagram is shorter and Actor associations stay close to their side.
 
 ## Detailed source basis
 
@@ -123,91 +123,110 @@ This overview answers only two questions: **Who interacts with YADD?** and **Wha
 ## Detailed Diagram
 
 ```mermaid
-%%{init: {"flowchart": {"curve": "linear", "nodeSpacing": 26, "rankSpacing": 34, "htmlLabels": true}}}%%
-flowchart LR
+%%{init: {"flowchart": {"curve": "linear", "nodeSpacing": 24, "rankSpacing": 28, "htmlLabels": true}}}%%
+flowchart TB
 
-    subgraph LEFT_ACTORS[" "]
-        direction TB
-        G2["Guest"]:::actor
-        B2["Beneficiary"]:::actor
-    end
-
-    subgraph SYS2["YADD System — Detailed View"]
+    subgraph FRAME[" "]
         direction LR
 
-        subgraph BENEFICIARY_LANE[" "]
+        subgraph LEFT_ACTORS[" "]
             direction TB
-            LOGIN2(["Log In"]):::usecase
-            REGISTER2(["Create Account"]):::usecase
-            BROWSE2(["Browse Public Content"]):::usecase
-            SEARCH2(["Search Providers"]):::usecase
-            PROFILE2(["View Provider Profile"]):::usecase
-            VIEW_PORTFOLIO2(["View Portfolio / Catalog"]):::usecase
-            MANAGE_ACCOUNT2(["Manage Account"]):::usecase
-
-            CREATE_REQ2(["Create Request"]):::usecase
-            CLOSE_REQ2(["Close Open Request"]):::usecase
-            COMPARE2(["Compare Provider Responses"]):::usecase
-            SELECT2(["Select Provider"]):::usecase
-
-            REVIEW_INV2(["Review Final Invoice"]):::usecase
-            APPROVE_INV2(["Approve Final Invoice"]):::usecase
-            REQUEST_REV2(["Request Invoice Revision"]):::usecase
-            COMPLAINT2(["Raise Transaction Complaint"]):::usecase
-            RATE_PROVIDER2(["Rate Provider"]):::usecase
+            G2["Guest"]:::actor
+            B2["Beneficiary"]:::actor
         end
 
-        subgraph SHARED_LANE[" "]
+        subgraph SYS2["YADD System — Detailed View"]
             direction TB
-            CHAT2(["Communicate / Inquire"]):::usecase
-            REQUEST_START2(["Request Transaction Start"]):::usecase
-            CONFIRM_START2(["Confirm Transaction Start"]):::usecase
-            CREATE_TX2(["Create Active Transaction"]):::systemuc
-            CANCEL_TX2(["Cancel Transaction"]):::usecase
-            COMPLETE_TX2(["Complete Transaction"]):::systemuc
-            BLOCK2(["Block User"]):::usecase
-            REPORT2(["Report User / Content"]):::usecase
-            VALIDATE_RESPONSE2(["Validate Response Eligibility"]):::systemuc
+
+            subgraph TOP_ROW[" "]
+                direction LR
+
+                subgraph ACCESS2["Access & Discovery"]
+                    direction TB
+                    LOGIN2(["Log In"]):::usecase
+                    REGISTER2(["Create Account"]):::usecase
+                    BROWSE2(["Browse Public Content"]):::usecase
+                    SEARCH2(["Search Providers"]):::usecase
+                    PROFILE2(["View Provider Profile"]):::usecase
+                    VIEW_PORTFOLIO2(["View Portfolio / Catalog"]):::usecase
+                    MANAGE_ACCOUNT2(["Manage Account"]):::usecase
+                end
+
+                subgraph SHARED2["Communication & Transaction"]
+                    direction TB
+                    CHAT2(["Communicate / Inquire"]):::usecase
+                    REQUEST_START2(["Request Transaction Start"]):::usecase
+                    CONFIRM_START2(["Confirm Transaction Start"]):::usecase
+                    CREATE_TX2(["Create Active Transaction"]):::systemuc
+                    CANCEL_TX2(["Cancel Transaction"]):::usecase
+                    BLOCK2(["Block User"]):::usecase
+                    REPORT2(["Report User / Content"]):::usecase
+                end
+
+                subgraph PROVIDER_OPS2["Provider Response & Management"]
+                    direction TB
+                    VIEW_MATCHING2(["View Matching Requests"]):::usecase
+                    SUBMIT_RESPONSE2(["Submit Provider Response"]):::usecase
+                    EDIT_RESPONSE2(["Edit Provider Response"]):::usecase
+                    WITHDRAW_RESPONSE2(["Withdraw Provider Response"]):::usecase
+                    VALIDATE_RESPONSE2(["Validate Response Eligibility"]):::systemuc
+                    MANAGE_PROFILE2(["Manage Provider Profile"]):::usecase
+                    MANAGE_PORTFOLIO2(["Manage Portfolio / Catalog"]):::usecase
+                    SERVICE_AREAS2(["Manage Service Areas"]):::usecase
+                end
+            end
+
+            subgraph BOTTOM_ROW[" "]
+                direction LR
+
+                subgraph REQUESTS2["Request & Selection"]
+                    direction TB
+                    CREATE_REQ2(["Create Request"]):::usecase
+                    CLOSE_REQ2(["Close Open Request"]):::usecase
+                    COMPARE2(["Compare Provider Responses"]):::usecase
+                    SELECT2(["Select Provider"]):::usecase
+                    RATE_PROVIDER2(["Rate Provider"]):::usecase
+                end
+
+                subgraph INVOICE2["Invoice & Completion"]
+                    direction TB
+                    CREATE_INV2(["Create Final Invoice"]):::usecase
+                    REVIEW_INV2(["Review Final Invoice"]):::usecase
+                    APPROVE_INV2(["Approve Final Invoice"]):::usecase
+                    REQUEST_REV2(["Request Invoice Revision"]):::usecase
+                    REVISE_INV2(["Revise Final Invoice"]):::usecase
+                    COMPLETE_TX2(["Complete Transaction"]):::systemuc
+                    RATE_BENEFICIARY2(["Rate Beneficiary"]):::usecase
+                end
+
+                subgraph TRUST2["Verification, Reports & Administration"]
+                    direction TB
+                    SUBMIT_VERIFICATION2(["Submit Verification"]):::usecase
+                    REVIEW_VERIFICATION2(["Review Provider Verification"]):::usecase
+                    SUBSCRIPTION2(["Manage Provider Subscription"]):::usecase
+                    COMPLAINT2(["Raise Transaction Complaint"]):::usecase
+                    REVIEW_COMPLAINT2(["Review Transaction Complaint"]):::usecase
+                    REVIEW_REPORTS2(["Review Reports / Flags"]):::usecase
+                end
+            end
         end
 
-        subgraph PROVIDER_LANE[" "]
+        subgraph RIGHT_ACTORS[" "]
             direction TB
-            VIEW_MATCHING2(["View Matching Requests"]):::usecase
-            SUBMIT_RESPONSE2(["Submit Provider Response"]):::usecase
-            EDIT_RESPONSE2(["Edit Provider Response"]):::usecase
-            WITHDRAW_RESPONSE2(["Withdraw Provider Response"]):::usecase
-
-            CREATE_INV2(["Create Final Invoice"]):::usecase
-            REVISE_INV2(["Revise Final Invoice"]):::usecase
-            RATE_BENEFICIARY2(["Rate Beneficiary"]):::usecase
-
-            MANAGE_PROFILE2(["Manage Provider Profile"]):::usecase
-            MANAGE_PORTFOLIO2(["Manage Portfolio / Catalog"]):::usecase
-            SERVICE_AREAS2(["Manage Service Areas"]):::usecase
-            SUBMIT_VERIFICATION2(["Submit Verification"]):::usecase
-
-            REVIEW_VERIFICATION2(["Review Provider Verification"]):::usecase
-            SUBSCRIPTION2(["Manage Provider Subscription"]):::usecase
-            REVIEW_REPORTS2(["Review Reports / Flags"]):::usecase
-            REVIEW_COMPLAINT2(["Review Transaction Complaint"]):::usecase
+            A2["YADD Administrator"]:::actor
+            P2["Provider"]:::actor
+            SP2["Service Provider"]:::actor
+            PP2["Product Provider"]:::actor
         end
     end
 
-    subgraph RIGHT_ACTORS[" "]
-        direction TB
-        A2["YADD Administrator"]:::actor
-        P2["Provider"]:::actor
-        SP2["Service Provider"]:::actor
-        PP2["Product Provider"]:::actor
-    end
-
-    %% Layout anchors: invisible only
+    %% Invisible anchors force the three real columns: left Actors | system | right Actors
     G2 ~~~ LOGIN2
     B2 ~~~ CREATE_REQ2
-    REVIEW_VERIFICATION2 ~~~ A2
     MANAGE_PROFILE2 ~~~ P2
+    REVIEW_VERIFICATION2 ~~~ A2
 
-    %% Guest associations — left side
+    %% Guest — left side only
     G2 --- LOGIN2
     G2 --- REGISTER2
     G2 --- BROWSE2
@@ -215,7 +234,7 @@ flowchart LR
     G2 --- PROFILE2
     G2 --- VIEW_PORTFOLIO2
 
-    %% Beneficiary associations — left side
+    %% Beneficiary — left side only
     B2 --- MANAGE_ACCOUNT2
     B2 --- SEARCH2
     B2 --- PROFILE2
@@ -223,10 +242,6 @@ flowchart LR
     B2 --- CLOSE_REQ2
     B2 --- COMPARE2
     B2 --- SELECT2
-    B2 --- REVIEW_INV2
-    B2 --- APPROVE_INV2
-    B2 --- REQUEST_REV2
-    B2 --- COMPLAINT2
     B2 --- RATE_PROVIDER2
     B2 --- CHAT2
     B2 --- REQUEST_START2
@@ -234,8 +249,12 @@ flowchart LR
     B2 --- CANCEL_TX2
     B2 --- BLOCK2
     B2 --- REPORT2
+    B2 --- REVIEW_INV2
+    B2 --- APPROVE_INV2
+    B2 --- REQUEST_REV2
+    B2 --- COMPLAINT2
 
-    %% Provider associations — right side (use-case first keeps Provider on the right)
+    %% Provider — right side only; use-case-first associations preserve right placement
     MANAGE_ACCOUNT2 --- P2
     CHAT2 --- P2
     REQUEST_START2 --- P2
@@ -243,26 +262,25 @@ flowchart LR
     CANCEL_TX2 --- P2
     BLOCK2 --- P2
     REPORT2 --- P2
-
     VIEW_MATCHING2 --- P2
     SUBMIT_RESPONSE2 --- P2
     EDIT_RESPONSE2 --- P2
     WITHDRAW_RESPONSE2 --- P2
-    CREATE_INV2 --- P2
-    REVISE_INV2 --- P2
-    RATE_BENEFICIARY2 --- P2
     MANAGE_PROFILE2 --- P2
     MANAGE_PORTFOLIO2 --- P2
     SERVICE_AREAS2 --- P2
+    CREATE_INV2 --- P2
+    REVISE_INV2 --- P2
+    RATE_BENEFICIARY2 --- P2
     SUBMIT_VERIFICATION2 --- P2
 
-    %% Administrator associations — upper/right side
+    %% Administrator — right side only
     REVIEW_VERIFICATION2 --- A2
     SUBSCRIPTION2 --- A2
-    REVIEW_REPORTS2 --- A2
     REVIEW_COMPLAINT2 --- A2
+    REVIEW_REPORTS2 --- A2
 
-    %% Provider actor specialization
+    %% Provider specialization
     SP2 -. "«generalization»" .-> P2
     PP2 -. "«generalization»" .-> P2
 
@@ -288,20 +306,27 @@ flowchart LR
     classDef usecase fill:#FFFFFF,stroke:#3F6FA5,stroke-width:1.35px,color:#111827;
     classDef systemuc fill:#FFF8E6,stroke:#B7791F,stroke-width:1.35px,color:#111827;
 
-    style SYS2 fill:#FFFFFF,stroke:#2F75B5,stroke-width:2.4px
+    style FRAME fill:transparent,stroke:transparent
     style LEFT_ACTORS fill:transparent,stroke:transparent
     style RIGHT_ACTORS fill:transparent,stroke:transparent
-    style BENEFICIARY_LANE fill:transparent,stroke:transparent
-    style SHARED_LANE fill:transparent,stroke:transparent
-    style PROVIDER_LANE fill:transparent,stroke:transparent
+    style SYS2 fill:#FFFFFF,stroke:#2F75B5,stroke-width:2.4px
+    style TOP_ROW fill:transparent,stroke:transparent
+    style BOTTOM_ROW fill:transparent,stroke:transparent
+    style ACCESS2 fill:#FBFDFF,stroke:#CBD5E1,stroke-width:1px
+    style SHARED2 fill:#FBFDFF,stroke:#CBD5E1,stroke-width:1px
+    style PROVIDER_OPS2 fill:#FBFDFF,stroke:#CBD5E1,stroke-width:1px
+    style REQUESTS2 fill:#FBFDFF,stroke:#CBD5E1,stroke-width:1px
+    style INVOICE2 fill:#FBFDFF,stroke:#CBD5E1,stroke-width:1px
+    style TRUST2 fill:#FBFDFF,stroke:#CBD5E1,stroke-width:1px
 ```
 
 ## How to read the detailed view
 
-- `Guest` and `Beneficiary` are positioned outside the **left** side of the YADD boundary.
-- `Provider` and `YADD Administrator` are positioned outside the **right** side, matching the supplied academic reference style.
-- `Service Provider` and `Product Provider` remain close to `Provider` because they are Actor specializations.
-- Solid lines are Actor associations. Their direction in Mermaid is used only to keep Actors on the intended side; it does not add behavioral direction to the UML association.
+- `Guest` and `Beneficiary` are fixed outside the **left** side of the YADD boundary.
+- `Provider` and `YADD Administrator` are fixed outside the **right** side.
+- `Service Provider` and `Product Provider` remain adjacent to `Provider` because they are Actor specializations.
+- Use Cases are arranged in a 2×3 grid so Beneficiary-heavy groups stay toward the left, shared interactions stay in the middle, and Provider/Admin-heavy groups stay toward the right.
+- Solid lines are Actor associations. Mermaid edge direction is used only for layout; it does not add behavioral direction to the UML association.
 - Dashed `«extend»` and `«include»` relationships preserve the current approved/derived model relationships.
 - Gold Use Cases are included system behavior and are **not independent Actor goals**.
 
@@ -327,4 +352,4 @@ flowchart LR
 
 ## Coverage note
 
-The detailed diagram is an **expansion of the overview above**, not a replacement and not a separate model. The three transparent internal lanes exist only to create a balanced Mermaid layout: Beneficiary-oriented Use Cases are closer to the left boundary, shared interactions stay central, and Provider/Administrator Use Cases stay closer to the right boundary.
+The detailed diagram is an **expansion of the overview above**, not a replacement and not a separate model. The invisible outer frame exists only to force the academic left/system/right composition in Mermaid; it has no UML meaning.
