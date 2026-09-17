@@ -1,6 +1,6 @@
 # Use Case View 02 — Request & Provider Response
 
-> **Status:** `REVIEW DRAFT — NOT BASELINED — SYNCHRONIZED THROUGH DEC-077`
+> **Status:** `REVIEW DRAFT — NOT BASELINED — SYNCHRONIZED THROUGH DEC-090`
 >
 > **Purpose:** Focused view of the published Request route from request creation through Provider Responses, comparison and Provider selection.
 
@@ -9,7 +9,7 @@
 - `UC-02 — Create Request`
 - `UC-03 — Respond to Request`
 - `UC-04 — Select Provider from Request`
-- DEC-013/014/041/043/047/066/070/077
+- DEC-013/014/041/043/047/066/070/077/081/082/085/086
 - Approved relationship table in `docs/03-analysis/08-use-cases.md`.
 
 ## Diagram
@@ -83,3 +83,9 @@ flowchart LR
 - `Validate Response Eligibility` is mandatory for a new Provider Response and enforces the current eligibility rules, including Verified Provider, Active Subscription and Open Request.
 - `Select Provider` always creates one Active Transaction for the selected Provider and closes the Request to new responses.
 - `Communicate / Inquire` before selection is optional and therefore extends comparison rather than being required by it.
+
+## DEC-081/082/085/086 synchronization
+
+- Request inactivity: reminders at 24h/48h and Expired at 72h; Republish creates a new Request.
+- Provider Response has no independent expiry; it ends with Withdraw/Selection/Request Close/Expiry.
+- Submit Provider Response eligibility is type-specific: SERVICE requires Identity Verified; PRODUCT requires Account/Profile eligible; both require Active Subscription.
