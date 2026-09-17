@@ -7,8 +7,8 @@
 ## Source basis
 
 - **Approved behavior:** `UC-03 — Respond to Request` in `docs/03-analysis/08-use-cases.md`.
-- **Business/decision basis:** `DEC-013`, `DEC-041`, `DEC-043`, `DEC-047`, `DEC-066`, `DEC-070` and the corresponding current business rules.
-- **Preconditions:** Provider Verified + subscription Active + Request `Open`.
+- **Business/decision basis:** `DEC-013`, `DEC-041`, `DEC-043`, `DEC-047`, `DEC-066`, `DEC-070`, `DEC-082`, `DEC-085`, `DEC-086` and the corresponding current business rules.
+- **Preconditions:** Provider authenticated + type-specific eligibility (SERVICE: Identity Verified; PRODUCT: Account/Profile eligible) + subscription Active + Request `Open`.
 - **Business constraint:** one active Provider Response per Provider per Request.
 - **Derived modeling roles:** `ProviderUI` and `ResponseController` are Sequence modeling roles; they are not approved implementation class names.
 
@@ -23,7 +23,7 @@ sequenceDiagram
     participant RQ as Request «entity»
     participant PR as ProviderResponse «entity»
 
-    Note over P,PR: Preconditions: Provider Verified + Active Subscription + Request Open
+    Note over P,PR: Preconditions: Type-specific eligibility + Active Subscription + Request Open
 
     P->>UI: openRequest(requestId)
     UI->>C: getRequestForResponse(requestId)
@@ -65,7 +65,7 @@ sequenceDiagram
             C-->>UI: withdrawalConfirmed()
             UI-->>P: showWithdrawnStatus()
         end
-    else Provider not eligible or Request not Open
+    else Provider type not eligible / subscription inactive / Request not Open
         C-->>UI: submissionRejected(reason)
         UI-->>P: showSubmissionError()
     else Active response already exists
@@ -92,6 +92,7 @@ sequenceDiagram
 
 - توجد Provider Response فعالة واحدة فقط لهذا Provider على هذا Request.
 - تبقى قابلة للتعديل أو السحب ما دام Request `Open` وقبل Provider selection.
+- لا تملك مدة صلاحية مستقلة؛ تصبح غير فعالة عند Withdraw/Selection/Request Close/Expiry.
 
 عند سحب الاستجابة:
 
