@@ -1,6 +1,6 @@
 # YADD Diagrams — Working Sources and Governance
 
-> **Diagram drafting status:** `WORKING PACKAGE SYNCHRONIZED 2026-09-15 THROUGH DEC-077`
+> **Diagram drafting status:** `WORKING PACKAGE SYNCHRONIZED 2026-09-18 THROUGH DEC-090`
 >
 > هذه الصفحة تحدد مصادر السلطة، بنية ملفات الرسم، وقواعد التصدير حتى لا تختلط Semantic Models مع Editable Diagram Sources أو Generated Exports.
 
