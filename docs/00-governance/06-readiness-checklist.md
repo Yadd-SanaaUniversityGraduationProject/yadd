@@ -1,6 +1,6 @@
 # بوابة الجاهزية قبل اعتماد الفصول الأربعة للمناقشة الأولية
 
-> **الحالة:** `ACTIVE — SYNCHRONIZED 2026-09-15 THROUGH DEC-077`
+> **الحالة:** `ACTIVE — SYNCHRONIZED 2026-09-18 THROUGH DEC-090`
 >
 > وجود مسودة فصل أو مخطط لا يعني اجتياز هذه البوابة. تستخدم القائمة لمنع اعتبار التحليل/التصميم نهائيًا أو جاهزًا للتسليم قبل تحقق البنود فعليًا.
 
@@ -9,7 +9,7 @@
 - [x] حسم GOV-Q02: منهج التحليل والمخططات — DFD + UML معًا وفق `DEC-060`.
 - [x] حسم GOV-Q03: لغة التقرير — العربية مع المصطلحات التقنية عند الحاجة وفق `DEC-061`.
 - [x] حسم GOV-Q04: أداة جمع بيانات المستخدمين — Survey-only مقبول وفق `DEC-062` دون ادعاء مقابلات/Observation غير منفذة.
-- [x] توثيق قرارات Core الحالية في Decision Register حتى `DEC-077`.
+- [x] توثيق قرارات Core الحالية في Decision Register حتى `DEC-090`.
 - [x] اعتماد Guest public browsing/authentication boundary في `DEC-077` مع إبقاء Backend/API مرجع الصلاحيات.
 
 ## Research
@@ -25,19 +25,19 @@
 - [x] Business Rules للعمليات الحرجة متزامنة مع Core Decisions الحالية حتى `DEC-077` في نطاقها.
 - [x] Public/private access boundary موثقة: Guest public browse فقط، protected actions authenticated، phone/direct private contact غير Public Profile.
 - [ ] AI detailed policy/provider/threshold/retention ما تزال Needs Verification؛ لا تعتبر محسومة.
-- [x] الاستثناءات الأساسية والإلغاء والنزاعات موثقة؛ السياسات الرقمية الثانوية المفتوحة تبقى Needs Verification.
+- [x] الاستثناءات الأساسية والإلغاء والنزاعات موثقة؛ Request 24/48/72، Direct Start 12h، Invoice 24/48/72، Subscription 30d أغلقت. السياسات الأخرى المفتوحة تبقى Needs Verification.
 
 ## Modeling
 - [ ] Main Use Case Diagram بصيغة UML قياسية نهائية + Specifications مراجعة؛ Working semantic model يشمل Guest وAuthentication boundary، لكن إعادة الرسم الأكاديمي النهائية ما تزال مطلوبة.
 - [ ] Activity/Sequence بصيغها النهائية للمناقشة؛ Working protected-flow sources موجودة وتحتاج Visual/A4 review. Guest auth-gate scenario يضاف فقط إذا احتاجته الحزمة الأكاديمية.
-- [x] Class Diagram package مشتق ومزامن دلاليًا مع ERD والقرارات حتى `DEC-077`؛ Guest لا يضيف Class؛ يبقى التصدير/المراجعة البصرية النهائية مفتوحًا.
-- [ ] DFD Context + Level 0 بصيغة نهائية قابلة للطباعة وفق `DEC-060`؛ Working model يشمل Guest flows حتى DEC-077.
-- [ ] ERD متتبع إلى المتطلبات ومراجع بصريًا للنسخة المقدمة؛ بنيويًا متزامن حتى DEC-077 ولا يحتوي Guest entity.
-- [x] Process/Data Flow/Data Store descriptions موجودة ومزامنة مع Core Model حتى DEC-077.
+- [x] Class Diagram package مشتق ومزامن دلاليًا مع ERD والقرارات حتى `DEC-090`؛ يشمل TradeName/Hybrid Rating/Service Identity Verification/Notification؛ يبقى التصدير/المراجعة البصرية النهائية مفتوحًا.
+- [ ] DFD Context + Level 0 بصيغة نهائية قابلة للطباعة وفق `DEC-060`؛ Working semantics synchronized through DEC-090.
+- [ ] ERD متتبع إلى المتطلبات ومراجع بصريًا للنسخة المقدمة؛ بنيويًا متزامن حتى DEC-090 ولا يحتوي Guest entity.
+- [x] Process/Data Flow/Data Store descriptions موجودة ومزامنة مع Core Model حتى DEC-090.
 
 ## Design
-- [ ] Relation Schema مشتق من ERD الحالي ومراجع؛ Working draft أعيدت مزامنته عبر DEC-077 لكن ما يزال غير Baselined والقرارات الفيزيائية المفتوحة ظاهرة.
-- [ ] Data Dictionary متزامن مع Relation Schema والقيود المعتمدة؛ Working skeleton أعيدت مزامنته عبر DEC-077، بينما SQL types/constraints النهائية TBD.
+- [ ] Relation Schema مشتق من ERD الحالي ومراجع؛ Working draft أعيدت مزامنته عبر DEC-090 لكنه ما يزال غير Baselined والقرارات الفيزيائية المفتوحة ظاهرة.
+- [ ] Data Dictionary متزامن مع Relation Schema والقيود المعتمدة؛ Working skeleton أعيدت مزامنته عبر DEC-090، بينما SQL types/constraints النهائية TBD.
 - [ ] Interface hierarchy/wireframes مرتبطة بالUse Cases الحالية؛ Guest public screens/auth gate موثقة، لكن Figma/final UX validation pending.
 - [ ] Forms/queries/reports محددة بالقدر الأكاديمي المطلوب دون اختراع وظائف.
 
