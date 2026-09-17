@@ -26,11 +26,15 @@ YADD منصة رقمية محلية ضمن نطاق MVP في أمانة العا
 - يمكن إنشاء `Provider Profile` واحد كحد أقصى داخل الحساب نفسه.
 - في MVP يكون Provider Profile من نوع واحد فقط: `SERVICE` أو `PRODUCT` — DEC-074.
 - يمكن للمقدم اختيار تصنيف واحد أو أكثر داخل نوعه فقط عبر `ProviderActivity`; Draft قد يحتوي صفرًا مؤقتًا، لكن أهلية وظائف التقديم تتطلب تصنيفًا صالحًا واحدًا على الأقل — DEC-076.
-- Provider Profile يحتاج Verification قبل وظائف التقديم.
-- إرسال Provider Responses جديدة يحتاج أيضًا Active Subscription.
+- Service Provider يحتاج Identity Verification قبل وظائف التقديم؛ Product Provider لا يحتاج Government ID في MVP لكنه يحتاج Account/Profile eligibility.
+- كلا النوعين يحتاجان Active Subscription لبدء تعاملات جديدة.
 - سياسة تغيير Provider Type بعد الاختيار لم تعتمد بعد.
 
-**المرجع:** DEC-008..011/030/034/035/043/074/076/077.
+**المرجع:** DEC-008..011/030/074/076/077/078/079/080/085/086.
+
+## 2.1 Account and Authentication Detail
+
+Create Account: First/Father/Grandfather/Family Name + Mobile + Password + Terms/Privacy، والبريد اختياري. OTP للهاتف إلزامي قبل اكتمال الحساب. Log In بالهاتف الموثق أو البريد الموثق + Password؛ Forgot Password عبر OTP للهاتف والبريد الموثق خيار إضافي. يدعم Manage Account التغيير الموثق وDeactivate/Reactivate دون Hard Delete ذاتي.
 
 ## 3. Discovery Route A — Direct Search
 
@@ -118,7 +122,7 @@ YADD منصة رقمية محلية ضمن نطاق MVP في أمانة العا
 
 بعد `Transaction Completed` فقط:
 
-- تقييم Beneficiary للمقدم إلزامي: 1–5 نجوم، والتعليق اختياري.
+- تقييم Beneficiary للمقدم إلزامي كـHybrid Model: Overall Stars 1–5 + Structured Textual Criteria + Optional Comment، مع Later/Reminder 24h وإكماله قبل Transaction جديدة.
 - يعرض النظام للمقدم Prompt بارزًا لتقييم Beneficiary اختياريًا.
 - تقييم Beneficiary من Provider يتكون من ثلاثة مؤشرات 1–5: وضوح الطلب والتواصل، الالتزام بالاتفاق، حسن التعامل والتعاون، مع تعليق اختياري.
 - التقييمات مرتبطة بمعاملة Completed ولا تغير Transaction إلى حالة أخرى.
@@ -134,7 +138,9 @@ YADD منصة رقمية محلية ضمن نطاق MVP في أمانة العا
 
 - بيانات المقدم ونوعه الواحد في MVP.
 - عدة Provider Activities/تصنيفات داخل ذلك النوع.
-- مناطق الخدمة.
+- مناطق الخدمة ونبذة.
+- صورة/شعار اختياري.
+- Product Provider يمكنه Trade Name اختياريًا كاسم عرض عام.
 - Portfolio لمقدم الخدمة.
 - Product Catalog لمقدم المنتج.
 
