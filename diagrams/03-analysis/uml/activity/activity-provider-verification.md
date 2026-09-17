@@ -1,13 +1,13 @@
-# Activity Diagram — Provider Verification
+# Activity Diagram — Service Provider Identity Verification
 
-> **Status:** `REVIEW DRAFT — NOT BASELINED — SYNCHRONIZED 2026-09-12`
+> **Status:** `REVIEW DRAFT — NOT BASELINED — SYNCHRONIZED 2026-09-18`
 >
-> **Type:** Derived workflow view focused on the verification portion of `UC-09 — Provider Verification / Portal Activation`.
+> **Type:** Derived workflow view focused on the verification portion of `UC-09 — Service Provider Identity Verification / Provider Portal Eligibility`.
 
 ## Source basis
 
 - `UC-09 — Provider Verification / Portal Activation`
-- `DEC-010`, `DEC-034`, `DEC-035`, `DEC-036`, `DEC-037..040`
+- `DEC-010`, `DEC-035`, `DEC-036`, `DEC-037..040`, `DEC-085`
 - Current verification business rules
 - `docs/03-analysis/21-provider-verification-model.md`
 - Current Verification lifecycle.
@@ -16,9 +16,9 @@
 
 ```mermaid
 flowchart TD
-    S([Start]) --> A[User Opens Provider Verification]
-    A --> B[Enter Required Verification Data]
-    B --> C[Upload Identity Document and Personal Photo with Document]
+    S([Start]) --> A[Service Provider Opens Identity Verification]
+    A --> B[Load Verified Account Data / Legal Name]
+    B --> C[Upload National ID or Passport + Personal Photo with Document]
     C --> D{Required Inputs Present and Usable?}
 
     D -- No --> E[Show Verification Errors]
@@ -49,6 +49,10 @@ flowchart TD
     T --> U[Set Status Rejected]
     U --> ZR([End — Rejected])
 ```
+
+## Product Provider boundary
+
+Product Provider does not enter this Government-ID flow in MVP; it uses Account Verification + Provider Profile eligibility + Active Subscription and must not be labeled Identity Verified.
 
 ## Semantic constraints
 
