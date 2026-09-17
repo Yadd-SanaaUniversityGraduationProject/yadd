@@ -6,14 +6,11 @@
 
 | ID | الأولوية | السؤال | الجهة المطلوبة | أثر عدم الحسم |
 |---|---|---|---|---|
-| REQ-EXP-Q01 | P1 | ما مدة عدم النشاط التي بعدها يصبح الطلب المفتوح Expired، وما عدد/توقيت تذكيرات استمرار الحاجة؟ | الفريق بعد Prototype/اختبار | Request lifecycle / UX |
-| INV-PENDING-Q01 | P1 | ما سياسة التصعيد إذا بقيت فاتورة Pending Customer Approval مدة طويلة رغم التذكيرات؟ | الفريق + التشغيل | Transaction closure/admin workflow |
 | SAFE-REQ-Q01 | P1 | ما Thresholds/المؤشرات التي ترفع نمط إنشاء/إغلاق الطلبات المتكرر للمراجعة؟ | الفريق بعد بيانات/اختبار | Abuse detection / false positives |
 | TX-CONC-Q01 | P2 | هل يحتاج MVP حدًا أقصى للمعاملات الجارية المتوازية؟ وإن احتاج، ما الرقم المبرر؟ | الفريق بعد Prototype | Capacity/UX policy |
 | UX-VAL-Q01 | P1 | هل ينجح تدفق YADD الأساسي مع الفئة المستهدفة تحت تفاوت المهارات الرقمية والاتصال، وما التعديلات التي تثبتها اختبارات Usability/low-connectivity؟ | الفريق + مستخدمون مستهدفون | Academic evidence / UX / NFR |
 | LOC-DATA-Q01 | P1 | ما القائمة الحالية المعتمدة للمديريات والأحياء وعلاقات الجوار في أمانة العاصمة؟ | الفريق + مصدر محلي/إداري | Seed data |
 | LOC-OPS-TIME-Q01 | P2 | ما المدة الرقمية قبل عرض اقتراح توسيع النطاق عند غياب استجابة مناسبة؟ | الفريق بعد Prototype | Notification timing |
-| VER-DOC-Q01 | P1 | ما أنواع وثائق الهوية المقبولة وما الصور/الجوانب المطلوبة لكل نوع؟ | الفريق + تحقق قانوني/تشغيلي | Verification UX/policy |
 | VER-RET-Q01 | P1 | ما مدة الاحتفاظ بصور الهوية وبيانات/نتائج التحقق الحساسة؟ | الفريق + تحقق قانوني | Privacy/security |
 | VER-LIC-Q01 | P2 | هل توجد فئات نشاط تتطلب إثبات ترخيص مهني إضافي؟ | الفريق + مصدر رسمي | Provider eligibility |
 | AI-MOD-Q01 | P1 | ما الفئات التفصيلية في سياسة المحتوى والأنشطة المسموحة/الممنوعة؟ | الفريق + مراجعة قانونية/سياسات | Moderation policy |
@@ -21,14 +18,19 @@
 | AI-PROV-Q01 | P1 | ما مزود/مزودو OCR/Face/Liveness/Moderation الأنسب؟ | الفريق | Architecture/cost/privacy |
 | AI-RET-Q01 | P1 | ما سياسة الاحتفاظ بنتائج الفحص وFlags وسجلات المراقبة؟ | الفريق + تحقق قانوني | Privacy/audit |
 | AI-APPEAL-Q01 | P2 | ما مسار الاعتراض على قرارات moderation عالية الأثر؟ | الفريق | Governance/admin workflow |
-| SUB-PLAN-Q01 | P2 | ما الباقات/الأسعار/المدد الفعلية للاشتراك؟ | الفريق | Commercial configuration |
+| SUB-PLAN-Q01 | P2 | ما السعر النهائي للاشتراك الشهري المعتمد؟ | الفريق | Commercial configuration |
 | SUB-PAY-Q01 | P2 | ما وسائل وإجراءات الدفع الخارجي المقبولة وكيف يثبت المقدم الدفع للإدارة؟ | الفريق | Subscription operations |
-| SUB-OPS-Q01 | P2 | ما الأثر الدقيق لانتهاء الاشتراك على الظهور في البحث والمعاملات الجارية؟ | الفريق | Provider lifecycle |
+| SUB-OPS-Q01 | P2 | هل يبقى Provider ظاهرًا في البحث العام عندما يكون اشتراكه Expired؟ | الفريق | Provider discovery policy |
 
 ## Closed / Superseded
 
 | ID | تاريخ الإغلاق/التحديث | القرار | المرجع |
 |---|---|---|---|
+| REQ-EXP-Q01 | 2026-09-18 | Reminder بعد 24h و48h، وExpiry بعد 72h من عدم نشاط Beneficiary؛ النشاط الفعلي يعيد العداد وRepublish ينشئ Request جديدًا. | DEC-081 |
+| INV-PENDING-Q01 | 2026-09-18 | Final Invoice: Reminder بعد 24h و48h، وOverdue عند 72h دون Auto-Approval. | DEC-083 |
+| VER-DOC-Q01 | 2026-09-18 | Identity Verification الحكومية تخص Service Provider فقط، وتقبل National ID أو Passport مع صورة الوثيقة وصورة شخصية مع الوثيقة؛ Product Provider لا يحتاج Government ID في MVP. | DEC-085 |
+| SUB-DURATION-Q01 | 2026-09-18 | مدة اشتراك MVP = 30 يومًا مع Reminder قبل 3 أيام و24 ساعة. | DEC-086 |
+| SUB-OPS-PARTIAL-Q01 | 2026-09-18 | عند Expired تستمر المعاملات الجارية، ويمنع Provider Response وDirect Transaction الجديدة حتى التجديد؛ بقي فقط قرار الظهور العام في البحث. | DEC-086 |
 | GUEST-ACCESS-Q01 | 2026-09-15 | اعتمد `Guest` كActor غير authenticated يستطيع Public Browse/Search/View Provider Profile وPortfolio/Catalog فقط. Protected actions تتطلب Log In/Create Account، ولا يعرض Public Provider Profile رقم الهاتف/direct private-contact data أو البيانات الحساسة. لا ينشئ Guest Entity/Class لمجرد التصفح، ويطبق Backend/API المصادقة والصلاحيات. | DEC-077 |
 | PROV-ACT-Q01 | 2026-09-11 | كل Provider Profile يكون إما `SERVICE` أو `PRODUCT` فقط في MVP، ويمكن للمقدم اختيار تصنيف واحد أو أكثر داخل نوعه. يسمح Draft مؤقتًا بصفر تصنيفات، ولا تتاح وظائف التقديم قبل وجود تصنيف واحد على الأقل. | DEC-074/076 |
 | BUS-Q02 | 2026-09-11 | القرار التاريخي الذي سمح Service/Product أو كليهما استُبدل: Provider Profile واحد بنوع حصري `SERVICE` أو `PRODUCT`، مع تعدد التصنيفات داخل النوع نفسه. | DEC-029 (superseded) / DEC-074/076 |
