@@ -185,7 +185,7 @@ flowchart LR
 
 ## Open policy
 
-- توقيت Reminder/Expiry وعدد التذكيرات ما يزال في `REQ-EXP-Q01`؛ لا يُخترع countdown أو مدة افتراضية في التصميم النهائي.
+- Reminder/Expiry معتمد: 24h ثم 48h ثم Expired عند 72h من عدم نشاط Beneficiary؛ Republish ينشئ Request جديدًا.
 - التوسع إلى الأحياء المجاورة يحتاج موافقة Beneficiary؛ بيانات الجوار والتوقيت التشغيلي ما تزال مفتوحة.
 
 ```mermaid
@@ -280,7 +280,7 @@ flowchart LR
 
 - عدم رد Beneficiary لا يعد Approval.
 - تبقى الفاتورة Pending وتصل تذكيرات.
-- سياسة التصعيد الطويل `INV-PENDING-Q01` ما تزال مفتوحة.
+- بعد 24h Reminder، بعد 48h Reminder ثانٍ، وبعد 72h تصبح الفاتورة Overdue دون Auto-Approval.
 
 ## Financial boundary
 
