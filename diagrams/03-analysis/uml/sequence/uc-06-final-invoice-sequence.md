@@ -122,7 +122,7 @@ sequenceDiagram
     end
 
     Note over B,I: No response keeps the invoice Pending Customer Approval — no Auto-Approval
-    Note over B,I: Reminder concept is approved, but long-pending escalation timing remains open
+    Note over B,I: Reminder at 24h and 48h; at 72h invoice becomes Overdue — no Auto-Approval
 ```
 
 ## Scope boundary
