@@ -1,8 +1,8 @@
 # Data Dictionary
 
-> **الحالة:** `DRAFT FOR PRELIMINARY DEFENSE — CURRENT MODEL SKELETON — SYNCHRONIZED THROUGH DEC-077 — 2026-09-15`
+> **الحالة:** `DRAFT FOR PRELIMINARY DEFENSE — CURRENT MODEL SKELETON — SYNCHRONIZED THROUGH DEC-090 — 2026-09-18`
 >
-> **المصدر:** `docs/04-design/01-database-design.md` المشتق من `docs/03-analysis/11-ERD.md` وSRS v0.9.9. الأنواع الفيزيائية والقيود غير المثبتة تبقى `TBD` بدل اختراعها.
+> **المصدر:** `docs/04-design/01-database-design.md` المشتق من `docs/03-analysis/11-ERD.md` وSRS v0.9.10. الأنواع الفيزيائية والقيود غير المثبتة تبقى `TBD` بدل اختراعها.
 
 ## Current Dictionary Skeleton
 
@@ -10,12 +10,22 @@
 |---|---|---|---|---|---|---|
 | User | UserId | TBD | Yes | PK | معرف حساب المستخدم الواحد بعد Create Account/Auth؛ لا يوجد Guest row لمجرد التصفح | DEC-008/077 / ERD |
 | User | AccountStatus | TBD | Yes | lifecycle/design constraint TBD | حالة الحساب | SRS / ERD |
-| User | FullName | TBD | Yes/TBD by final account design | validation TBD | الاسم المرتبط بالحساب؛ public exposure تحددها واجهة Public Profile ولا يفترض عرض كل بيانات User | ERD / DEC-077 |
-| User | Phone | TBD | Yes/TBD by final account design | verification/account constraint TBD | رقم الحساب/التحقق؛ **ليس Public Provider Profile field ولا يعرض للGuest** | ERD / DEC-046/077 |
+| User | FirstName | TBD | Yes | name validation | الاسم الأول؛ يمكن إظهاره فقط في public rating reviewer label وفق DEC-087 | DEC-078/087 |
+| User | FatherName | TBD | Yes | name validation | اسم الأب | DEC-078 |
+| User | GrandfatherName | TBD | Yes | name validation | اسم الجد | DEC-078 |
+| User | FamilyName | TBD | Yes | name validation | اللقب/اسم العائلة | DEC-078 |
+| User | Phone | TBD | Yes | unique/account constraint | رقم الهاتف الأساسي؛ لا يعتمد قبل OTP؛ ليس Public Provider Profile field | DEC-078/077 |
+| User | PhoneVerifiedAt | TBD | Yes after registration | verification timestamp | إثبات نجاح OTP للهاتف | DEC-078 |
+| User | Email | TBD | No | unique when present | بريد اختياري | DEC-078 |
+| User | EmailVerifiedAt | TBD | No | verification timestamp | يلزم قبل استخدام البريد في Login/Recovery | DEC-078 |
+| User | LastPortal | TBD | No | BENEFICIARY/PROVIDER | آخر Portal مستخدم | DEC-078 |
+| User | DeactivatedAt | TBD | No | lifecycle field | يدعم self-deactivation/reactivation | DEC-079 |
 | ProviderProfile | ProviderProfileId | TBD | Yes | PK | معرف ملف المقدم | DEC-010/074 |
 | ProviderProfile | UserId | TBD | Yes | FK + Unique candidate | يربط Provider Profile بحساب User واحد | DEC-008..011/074 |
 | ProviderProfile | ProviderType | TBD | Yes when profile type selected | allowed values `SERVICE`/`PRODUCT` | نوع مقدم واحد فقط في MVP | DEC-074 |
-| ProviderProfile | VerificationStatus | TBD | Yes | lifecycle constraint | حالة تحقق المقدم؛ ليست public verification evidence | DEC-034..036 |
+| ProviderProfile | TradeName | TBD | No | allowed only for PRODUCT | اسم عرض تجاري اختياري لمقدم المنتج | DEC-080 |
+| ProviderProfile | Description | TBD | Yes before eligibility | content validation | نبذة المقدم | DEC-080 |
+| ProviderProfile | IdentityVerificationStatus | TBD | Conditional | required for SERVICE only | حالة تحقق هوية مقدم الخدمة؛ Product Provider لا يحتاج Government ID | DEC-085 |
 | ProviderProfile | ProfileStatus | TBD | Yes | lifecycle/design constraint TBD | حالة ملف المقدم | ERD |
 | Category | CategoryId | TBD | Yes | PK | معرف التصنيف | ERD / DEC-076 |
 | Category | Name | TBD | Yes | uniqueness/localization TBD | اسم التصنيف | ERD |
@@ -97,7 +107,7 @@
 | BeneficiaryRating | CooperationScore | TBD | Yes when rating submitted | 1..5 | حسن التعامل والتعاون | DEC-063 |
 | BeneficiaryRating | Comment | TBD | No | moderation policy applies | تعليق اختياري؛ سجل Beneficiary ليس public Guest data | DEC-063/077 |
 | VerificationCase | VerificationCaseId | TBD | Yes | PK | حالة تحقق مقدم؛ ليست Public Guest data | DEC-034..036/077 |
-| VerificationCase | ProviderProfileId | TBD | Yes | FK | Provider Profile موضوع التحقق | DEC-034 |
+| VerificationCase | ProviderProfileId | TBD | Yes | FK; SERVICE provider only | Service Provider Profile موضوع Identity Verification | DEC-085 |
 | VerificationCase | Status | TBD | Yes | lifecycle constraint | حالة التحقق | Verification model |
 | VerificationCase | ReviewNote | TBD | No/conditional | required on ResubmissionRequired/Rejected conceptually | ملاحظة/سبب المراجع | Verification model |
 | VerificationArtifact | ArtifactType | TBD | Yes | allowed types Needs Verification | نوع مستند/أثر تحقق، خاص/حساس | VER-DOC-Q01 / DEC-036 |
@@ -151,3 +161,7 @@
 - polymorphic Report target implementation.
 
 لا يوجد في Data Dictionary الحالي Payment/Wallet/Escrow/Refund/Settlement أو DepositAmount لأن هذه ليست جزءًا من النموذج الحالي.
+| Notification | NotificationId | TBD | Yes | PK | معرف الإشعار | DEC-090 |
+| Notification | UserId | TBD | Yes | FK | المستلم | DEC-090 |
+| Notification | Channel | TBD | Yes | InApp/SMS/Email | InApp افتراضي، SMS للأمان/OTP، Email موثق اختياري | DEC-090 |
+| Notification | Status | TBD | Yes | delivery/read lifecycle | حالة الإشعار | DEC-090 |
