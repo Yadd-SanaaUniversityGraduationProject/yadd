@@ -8,9 +8,9 @@
 
 - **Approved behavior:** `UC-07 — Rate Provider` in `docs/03-analysis/08-use-cases.md`.
 - **Rating model:** `docs/03-analysis/18-rating-reputation-model.md`.
-- **Business/decision basis:** `DEC-051`, `DEC-071` and the corresponding rating/business rules.
+- **Business/decision basis:** `DEC-051`, `DEC-071`, `DEC-087` and the corresponding rating/business rules.
 - **Precondition:** Transaction is `Completed` between the same Beneficiary and Provider, with the final invoice approved.
-- **Rating data:** 1–5 stars are required; text comment is optional.
+- **Rating data:** Overall 1–5 stars + structured textual criteria by provider type are required; text comment is optional.
 - **State rule:** submitting the rating does not change Transaction status; it remains `Completed`.
 - **Derived modeling roles:** `RatingUI` and `RatingController` are Sequence modeling roles, not approved implementation class names.
 
@@ -26,6 +26,7 @@ sequenceDiagram
     participant R as ProviderRating «entity»
 
     Note over B,T: Precondition: Transaction Completed + final invoice approved
+    Note over B,UI: Beneficiary may choose Later; reminder after 24h and completion required before a new Transaction
 
     UI-->>B: promptRequiredProviderRating(transactionId)
     B->>UI: submitProviderRating(stars, optionalComment)
@@ -56,6 +57,11 @@ sequenceDiagram
 - Provider rating of Beneficiary؛ مغطى في `UC-07B` منفصلة.
 - أي انتقال إلى Transaction state باسم `Closed`؛ لا توجد هذه الحالة في النموذج الحالي.
 - تفاصيل Content Moderation للتعليق؛ التعليق يخضع لسياسة المحتوى، لكن المراجعة الإدارية ليست خطوة إلزامية في كل Rating.
+
+## Public review projection
+
+- Public reviewer identity exposes First Name only plus a Verified Transaction Review indicator.
+- No phone/email/full legal name is exposed with the review.
 
 ## Postconditions
 
