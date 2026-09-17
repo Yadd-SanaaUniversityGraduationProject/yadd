@@ -232,10 +232,10 @@ erDiagram
 ## 3. Core Entity Semantics
 
 ### USER
-يمثل حساب الشخص الواحد في YADD بعد إنشاء/استخدام الحساب. يمكن أن يعمل الشخص كمستفيد مباشرة، ويمكنه امتلاك Provider Profile واحد كحد أقصى. `Guest` لا يمثل USER قبل Authentication/Create Account لمجرد التصفح العام. `phone` بيانات حساب/تحقق وليست Public Provider Profile field وفق DEC-077.
+يمثل حساب الشخص الواحد في YADD بعد إنشاء/استخدام الحساب. يمكن أن يعمل الشخص كمستفيد مباشرة، ويمكنه امتلاك Provider Profile واحد كحد أقصى. `Guest` لا يمثل USER قبل Authentication/Create Account لمجرد التصفح العام. USER يحتفظ بالاسم في أربعة حقول (first/father/grandfather/family)، وPhone موثق بـOTP، وEmail اختياري مع حالة تحقق؛ هذه بيانات حساب وليست Public Provider Profile fields وفق DEC-077/078.
 
 ### PROVIDER_PROFILE
-يمثل هوية Provider داخل الحساب نفسه. يحدد `provider_type` نوعًا واحدًا فقط في MVP: `SERVICE` أو `PRODUCT` وفق DEC-074. ترتبط به Verification، الأنشطة/التصنيفات، مناطق الخدمة، Portfolio/Catalog والاشتراك. سياسة تغيير النوع بعد اختياره لم تعتمد بعد.
+يمثل هوية Provider داخل الحساب نفسه. يحتوي Product Provider على `trade_name` اختياري كاسم عرض عام، بينما تبقى الهوية القانونية في USER. يحدد `provider_type` نوعًا واحدًا فقط في MVP: `SERVICE` أو `PRODUCT` وفق DEC-074. قد يرتبط به Identity Verification عندما يكون النوع `SERVICE`، وترتبط به الأنشطة/التصنيفات، مناطق الخدمة، Portfolio/Catalog والاشتراك. Product Provider لا يحتاج Government-ID Verification في MVP. سياسة تغيير النوع بعد اختياره لم تعتمد بعد.
 
 ### PROVIDER_ACTIVITY
 يمثل ارتباط Provider Profile بتصنيف داخل نوعه المختار. يمكن للملف أن يمتلك عدة Provider Activities، لكن يجب أن تتوافق جميع Categories مع `provider_type`. يسمح Draft بصفر Activities مؤقتًا، بينما أهلية وظائف التقديم تتطلب Activity واحدة على الأقل وفق DEC-076.
@@ -298,6 +298,9 @@ erDiagram
 تقييم Provider للمستفيد بعد Transaction Completed: optional، ثلاثة مؤشرات 1–5، comment optional، وبحد أقصى تقييم واحد لكل Transaction. سجل التفاعل ليس Public Guest data.
 
 ---
+
+### NOTIFICATION
+مفهوم مشتق لدعم DEC-090: إشعار مرتبط بـUSER مع channel/status/timestamps؛ In-App افتراضي، SMS للأمان/OTP، Email موثق اختياري. لا يثبت هذا التصميم مزود رسائل بعينه.
 
 ## 4. Supporting Trust / Administration ERD
 
