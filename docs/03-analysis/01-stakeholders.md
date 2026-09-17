@@ -1,6 +1,6 @@
 # Stakeholder & Actor Analysis
 
-> **الحالة:** `ANALYZED — SYNCHRONIZED 2026-09-15 THROUGH DEC-077`
+> **الحالة:** `ANALYZED — SYNCHRONIZED 2026-09-18 THROUGH DEC-090`
 >
 > هذه الوثيقة مشتقة من Decision Register وSRS الحاليين. تحديد Stakeholder أو Actor هنا لا ينشئ Requirement جديدًا بذاته.
 
@@ -12,7 +12,7 @@
 | STK-01 | Beneficiary / المستخدم المستفيد | اكتشاف مقدمي الخدمات/المنتجات، إنشاء الطلبات، المقارنة والاختيار، التواصل، المعاملات، اعتماد الفاتورة، تقييم المقدم، الحظر/الإبلاغ | `ANALYZED_APPROVED` — DEC-008..014/046..053/066..077 |
 | STK-02 | Service Provider / مقدم الخدمة | إدارة Provider Profile والنشاط ومناطق الخدمة، الاستجابة للطلبات، التواصل، بدء/تنفيذ المعاملات، الفاتورة، Portfolio، تقييم المستفيد | `ANALYZED_APPROVED` — DEC-030/034/043/046/063/064/066..077 |
 | STK-03 | Product Provider / مقدم المنتج/المشروع المنزلي | إدارة Provider Profile والنشاط وCatalog، الاستجابة لطلبات المنتجات، التواصل، تجهيز المنتج، الفاتورة، تقييم المستفيد | `ANALYZED_APPROVED` — DEC-003/019/030/063/064/066..077 |
-| STK-04 | YADD Administration / إدارة المنصة | Provider Verification، Trust & Safety، البلاغات، الاشتراكات، الإجراءات الإدارية والسجل المرتبط بها | `ANALYZED_APPROVED` في الوظائف الأساسية — DEC-035/036/039/042/053/067 |
+| STK-04 | YADD Administration / إدارة المنصة | Service Provider Identity Verification، Trust & Safety، البلاغات، الاشتراكات، الإجراءات الإدارية والسجل المرتبط بها | `ANALYZED_APPROVED` في الوظائف الأساسية — DEC-035/036/039/042/053/067 |
 | STK-05 | Project Team / فريق المشروع | تحليل وتصميم وتنفيذ وتوثيق MVP ضمن نطاق ووقت مشروع التخرج | `APPROVED` كصاحب مصلحة تشغيلي/أكاديمي |
 | STK-06 | Supervisor / Department / المشرف والقسم | مراجعة الالتزام الأكاديمي والمنهجي ومخرجات المشروع | `APPROVED` كصاحب مصلحة أكاديمي |
 
@@ -25,7 +25,7 @@
 بعد Authentication:
 - يستطيع الحساب استخدام Beneficiary Portal.
 - يستطيع الشخص إنشاء Provider Profile داخل الحساب نفسه.
-- لا تتاح وظائف التقديم قبل استكمال شروط Provider Verification والتفعيل.
+- Service Provider لا تتاح له وظائف التقديم قبل Identity Verification؛ Product Provider لا يحتاج Government ID لكنه يحتاج Account/Profile eligibility وActive Subscription.
 - يمكن للحساب الانتقال بين Beneficiary Portal وProvider Portal عند استيفاء الشروط.
 - اختيار البوابة عند البداية يحدد Onboarding فقط ولا يحول الحساب إلى نوع دائم.
 
@@ -38,8 +38,10 @@ flowchart TD
     U --> B[Beneficiary Portal]
     U --> PP{Provider Profile eligible?}
     PP -- No --> CP[Create / Complete Provider Profile]
-    CP --> V[Provider Verification]
+    CP --> T{Provider Type}
+    T -->|SERVICE| V[Identity Verification]
     V --> PP
+    T -->|PRODUCT| PP
     PP -- Yes --> P[Provider Portal]
     B <-->|Switch Portal| P
 ```
@@ -124,10 +126,9 @@ Public Provider Profile does not expose direct private contact details such as p
 
 ## 8. ما يزال مفتوحًا ولا يغيّر Actor Model الأساسي
 
-- تفاصيل أنواع وثائق الهوية: `VER-DOC-Q01`.
 - مدة الاحتفاظ ببيانات التحقق: `VER-RET-Q01`.
 - بعض الفئات التي قد تحتاج ترخيصًا إضافيًا: `VER-LIC-Q01`.
 - مزود AI وسياساته التفصيلية: `AI-PROV-Q01` وما يرتبط به.
-- تفاصيل الباقات/الدفع الخارجي للاشتراك: `SUB-PLAN-Q01` و`SUB-PAY-Q01`.
+- سعر الاشتراك الشهري النهائي وطريقة/إثبات الدفع الخارجي: `SUB-PLAN-Q01` و`SUB-PAY-Q01`.
 
 هذه النقاط لا تمنع اعتماد Actors الرئيسية للمخططات الحالية.
