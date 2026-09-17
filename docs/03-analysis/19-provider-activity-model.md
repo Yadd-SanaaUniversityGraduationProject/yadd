@@ -1,8 +1,8 @@
 # نموذج نشاط المقدم — Provider Activity Model
 
-> **الحالة:** `ANALYZED_APPROVED — SYNCHRONIZED 2026-09-11`
+> **الحالة:** `ANALYZED_APPROVED — SYNCHRONIZED 2026-09-18 THROUGH DEC-086`
 >
-> **أساس القرارات:** DEC-030/034/035/041/043/064/074/076. القرار السابق DEC-029 استُبدل جزئيًا بـDEC-074.
+> **أساس القرارات:** DEC-030/035/041/043/064/074/076/080/085/086. القرار السابق DEC-029 استُبدل جزئيًا بـDEC-074، وDEC-034 عُدّل جزئيًا بـDEC-085.
 
 ## 1. القرار الأساسي
 
@@ -24,12 +24,12 @@
 - الارتباط بهوية `User`؛
 - نوع المقدم `providerType = SERVICE | PRODUCT`؛
 - حالة `Provider Profile`؛
-- حالة `Provider Verification`؛
+- حالة `Identity Verification` عند النوع SERVICE فقط؛
 - حالة/فترة `Subscription`؛
 - مؤشرات السمعة المشتقة من `Transactions` المكتملة والمؤهلة؛
-- معلومات الملف العامة المشتركة.
+- معلومات الملف العامة المشتركة؛ ولـPRODUCT يمكن إضافة `Trade Name` اختياري كاسم عرض عام.
 
-`Provider Verification` متطلب معتمد. أما أنواع وثائق الهوية المقبولة بدقة وفترات الاحتفاظ فتبقى تفاصيل سياسة مفتوحة ولا تغير هذا النموذج.
+Identity Verification الحكومية متطلب على Service Provider فقط. Product Provider لا يحتاج Government ID في MVP. مدة الاحتفاظ ببيانات تحقق الخدمة تبقى سياسة مفتوحة.
 
 ## 3. Provider Activities / Categories
 
@@ -98,12 +98,13 @@ classDiagram
 - `PROV-BR-01`: يمكن لكل `User` امتلاك `Provider Profile` واحد كحد أقصى.
 - `PROV-BR-02`: في MVP يكون `Provider Profile` من نوع واحد فقط: `SERVICE` أو `PRODUCT` — DEC-074.
 - `PROV-BR-03`: لا يمكن تفعيل Service وProduct معًا على Provider Profile نفسه في MVP.
-- `PROV-BR-04`: الهوية و`Verification` مشتركتان على مستوى `Provider Profile`.
+- `PROV-BR-04`: Identity Verification الحكومية تطبق على SERVICE فقط؛ PRODUCT لا يحتاج Government ID، مع بقاء هوية User الأساسية منفصلة عن Trade Name.
 - `PROV-BR-05`: يمكن للمقدم اختيار تصنيف واحد أو أكثر داخل نوعه فقط — DEC-076.
 - `PROV-BR-06`: Draft Provider Profile يمكن أن يحتوي مؤقتًا صفر Provider Activities؛ التفعيل لوظائف التقديم يتطلب Activity واحدة على الأقل — DEC-076.
 - `PROV-BR-07`: يجب أن يتوافق `Category.categoryType` مع `ProviderProfile.providerType` لكل Provider Activity.
 - `PROV-BR-08`: تتطلب أهلية Request/Response تطابق نوع المقدم وتصنيف الطلب إضافة إلى بقية شروط الأهلية.
 - `PROV-BR-09`: يدعم Provider Profile الـPortfolio أو Product Catalog وفق نوعه باستخدام مفهوم `ShowcaseItem` المعتمد.
+- `PROV-BR-10`: الاشتراك Active مطلوب لكلا النوعين؛ مدة MVP 30 يومًا، وExpired يمنع تعاملات جديدة دون إيقاف الجارية.
 
 ## 9. نقاط تصميم تؤجل إلى Chapter Four
 
