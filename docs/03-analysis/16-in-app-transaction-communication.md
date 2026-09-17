@@ -1,8 +1,8 @@
 # نموذج التواصل داخل التطبيق — In-App Communication Model
 
-> **الحالة:** `ANALYZED_APPROVED — SYNCHRONIZED 2026-09-15 THROUGH DEC-077`
+> **الحالة:** `ANALYZED_APPROVED — SYNCHRONIZED 2026-09-18 THROUGH DEC-090`
 >
-> **القرارات المرجعية:** DEC-023/024/046/047/053/055/069/075/077.
+> **القرارات المرجعية:** DEC-023/024/046/047/053/055/069/075/077/082/088/090.
 
 ## 1. القرار الأساسي
 
@@ -52,6 +52,10 @@
 - `Block + Report`.
 
 مكالمات الصوت/الفيديو ليست جزءًا من الـCore Model الحالي. تظل الرسائل الصوتية `PROPOSED` ولا يجوز إظهارها كـUse Case معتمدة ما لم تعتمد بصورة مستقلة.
+
+## Block أثناء Active Transaction
+
+Block يمنع التفاعل الجديد بين الطرفين ولا يلغي Conversation history. إذا كانت Active Transaction قائمة، تبقى Transaction وإجراءات Invoice/Cancel/Complaint وإشعارات النظام متاحة. Unblock يعيد التفاعل المستقبلي فقط ولا يعيد كيانات منتهية أو يلغي Report سابقًا — DEC-088.
 
 ## 4. التواصل والتفاوض والفاتورة
 
