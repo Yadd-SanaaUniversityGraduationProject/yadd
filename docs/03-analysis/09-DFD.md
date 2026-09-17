@@ -28,8 +28,8 @@ flowchart LR
     B -->|Account Data; Search Criteria; Request Data; Messages; Provider Selection; Transaction Start Request or Confirmation; Invoice Response; Complaint Data; Rating Data; Report Data| Y
     Y -->|Search Results; Provider Information; Provider Responses; Messages; Transaction Start Confirmation Request; Transaction Status; Invoice Data; Complaint Status; Notifications; History| B
 
-    P -->|Account and Provider Data; Verification Data; Service Areas; Portfolio or Catalog Data; Provider Response Data; Response Edit or Withdrawal; Messages; Transaction Start Request or Confirmation; Invoice Data; Beneficiary Rating Data; Report Data| Y
-    Y -->|Verification and Subscription Status; Matching Requests; Response and Selection Status; Messages; Transaction Start Confirmation Request; Transaction Status; Invoice Status; Notifications| P
+    P -->|Account and Provider Data; Service Provider Identity Verification Data when applicable; Service Areas; Portfolio or Catalog Data; Provider Response Data; Response Edit or Withdrawal; Messages; Transaction Start Request or Confirmation; Invoice Data; Beneficiary Rating Data; Report Data| Y
+    Y -->|Account or Identity Verification Status as applicable; Subscription Status; Matching Requests; Response and Selection Status; Messages; Transaction Start Confirmation Request; Transaction Status; Invoice Status; Notifications| P
 
     A -->|Verification Decisions; Subscription Updates; Report and Moderation Actions; Complaint Review Actions| Y
     Y -->|Verification Cases; Reports and Flags; Complaint Evidence; Subscription Records; Administrative Audit Information| A
@@ -179,7 +179,7 @@ Manages:
 
 Public responses to Guest must not expose direct private-contact data such as provider phone number or sensitive/private records. If Guest attempts a protected action, UI/API routes to Authentication rather than creating the protected domain action — DEC-077.
 
-Exact expiry/reminder timing is `REQ-EXP-Q01` and must not be shown as a numeric value in the diagram.
+Request inactivity policy: Reminder after 24h and 48h, then Expired after 72h of Beneficiary inactivity; Republish creates a new Request — DEC-081.
 
 ### 3.0 Manage Provider Responses & Communication
 
@@ -193,7 +193,7 @@ Manages:
 - one persistent Conversation per Beneficiary–Provider pair — DEC-075;
 - system separators/events that mark Transaction boundaries inside the persistent Conversation;
 - Provider selection in Request route;
-- `Transaction Start Request` and `Start Confirmation` in Direct Search route.
+- `Transaction Start Request` and `Start Confirmation` in Direct Search route; pending start request expires after 12h and only one may be pending per pair — DEC-082.
 
 Chat alone does not create Transaction. A persistent Conversation may contain zero or multiple Transactions over time. Guest cannot create/join the private Conversation before Authentication.
 
@@ -201,7 +201,7 @@ Chat alone does not create Transaction. A persistent Conversation may contain ze
 
 Transaction becomes Active through either:
 1. Beneficiary selects one Provider in Request route; or
-2. one party sends a Transaction Start Request and the other confirms in Direct Search route.
+2. one party sends a Transaction Start Request and the other confirms within 12h in Direct Search route.
 
 Each Transaction belongs to the persistent Conversation between the same Beneficiary and Provider. Physical linking of individual messages/system events to a specific Transaction remains Chapter Four work.
 
