@@ -1,17 +1,17 @@
 # Class Diagram — Account, Provider, Discovery and Portfolio
 
-> **Status:** `SEMANTICALLY VERIFIED — TEAM APPROVED — NOT BASELINED — VISUAL/A4 FINALIZATION PENDING`
+> **Status:** `SEMANTICALLY VERIFIED — TEAM APPROVED — SYNCHRONIZED THROUGH DEC-090 — NOT BASELINED — VISUAL/A4 FINALIZATION PENDING`
 >
 > **Type:** View 1 of one Detailed Analysis Class Model.
 
 ## Source basis
 
 - `docs/03-analysis/11-ERD.md` — corrected Conceptual ERD and conceptual identifiers/attributes.
-- `docs/03-analysis/05-SRS.md` — current requirements through DEC-076.
+- `docs/03-analysis/05-SRS.md` — current requirements through DEC-090.
 - `docs/03-analysis/08-use-cases.md` — UC-01, UC-02, UC-03, UC-04, UC-09 and UC-10.
 - `docs/03-analysis/19-provider-activity-model.md` — current Provider Type / Activity rules.
 - `docs/03-analysis/20-location-and-neighborhood-model.md` — current Area / adjacency / service-area rules.
-- `DEC-008..014`, `DEC-030..033`, `DEC-041`, `DEC-045`, `DEC-064`, `DEC-066`, `DEC-070`, `DEC-074`, `DEC-076`.
+- `DEC-008..014`, `DEC-030..033`, `DEC-041`, `DEC-045`, `DEC-064`, `DEC-066`, `DEC-070`, `DEC-074`, `DEC-076`, `DEC-078..082`, `DEC-085/086/090`.
 
 ## Diagram
 
@@ -21,17 +21,29 @@ classDiagram
 
     class User {
         -Identifier userId
-        -String fullName
+        -String firstName
+        -String fatherName
+        -String grandfatherName
+        -String familyName
         -String phone
+        -DateTime phoneVerifiedAt
+        -String email
+        -DateTime emailVerifiedAt
         -String accountStatus
+        -String lastPortal
         +createRequest() Request
         +createProviderProfile() ProviderProfile
+        +deactivate()
+        +reactivate()
     }
 
     class ProviderProfile {
         -Identifier providerProfileId
         -String providerType
-        -String verificationStatus
+        -String tradeName
+        -String description
+        -String profileImageReference
+        -String identityVerificationStatus
         -String profileStatus
         +selectProviderType(type)
         +addActivity(category)
@@ -115,11 +127,11 @@ classDiagram
 
 ## Detailed analysis interpretation
 
-- `User` واحد يمكنه امتلاك صفر أو `ProviderProfile` واحد؛ Beneficiary/Provider ليست Classes لحسابين منفصلين.
-- `ProviderProfile.providerType` في MVP يأخذ نوعًا واحدًا فقط: `SERVICE` أو `PRODUCT`، ولا يمكن الجمع بينهما على الملف نفسه — DEC-074.
+- `User` واحد يمكنه امتلاك صفر أو `ProviderProfile` واحد؛ Beneficiary/Provider ليست Classes لحسابين منفصلين. الاسم القانوني مخزن في أربعة أجزاء، والهاتف موثق بـOTP، والبريد اختياري ولا يصبح login/recovery identifier قبل التحقق.
+- `ProviderProfile.providerType` في MVP يأخذ نوعًا واحدًا فقط: `SERVICE` أو `PRODUCT`، ولا يمكن الجمع بينهما على الملف نفسه — DEC-074. `tradeName` اختياري ومسموح كاسم عرض عام للنوع PRODUCT فقط.
 - `selectProviderType(type)` تمثل اختيار نوع Provider Profile أثناء إنشاء/إعداد الملف. **تغيير النوع بعد ذلك غير محسوم حاليًا ولا يستنتج من هذه العملية**.
 - يمكن لـProviderProfile امتلاك عدة `ProviderActivity`، وكل Activity تمثل تصنيفًا داخل نوع المقدم نفسه — DEC-076.
-- `0..*` بين ProviderProfile وProviderActivity تسمح بوجود Draft Provider Profile دون تصنيفات مؤقتًا؛ قبل أهلية وظائف التقديم يجب وجود Activity واحدة على الأقل.
+- `0..*` بين ProviderProfile وProviderActivity تسمح بوجود Draft Provider Profile دون تصنيفات مؤقتًا؛ قبل أهلية وظائف التقديم يجب وجود Activity واحدة على الأقل. Service Provider يحتاج Identity Verified؛ Product Provider لا يحتاج Government ID ولكنه يحتاج Account/Profile eligibility.
 - يجب أن يكون `Category.categoryType` متوافقًا مع `ProviderProfile.providerType` لكل ProviderActivity.
 - `Area` يمثل District/Neighborhood hierarchy بصورة تحليلية. علاقة `adjacent to` تمثل الجوار المدار داخل YADD، وليس GPS Radius.
 - تمثل علاقة `ProviderProfile ↔ Area` مفهوم مناطق الخدمة مباشرة في Class View بدل إبقاء `ProviderServiceArea` كصندوق Class بلا سلوك أو Attributes مستقلة على مستوى التحليل. إذا احتاجت العلاقة Attributes مستقلة في التصميم الفيزيائي، يمكن إعادة تمثيلها Association Class في Chapter Four.
@@ -128,7 +140,7 @@ classDiagram
 - `ShowcaseItem` يمثل Portfolio إذا كان النوع SERVICE وProduct Catalog إذا كان النوع PRODUCT باستخدام مفهوم عرض موحد.
 - `Request.indicativePrice` اختياري وغير ملزم على مستوى المتطلبات.
 - `RequestImage` عنصر مشتق من المتطلب المعتمد الذي يسمح بإضافة صور اختيارية عند إنشاء Request. لا يثبت هذا الرسم storage provider أو file format أو retention policy.
-- لكل Provider استجابة فعالة واحدة فقط لكل Request؛ هذا Business Constraint وليس مجرد multiplicity.
+- لكل Provider استجابة فعالة واحدة فقط لكل Request؛ هذا Business Constraint وليس مجرد multiplicity. لا توجد مدة صلاحية مستقلة للاستجابة؛ تنتهي مع السحب/الاختيار/إغلاق أو Expiry الطلب.
 - يجوز تعديل أو سحب Provider Response ما دام Request `Open` وقبل اختيار Provider؛ عند الاختيار تصبح المختارة `Selected` والبقية `NotSelected`.
 - `requiresDeposit` Boolean فقط ولا ينشئ Payment/Deposit lifecycle.
 
