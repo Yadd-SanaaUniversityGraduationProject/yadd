@@ -191,15 +191,13 @@ gantt
 ## 7. نقاط لا نُلزم أنفسنا بإغلاقها قبل المناقشة الأولية إذا لم تمنع التصميم
 
 تبقى `Needs Verification` صريحة:
-- `REQ-EXP-Q01` — مدة Expiry والتذكيرات الرقمية.
-- `INV-PENDING-Q01` — تصعيد الفاتورة المعلقة.
 - `TX-CONC-Q01` — الحد الأقصى للمعاملات المتوازية.
 - `LOC-OPS-TIME-Q01` — توقيت توسيع النطاق.
 - `SAFE-REQ-Q01` — Thresholds لسوء الاستخدام.
 - `UX-VAL-Q01` — Usability/low-connectivity validation.
-- `VER-DOC-Q01`, `VER-RET-Q01`, `VER-LIC-Q01`.
+- `VER-RET-Q01`, `VER-LIC-Q01`.
 - `AI-MOD-Q01/02`, `AI-PROV-Q01`, `AI-RET-Q01`, `AI-APPEAL-Q01`.
-- `SUB-PLAN-Q01`, `SUB-PAY-Q01`, `SUB-OPS-Q01`.
+- سعر الاشتراك النهائي (`SUB-PLAN-Q01`)، `SUB-PAY-Q01`، والظهور العام عند Expired (`SUB-OPS-Q01`).
 
 ## 8. ما بعد المناقشة الأولية
 
