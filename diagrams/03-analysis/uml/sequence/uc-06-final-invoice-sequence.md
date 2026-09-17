@@ -9,7 +9,7 @@
 - **Approved behavior:** `UC-06 — Create, Revise and Approve Final Invoice` in `docs/03-analysis/08-use-cases.md`.
 - **Requirements:** `FR-010`, `FR-010A`, `FR-011`, `FR-011A`, `FR-011B`, `FR-011C`, `FR-011D`, and the current completion requirement in `docs/03-analysis/05-SRS.md`.
 - **Business rules:** `BR-009` through `BR-013`, plus the current dispute/completion rules.
-- **Lifecycle:** Final Invoice is sent as `Pending Customer Approval`; approval makes Transaction `Completed`; revision returns the invoice to Provider and then back for review; no response is not approval and there is no Auto-Approval.
+- **Lifecycle:** Final Invoice is sent as `Pending Customer Approval`; reminders occur at 24h and 48h, and at 72h it becomes `Overdue` without Auto-Approval; approval makes Transaction `Completed`; revision returns the invoice to Provider and then back for review.
 - **Detailed model:** `docs/03-analysis/15-invoice-approval-and-dispute.md`.
 - **Derived modeling roles:** `ProviderUI`, `BeneficiaryUI`, `InvoiceController`, and `TransactionController` are Sequence modeling roles, not approved implementation class names.
 - **Abstraction rule:** this draft does **not** commit to an `InvoiceVersion` implementation class. The requirement to preserve revision history is represented abstractly on `Invoice`.
@@ -147,6 +147,10 @@ UC-06 ينتهي في المسار الناجح عند:
 - No response does not equal approval; there is no Auto-Approval.
 - No Payment/Refund lifecycle is modeled inside YADD.
 
-## Needs Verification / intentionally omitted
+## Approved pending-invoice timing
 
-`INV-PENDING-Q01` remains open, so this diagram does not invent a duration, reminder count, or automatic escalation rule for a long-pending invoice.
+- 24h: Reminder #1.
+- 48h: Reminder #2.
+- 72h: mark `Pending Customer Approval — Overdue`.
+- No Auto-Approval.
+- Revision has no hard maximum; each request needs a note and history is preserved; after the second consecutive revision, the UI surfaces Complaint as an option.
