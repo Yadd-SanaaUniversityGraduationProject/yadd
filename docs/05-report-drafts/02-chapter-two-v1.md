@@ -30,7 +30,7 @@
 
 يرتبط نموذج التقييم الحالي في YADD بمعاملة وصلت إلى `Completed` بعد اعتماد الفاتورة. هذا يزيد قابلية تتبع مصدر التقييم مقارنة بتقييم مفتوح غير مرتبط بتعامل مسجل، لكنه لا يجعل النتيجة خالية من التحيز.
 
-- Beneficiary → Provider: تقييم إلزامي 1–5 نجوم، وتعليق اختياري.
+- Beneficiary → Provider: تقييم Hybrid إلزامي بعد Completed يتكون من Overall Stars 1–5 + Structured Textual Criteria حسب نوع Provider + تعليق اختياري.
 - Provider → Beneficiary: تقييم اختياري بثلاثة مؤشرات 1–5 وتعليق اختياري.
 - التقييمات Post-Transaction ولا تغيّر حالة Transaction بعد `Completed`.
 
@@ -216,7 +216,7 @@ inDrive يدعم فهم النمط التشغيلي، لكنه لا يثبت م�
 | Final invoice approval model | ليس نموذج المقارنة الأساسي؛ لديها دفع/استلام | `N/E` | `N/E` | غير منطبق | نعم |
 | Rating | تقييمات عملاء ظاهرة | لا تعتمد هذه النسخة غياب/وجود نظام كامل دون Evidence إضافي | نعم | نعم | بعد Completed Transaction |
 | Financial handling | تدير/تتوسط في الدفع وفق شروطها | يختلف حسب خدمات المنصة | غير محور المقارنة هنا | تدفقات دفع خاصة بالنقل | دفع Beneficiary↔Provider خارج YADD |
-| Provider verification | سياسات المنصة تختلف | تعلن المنصة تحققًا/موثوقية | موافقة إدارة على مقدم الخدمة | نموذج خاص بالسائقين | Provider Verification + human final decision |
+| Provider verification | سياسات المنصة تختلف | تعلن المنصة تحققًا/موثوقية | موافقة إدارة على مقدم الخدمة | نموذج خاص بالسائقين | Service Provider Identity Verification + human final decision; Product Provider no Government ID in MVP |
 | Service + product activity under one YADD-style provider profile | ليس نموذجها | نطاق أوسع ومختلف | خدمات ومنتجات | لا | نعم |
 | Exact internal Technology Stack publicly verified | لا | لا | لا | لا حاجة للمقارنة | لم يعتمد نهائيًا بعد |
 
@@ -246,9 +246,9 @@ inDrive يدعم فهم النمط التشغيلي، لكنه لا يثبت م�
 - Transaction lifecycle موحد للخدمة والمنتج.
 - Final Invoice approval كسجل بنود وأسعار داخل YADD.
 - `Completed` terminal state ثم Post-Transaction ratings.
-- Provider Verification مع قرار بشري نهائي.
+- Service Provider Identity Verification مع قرار بشري نهائي، دون Government ID لمقدم المنتج في MVP.
 - Portfolio/Catalog داخل Provider Profile.
-- Service Activity وProduct Activity أو كلاهما على Provider Profile واحد.
+- Provider Profile واحد بنوع حصري SERVICE أو PRODUCT مع تصنيفات متعددة داخل النوع.
 
 هذه عناصر `Team Decisions / Analyzed Requirements` وليست دليلًا على نجاح المنتج؛ نجاحها وملاءمتها للمستخدمين يحتاجان Prototype وUsability Validation.
 
