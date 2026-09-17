@@ -1,8 +1,8 @@
 # نموذج الحساب والبوابات — Account & Portal Model
 
-> **الحالة:** `ANALYZED_APPROVED — SYNCHRONIZED 2026-09-15 THROUGH DEC-077`
+> **الحالة:** `ANALYZED_APPROVED — SYNCHRONIZED 2026-09-18 THROUGH DEC-090`
 >
-> **أساس القرارات:** DEC-008..011, DEC-030, DEC-034/035, DEC-074/076/077.
+> **أساس القرارات:** DEC-008..011, DEC-030, DEC-074/076/077/078/079/080/085/086.
 
 ## 1. القرار الأساسي للحساب
 
@@ -10,12 +10,23 @@
 
 قبل Authentication يمكن للشخص استخدام المنصة بصفة `Guest` ضمن نطاق التصفح العام فقط. `Guest` ليس حسابًا ولا كيان بيانات مستقلًا؛ عند محاولة وظيفة محمية يجب تنفيذ `Log In` أو `Create Account` قبل متابعة الإجراء — DEC-077.
 
-بعد Authentication، يمكن للمستخدم عند الاستخدام الأول اختيار البوابة التي يبدأ منها:
+بعد Create Account والتحقق من الهاتف بـOTP، يمكن للمستخدم عند الاستخدام الأول اختيار البوابة التي يبدأ منها:
 
 1. `Beneficiary Portal`
 2. `Provider Portal`
 
 هذا الاختيار يتحكم فقط في تجربة البداية/التهيئة (`onboarding/start experience`) ولا ينشئ نوع حساب دائمًا.
+
+## 1.1 Create Account / Authentication
+
+- الاسم عند Create Account أربعة حقول: First Name, Father Name, Grandfather Name, Family Name.
+- Mobile Number مطلوب ويجب توثيقه بـOTP قبل اكتمال الحساب.
+- Password مطلوب؛ Email اختياري ولا يستخدم للدخول/الاستعادة حتى Verification.
+- Log In: Verified Mobile Number أو Verified Email + Password؛ لا Username مستقل.
+- Forgot Password: OTP للهاتف، والبريد الموثق خيار إضافي.
+- Manage Account يسمح بتغيير الاسم والهاتف والبريد وكلمة المرور والصورة؛ تغيير الهاتف/البريد يحتاج إعادة تحقق.
+- إذا غيّر Service Provider الموثق اسمه الحقيقي، تعاد مراجعة Identity Verification.
+- يدعم MVP Deactivate/Reactivate Account ولا يوجد Hard Delete ذاتي مباشر.
 
 ## 2. Guest / Public Access
 
@@ -52,15 +63,17 @@
 - يمكن لـ`User` امتلاك صفر أو `Provider Profile` واحد؛
 - في MVP يكون `Provider Profile` من نوع واحد فقط: `SERVICE` أو `PRODUCT`، ولا يمكن تفعيل النوعين معًا على الملف نفسه — DEC-074؛
 - داخل النوع المختار يمكن للمقدم اختيار تصنيف واحد أو أكثر عبر `ProviderActivity`، مع السماح مؤقتًا بصفر تصنيفات أثناء Draft، واشتراط تصنيف واحد على الأقل قبل أهلية وظائف التقديم — DEC-076؛
-- يجب أن يجتاز `Provider Profile` عملية `Provider Verification` قبل وظائف التقديم الخاصة بالمقدم؛
-- يتطلب إرسال `Provider Responses` جديدة بالإضافة إلى ذلك اشتراكًا `Active`.
+- يتطلب `Service Provider` اجتياز Identity Verification قبل وظائف التقديم؛ `Product Provider` لا يحتاج Government ID في MVP لكنه يحتاج Account Verified وProvider Profile مستوفيًا للشروط؛
+- يتطلب بدء تعاملات جديدة لكلا النوعين اشتراكًا `Active`.
 
 > **Open:** سياسة تغيير `ProviderProfile.providerType` بعد الاختيار/التفعيل لم تعتمد بعد، ولا يجوز استنتاج السماح بالتبديل من هذا النموذج.
 
 ## 5. التبديل بين البوابات — Portal Switching
 
 - يمكن لـ`Beneficiary` إنشاء/استكمال `Provider Profile` من الحساب نفسه؛
-- بعد استيفاء شروط بوابة المقدم، يمكن لـ`User` التبديل بين `Beneficiary Portal` و`Provider Portal`؛
+- بعد استيفاء شروط بوابة المقدم، يمكن لـ`User` التبديل بين `Beneficiary Portal` و`Provider Portal` بزر واضح؛
+- يتذكر النظام آخر Portal مستخدم ويفتحه افتراضيًا عند Login لاحق؛
+- إذا لم تكن بوابة Provider مؤهلة يوجّه المستخدم إلى استكمال Provider Profile بدل فتح بوابة كاملة؛
 - يمكن لـ`User` الذي بدأ كمقدم استخدام إمكانات `Beneficiary` دون إنشاء حساب آخر.
 
 ## 6. النموذج المفاهيمي
