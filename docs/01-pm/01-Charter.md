@@ -36,10 +36,10 @@
 - تقديم الاستجابات والتفاوض.
 - توثيق السعر المتفق عليه.
 - الفاتورة الرقمية.
-- **تقييم المستفيد للمقدم إلزامي بعد Transaction Completed وفق DEC-051.**
+- **تقييم المستفيد للمقدم إلزامي بعد Transaction Completed وفق DEC-051/087 بنموذج Hybrid: Overall Stars + Structured Criteria + Optional Comment.**
 - **تقييم المقدم للمستفيد اختياري بعد Transaction Completed وفق DEC-063، عبر مؤشرات سلوكية محددة ودون عقوبات آلية في MVP.**
 - الاشتراكات/Zero Commission.
-- التحقق والرقابة المدعومة بالذكاء الاصطناعي.
+- Identity Verification لمقدمي الخدمات فقط + الرقابة المدعومة بالذكاء الاصطناعي؛ Product Providers لا يحتاجون Government ID في MVP.
 - Provider Profile واحد من نوع حصري `SERVICE` أو `PRODUCT` في MVP، مع إمكانية اختيار تصنيف واحد أو أكثر داخل النوع نفسه وفق DEC-074/076.
 
 ## Success Criteria — مسودة تحتاج ضبطًا
@@ -61,5 +61,5 @@
 - الاتجاه المعماري Client–Server مع Backend/API مركزي وواجهة Web أساسية حاليًا معتمد كاتجاه وفق DEC-065.
 - Flutter معتمد كاتجاه لعميل Mobile لاحق يتصل بالـAPI نفسه وفق DEC-065، وليس Framework التنفيذ الفوري الملزم لكل الواجهات الحالية.
 - ASP.NET Core ما يزال `PROPOSED` كخيار Backend تفصيلي حتى اكتمال Technical Feasibility واعتماد التقنية النهائية.
-- وظائف AI المساندة في Verification وTrust & Safety معتمدة في النطاق وفق DEC-037..040، بينما مزودو OCR/Face/Liveness/Moderation وبنية التكامل والتكلفة والاحتفاظ ما تزال تحتاج Feasibility وVerification.
+- وظائف AI المساندة في Service Provider Identity Verification وTrust & Safety معتمدة في النطاق وفق DEC-037..040/085، بينما مزودو OCR/Face/Liveness/Moderation وبنية التكامل والتكلفة والاحتفاظ ما تزال تحتاج Feasibility وVerification.
 - المسؤولية عن تصميم قاعدة البيانات والتجهيز التقني والتنفيذ البرمجي موزعة حاليًا على محمد عبدالرحمن وفق Work Plan؛ وهذا توزيع عمل إداري ولا يعتمد اختيار Framework تفصيلي بحد ذاته.
