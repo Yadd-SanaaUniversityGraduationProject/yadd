@@ -1,8 +1,8 @@
 # نموذج إغلاق الطلب والإلغاء والانتهاء — Request Closure, Cancellation & Expiry Model
 
-> **الحالة:** `ANALYZED_APPROVED / PARTIAL POLICY — SYNCHRONIZED 2026-09-04`
+> **الحالة:** `ANALYZED_APPROVED — SYNCHRONIZED 2026-09-18 THROUGH DEC-083`
 >
-> **القرارات المرجعية:** DEC-047..050/054/071.
+> **القرارات المرجعية:** DEC-047..050/054/071/081/083.
 
 ## 1. الطلب المفتوح — Open Request
 
@@ -12,7 +12,11 @@
 - لا يعود `Beneficiary` بحاجة إلى الـ`Request` → تصبح `ClosedByBeneficiary`.
 - تتحقق سياسة عدم النشاط → تصبح `Expired`.
 
-تظل المدة الدقيقة لعدم النشاط وجدول التذكيرات ضمن `REQ-EXP-Q01` ولا يجوز اختلاقها داخل المخططات.
+سياسة عدم النشاط المعتمدة: Reminder بعد 24 ساعة، Reminder ثانٍ بعد 48 ساعة، و`Expired` بعد 72 ساعة من عدم نشاط Beneficiary. نشاط Beneficiary الدال على استمرار الحاجة يعيد العداد؛ وصول Provider Response وحده لا يعيده.
+
+## 1.1 Republish بعد Expiry
+
+الطلب Expired لا يعاد فتحه. عند `Republish Request` ينسخ النظام بيانات الطلب إلى Draft جديد يراجعه Beneficiary ويعدله عند الحاجة ثم ينشره كـRequest جديد. يبقى الطلب القديم Expired واستجاباته القديمة غير فعالة.
 
 ## 2. إغلاق الطلب قبل الاختيار — Request Closure Before Selection
 
@@ -62,7 +66,7 @@
 - `Disputed`
 - `Approved`
 
-عدم الرد لا يعد موافقة، ولا يوجد `Auto-Approval`.
+عدم الرد لا يعد موافقة، ولا يوجد `Auto-Approval`. يرسل النظام Reminder بعد 24h و48h، وعند 72h تصبح الفاتورة `Pending Customer Approval — Overdue`.
 
 ## 8. نموذج الحالات — State Model
 
@@ -102,7 +106,9 @@ stateDiagram-v2
 - `REQ-BR-01`: إغلاق `Request` قبل الاختيار ليس `Transaction Cancellation`.
 - `REQ-BR-02`: اختيار `Provider` واحد في `Published Request` يغلق الطلب أمام الاستجابات الجديدة ويبدأ `Transaction` واحدة.
 - `REQ-BR-03`: يتطلب `Transaction Cancellation` سببًا مسجلًا.
-- `REQ-BR-04`: تخضع `Open Requests` للتذكيرات/`Expiry` من حيث المبدأ.
+- `REQ-BR-04`: Reminder 24h/48h وExpiry 72h من عدم نشاط Beneficiary؛ النشاط الفعلي يعيد العداد.
 - `REQ-BR-05`: قد ينتج عن الإغلاق المتكرر `Flag + Admin Review`، وليس عقوبة تلقائية.
 - `REQ-BR-06`: بعد إرسال الفاتورة النهائية، يحكم `Invoice workflow` المسار المتبقي.
 - `REQ-BR-07`: `Completed` هي الحالة النهائية الناجحة للـ`Transaction`، و`Ratings` عمليات Post-Transaction.
+- `REQ-BR-08`: Republish بعد Expiry ينشئ Request جديدًا ولا يعيد فتح القديم.
+- `REQ-BR-09`: Cancel Transaction مسموح حتى ما قبل Invoice Approval/Completed مع سبب إلزامي.
