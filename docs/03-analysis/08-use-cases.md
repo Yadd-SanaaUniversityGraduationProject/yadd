@@ -1,6 +1,6 @@
 # Use Cases & Specifications
 
-> **الحالة:** `ANALYZED — CORE SYNCHRONIZED 2026-09-15 THROUGH DEC-077`
+> **الحالة:** `ANALYZED — CORE SYNCHRONIZED 2026-09-18 THROUGH DEC-090`
 >
 > تعكس هذه الوثيقة السيناريوهات المعتمدة حاليًا في Decision Register وSRS وBusiness Rules، مع إبقاء السياسات المفتوحة خارج الافتراض. جميع التسميات داخل المخططات النهائية تكون باللغة الإنجليزية وفق DEC-072.
 
@@ -56,9 +56,9 @@
   4. يبدأ Beneficiary أو Provider تواصلًا خاصًا في سياق Inquiry/Chat حسب الواجهة المتاحة.
   5. يستمر الطرفان في مناقشة التفاصيل داخل المحادثة.
   6. إذا أراد أحد الطرفين بدء التعامل الرسمي، يرسل `Request Transaction Start`.
-  7. يعرض YADD للطرف الآخر `Request Start Confirmation`.
-  8. إذا أكد الطرف الآخر، ينشئ YADD `Active Transaction` بين الطرفين.
-- **Alternative — No confirmation / rejection:** تبقى المحادثة دون Transaction ويمكن أن تستمر أو تنتهي.
+  7. يعرض YADD للطرف الآخر `Request Start Confirmation` صالحًا لمدة 12 ساعة.
+  8. إذا أكد الطرف الآخر خلال المهلة، ينشئ YADD `Active Transaction` بين الطرفين.
+- **Alternative — No confirmation / rejection:** الرفض أو انتهاء 12 ساعة يلغي طلب البدء فقط؛ تبقى المحادثة دون Transaction ويمكن إرسال طلب جديد لاحقًا. Pending واحد فقط بين الطرفين.
 - **Rule:** Chat وحدها لا تنشئ Transaction.
 - **Related:** DEC-012/031..033/046/047/064/066/069/077.
 
@@ -78,7 +78,7 @@
   6. ينشر الطلب ويصبح `Open`.
 - **Alternative:** يغلقه Beneficiary قبل اختيار Provider إذا لم يعد يحتاجه؛ هذا `Request Closure` وليس Transaction Cancellation.
 - **Guest boundary:** CTA إنشاء الطلب قد يظهر للGuest، لكن لا ينفذ UC-02 قبل Log In/Create Account.
-- **Open policy:** Expiry/reminder timing في `REQ-EXP-Q01`.
+- **Expiry policy:** Reminder 24h و48h، وExpired عند 72h من عدم نشاط Beneficiary؛ Republish ينشئ Request جديدًا — DEC-081.
 - **Related:** DEC-012/013/048/049/077.
 
 ---
@@ -87,7 +87,7 @@
 
 - **Status:** `ANALYZED_APPROVED`.
 - **Primary actor:** Eligible Provider.
-- **Preconditions:** Provider authenticated + Verified + subscription Active + Request `Open`.
+- **Preconditions:** Provider authenticated + eligible بحسب النوع (Service Provider: Identity Verified؛ Product Provider: Account/Profile eligible) + subscription Active + Request `Open`.
 - **Main flow:**
   1. يراجع Provider الطلب.
   2. يرسل `Provider Response`.
@@ -99,6 +99,7 @@
 - **Alternative — Edit response:** ما دام Request `Open` ولم يتم اختيار Provider، يستطيع Provider تعديل استجابته الفعالة بدل إنشاء استجابة مكررة.
 - **Alternative — Withdraw response:** ما دام Request `Open` ولم يتم اختيار Provider، يستطيع Provider سحب استجابته.
 - **After selection:** لا تعد الاستجابة قابلة للتعديل/السحب كاستجابة مفتوحة بعد اختيار Provider وبدء Transaction.
+- **Validity:** لا مدة مستقلة للاستجابة؛ تنتهي فعاليتها مع Withdraw/Selection/Request Close/Expiry — DEC-082.
 - **Related:** DEC-013/041/043/047/066/070/077.
 
 ---
@@ -124,7 +125,7 @@
 
 - **Status:** `ANALYZED_APPROVED`.
 - **Primary actor:** Beneficiary or Provider.
-- **Precondition:** Actor authenticated؛ Transaction في حالة تسمح بالإلغاء وفق lifecycle الحالي.
+- **Precondition:** Actor authenticated؛ Transaction Active ولم تصل إلى Final Invoice Approved/Completed.
 - **Main flow:**
   1. يختار الطرف إلغاء المعاملة.
   2. يدخل سببًا إلزاميًا.
@@ -150,11 +151,10 @@
   5. يراجع Beneficiary الفاتورة.
   6. يختار `Approve` أو `Request Revision` مع ملاحظة.
   7. عند `Approve` تصبح Transaction `Completed` وتحفظ النسخة المعتمدة كسجل نهائي داخل YADD.
-- **Alternative — Revision requested:** يعدل Provider الفاتورة ويرسل نسخة جديدة مع الاحتفاظ بتاريخ النسخ.
-- **Alternative — Dispute:** يمكن رفع شكوى إذا استمرت المشكلة.
-- **No response:** تبقى الفاتورة Pending وتصل تذكيرات؛ لا Auto-Approval.
+- **Alternative — Revision requested:** كل طلب تعديل يحتاج ملاحظة، يعدل Provider الفاتورة ويرسل Version جديدة مع الاحتفاظ بتاريخ النسخ؛ لا حد عددي صلب، وبعد ثاني Revision متتالٍ يظهر Complaint prompt.
+- **Alternative — Dispute:** Complaint تحتاج سببًا ووصفًا إلزاميين ومرفقات اختيارية؛ إذا حُل الخلاف يعود المسار للمراجعة/التعديل، وإلا تنتهي Transaction = Disputed.
+- **No response:** Reminder بعد 24h و48h، وعند 72h تصبح Pending Customer Approval — Overdue؛ لا Auto-Approval.
 - **Terminal rule:** `Completed` هي النهاية الناجحة للTransaction؛ لا توجد حالة Transaction باسم `Closed`.
-- **Open policy:** التصعيد الطويل `INV-PENDING-Q01`.
 - **Related:** DEC-015/016/025/050/055/071/077.
 
 ---
@@ -165,10 +165,11 @@
 - **Primary actor:** Beneficiary.
 - **Precondition:** Beneficiary authenticated؛ Transaction `Completed` مع Provider نفسه وبفاتورة معتمدة.
 - **Main flow:**
-  1. يطلب YADD من Beneficiary تقييم Provider.
-  2. يختار Beneficiary تقييمًا من 1 إلى 5 نجوم.
-  3. يمكن إضافة تعليق اختياري.
-  4. يرسل التقييم.
+  1. يطلب YADD من Beneficiary تقييم Provider بعد Completed.
+  2. يمكنه التقييم الآن أو اختيار Later؛ عند Later يرسل Reminder بعد 24h ويطلب الإكمال قبل Transaction جديدة.
+  3. يحدد Overall Rating من 1 إلى 5 ويكمل Structured Textual Criteria المناسبة لنوع Provider.
+  4. يمكن إضافة تعليق اختياري.
+  5. يرسل التقييم، ويظهر للعامة First Name فقط مع Verified Transaction Review indicator.
 - **Rule:** التقييم إلزامي بعد Completed وفق تجربة النظام الحالية، لكنه **Post-Transaction operation** ولا يغير Transaction status.
 - **Related:** DEC-051/071/077.
 
@@ -202,29 +203,29 @@
 - **Supporting actor:** YADD Administrator.
 - **Precondition:** User authenticated؛ Guest لا ينفذ Block/Report قبل Authentication.
 - **Main flow:**
-  1. يحظر User الطرف الآخر لإيقاف التواصل المباشر.
+  1. يحظر User الطرف الآخر لإيقاف التواصل/التعاملات الجديدة، مع بقاء Active Transaction وإجراءاتها وإشعاراتها إن وجدت.
   2. يستطيع تقديم Report مرتبطًا بمستخدم/محادثة/سلوك أو Portfolio/Catalog Item.
   3. يذهب Report للمراجعة الإدارية.
-  4. يقرر الموظف المخول الإجراء وفق السياسة والأدلة.
-- **Rule:** Report وحده لا يساوي إدانة أو حظرًا نهائيًا.
+  4. يقرر الموظف المخول نتيجة بشرية مسجلة من No Violation/Warning/Content Removal/Temporary Restriction/Account Suspension/Permanent Ban وفق السياسة والأدلة.
+- **Rule:** Report وحده لا يساوي إدانة أو حظرًا نهائيًا؛ Block وReport مستقلان، وUnblock لا يلغي Report سابقًا.
 - **Related:** DEC-053/054/077.
 
 ---
 
-## UC-09 — Provider Verification / Portal Activation
+## UC-09 — Service Provider Identity Verification / Provider Portal Eligibility
 
 - **Status:** `ANALYZED_APPROVED` في الجوهر.
-- **Primary actor:** User / prospective Provider.
+- **Primary actor:** User / prospective Service Provider.
 - **Supporting actor:** YADD Administrator / Verification Reviewer.
 - **Precondition:** User authenticated.
 - **Main flow:**
   1. ينشئ User أو يكمل Provider Profile داخل الحساب نفسه.
   2. يحدد النشاط والمجال ومناطق الخدمة المطلوبة.
-  3. يرفع بيانات/Artifacts التحقق المطلوبة وفق السياسة المعتمدة جزئيًا.
+  3. إذا كان النوع SERVICE يرفع National ID أو Passport وصورة الوثيقة وصورة شخصية مع الوثيقة؛ إذا كان PRODUCT فلا يطلب Government ID في MVP.
   4. يمكن لـAI توليد مؤشرات مساعدة وفق حدود السياسة الحالية.
   5. يراجع موظف مخول حالة التحقق.
-  6. القرار النهائي بشري؛ عند Verified تتاح صلاحيات Provider المناسبة حسب بقية الشروط.
-- **Open:** أنواع الوثائق الدقيقة والاحتفاظ والتراخيص الخاصة في `VER-DOC-Q01 / VER-RET-Q01 / VER-LIC-Q01`.
+  6. القرار النهائي في Service Identity Verification بشري؛ عند Verified تتاح صلاحيات Service Provider حسب بقية الشروط. Product Provider يعتمد Account/Profile eligibility والاشتراك دون Identity Verified badge.
+- **Open:** مدة الاحتفاظ والتراخيص الخاصة في `VER-RET-Q01 / VER-LIC-Q01`.
 - **Related:** DEC-010/034..040/077.
 
 ---
@@ -360,8 +361,6 @@
 
 ## 3. Open Use-Case Policies — Non-blocking for Core Diagrams
 
-- `REQ-EXP-Q01`: Expiry/reminders.
-- `INV-PENDING-Q01`: pending invoice escalation.
 - `SAFE-REQ-Q01`: abuse thresholds.
 - `TX-CONC-Q01`: concurrent transaction numerical limit if needed.
 - `UX-VAL-Q01`: usability/low-connectivity validation.
