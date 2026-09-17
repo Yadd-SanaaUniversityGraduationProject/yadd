@@ -27,17 +27,17 @@
 | BR-017 | يعرض ملف المقدم عدد الأعمال/المعاملات المكتملة داخل YADD، ولا تحتسب العروض أو المحادثات أو الطلبات/المعاملات غير المكتملة. | `ANALYZED_APPROVED` | DEC-052 |
 | BR-018 | إغلاق طلب مفتوح قبل اختيار مقدم هو Request Closure وليس Transaction Cancellation. | `ANALYZED_APPROVED` | DEC-048 |
 | BR-019 | بعد بدء المعاملة، الإلغاء Transaction Cancellation ويتطلب سببًا مسجلًا يظهر للطرف الآخر ويمكن مراجعته إداريًا. | `ANALYZED_APPROVED` | DEC-048 |
-| BR-020 | الطلب المفتوح يخضع لتذكير استمرار الحاجة ويمكن أن يصبح Expired بعد عدم النشاط؛ المدد والأعداد لم تعتمد بعد. | `ANALYZED_APPROVED` في المبدأ | DEC-049 / REQ-EXP-Q01 |
+| BR-020 | الطلب المفتوح يخضع Reminder بعد 24h و48h ويصبح Expired بعد 72h من عدم نشاط Beneficiary؛ نشاط Beneficiary الفعلي يعيد العداد. | `ANALYZED_APPROVED` | DEC-049/081 |
 | BR-021 | يمكن رصد أنماط إنشاء/إغلاق الطلبات غير الطبيعية كـFlag للمراجعة دون عقوبة تلقائية لمجرد التكرار. | `ANALYZED_APPROVED` | DEC-054 |
 | BR-022 | يدعم النظام Block لإيقاف التواصل المباشر وReport لإرسال بلاغ؛ البلاغ يخضع للمراجعة ولا يساوي إدانة تلقائية. | `ANALYZED_APPROVED` | DEC-053 |
 | BR-023 | يمكن للمستخدم امتلاك عدة معاملات جارية بالتوازي؛ لا يوجد حد رقمي معتمد حاليًا. | `ANALYZED_APPROVED` | DEC-056 |
 | BR-024 | YADD لا ينفذ أو يحتفظ أو يتحقق من أي دفع مالي بين المستفيد والمقدم. | `ANALYZED_APPROVED` | DEC-018/041 |
 | BR-025 | التوصيل ليس عملية داخل YADD؛ يمكن الاتفاق على الاستلام أو توصيل يرتبه المقدم خارجيًا وإدراج تكلفته في الفاتورة. | `ANALYZED_APPROVED` | DEC-019 |
 | BR-026 | اشتراك المقدم منفصل عن معاملات المستفيدين ولا تؤخذ عمولة من قيمة المعاملة. | `APPROVED_AS_BUSINESS_MODEL` | DEC-021 |
-| BR-027 | لا يمارس Provider Profile وظائف التقديم قبل التحقق الرسمي والمراجعة البشرية النهائية. | `ANALYZED_APPROVED` | DEC-034/035 |
+| BR-027 | Service Provider لا يمارس وظائف التقديم قبل Identity Verification والمراجعة البشرية النهائية؛ Product Provider لا يحتاج Government ID في MVP. | `ANALYZED_APPROVED` | DEC-035/085 |
 | BR-028 | AI يساعد في Verification وTrust & Safety ولا يصدر وحده عقوبة نهائية عالية الأثر. | `ANALYZED_APPROVED` | DEC-037..040 |
 | BR-029 | يدير YADD حالة وفترة اشتراك Provider Profile بينما التحصيل خارجي ويؤكده موظف مخول. | `ANALYZED_APPROVED` | DEC-042 |
-| BR-030 | إرسال Provider Responses جديدة يتطلب Provider Profile متحققًا واشتراكًا Active. | `ANALYZED_APPROVED` | DEC-043 |
+| BR-030 | إرسال Provider Responses جديدة يتطلب Active Subscription وأهلية النوع: Service Provider = Identity Verified، Product Provider = Account/Profile eligible. | `ANALYZED_APPROVED` | DEC-043/085/086 |
 | BR-031 | يبدأ توزيع الطلب في حي الطلب، والتوسع إلى الأحياء المجاورة يحتاج موافقة المستفيد. | `ANALYZED_APPROVED` | DEC-031..033/045 |
 | BR-032 | واجهة المستخدم ينبغي أن تعرض أفعالًا بسيطة ومباشرة، بينما تبقى حالات النظام الداخلية تفاصيل تقنية. | `APPROVED_AS_UX_PRINCIPLE` | DEC-057 |
 | BR-033 | Provider Response يمكن أن تحتوي فقط دلالة `RequiresDeposit` نعم/لا؛ لا DepositAmount أو نسبة أو حالة دفع أو Refund داخل YADD. | `ANALYZED_APPROVED` | DEC-041 |
