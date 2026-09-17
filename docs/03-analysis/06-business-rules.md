@@ -1,6 +1,6 @@
 # Business Rules — YADD Core Flow
 
-> **الحالة:** `PARTIALLY ANALYZED — SYNCHRONIZED 2026-09-15 THROUGH DEC-077`
+> **الحالة:** `PARTIALLY ANALYZED — SYNCHRONIZED 2026-09-18 THROUGH DEC-090`
 >
 > القواعد `ANALYZED_APPROVED` مستمدة من Decision Register. البنود الرقمية/السياسات المفتوحة لا تعتبر معتمدة.
 
@@ -56,18 +56,36 @@
 | BR-046 | قد تظهر أزرار الوظائف المحمية للـGuest، لكن استخدامها يوجّه إلى `Log In` أو `Create Account`؛ ويجب على Backend/API فرض Authentication/Authorization، فلا يعد إخفاء الزر أو إعادة التوجيه في الواجهة حماية كافية. | `ANALYZED_APPROVED` | DEC-065/077 |
 | BR-047 | لا يعرض Public Provider Profile رقم الهاتف أو وسيلة اتصال مباشرة خاصة؛ التواصل الأساسي يتم داخل YADD بعد Authentication، وتبقى البيانات الحساسة والخاصة غير عامة. | `ANALYZED_APPROVED` | DEC-036/046/077 |
 
+| BR-048 | Create Account يتطلب الاسم الرباعي بأربعة حقول + رقم هاتف + كلمة مرور + قبول الشروط/الخصوصية؛ البريد اختياري، والحساب لا يكتمل قبل OTP ناجح على الهاتف. | `ANALYZED_APPROVED` | DEC-078 |
+| BR-049 | Log In يقبل الهاتف الموثق أو البريد الموثق مع كلمة المرور؛ Forgot Password يستخدم OTP للهاتف والبريد الموثق خيارًا إضافيًا. | `ANALYZED_APPROVED` | DEC-078 |
+| BR-050 | تغيير الهاتف يحتاج OTP جديدًا؛ البريد الجديد لا يستخدم للدخول/الاستعادة قبل Verification؛ Deactivate/Reactivate مدعوم ولا يوجد Hard Delete ذاتي مباشر. | `ANALYZED_APPROVED` | DEC-079 |
+| BR-051 | Product Provider قد يستخدم Trade Name اختياريًا كاسم عرض عام؛ الاسم الحقيقي يبقى في User Account/التحقق ولا يستبدل قانونيًا. | `ANALYZED_APPROVED` | DEC-080 |
+| BR-052 | Request Open: Reminder بعد 24h و48h وExpiry بعد 72h من عدم نشاط Beneficiary؛ نشاط Beneficiary الدال على استمرار الحاجة يعيد العداد، وProvider Response وحدها لا تعيده. | `ANALYZED_APPROVED` | DEC-081 |
+| BR-053 | Request Expired لا يعاد فتحه؛ Republish ينشئ Request جديدًا بعد مراجعة البيانات، وتظل الاستجابات القديمة غير فعالة. | `ANALYZED_APPROVED` | DEC-081 |
+| BR-054 | Provider Response لا تملك expiry مستقلًا؛ تنتهي فعاليتها مع Withdraw/Selection/Request Close/Expiry. | `ANALYZED_APPROVED` | DEC-082 |
+| BR-055 | Request Transaction Start في Direct Search صالح 12h، ورفضه/انتهاءه لا يغلق Conversation؛ Pending واحد فقط بين الطرفين. | `ANALYZED_APPROVED` | DEC-082 |
+| BR-056 | Transaction Cancellation مسموح حتى ما قبل Invoice Approval/Completed، مع سبب إلزامي مسجل. | `ANALYZED_APPROVED` | DEC-083 |
+| BR-057 | Final Invoice: Reminder 24h ثم 48h ثم Overdue عند 72h دون Auto-Approval. | `ANALYZED_APPROVED` | DEC-083 |
+| BR-058 | Invoice Revisions بلا حد عددي صلب؛ كل طلب يحتاج ملاحظة ويحفظ تاريخ النسخ؛ بعد ثاني Revision متتالٍ يظهر تنبيه Complaint دون إجبار. | `ANALYZED_APPROVED` | DEC-083 |
+| BR-059 | Complaint يتطلب سببًا ووصفًا، والمرفقات اختيارية؛ الحل يعيد المسار للمراجعة/التعديل، وعدم الحل ينتهي Disputed ولا يفتح Ratings. | `ANALYZED_APPROVED` | DEC-084 |
+| BR-060 | Identity Verification الحكومية إلزامية لـService Provider فقط: National ID أو Passport + صورة الوثيقة + صورة شخصية مع الوثيقة + مراجعة بشرية؛ Product Provider لا يحتاج Government ID في MVP. | `ANALYZED_APPROVED` | DEC-085 |
+| BR-061 | يجب التمييز بين Account Verified وIdentity Verified؛ Product Provider لا يعرض Identity Verified badge دون إجراء الهوية. | `ANALYZED_APPROVED` | DEC-085 |
+| BR-062 | الاشتراك إلزامي لكلا نوعي Provider ومدته 30 يومًا؛ Reminder قبل 3 أيام وقبل 24h، وExpired يمنع تعاملات جديدة ولا يوقف الجارية. | `ANALYZED_APPROVED` | DEC-086 |
+| BR-063 | Beneficiary→Provider rating إلزامي بعد Completed لكن يمكن Later؛ Reminder بعد 24h، ويجب استكمال التقييم السابق قبل Transaction جديدة. | `ANALYZED_APPROVED` | DEC-087 |
+| BR-064 | تقييم المقدم Hybrid: Overall 1–5 + Structured Textual Criteria حسب نوع Provider + تعليق اختياري؛ يظهر اسم المقيّم الأول فقط مع دلالة Verified/Completed Transaction Review. | `ANALYZED_APPROVED` | DEC-087 |
+| BR-065 | Block لا يكسر Active Transaction؛ يمنع التفاعل الجديد فقط، وتستمر إجراءات/إشعارات المعاملة، وUnblock لا يعيد كيانات منتهية ولا يلغي Report. | `ANALYZED_APPROVED` | DEC-088 |
+| BR-066 | نتائج المراجعة الإدارية المسموحة: No Violation/Warning/Content Removal/Temporary Restriction/Account Suspension/Permanent Ban، والقرار عالي الأثر بشري ومسجل. | `ANALYZED_APPROVED` | DEC-089 |
+| BR-067 | In-App هو الافتراضي؛ SMS للـOTP والأمان/الحساب الحرِج؛ البريد الموثق اختياري؛ Push خارج Web MVP الحالي. | `ANALYZED_APPROVED` | DEC-090 |
+
 ## قواعد مفتوحة تحتاج قرارًا/تحققًا
 
 | ID | الموضوع | الحالة | السؤال المرجعي |
 |---|---|---|---|
-| BR-OPEN-02 | مدة Expiry وتوقيت/عدد تذكيرات الطلب | `NEEDS_VERIFICATION` | REQ-EXP-Q01 |
-| BR-OPEN-03 | التصعيد لفاتورة معلقة مدة طويلة | `NEEDS_VERIFICATION` | INV-PENDING-Q01 |
 | BR-OPEN-04 | Thresholds إساءة استخدام الطلبات | `NEEDS_VERIFICATION` | SAFE-REQ-Q01 |
 | BR-OPEN-05 | حد المعاملات المتوازية إن لزم | `NEEDS_VERIFICATION` | TX-CONC-Q01 |
 | BR-OPEN-06 | تحقق Usability/low-connectivity مع الفئة المستهدفة | `NEEDS_EVIDENCE` | UX-VAL-Q01 |
 | BR-OPEN-07 | القائمة النهائية للأحياء والجوار | `PROPOSED` | LOC-DATA-Q01 |
 | BR-OPEN-08 | المدة قبل اقتراح التوسع الجغرافي | `PROPOSED` | LOC-OPS-TIME-Q01 |
-| BR-OPEN-09 | أنواع وثائق الهوية | `PROPOSED` | VER-DOC-Q01 |
 | BR-OPEN-10 | مدة الاحتفاظ ببيانات التحقق | `NEEDS_LEGAL_VERIFICATION` | VER-RET-Q01 |
 | BR-OPEN-11 | التراخيص المهنية الإضافية | `NEEDS_VERIFICATION` | VER-LIC-Q01 |
 | BR-OPEN-12 | سياسة المحتوى التفصيلية | `PROPOSED` | AI-MOD-Q01 |
@@ -75,9 +93,9 @@
 | BR-OPEN-14 | مزودو AI | `PROPOSED` | AI-PROV-Q01 |
 | BR-OPEN-15 | الاحتفاظ بنتائج AI/Flags | `NEEDS_VERIFICATION` | AI-RET-Q01 |
 | BR-OPEN-16 | مسار الاعتراض على moderation | `PROPOSED` | AI-APPEAL-Q01 |
-| BR-OPEN-17 | الباقات والأسعار والمدد | `PROPOSED` | SUB-PLAN-Q01 |
+| BR-OPEN-17 | سعر الاشتراك الشهري النهائي | `PROPOSED` | SUB-PLAN-Q01 |
 | BR-OPEN-18 | دفع الاشتراك الخارجي وإثباته | `PROPOSED` | SUB-PAY-Q01 |
-| BR-OPEN-19 | أثر انتهاء الاشتراك | `PROPOSED` | SUB-OPS-Q01 |
+| BR-OPEN-19 | أثر انتهاء الاشتراك على الظهور العام في البحث فقط | `PROPOSED` | SUB-OPS-Q01 |
 
 ## ملاحظات نطاق
 
