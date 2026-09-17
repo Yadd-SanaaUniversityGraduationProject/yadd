@@ -57,8 +57,8 @@
 - إبقاء التواصل الأساسي داخل المنصة.
 - استخدام Final Invoice كسجل معتمد للبنود والأسعار داخل YADD.
 - ربط التقييم بمعاملة Completed.
-- استخدام Provider Verification بقرار بشري نهائي.
-- دعم Service Activity وProduct Activity أو كليهما ضمن Provider Profile واحد.
+- تطبيق Identity Verification على Service Provider بقرار بشري نهائي، مع عدم طلب Government ID من Product Provider في MVP.
+- دعم Provider Profile واحد بنوع حصري SERVICE أو PRODUCT، مع تصنيفات متعددة داخل النوع.
 
 هذه فرص وتحليلات تصميم، ولا تعني أن كل ميزة مثبتة النجاح قبل الاختبار.
 
@@ -80,8 +80,8 @@
 6. بدء Direct Search Transaction فقط بعد Request Transaction Start وتأكيد الطرف الآخر.
 7. توثيق البنود والأسعار النهائية عبر Final Invoice يعتمدها المستفيد.
 8. جعل `Completed` الحالة النهائية الناجحة للTransaction بعد اعتماد الفاتورة.
-9. ربط تقييم Beneficiary للمقدم وتقييم Provider الاختياري للمستفيد بمعاملة Completed.
-10. تطبيق Provider Verification مع حماية بيانات الهوية وقرار بشري نهائي.
+9. ربط تقييم Beneficiary للمقدم بمعاملة Completed باستخدام Overall Stars + Structured Criteria + Optional Comment، مع إبقاء تقييم Provider للمستفيد اختياريًا.
+10. تطبيق Service Provider Identity Verification مع حماية بيانات الهوية وقرار بشري نهائي، دون فرض Government ID على Product Provider في MVP.
 11. مراعاة الخصوصية المكانية بعدم نشر الموقع الدقيق للعامة.
 12. بناء MVP قابل للتنفيذ لفريق المشروع ضمن نطاق وموارد مشروع التخرج.
 
