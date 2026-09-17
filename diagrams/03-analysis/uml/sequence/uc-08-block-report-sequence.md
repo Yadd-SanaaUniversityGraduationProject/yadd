@@ -7,8 +7,8 @@
 ## Source basis
 
 - **Approved behavior:** `UC-08 — Block and Report User / Content` in `docs/03-analysis/08-use-cases.md`.
-- **Team decisions:** `DEC-053` and `DEC-054`.
-- **Business rules:** `BR-021` and `BR-022`.
+- **Team decisions:** `DEC-053`, `DEC-054`, `DEC-088`, `DEC-089`.
+- **Business rules:** `BR-021`, `BR-022`, `BR-065`, `BR-066`.
 - **Traceability:** `UR-SAFE-01` maps to `UC-08 → Block User / Report User-Content / Review Reports-Flags` and to `REPORT / moderation records`.
 - **Trust & Safety rule:** Report and AI/behavioral Flags are inputs for review and do not by themselves prove a violation or authorize an automatic final high-impact punishment.
 - **Open items intentionally excluded:** AI/moderation thresholds and detailed policy categories remain open and are not invented here.
@@ -34,14 +34,14 @@ sequenceDiagram
     SC-->>UI: blockApplied()
     UI-->>U: showBlockConfirmation()
 
-    Note over U,SC: Direct communication between the two users is stopped
+    Note over U,SC: New direct interaction is stopped; any Active Transaction remains accessible with its required actions/system notifications
 ```
 
 ### Scenario A postcondition
 
-- التواصل المباشر بين المستخدم الحاظر والطرف المحظور يتوقف وفق `DEC-053 / BR-022`.
-- لا يعني `Block` تلقائيًا وجود Report.
-- لم يُفترض وجود عقوبة إدارية أو إدانة للطرف الآخر لمجرد الحظر.
+- يتوقف التواصل والتعامل الجديد بين المستخدمين، لكن Active Transaction القائمة وإجراءاتها الأساسية وإشعارات النظام تبقى متاحة.
+- يمكن لصاحب الحظر تنفيذ Unblock لاحقًا؛ Unblock لا يعيد Request/Transaction منتهية ولا يلغي Report سابقًا.
+- لا يعني `Block` تلقائيًا وجود Report ولا يمثل إدانة.
 
 ---
 
@@ -76,14 +76,14 @@ sequenceDiagram
     MC-->>AUI: reviewContext
     AUI-->>A: showReviewContext()
 
-    A->>AUI: recordReviewOutcome(outcome)
-    AUI->>MC: recordAuthorizedReviewOutcome(reportId, outcome)
-    MC->>R: saveReviewOutcome(outcome)
+    A->>AUI: recordReviewOutcome(outcome, reason)
+    AUI->>MC: recordAuthorizedReviewOutcome(reportId, outcome, reason)
+    MC->>R: saveReviewOutcome(outcome, reason)
     R-->>MC: outcomeSaved()
     MC-->>AUI: reviewRecorded()
     AUI-->>A: showReviewConfirmation()
 
-    Note over A,MC: Any administrative action must follow approved YADD policy and human authorization
+    Note over A,MC: Allowed outcomes: No Violation / Warning / Content Removal / Temporary Restriction / Account Suspension / Permanent Ban — human authorization required
 ```
 
 ## Scope boundary
@@ -94,7 +94,7 @@ sequenceDiagram
 
 - AI كخطوة إلزامية في كل Report؛ AI/Rules قد تولد Flags في Trust & Safety، لكن UC-08 لا تشترط أن يمر كل Report عبر AI.
 - أي threshold رقمي أو Risk Score محدد؛ هذه تفاصيل `Needs Verification`.
-- قائمة نهائية بأنواع المخالفات أو العقوبات؛ السياسة التفصيلية ما تزال مفتوحة جزئيًا.
+- فئات المخالفات والـthresholds التفصيلية ما تزال مفتوحة؛ أما قائمة نتائج المراجعة الإدارية الأساسية فمعتمدة في DEC-089.
 - أي عقوبة نهائية آلية بمجرد Report أو Flag.
 
 ## Postconditions
@@ -107,7 +107,7 @@ sequenceDiagram
 
 - يتم حفظ Report كسجل قابل للمراجعة الإدارية.
 - يراجع موظف مخول Report والأدلة المتاحة داخل YADD.
-- يسجل Review Outcome وفق السياسة المعتمدة.
+- يسجل Review Outcome وسببه والموظف والتوقيت وفق السياسة؛ النتائج المسموحة معتمدة في DEC-089.
 - Report وحده لا يساوي إدانة، ولا يؤدي تلقائيًا إلى حظر نهائي أو عقوبة عالية الأثر.
 
 ## Modeling note
