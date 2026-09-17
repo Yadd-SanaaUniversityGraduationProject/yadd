@@ -1,6 +1,6 @@
 # Class Diagram — Integrated Master View
 
-> **Status:** `SEMANTICALLY VERIFIED — TEAM APPROVED — NOT BASELINED — VISUAL/A4 FINALIZATION PENDING`
+> **Status:** `SEMANTICALLY VERIFIED — TEAM APPROVED — SYNCHRONIZED THROUGH DEC-090 — NOT BASELINED — VISUAL/A4 FINALIZATION PENDING`
 >
 > **Type:** Integrated Master View of the same Detailed Analysis Class Model represented by Views 1–3.
 
@@ -8,7 +8,7 @@
 
 هذا الملف لا يمثل Class Model رابعًا مستقلًا. هو **Master Integration View** يجمع نفس الـAnalysis Classes الموجودة في الـViews الثلاثة في رسم واحد بعد إزالة التكرار، لإثبات أن الحزمة كلها نموذج Class واحد متكامل.
 
-- عدد الـClasses الفريدة في الـMaster: **26**.
+- عدد الـClasses الفريدة في الـMaster بعد مزامنة DEC-078..090: **28**.
 - لا يضيف هذا الـView أي علاقة دلالية جديدة غير موجودة في Views 1–3.
 - الـClasses التي كانت تظهر في أكثر من View مثل `User`, `ProviderProfile`, `Request`, `ProviderResponse`, `Conversation`, `ShowcaseItem`, و`Transaction` تظهر هنا مرة واحدة فقط بعد جمع تفاصيلها المتوافقة.
 - هذا الـMaster يثبت التكامل والحدود بين المجالات، بينما تبقى Views 1–3 هي العرض الأكثر قابلية للقراءة عند مناقشة التفاصيل والطباعة على A4.
@@ -28,11 +28,20 @@ classDiagram
 
     class User {
         -Identifier userId
-        -String fullName
+        -String firstName
+        -String fatherName
+        -String grandfatherName
+        -String familyName
         -String phone
+        -DateTime phoneVerifiedAt
+        -String email
+        -DateTime emailVerifiedAt
         -String accountStatus
+        -String lastPortal
         +createRequest() Request
         +createProviderProfile() ProviderProfile
+        +deactivate()
+        +reactivate()
         +blockUser()
         +submitReport() Report
     }
@@ -40,7 +49,10 @@ classDiagram
     class ProviderProfile {
         -Identifier providerProfileId
         -String providerType
-        -String verificationStatus
+        -String tradeName
+        -String description
+        -String profileImageReference
+        -String identityVerificationStatus
         -String profileStatus
         +selectProviderType(type)
         +addActivity(category)
@@ -165,9 +177,17 @@ classDiagram
 
     class ProviderRating {
         -Identifier providerRatingId
-        -Integer stars
+        -Integer overallStars
         -String comment
+        -String workflowStatus
+        +defer()
         +submit()
+    }
+
+    class ProviderRatingCriterion {
+        -Identifier criterionId
+        -String criterionType
+        -String textualValue
     }
 
     class BeneficiaryRating {
@@ -212,6 +232,10 @@ classDiagram
 
     class UserBlock {
         -Identifier blockId
+        -String status
+        -DateTime blockedAt
+        -DateTime unblockedAt
+        +unblock()
     }
 
     class Report {
@@ -219,6 +243,7 @@ classDiagram
         -String targetType
         -Identifier targetReference
         -String reason
+        -String description
         -String status
         -DateTime createdAt
         +submit()
@@ -237,7 +262,18 @@ classDiagram
         -String subjectType
         -Identifier subjectReference
         -String eventType
+        -String decisionOutcome
+        -String reason
         -DateTime recordedAt
+    }
+
+    class Notification {
+        -Identifier notificationId
+        -String type
+        -String channel
+        -String status
+        -DateTime createdAt
+        -DateTime readAt
     }
 
     User "1" --> "0..1" ProviderProfile : may own
@@ -278,12 +314,13 @@ classDiagram
     Transaction "1" --> "0..1" ProviderRating : provider rating
     User "1" --> "0..*" ProviderRating : writes
     ProviderProfile "1" --> "0..*" ProviderRating : receives
+    ProviderRating "1" --> "5" ProviderRatingCriterion : contains
 
     Transaction "1" --> "0..1" BeneficiaryRating : beneficiary rating
     ProviderProfile "1" --> "0..*" BeneficiaryRating : writes
     User "1" --> "0..*" BeneficiaryRating : receives
 
-    ProviderProfile "1" --> "0..*" VerificationCase : submits
+    ProviderProfile "1" --> "0..*" VerificationCase : SERVICE identity checks
     VerificationCase "1" --> "1..*" VerificationArtifact : includes
     ProviderProfile "1" --> "0..*" Subscription : has
 
@@ -296,6 +333,7 @@ classDiagram
     ShowcaseItem "0..1" --> "0..*" Report : may target content
     Conversation "0..1" --> "0..*" Report : may contextualize
     Transaction "0..1" --> "0..*" Report : may contextualize
+    User "1" --> "0..*" Notification : receives
 ```
 
 ## Decomposition basis
@@ -317,10 +355,10 @@ classDiagram
 ## Important interpretation
 
 - الـMaster هو **اتحاد متسق** للـViews الثلاثة، وليس مصدرًا يعلو على Decision Register/SRS/Business Rules.
-- `selectProviderType(type)` يمثل اختيار النوع أثناء إعداد Provider Profile؛ سياسة تغيير النوع لاحقًا لم تعتمد بعد.
+- `selectProviderType(type)` يمثل اختيار النوع أثناء إعداد Provider Profile؛ سياسة تغيير النوع لاحقًا لم تعتمد بعد. `tradeName` اختياري لمقدم PRODUCT فقط.
 - `Conversation` واحدة فقط لنفس زوج Beneficiary/Provider: **`{unique Conversation per Beneficiary–Provider pair}`**. multiplicities العامة تبقى `0..*` لأن الطرف الواحد يمكنه محادثة أطراف مختلفة.
 - `RequestImage`, `MessageAttachment`, `InvoiceImage`, و`SystemEvent` تبقى Derived Analysis Elements، ولا تعتمد storage/schema details نهائية.
-- `SafetyFlag.reasonCategory` يمثل سبب/فئة الاشتباه المطلوبة للمراجعة البشرية؛ قائمة القيم والـthresholds ما تزال مفتوحة.
+- `SafetyFlag.reasonCategory` يمثل سبب/فئة الاشتباه المطلوبة للمراجعة البشرية؛ قائمة القيم والـthresholds ما تزال مفتوحة. Identity Verification الحكومية تخص SERVICE فقط.
 - `ProviderProfile ↔ Area` و`Area ↔ Area` Associations تقابل مفاهيميًا `PROVIDER_SERVICE_AREA` و`AREA_ADJACENCY` في الـERD. اختلاف التمثيل مقصود لأن الـERD يركز على بنية البيانات، بينما لا توجد حاليًا Attributes/Operations مستقلة تبرر Association Classes في مخطط الفئات.
 - `SafetyFlag` و`AdminAuditRecord` تظهران دون speculative associations لأن target mapping/retention/storage لم تعتمد بعد.
 - لا توجد Composition لأن object-lifetime/deletion ownership لم يثبت بعد.
@@ -335,4 +373,4 @@ classDiagram
 
 ## Review note
 
-تمت مراجعة الـMaster دلاليًا مقابل Decision Register وSRS وBusiness Rules وUse Cases وERD وTraceability Matrix. ما يزال مطلوبًا **Visual/A4 Review** قبل اعتباره جاهزًا للتقرير النهائي، كما أن SRS نفسه ما يزال `NOT BASELINED`.
+تمت مراجعة الـMaster دلاليًا بعد مزامنة DEC-078..090 مقابل Decision Register وSRS وBusiness Rules وUse Cases وERD وTraceability Matrix. يميز النموذج الآن بين Account Verification وService Provider Identity Verification، ويدعم Trade Name، Hybrid Rating، Unblock، Notification وقرارات الإدارة المسجلة. ما يزال مطلوبًا **Visual/A4 Review** قبل اعتباره جاهزًا للتقرير النهائي، كما أن SRS نفسه ما يزال `NOT BASELINED`.
