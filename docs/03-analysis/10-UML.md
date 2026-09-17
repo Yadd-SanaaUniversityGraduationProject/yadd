@@ -1,8 +1,8 @@
 # نماذج UML — YADD Preliminary Defense
 
-> **الحالة:** `DRAFT FOR PRELIMINARY DEFENSE — SYNCHRONIZED THROUGH DEC-077 — CLASS PACKAGE SEMANTICALLY VERIFIED`
+> **الحالة:** `DRAFT FOR PRELIMINARY DEFENSE — SYNCHRONIZED THROUGH DEC-090 — CLASS PACKAGE REQUIRES DEC-078..090 REVIEW`
 >
-> **المراجع الحاكمة:** DEC-046/047/048/050/051/053/054/063/064/066/067/068/069/070/071/072/073/074/075/076/077 + `05-SRS.md` + `06-business-rules.md` + `07-lifecycles.md` + `08-use-cases.md` + `11-ERD.md`.
+> **المراجع الحاكمة:** DEC-046/047/048/050/051/053/054/063/064/066/067/068/069/070/071/072/073/074/075/076/077/078..090 + `05-SRS.md` + `06-business-rules.md` + `07-lifecycles.md` + `08-use-cases.md` + `11-ERD.md`.
 >
 > يستخدم YADD كلًا من DFD وUML وفق `DEC-060`. يجب أن تكون جميع التسميات داخل المخططات الأكاديمية النهائية باللغة الإنجليزية وفق `DEC-072`.
 
@@ -22,6 +22,8 @@
 - `Subscription Administrator`
 
 `Guest` Actor غير authenticated للتصفح العام فقط؛ لا يمثل حسابًا أو Entity/Class. استخدام `YADD Administrator` في المخطط الرئيسي هو تبسيط نمذجي، ولا يعني أن موظفًا واحدًا يمتلك جميع الصلاحيات الإدارية.
+
+**DEC-085 actor specialization constraint:** `Submit Service Provider Verification` يخص `Service Provider` فقط؛ `Product Provider` لا يمر بمسار Government-ID Verification في MVP. إذا ظل Main Diagram يستخدم Actor العام `Provider` للبساطة، يجب توضيح هذا القيد كنطاق/Precondition لا كصلاحية عامة.
 
 ---
 
@@ -67,7 +69,7 @@ flowchart LR
         UC19([Manage Provider Profile])
         UC20([Manage Portfolio / Catalog])
         UC21([Manage Service Areas])
-        UC22([Submit Verification])
+        UC22([Submit Service Provider Verification])
         UC23([View Matching Requests])
         UC24([Submit Provider Response])
         UC25([Edit Provider Response])
@@ -80,7 +82,7 @@ flowchart LR
         UC31([Block User])
         UC32([Report User / Content])
 
-        UC33([Review Provider Verification])
+        UC33([Review Service Provider Verification])
         UC34([Review Reports / Flags])
         UC35([Review Transaction Complaint])
         UC36([Manage Provider Subscription])
