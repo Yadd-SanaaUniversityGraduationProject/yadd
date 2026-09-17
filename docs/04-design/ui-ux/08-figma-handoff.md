@@ -72,6 +72,20 @@ When recreated, it must preserve the approved constraints:
 - No public phone number or precise private address.
 - No verification artifacts or other sensitive/private data in public profiles.
 
+## Requirements Closure Constraints — 2026-09-18
+
+Any recreated/account/provider/transaction screens must now preserve DEC-078..090:
+
+- Create Account uses four name fields + mobile + password + optional email + phone OTP.
+- Login accepts verified phone or verified email; portal switch remembers last portal.
+- Product Provider may show an optional Trade Name; Service Provider alone has Government-ID Identity Verification UI.
+- Requests expose 24h/48h reminders and 72h expiry with Republish as new.
+- Direct Transaction Start confirmation expires after 12h.
+- Invoice review exposes 24h/48h reminders and Overdue at 72h without Auto-Approval.
+- Provider rating is Hybrid, not stars-only.
+- Subscription is 30 days for both provider types with -3 day/-24h reminders.
+- Block must not hide/break an Active Transaction; moderation outcomes are human-authorized.
+
 ## Synchronization Rule
 
 If Figma and repository specifications disagree, do not silently pick one. Identify whether the mismatch requires:
