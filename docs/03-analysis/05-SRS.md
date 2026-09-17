@@ -240,8 +240,8 @@
 - `FR-011A` `ANALYZED_APPROVED`: يحتفظ بتاريخ نسخ الفاتورة والتعديلات.
 - `FR-011B` `ANALYZED_APPROVED`: الاعتماد نهائي داخل YADD بعد تحذير واضح.
 - `FR-011C` `ANALYZED_APPROVED`: يمكن رفع شكوى مرتبطة بالمعاملة عند استمرار الخلاف قبل الاعتماد.
-- `FR-011D` `ANALYZED_APPROVED`: الفاتورة غير المستجاب لها تبقى Pending Customer Approval؛ عدم الرد ليس موافقة وتصل تذكيرات للمستفيد.
-- `FR-011E` `PROPOSED/BLOCKED BY INV-PENDING-Q01`: سياسة التصعيد بعد عدم الاستجابة الطويلة لم تعتمد.
+- `FR-011D` `ANALYZED_APPROVED`: الفاتورة غير المستجاب لها تبقى Pending Customer Approval؛ Reminder بعد 24h و48h، وبعد 72h تصبح `Overdue` دون Auto-Approval.
+- `FR-011E` `ANALYZED_APPROVED`: طلب Revision يحتاج ملاحظة إلزامية ويحفظ Version History؛ لا حد أقصى صلب، وبعد ثاني Revision متتالٍ يظهر Complaint prompt.
 - `FR-011F` `ANALYZED_APPROVED`: تتيح المراجعة الإدارية الوصول إلى سجلات YADD المرتبطة بالشكوى وفق الصلاحيات، بهدف تطبيق سياسات المنصة واتخاذ إجراء إداري عند وجود مخالفة.
 - `FR-011G` `ANALYZED_APPROVED`: لا تتيح إدارة YADD إصدار حكم مالي/تجاري بين الطرفين أو إلزام دفع أو Refund أو Compensation.
 - `FR-012` `ANALYZED_APPROVED`: عند اعتماد الفاتورة تحفظ في سجل الطرفين وتصبح Transaction `Completed`.
@@ -250,7 +250,7 @@
 ### Reviews / Reputation
 - `FR-013` `ANALYZED_APPROVED`: لا يسمح بتقييم المستفيد للمقدم إلا إذا كان مرتبطًا بمعاملة Completed مع ذلك المقدم.
 - `FR-014` `ANALYZED_APPROVED`: بعد اعتماد الفاتورة يصبح تقييم المقدم خطوة إلزامية على المستفيد.
-- `FR-014A` `ANALYZED_APPROVED`: تقييم المستفيد للمقدم = 1–5 نجوم إلزامية والتعليق النصي اختياري.
+- `FR-014A` `ANALYZED_APPROVED`: تقييم المستفيد للمقدم = Overall Stars 1–5 + Structured Textual Criteria حسب نوع Provider + Optional Comment.
 - `FR-014B` `ANALYZED_APPROVED`: بعد Transaction Completed يعرض النظام للمقدم Prompt بارزًا لتقييم المستفيد، والتقييم اختياري ويمكن تخطيه.
 - `FR-014C` `ANALYZED_APPROVED`: تقييم المقدم للمستفيد يتكون من ثلاثة مؤشرات 1–5: وضوح الطلب والتواصل، الالتزام بالاتفاق، حسن التعامل والتعاون؛ التعليق النصي اختياري.
 - `FR-014D` `ANALYZED_APPROVED`: يعرض ملف المقدم عدد المعاملات المكتملة داخل YADD كمؤشر «عدد الأعمال».
