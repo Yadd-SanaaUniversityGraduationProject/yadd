@@ -12,8 +12,8 @@
 | 2.0 | Manage Discovery & Requests | Guest/public search criteria and browse requests; authenticated search criteria; request data; request closure | public search results/public provider profile references; authenticated search results; matching requests; request status | D1, D2, D3, D7 | DEC-012..014/031..033/045/048/049/064/074/076/077 |
 | 3.0 | Manage Provider Responses & Communication | provider response data, response edit/withdrawal, messages, provider selection, transaction-start request/confirmation | responses, messages, selection/start result | D3, D4 | DEC-023/046/047/066/069/070/075/077 |
 | 4.0 | Manage Transactions & Invoices | selected provider, confirmed direct start, cancellation data, invoice/revision data, invoice approval, complaint data | transaction status, invoice status, completed transaction reference, complaint reference | D4, D5 | DEC-015/025/048/050/055/066/069/071/073/075/077 |
-| 5.0 | Manage Ratings & Reputation | provider rating, beneficiary behavioral rating | provider reputation, beneficiary interaction record | D4, D6 | DEC-051/052/063/071/073/077 |
-| 6.0 | Manage Administration, Verification & Safety | verification submission/decision, subscription updates, reports, complaint reference/evidence, moderation actions | verification/subscription/report/complaint status, flags, audit information | D1, D7, D8 | DEC-034..043/053/054/064/073/077 |
+| 5.0 | Manage Ratings & Reputation | hybrid provider rating, beneficiary behavioral rating | provider reputation, beneficiary interaction record | D4, D6 | DEC-051/052/063/071/073/077 |
+| 6.0 | Manage Administration, Verification & Safety | service-provider identity verification submission/decision, subscription updates, reports, complaint reference/evidence, moderation actions | verification/subscription/report/complaint status, flags, audit information | D1, D7, D8 | DEC-034..043/053/054/064/073/077 |
 
 ## 2. مخازن البيانات المنطقية — Logical Data Stores
 
@@ -48,7 +48,7 @@
 - `Create Request` وRequest Closure وظائف authenticated Beneficiary وليست صلاحيات Guest؛ قد يظهر CTA للGuest لكن التنفيذ يتطلب Log In/Create Account أولًا.
 - يستخدم موقع `Request` الـ`District + Neighborhood`؛ ولا يكون العنوان الدقيق/GPS عامًا.
 - أهلية Provider للطلب تتطلب توافق `ProviderProfile.providerType` وCategory/ProviderActivity مع نوع وتصنيف Request.
-- يوجد `Request expiry` من حيث المبدأ؛ لكن توقيت عدم النشاط/التذكير الدقيق يبقى `REQ-EXP-Q01` ولا يجوز اختلاقه داخل مخطط.
+- Request expiry policy معتمدة: Reminder 24h/48h وExpired 72h من عدم نشاط Beneficiary؛ Republish ينشئ Request جديدًا.
 
 ### 3.0 Manage Provider Responses & Communication
 - المصطلح القياسي هو `Provider Response` وليس `Offer`.
@@ -106,8 +106,6 @@
 
 يجب حذف العناصر التالية من المخططات أو إظهارها بصورة عامة فقط، دون اختلاق قيم رقمية:
 
-- `REQ-EXP-Q01`: توقيت expiry/reminders.
-- `INV-PENDING-Q01`: تصعيد الفاتورة التي تبقى Pending مدة طويلة.
 - `SAFE-REQ-Q01`: عتبات إساءة الاستخدام.
 - `LOC-DATA-Q01`: القائمة الجغرافية النهائية، و`LOC-OPS-TIME-Q01`: التوقيت.
 - أنواع وثائق التحقق الدقيقة/الاحتفاظ/التراخيص.
