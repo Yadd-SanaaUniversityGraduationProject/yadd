@@ -1,6 +1,6 @@
 # خط أساس مشروع يَد | YADD
 
-> **الحالة:** `DRAFT — CORE MODEL SYNCHRONIZED 2026-09-15 THROUGH DEC-077 — TEAM REVIEW REQUIRED`
+> **الحالة:** `DRAFT — CORE MODEL SYNCHRONIZED 2026-09-18 THROUGH DEC-090 — TEAM REVIEW REQUIRED`
 >
 > **الغرض:** توحيد الحالة الحالية قبل تحويلها إلى متطلبات ونماذج. عند التعارض تكون الأولوية لـDecision Register ثم SRS ثم Business Rules.
 
@@ -57,7 +57,7 @@ Authenticated Discovery
   │    → Provider Profile / Portfolio or Catalog
   │    → Persistent Private Conversation
   │    → Either Party Requests Transaction Start
-  │    → Other Party Confirms
+  │    → Other Party Confirms within 12h
   │
   └─ Create Request
        → Provider Responses
@@ -125,8 +125,8 @@ Guest does not have protected Beneficiary/Provider permissions before Authentica
 - A User may have zero or one Provider Profile.
 - In MVP, Provider Profile has exactly one provider type: `SERVICE` or `PRODUCT`; the two types cannot be active together on the same profile — DEC-074.
 - A Provider Profile may choose one or more Categories inside its selected type through ProviderActivity; Draft may temporarily contain zero, but provider-function eligibility requires at least one valid Activity — DEC-076.
-- Provider Verification is required before provider submission functions.
-- Response submission also requires Active Subscription.
+- Service Provider requires Identity Verification before provider submission functions; Product Provider does not require Government ID in MVP but needs Account/Profile eligibility.
+- Both provider types require Active Subscription for new Provider Responses / new direct transactions.
 - Provider Type switching after initial selection remains unresolved and must not be inferred.
 
 ## 7. Technical Direction — Approved / Technology Details Partial
@@ -148,7 +148,7 @@ Guest does not have protected Beneficiary/Provider permissions before Authentica
 
 ## 9. Open Items — Non-Blocking for Core Diagrams
 
-Open items remain documented in `docs/00-governance/03-open-questions.md`, including exact timings, thresholds, identity-document lists/retention, detailed AI provider/policy settings, geographic seed data, subscription packages, and Provider Type switching policy.
+Open items remain documented in `docs/00-governance/03-open-questions.md`, including abuse thresholds, verification-data retention/professional licensing, detailed AI provider/policy settings, geographic seed data, final subscription price/payment proof/public visibility when expired, and Provider Type switching policy. Request/invoice/direct-start/subscription durations and accepted Service Provider identity-document types are no longer open.
 
 Exact UX continuation after Guest authenticates from a protected CTA remains a design detail; it does not change the approved authentication rule.
 
@@ -156,9 +156,9 @@ These items must not be invented in diagrams. They **do not block** the current 
 
 ## 10. Modeling Readiness
 
-- SRS remains `PARTIALLY ANALYZED — NOT BASELINED`; synchronized core requirements through DEC-077 require continued controlled review.
-- Business Rules and Core Traceability are synchronized through DEC-077 in their applicable scope.
-- Guest public browsing/authentication boundary is resolved through DEC-077.
+- SRS remains `PARTIALLY ANALYZED — NOT BASELINED`; synchronized core requirements through DEC-090 require continued controlled review.
+- Business Rules and Core Traceability are synchronized through DEC-090 in their applicable scope.
+- Guest public browsing/authentication boundary is resolved through DEC-077; account/auth details are resolved through DEC-078/079.
 - Provider Activity semantics are synchronized through DEC-076.
 - Persistent Conversation semantics are resolved through DEC-075 at the analysis level; physical message/system-event linking remains Chapter Four work.
 - DFD working model reflects Guest + authenticated Core Model; final standard visual export remains a delivery task.
