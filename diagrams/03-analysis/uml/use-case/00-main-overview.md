@@ -1,6 +1,6 @@
 # Use Case View 00 — YADD Main Overview
 
-> **Status:** `REVIEW DRAFT — NOT BASELINED — SYNCHRONIZED THROUGH DEC-077`
+> **Status:** `REVIEW DRAFT — NOT BASELINED — SYNCHRONIZED THROUGH DEC-090`
 >
 > **Purpose:** High-level overview of the single YADD Use Case Model. Detailed `<<include>>`, `<<extend>>`, lifecycle and precondition semantics are intentionally delegated to focused Views 01–04.
 
@@ -9,7 +9,7 @@
 - `docs/00-governance/02-decision-register.md`
 - `docs/03-analysis/08-use-cases.md`
 - `docs/03-analysis/10-UML.md`
-- DEC-066..077, especially DEC-067/072/077.
+- DEC-066..090, especially DEC-067/072/077/078/085/086/087/088/089/090.
 
 ## Diagram
 
