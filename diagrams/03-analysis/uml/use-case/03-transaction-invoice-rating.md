@@ -1,6 +1,6 @@
 # Use Case View 03 — Transaction, Invoice & Rating
 
-> **Status:** `REVIEW DRAFT — NOT BASELINED — SYNCHRONIZED THROUGH DEC-077`
+> **Status:** `REVIEW DRAFT — NOT BASELINED — SYNCHRONIZED THROUGH DEC-090`
 >
 > **Purpose:** Focused view of direct Transaction start, cancellation, Final Invoice review/revision/approval, complaint handling and post-transaction ratings.
 
@@ -11,7 +11,7 @@
 - `UC-06 — Create, Revise and Approve Final Invoice`
 - `UC-07 — Rate Provider`
 - `UC-07B — Provider Rates Beneficiary`
-- DEC-025/046/048/050/051/063/069/071/073/075/077
+- DEC-025/046/048/050/051/063/069/071/073/075/077/082/083/084/087/088/090
 - Approved relationship table in `docs/03-analysis/08-use-cases.md`.
 
 ## Diagram
@@ -106,3 +106,11 @@ flowchart LR
 - `Review Transaction Complaint` requires an existing complaint and is an asynchronous administrative goal.
 - Administration reviews YADD evidence and platform-policy compliance only; it does not decide Payment, Refund, Compensation or other external financial entitlement.
 - `Rate Provider` and `Rate Beneficiary` require `Transaction = Completed`; Beneficiary rating of Provider is required by the current model, while Provider rating of Beneficiary is optional.
+
+## DEC-082/083/084/087 synchronization
+
+- Direct Transaction Start confirmation expires after 12h; one pending request per pair.
+- Cancellation is allowed until before invoice approval/Completed.
+- Final Invoice reminders at 24h/48h and Overdue at 72h; no Auto-Approval.
+- Invoice revisions have no hard maximum; complaint requires reason + description and unresolved complaint ends Disputed.
+- Beneficiary→Provider rating is Hybrid with Later/24h reminder and required completion before a new Transaction.
