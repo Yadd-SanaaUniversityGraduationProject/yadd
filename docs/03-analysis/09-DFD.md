@@ -1,8 +1,8 @@
 # Data Flow Diagrams — YADD Preliminary Defense
 
-> **الحالة:** `DRAFT FOR PRELIMINARY DEFENSE — CORE SYNCHRONIZED 2026-09-15 THROUGH DEC-077`
+> **الحالة:** `DRAFT FOR PRELIMINARY DEFENSE — CORE SYNCHRONIZED 2026-09-18 THROUGH DEC-090`
 >
-> **المراجع الحاكمة:** DEC-012/041/046/047/048/050/051/053/063/064/066/067/068/069/070/071/072/073/074/075/076/077 + `05-SRS.md` + `06-business-rules.md` + `07-lifecycles.md` + `08-use-cases.md`.
+> **المراجع الحاكمة:** DEC-012/041/046/047/048/050/051/053/063/064/066/067/068/069/070/071/072/073/074/075/076/077/078..090 + `05-SRS.md` + `06-business-rules.md` + `07-lifecycles.md` + `08-use-cases.md`.
 >
 > يستخدم المشروع DFD وUML معًا وفق DEC-060. يمثل DFD أدناه **تدفقات البيانات**، ولا يستخدم لوصف حالات الكائنات أو تسلسل الرسائل التفصيلي. جميع التسميات داخل الرسم النهائي باللغة الإنجليزية وفق DEC-072.
 
