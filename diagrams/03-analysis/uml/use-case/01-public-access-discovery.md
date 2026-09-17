@@ -1,6 +1,6 @@
 # Use Case View 01 — Public Access & Discovery
 
-> **Status:** `REVIEW DRAFT — NOT BASELINED — SYNCHRONIZED THROUGH DEC-077`
+> **Status:** `REVIEW DRAFT — NOT BASELINED — SYNCHRONIZED THROUGH DEC-090`
 >
 > **Purpose:** Focused view of Guest/public discovery, authentication entry points and authenticated direct inquiry.
 
@@ -9,7 +9,7 @@
 - `UC-00 — Browse Public Provider Information`
 - `UC-01 — Search and Inquire Directly`
 - `UC-10 — Manage Portfolio / Catalog` (public viewing aspect only)
-- DEC-036/046/064/077
+- DEC-036/046/064/077/078/080
 - Approved relationship table in `docs/03-analysis/08-use-cases.md`.
 
 ## Diagram
