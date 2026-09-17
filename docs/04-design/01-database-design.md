@@ -1,10 +1,10 @@
 # Database Design — Relation Schema
 
-> **الحالة:** `DRAFT FOR PRELIMINARY DEFENSE — RE-SYNCHRONIZED THROUGH DEC-077 — NOT BASELINED`
+> **الحالة:** `DRAFT FOR PRELIMINARY DEFENSE — RE-SYNCHRONIZED THROUGH DEC-090 — NOT BASELINED`
 >
-> **آخر مزامنة:** 2026-09-15
+> **آخر مزامنة:** 2026-09-18
 >
-> **المصدر:** `docs/03-analysis/11-ERD.md` + SRS v0.9.9 + Business Rules الحالية. هذه الوثيقة تصميم مشتق ولا تنشئ Requirement أو Team Decision جديدًا.
+> **المصدر:** `docs/03-analysis/11-ERD.md` + SRS v0.9.10 + Business Rules الحالية. هذه الوثيقة تصميم مشتق ولا تنشئ Requirement أو Team Decision جديدًا.
 
 ## 1. Design Boundary
 
@@ -27,15 +27,27 @@
 User(
   UserId PK,
   AccountStatus,
-  FullName,
-  Phone
+  FirstName,
+  FatherName,
+  GrandfatherName,
+  FamilyName,
+  Phone,
+  PhoneVerifiedAt,
+  Email NULL,
+  EmailVerifiedAt NULL,
+  PasswordHash,
+  LastPortal,
+  DeactivatedAt NULL
 )
 
 ProviderProfile(
   ProviderProfileId PK,
   UserId FK UNIQUE -> User.UserId,
   ProviderType,
-  VerificationStatus,
+  TradeName NULL,
+  Description,
+  ProfileImageReference NULL,
+  IdentityIdentityVerificationStatus NULL,
   ProfileStatus
 )
 
@@ -226,6 +238,17 @@ AdminAuditRecord(
   EventType,
   RecordedAt
 )
+
+Notification(
+  NotificationId PK,
+  UserId FK -> User.UserId,
+  Type,
+  Channel,
+  Status,
+  CreatedAt,
+  ReadAt NULL
+)
+
 ```
 
 > `SystemEvent`/message-to-transaction physical mapping داخل Conversation المستمرة ما يزال Design Decision مفتوحًا وفق DEC-075. لذلك لا تُخترع FK نهائية هنا قبل اختيار التصميم المناسب.
@@ -293,3 +316,9 @@ AdminAuditRecord(
 - حسم Message/SystemEvent↔Transaction physical mapping دون كسر Conversation المستمرة.
 - مراجعة Public/Private projection وBackend authorization ضد DEC-077.
 - اجتياز Design/Readiness Gate ثم Baseline المناسب.
+## DEC-085/086/087/090 synchronization notes
+
+- `VerificationCase`/`VerificationArtifact` rows are required for Service Provider identity verification only; Product Provider does not require Government ID rows in MVP.
+- Subscription duration is 30 days; expiry does not terminate existing Transaction rows.
+- ProviderRating must support overall score plus structured criterion values and optional comment; public reviewer projection exposes FirstName only.
+- Notification storage is a candidate cross-cutting relation; SMS/email delivery details remain integration design.
