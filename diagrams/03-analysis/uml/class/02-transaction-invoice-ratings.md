@@ -1,6 +1,6 @@
 # Class Diagram — Communication, Transaction, Invoice and Ratings
 
-> **Status:** `SEMANTICALLY VERIFIED — TEAM APPROVED — NOT BASELINED — VISUAL/A4 FINALIZATION PENDING`
+> **Status:** `SEMANTICALLY VERIFIED — TEAM APPROVED — SYNCHRONIZED THROUGH DEC-087 — NOT BASELINED — VISUAL/A4 FINALIZATION PENDING`
 >
 > **Type:** View 2 of one Detailed Analysis Class Model.
 
@@ -11,7 +11,7 @@
 - `docs/03-analysis/08-use-cases.md` — UC-01, UC-03, UC-04, UC-05, UC-06, UC-07 and UC-07B.
 - `docs/03-analysis/15-invoice-approval-and-dispute.md` — invoice revision/history/approval/dispute rules.
 - `docs/03-analysis/18-rating-reputation-model.md` — current rating rules.
-- `DEC-015/016/023..025/046..056/063/066/068..075`.
+- `DEC-015/016/023..025/046..056/063/066/068..075/082..084/087`.
 
 ## Diagram
 
@@ -26,7 +26,8 @@ classDiagram
 
     class ProviderProfile {
         -Identifier providerProfileId
-        -String verificationStatus
+        -String providerType
+        -String identityVerificationStatus
         -String profileStatus
     }
 
@@ -105,9 +106,17 @@ classDiagram
 
     class ProviderRating {
         -Identifier providerRatingId
-        -Integer stars
+        -Integer overallStars
         -String comment
+        -String workflowStatus
+        +defer()
         +submit()
+    }
+
+    class ProviderRatingCriterion {
+        -Identifier criterionId
+        -String criterionType
+        -String textualValue
     }
 
     class BeneficiaryRating {
@@ -139,6 +148,7 @@ classDiagram
     Transaction "1" --> "0..1" ProviderRating : provider rating
     User "1" --> "0..*" ProviderRating : writes
     ProviderProfile "1" --> "0..*" ProviderRating : receives
+    ProviderRating "1" --> "5" ProviderRatingCriterion : contains
 
     Transaction "1" --> "0..1" BeneficiaryRating : beneficiary rating
     ProviderProfile "1" --> "0..*" BeneficiaryRating : writes
@@ -153,14 +163,14 @@ classDiagram
 - `SystemEvent` عنصر تحليل مشتق من DEC-075 لتمثيل الفواصل/الأحداث الواضحة عند بدء وانتهاء Transactions داخل Conversation المستمرة. الربط الفيزيائي الدقيق بين System Event أو Message وTransaction محددة لم يُحسم، لذلك لا يفرض هذا الرسم Association مباشرة من `SystemEvent` إلى `Transaction`.
 - `Message.textContent` يمثل الرسائل النصية المعتمدة، و`MessageAttachment` يمثل الصور/المرفقات المدعومة في التواصل. لا يثبت هذا الرسم storage provider أو file format أو retention policy.
 - قد تبدأ أو تستمر Conversation في سياق Request، لكن هذا الـView لا يفرض علاقة مباشرة `Request ↔ Conversation` لأن Conversation المستمرة قد تمر بعدة Request contexts عبر الزمن؛ طريقة تمثيل تلك السياقات تؤجل إلى Chapter Four.
-- Request Route يبدأ Transaction عند اختيار Provider، بينما Direct Search يحتاج Request Transaction Start ثم confirmation من الطرف الآخر.
+- Request Route يبدأ Transaction عند اختيار Provider، بينما Direct Search يحتاج Request Transaction Start ثم confirmation من الطرف الآخر خلال 12 ساعة؛ Pending واحد فقط بين الطرفين.
 - Request واحدة تنتج صفر أو Transaction واحدة فقط.
-- عند الإلغاء يحتفظ Transaction بالطرف الذي ألغى والسبب والتوقيت وفق DEC-048/BR-019.
+- عند الإلغاء يحتفظ Transaction بالطرف الذي ألغى والسبب والتوقيت؛ الإلغاء مسموح حتى ما قبل Invoice approval/Completed.
 - `Completed` النهاية الناجحة؛ `Cancelled` و`Disputed` نهايات بديلة، ولا توجد حالة `Closed`.
 - `InvoiceVersion` يحفظ تاريخ التعديلات ولا يستبدل النسخ السابقة بلا أثر. الشكل الفيزيائي النهائي قد يصبح `Invoice + InvoiceRevision` أو تمثيلًا مكافئًا في Chapter Four بشرط الحفاظ على التاريخ.
 - `InvoiceImage` عنصر مشتق من UC-06 الذي يسمح بصور اختيارية داخل الفاتورة. لا يثبت هذا الرسم format أو storage أو retention.
-- Invoice approval يجعل Transaction = `Completed`. عدم الرد لا يساوي approval ولا يوجد Auto-Approval.
-- Provider Rating حدها الأقصى واحدة لكل Transaction وتكون مطلوبة من Beneficiary بعد Completed: 1–5 stars + optional comment.
+- Invoice approval يجعل Transaction = `Completed`. عدم الرد لا يساوي approval؛ Reminder عند 24h و48h ثم Overdue عند 72h دون Auto-Approval. Revision history محفوظ ولا يوجد حد عددي صلب.
+- Provider Rating حدها الأقصى واحدة لكل Transaction وتكون مطلوبة من Beneficiary بعد Completed، مع إمكانية Later وReminder بعد 24h ومنع بدء Transaction جديدة قبل استكمال التقييم السابق. النموذج = Overall 1–5 + خمسة Structured Textual Criteria حسب Provider Type + optional comment.
 - Beneficiary Rating حدها الأقصى واحدة لكل Transaction واختيارية من Provider بعد Completed: ثلاثة مؤشرات 1–5 + optional comment.
 - Ratings لا تغيّر Transaction status، ولا تفتح لمعاملة `Cancelled` أو `Disputed`.
 - لا توجد Payment/Refund/Escrow/Settlement entities داخل هذه البنية.
@@ -174,7 +184,7 @@ classDiagram
 - `Transaction.cancel()` ← UC-05 + Transaction lifecycle.
 - `Transaction.markAwaitingInvoice()` / `complete()` / `markDisputed()` ← Transaction/Invoice lifecycle.
 - `InvoiceVersion.addItem()` / `submitForApproval()` / `requestRevision()` / `approve()` ← UC-06 + Invoice Approval model.
-- `ProviderRating.submit()` ← UC-07.
+- `ProviderRating.defer()` / `submit()` + `ProviderRatingCriterion` ← UC-07 / DEC-087.
 - `BeneficiaryRating.submit()` ← UC-07B.
 
 ## UML / Design boundary
