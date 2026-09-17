@@ -1,6 +1,6 @@
 # Requirements Traceability Matrix — Core Diagram Model
 
-> **الحالة:** `CORE TRACEABILITY SYNCHRONIZED 2026-09-15 THROUGH DEC-077 — DESIGN TRACEABILITY PENDING`
+> **الحالة:** `CORE TRACEABILITY SYNCHRONIZED 2026-09-18 THROUGH DEC-090 — DESIGN TRACEABILITY PARTIAL`
 >
 > الغرض من هذه النسخة هو منع اعتماد المخططات على FR/Entities تاريخية. المرجع الأعلى يبقى Decision Register ثم SRS وBusiness Rules.
 >
@@ -12,15 +12,19 @@
 | UR-GST-02 | DEC-077 | BR-045/046 / Account-Portal Model | UC-00 protected-action alternative → Log In / Create Account; protected actor goals have Authentication precondition | 1.0 / protected processes | Authentication boundary; no protected domain record before auth | `ANALYZED_APPROVED` |
 | UR-GST-03 | DEC-036/046/077 | BR-047 | UC-00 Public Provider Profile | 2.0 | Public/private field boundary; phone not public | `ANALYZED_APPROVED` |
 | UR-ACC-01 | DEC-008 | Account/Portal Model | Manage Account | 1.0 | USER | `ANALYZED_APPROVED` |
-| UR-ACC-02 | DEC-009/011 | Account/Portal Model | Manage Account / Switch Portal | 1.0 | USER, PROVIDER_PROFILE | `ANALYZED_APPROVED` |
+| UR-ACC-02 | DEC-009/011/078 | Account/Portal Model | Manage Account / Switch Portal | 1.0 | USER, PROVIDER_PROFILE | `ANALYZED_APPROVED` |
+| UR-ACC-03 | DEC-078 | BR-048/049 | Create Account / Log In / Forgot Password | 1.0 | USER + authentication verification state | `ANALYZED_APPROVED` |
+| UR-ACC-04 | DEC-079 | BR-050 | Manage Account / Deactivate / Reactivate | 1.0 | USER, historical references retained | `ANALYZED_APPROVED` |
 | UR-PROV-01 | DEC-074/030 | BR-041 | Manage Provider Profile / Manage Service Areas | 1.0 | PROVIDER_PROFILE | `ANALYZED_APPROVED` |
 | UR-PROV-02 | DEC-076 | BR-043 / Provider Activity Model | Manage Provider Profile / Manage Provider Categories | 1.0 | PROVIDER_ACTIVITY, CATEGORY | `ANALYZED_APPROVED` |
-| UR-VER-01 | DEC-034/035 | BR-027/028 | UC-09 → Submit Verification / Review Provider Verification | 6.0 | VERIFICATION_CASE, VERIFICATION_ARTIFACT, ADMIN_AUDIT_RECORD (conceptual) | `ANALYZED_APPROVED` |
+| UR-PROV-03 | DEC-080 | BR-051 | Manage Provider Profile | 1.0 | PROVIDER_PROFILE.TradeName/Description + service areas | `ANALYZED_APPROVED` |
+| UR-VER-01 | DEC-035/085 | BR-060/061 | UC-09 → Service Provider Identity Verification / Review | 6.0 | VERIFICATION_CASE, VERIFICATION_ARTIFACT, ADMIN_AUDIT_RECORD; Product Provider has no government-ID case | `ANALYZED_APPROVED` |
 | UR-DIS-01 | DEC-012/031..033/077 | BR-001/031/044 | UC-00/01 → Search Providers / View Provider Profile | 2.0 | CATEGORY, AREA, AREA_ADJACENCY, PROVIDER_SERVICE_AREA, PROVIDER_PROFILE | `ANALYZED_APPROVED` |
 | UR-PORT-01 | DEC-064/077 | BR-035/036/044 | UC-00/01/10 → View Provider Profile / View Portfolio-Catalog / Manage Portfolio-Catalog | 1.0 / 2.0 | SHOWCASE_ITEM | `ANALYZED_APPROVED` |
 | UR-REQ-01 | DEC-012/077 | BR-001/045 | UC-02 → Create Request; Authentication precondition | 2.0 | REQUEST | `ANALYZED_APPROVED` |
 | UR-REQ-02 | DEC-013 | BR-002/003 | UC-02 → Create Request | 2.0 | REQUEST | `ANALYZED_APPROVED` |
 | UR-REQ-03 | DEC-048 | BR-018/020 | UC-02 alternative → Close Open Request | 2.0 | REQUEST | `ANALYZED_APPROVED` |
+| UR-REQ-04 | DEC-081 | BR-052/053 | Create Request lifecycle → reminder/expiry/republish | 2.0 | REQUEST timestamps/status + new Request on republish | `ANALYZED_APPROVED` |
 | UR-COM-01 | DEC-046/077 | BR-005/008/045/047 | UC-01 / UC-03 / UC-04 → Communicate / Inquire; Authentication precondition | 3.0 | CONVERSATION, MESSAGE | `ANALYZED_APPROVED` |
 | UR-COM-02 | DEC-075 | BR-042 / In-App Communication Model | UC-01 / UC-03 / UC-04 communication context; persistent conversation invariant | 3.0 / 4.0 | CONVERSATION, SYSTEM_EVENT, TRANSACTION context | `DERIVED_FROM_APPROVED_DECISION` |
 | UR-OFF-01 | DEC-013/041 | BR-003/033 | UC-03 → Submit Provider Response | 3.0 | PROVIDER_RESPONSE | `ANALYZED_APPROVED` |
@@ -30,14 +34,15 @@
 | UR-TX-02 | DEC-056 | BR-023 | Transaction management / Cancel Transaction | 4.0 | TRANSACTION (including cancellation actor/reason/time concept) | `ANALYZED_APPROVED` |
 | UR-TX-03 | DEC-071 | BR-010/016 | UC-06 → Approve Final Invoice / Complete Transaction; UC-07/07B post-transaction ratings | 4.0 / 5.0 | TRANSACTION | `ANALYZED_APPROVED` |
 | UR-TX-04 | DEC-073 | BR-040 | UC-06 dispute branch → Raise Transaction Complaint / Review Transaction Complaint | 4.0 / 6.0 | TRANSACTION, REPORT / complaint record | `ANALYZED_APPROVED` |
-| UR-INV-01 | DEC-015/025/050/071 | BR-009..013 | UC-06 → Create Final Invoice / Review Final Invoice / Approve Final Invoice / Request Invoice Revision / Revise Final Invoice | 4.0 | INVOICE_VERSION, INVOICE_ITEM, TRANSACTION | `ANALYZED_APPROVED` |
-| UR-DSP-01 | DEC-073 | BR-040 | UC-06 dispute branch → Raise Transaction Complaint / Review Transaction Complaint | 4.0 / 6.0 | REPORT / complaint record, TRANSACTION, ADMIN_AUDIT_RECORD (conceptual) | `ANALYZED_APPROVED` |
-| UR-REV-01 | DEC-051 | BR-014/016 | UC-07 → Rate Provider; Precondition: Transaction Completed | 5.0 | PROVIDER_RATING | `ANALYZED_APPROVED` |
+| UR-INV-01 | DEC-015/025/050/071/083 | BR-057/058 | UC-06 → Create/Review/Approve/Revise Final Invoice | 4.0 | INVOICE_VERSION, INVOICE_ITEM, TRANSACTION + reminder/overdue state | `ANALYZED_APPROVED` |
+| UR-DSP-01 | DEC-073/084 | BR-059 | UC-06 dispute branch → Raise Transaction Complaint / Review Transaction Complaint | 4.0 / 6.0 | complaint record/evidence, TRANSACTION, ADMIN_AUDIT_RECORD | `ANALYZED_APPROVED` |
+| UR-REV-01 | DEC-051/087 | BR-063/064 | UC-07 → Rate Provider; Completed precondition + Later/Reminder/Hybrid criteria | 5.0 | PROVIDER_RATING + structured criteria | `ANALYZED_APPROVED` |
 | UR-REV-02 | DEC-063 | BR-015/016 | UC-07B → Rate Beneficiary; Precondition: Transaction Completed | 5.0 | BENEFICIARY_RATING | `ANALYZED_APPROVED` |
 | UR-REP-01 | DEC-063 | BR-034 | UC-07B / provider interaction context | 5.0 | BENEFICIARY_RATING / interaction record | `ANALYZED_APPROVED` |
-| UR-SAFE-01 | DEC-053/054/077 | BR-021/022/045 | UC-08 → Block User / Report User-Content / Review Reports-Flags; Authentication precondition | 6.0 | USER_BLOCK, REPORT, SAFETY_FLAG, ADMIN_AUDIT_RECORD (conceptual) | `ANALYZED_APPROVED` |
+| UR-SAFE-01 | DEC-053/054/077/088/089 | BR-065/066 | UC-08 → Block/Unblock / Report / Human Review Outcomes | 6.0 | USER_BLOCK, REPORT, SAFETY_FLAG, ADMIN_AUDIT_RECORD | `ANALYZED_APPROVED` |
 | UR-PAY-01 | DEC-018/041/073 | BR-024/033/040 | Scope constraint on Provider Response / Invoice / Complaint flows | — | **No Payment/Escrow/Refund/Settlement entity** | `ANALYZED_APPROVED` |
-| UR-SUB-01 | DEC-042/043 | BR-029/030 | Manage Provider Subscription + Validate Response Eligibility | 6.0 | SUBSCRIPTION | `ANALYZED_APPROVED` |
+| UR-SUB-01 | DEC-042/043/086 | BR-062 | Manage Provider Subscription + Validate Eligibility | 6.0 | SUBSCRIPTION (30-day period + expiry reminders) | `ANALYZED_APPROVED` |
+| UR-NOT-01 | DEC-090 | BR-067 | Notification delivery across auth/request/invoice/subscription/admin flows | cross-cutting | NOTIFICATION concept + SMS/email channels | `ANALYZED_APPROVED` |
 
 ## Use-Case Relationship Traceability
 
