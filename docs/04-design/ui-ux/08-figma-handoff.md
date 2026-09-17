@@ -1,6 +1,6 @@
 # YADD Figma Handoff — Working Draft
 
-> **Status:** IN PROGRESS — SYNCHRONIZED 2026-09-17
+> **Status:** IN PROGRESS — LIVE VERIFIED 2026-09-17
 
 This file tracks the handoff between repository documentation and Figma. Figma is the editable visual-design workspace, not the source of business requirements.
 
@@ -9,105 +9,68 @@ This file tracks the handoff between repository documentation and Figma. Figma i
 - File: `YADD — Visual Identity & Interface Design`
 - URL: `https://www.figma.com/design/OVEqHoGvcMJZYgsIPa2MQu`
 - Account/plan context: University/student Figma account.
-- Current implementation basis: Web-first project direction; approved narrow wireflow frames are represented as responsive web at a 390px viewport, not as a claim that a native Flutter client is the current primary interface.
 
-## Current Figma Pages
+## Live-Verified Figma Pages
+
+A live Figma metadata check on 2026-09-17 showed that the file initially exposed only `00 — Cover`. Therefore earlier handoff claims that `02 — UI Foundation`, `03 — Components`, and `04 — Wireflow 01` were already present in this specific file were incorrect and have been rolled back here rather than preserved as assumptions.
+
+After restoring write access, the following pages are currently verified:
 
 | Page | Purpose | Status | Notes |
 |---|---|---|---|
-| `00 — Cover` | Design file cover | IMPLEMENTED | Uses working YADD identity |
-| `01 — Brand Foundations` | Working logo/icon, bilingual lockup, palette and typography | IMPLEMENTED / WORKING | Brand direction approved; hand geometry still requires refinement |
-| `02 — UI Foundation` | Semantic colors, spacing, radius and typography hierarchy | IMPLEMENTED / WORKING | Values are working UI tokens pending formal repository freeze where applicable |
-| `03 — Components` | Reusable components used by current approved flows | IN PROGRESS | Button, Search Field, Select Field, Provider Result Card currently available |
-| `04 — Wireflow 01` | Public browsing and provider search flow | IMPLEMENTED / APPROVED WORKING WIREFLOW | Functional/content QA completed against current project scope |
+| `00 — Cover` | Design file cover | VERIFIED | Existing page |
+| `01 — Brand Foundations` | Approved symbol master, variants, size tests, working bilingual lockup | VERIFIED / IMPLEMENTED | Created after live verification |
 
-## Working Foundations Implemented
+The following planned pages are **not currently verified as present in Figma** and must be recreated/synchronized before being marked implemented:
 
-### Color variables
+- `02 — UI Foundation`
+- `03 — Components`
+- `04 — Wireflow 01`
 
-Figma currently contains:
+Their repository specifications and prior design approvals remain valid working inputs; only the Figma implementation status was corrected.
 
-- `YADD / Primitives`
-- `YADD / Semantic Colors`
-- `YADD / Layout`
+## Brand Asset Status
 
-Working brand values currently represented in Figma:
+The approved **Refined Vector Candidate v3** is now present in Figma as an editable vector on `01 — Brand Foundations` and is treated as the current approved symbol master.
 
-- Primary Green `#10B981`
-- Energetic Yellow `#FBBF24`
-- Deep Navy `#0F172A`
-- Off White `#F8FAFC`
+The page contains:
 
-These are represented as **working design tokens**. Their presence in Figma does not independently convert them into a higher-level approved requirement or override repository governance.
+- `YADD / Symbol / Master v3`.
+- Primary symbol treatment.
+- Light treatment.
+- Dark treatment.
+- Monochrome treatment.
+- Small-size visual tests at `48 px`, `32 px`, and `24 px`.
+- A separate working bilingual `يَد | YADD` lockup.
 
-### Typography
+The symbol master is approved. The exact production construction of the bilingual wordmark, clear-space rule, minimum-size specification, and final export package remain open production tasks.
 
-- Arabic: `Tajawal`
-- Latin: `Inter`
+## Working Brand Values Used in Figma
 
-Local text styles have been created for current display, heading, title, body, caption and Latin supporting text needs.
+- Primary Green: `#10B981`
+- Energetic Yellow: `#FBBF24`
+- Deep Navy: `#0F172A`
+- Off White: `#F8FAFC`
 
-### Brand asset status
+These remain working design tokens until accessibility/production freeze is synchronized in `05-ui-foundation.md`.
 
-The Figma file contains an editable **Working Vector Master** following the adopted logo direction:
+## Wireflow 01 — Repository Approval vs Figma Status
 
-- white open/spread hand with wrist;
-- green rounded-square background;
-- two yellow motion/accent marks;
-- bilingual `يَد | YADD` lockup.
-
-The symbol is not yet a production-final logo master because hand geometry refinement remains open in `01-brand-system.md`.
-
-## Wireflow 01 — Public Browsing & Provider Search
-
-### Flow
+Approved working flow:
 
 `Public Home → Search / Filter → Search Results → Public Provider Profile → Protected Action Authentication Gate`
 
-### Figma implementation
+The flow and its content constraints remain approved in the repository working package. However, as of this live verification, its Figma page is **NOT CURRENTLY VERIFIED / NEEDS RECREATION**.
 
-The following screen frames are implemented on `04 — Wireflow 01`:
+When recreated, it must preserve the approved constraints:
 
-| Screen | Repository mapping | Figma status | Review status |
-|---|---|---|---|
-| Public Home | `PUB-01` | IMPLEMENTED | Approved working wireflow |
-| Search / Filter | `PUB-02` | IMPLEMENTED | Approved working wireflow |
-| Search Results | `PUB-03` | IMPLEMENTED | Approved working wireflow |
-| Public Provider Profile | `PUB-04` / `PUB-05` presentation | IMPLEMENTED | Approved working wireflow |
-| Protected Action Authentication Gate | `PUB-06` | IMPLEMENTED | Approved working wireflow |
-
-### Scope/content QA applied
-
-Wireflow 01 was checked to avoid unsupported assumptions that appeared in earlier generated visual drafts. Current Figma implementation follows these constraints:
-
-- No corporate/large-store provider example is used.
-- No location outside Amanat Al Asimah — Sana'a is introduced.
-- Search/filter uses provider type, category, district and neighborhood concepts; there is no service-price filter.
-- No years-of-experience field is shown.
-- Search-result/provider-profile content is limited to approved public concepts such as provider name, type/category, general service-area information, public rating/indicators and completed YADD transaction count where applicable.
-- No public phone number, precise private address, verification artifact, subscription internal, transaction/invoice/report data is exposed.
-- `Contact / Inquire` and `Create Request` are protected actions for a Guest and lead to the authentication gate.
-
-Mock names/numbers in the wireframe are presentation placeholders, not Evidence, Facts, real users, or project data.
-
-## Reusable Components Currently Implemented
-
-- `Button` — Primary / Secondary working variants.
-- `Search Field`.
-- `Select Field`.
-- `Provider Result Card`.
-
-Component coverage will expand only as approved/derived screens require additional patterns.
-
-## Prototype Status
-
-- Visual screen sequence: IMPLEMENTED.
-- Formal clickable prototype/reaction wiring: NOT YET BASELINED.
-- Subsequent flows will be added after review/approval using the same repository-first process.
-
-## Handoff Rule
-
-Only stable design decisions should be moved into Figma as reusable variables/components. Experimental AI-generated visual boards are references only unless explicitly adopted and reconstructed as controlled design assets.
+- Sana'a / Amanat Al Asimah scope only.
+- District + neighborhood location model.
+- No corporate/large-store provider examples.
+- No service-price search filter.
+- No years-of-experience field.
+- No public phone number or precise private address.
+- No verification artifacts or other sensitive/private data in public profiles.
 
 ## Synchronization Rule
 
@@ -117,3 +80,5 @@ If Figma and repository specifications disagree, do not silently pick one. Ident
 - Design Decision,
 - Requirement/Business Rule verification,
 - or rollback of an unsupported design assumption.
+
+This update is a **Synchronization/Correction** of implementation status; it does not change project scope, requirements, or the approved Wireflow 01 logic.
