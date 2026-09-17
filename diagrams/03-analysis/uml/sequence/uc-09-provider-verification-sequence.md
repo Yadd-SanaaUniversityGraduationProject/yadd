@@ -1,17 +1,17 @@
-# UC-09 — Provider Verification / Portal Activation Sequence Diagrams
+# UC-09 — Service Provider Identity Verification / Provider Portal Eligibility Sequence Diagrams
 
 > **Status:** `REVIEW DRAFT — NOT BASELINED`
 >
-> **Purpose:** تم تفكيك `UC-09 — Provider Verification / Portal Activation` إلى سيناريوهين متماسكين داخل الملف نفسه حتى يبقى الرسم قابلًا للقراءة على A4: تقديم/إعادة تقديم التحقق، ثم المراجعة البشرية والقرار. هذا Scenario Decomposition داخل UC-09 ولا ينشئ Use Cases جديدة.
+> **Purpose:** تم تفكيك `UC-09 — Service Provider Identity Verification / Provider Portal Eligibility` إلى سيناريوهين متماسكين داخل الملف نفسه حتى يبقى الرسم قابلًا للقراءة على A4: تقديم/إعادة تقديم التحقق، ثم المراجعة البشرية والقرار. هذا Scenario Decomposition داخل UC-09 ولا ينشئ Use Cases جديدة.
 
 ## Source basis
 
 - **Approved behavior:** `UC-09 — Provider Verification / Portal Activation` in `docs/03-analysis/08-use-cases.md`.
 - **Provider Verification Model:** `docs/03-analysis/21-provider-verification-model.md`.
-- **Team decisions:** `DEC-010`, `DEC-034`, `DEC-035`, `DEC-036`, `DEC-037..040`.
+- **Team decisions:** `DEC-010`, `DEC-035`, `DEC-036`, `DEC-037..040`, `DEC-085`.
 - **Business rules:** `BR-027`, `BR-028` and the current verification rules.
-- **Core verification rule:** every Provider Profile must pass formal verification before Provider functions become available.
-- **Minimum approved evidence:** official identity document + a personal photo with the document + required account data for matching.
+- **Core verification rule:** Service Provider requires Identity Verification before provider functions; Product Provider does not require Government ID in MVP and follows Account/Profile eligibility instead.
+- **Minimum approved evidence for SERVICE:** verified phone + legal name + National ID or Passport + document image + personal photo with document.
 - **Human decision rule:** final `Verified`, `Resubmission Required`, or `Rejected` decision is made by authorized YADD staff. AI/automated checks are advisory only.
 - **Sensitive-data rule:** identity images, personal verification photos, matching results and related verification data are non-public and access-controlled.
 - **Derived modeling roles:** `ProviderUI`, `VerificationController`, `VerificationAssistant`, and `ReviewerUI` are Sequence modeling roles only, not approved implementation class names or committed services.
@@ -21,7 +21,7 @@
 ```mermaid
 %%{init: {"theme":"base","themeVariables":{"background":"#FFFFFF","fontFamily":"Arial","actorBkg":"#D8E8D0","actorBorder":"#7E7E7E","actorTextColor":"#222222","actorLineColor":"#8A8A8A","signalColor":"#A07878","signalTextColor":"#5C3F3F","labelBoxBkgColor":"#FFFFFF","labelBoxBorderColor":"#7E7E7E","labelTextColor":"#222222","loopTextColor":"#222222","noteBkgColor":"#FFFFFF","noteBorderColor":"#7E7E7E","noteTextColor":"#222222","activationBkgColor":"#C8E0E8","activationBorderColor":"#7B969C","sequenceNumberColor":"#222222"}}}%%
 sequenceDiagram
-    actor U as User
+    actor U as Prospective Service Provider
     participant UI as ProviderUI «boundary»
     participant VC as VerificationController «control»
     participant VP as ProviderProfile «entity»
@@ -32,7 +32,7 @@ sequenceDiagram
     VC-->>UI: verificationRequirements
     UI-->>U: showVerificationForm()
 
-    Note over U,CASE: Minimum approved inputs: official identity document, personal photo with document, required account data
+    Note over U,CASE: Minimum approved inputs: National ID or Passport, document image, personal photo with document, verified account data
 
     U->>UI: submitVerification(verificationData)
     UI->>VC: submitVerification(userId, verificationData)
@@ -170,3 +170,7 @@ sequenceDiagram
 ## Sensitive-data and governance note
 
 صور الهوية والصور الشخصية ونتائج المطابقة وبيانات التحقق مواد حساسة غير عامة. الوصول والمراجعات الحساسة يجب أن تكون مقيّدة ومُسجلة في Audit Trail وفق نموذج التحقق الحالي. تفاصيل مدة الاحتفاظ والحذف ما تزال `NEEDS_LEGAL_VERIFICATION` ولا تُخترع في هذا الرسم.
+
+## Product Provider boundary — DEC-085
+
+This sequence does not run for Product Provider identity verification because Government ID is not required for Product Provider in MVP. Product Provider eligibility depends on Account Verification, completed Provider Profile, valid category/service-area configuration and Active Subscription. Product Provider must not receive an `Identity Verified` badge solely from phone verification.
