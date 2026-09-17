@@ -61,8 +61,8 @@ flowchart TD
 | UI-G02 | Public Search / Filter by Category and Area | Guest | FR-GST-02 / FR-003 | DRAFT |
 | UI-G03 | Public Provider Profile + Portfolio/Catalog | Guest | FR-GST-03/04 / DEC-064/077 | DRAFT |
 | UI-G04 | Protected Action Authentication Gate | Guest | FR-GST-05/06 / DEC-077 | DRAFT |
-| UI-01 | Sign In / Create Account | Guest / User | FR-GST-05 / FR-001 | DRAFT |
-| UI-02 | Portal Selection / Switch | User | FR-001A/001B | DRAFT |
+| UI-01 | Sign In / Create Account / OTP / Forgot Password | Guest / User | FR-GST-05 / FR-001A..D / DEC-078 | DRAFT |
+| UI-02 | Portal Selection / Switch / Last Portal | User | FR-001E/001F | DRAFT |
 | UI-03 | Home / Discovery | Beneficiary | UR-DIS-01 | DRAFT |
 | UI-04 | Search / Filter by Category and Area | Guest / Beneficiary | FR-GST-02 / FR-003 | DRAFT |
 | UI-05 | Provider Profile + Portfolio/Catalog | Guest / Beneficiary | FR-GST-03/04 / FR-PORT-* | DRAFT |
@@ -78,8 +78,8 @@ flowchart TD
 | UI-15 | Rate Beneficiary — Optional after Completed | Provider | UR-REV-02 / DEC-063 | DRAFT |
 | UI-16 | Manage Provider Profile / Activities / Service Areas | Provider | FR-002/002B/002C/003C | DRAFT |
 | UI-17 | Manage Portfolio / Catalog | Provider | FR-PORT-* | DRAFT |
-| UI-18 | Provider Verification Submission / Status | Provider | FR-VER-* | DRAFT / DETAIL POLICY PARTIAL |
-| UI-19 | Subscription Status | Provider | FR-SUB-* | DRAFT / COMMERCIAL DETAILS PARTIAL |
+| UI-18 | Service Provider Identity Verification Submission / Status | Service Provider | FR-VER-* / DEC-085 | DRAFT |
+| UI-19 | Subscription Status / Renewal Reminders | Provider | FR-SUB-* / DEC-086 | DRAFT / PRICE & PAYMENT DETAILS PARTIAL |
 | UI-20 | Block / Report | User | UR-SAFE-01 | DRAFT |
 | UI-21 | Verification / Reports / Complaint / Subscription Admin Review | Authorized Admin | FR-015/015A/015C | DRAFT / AUTHORIZATION DETAIL PARTIAL |
 
@@ -139,3 +139,11 @@ flowchart TD
 - طريقة العودة الدقيقة إلى الـprotected action بعد Authentication هي Design/UX detail وليست Business Rule جديدة.
 
 هذه الوثيقة تحدد hierarchy وظيفية أولية قابلة للتتبع، لا واجهة نهائية أو دليل نجاح UX.
+## DEC-078..090 UI synchronization
+
+- Create Account fields: First/Father/Grandfather/Family Name, Mobile, Password/Confirm, optional Email, Terms/Privacy; OTP step mandatory.
+- Product Provider Profile exposes optional Trade Name and Logo/Profile image; Service Provider uses personal identity display and separate Identity Verification.
+- Rating UI uses Overall Stars + structured textual criteria + optional comment, with Later/24h reminder behavior.
+- Request UI communicates 24h/48h reminders and 72h expiry; expired request offers Republish as new.
+- Invoice UI communicates 24h/48h reminders and Overdue at 72h without Auto-Approval.
+- Block UI must preserve active-transaction actions; moderation admin UI supports the DEC-089 outcomes.
