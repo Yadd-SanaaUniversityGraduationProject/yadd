@@ -93,7 +93,7 @@
 - اختيار Beneficiary أو Provider عند البداية يحدد الـOnboarding والبوابة الابتدائية، وليس نوع حساب دائمًا.
 - يمكن استخدام Beneficiary Portal مباشرة.
 - يمكن إنشاء `Provider Profile` داخل الحساب نفسه.
-- Provider Portal يحتاج Provider Profile مستوفيًا شروط التحقق والتفعيل.
+- Provider Portal يحتاج Provider Profile مستوفيًا شروط النوع: Service Provider يحتاج Identity Verification؛ Product Provider لا يحتاج Government ID، وكلاهما يحتاج شروط الأهلية والاشتراك.
 - يمكن الانتقال بين Beneficiary Portal وProvider Portal بالحساب نفسه عند استيفاء الشروط.
 
 `Guest` Actor خارجي غير authenticated، وليس Entity/Class مستقلة في Domain Model لمجرد التصفح العام.
@@ -538,7 +538,7 @@ YADD لا يدير أي حركة مالية بين Beneficiary وProvider.
 
 وجود Requirement داخل SRS لا يعني تلقائيًا أنه Approved Requirement. البنود التي تعتمد على قيم تشغيلية غير محسومة تبقى Needs Verification حتى يتم إثباتها أو اعتمادها.
 
-Core Traceability الحالية متزامنة حتى `DEC-077`، وتشمل UR-GST-* وربطها بـUC-00 وDFD/UI/public-private boundary. Design Traceability لChapter Four والمخططات النهائية ما يزال مطلوبًا قبل Freeze/Baseline.
+Core Traceability الحالية متزامنة حتى `DEC-090`، وتشمل UR-GST-* وربطها بـUC-00 وDFD/UI/public-private boundary. Design Traceability لChapter Four والمخططات النهائية ما يزال مطلوبًا قبل Freeze/Baseline.
 
 ---
 
@@ -546,15 +546,13 @@ Core Traceability الحالية متزامنة حتى `DEC-077`، وتشمل UR
 
 تبقى البنود التالية Needs Verification / Design Detail ولا تعيد فتح Core Flow:
 
-- `REQ-EXP-Q01` — Expiry/reminder timing.
-- `INV-PENDING-Q01` — long pending invoice escalation.
 - `SAFE-REQ-Q01` — abuse thresholds.
 - `TX-CONC-Q01` — numeric concurrent transaction limit if needed.
 - `UX-VAL-Q01` — usability/low-connectivity validation.
 - `LOC-DATA-Q01`, `LOC-OPS-TIME-Q01`.
-- `VER-DOC-Q01`, `VER-RET-Q01`, `VER-LIC-Q01`.
+- `VER-RET-Q01`, `VER-LIC-Q01`.
 - `AI-MOD-Q01/02`, `AI-PROV-Q01`, `AI-RET-Q01`, `AI-APPEAL-Q01`.
-- `SUB-PLAN-Q01`, `SUB-PAY-Q01`, `SUB-OPS-Q01`.
+- سعر الاشتراك النهائي (`SUB-PLAN-Q01`), `SUB-PAY-Q01`, وأثر Expired على الظهور العام فقط (`SUB-OPS-Q01`).
 - Provider Type switching after initial selection.
 - exact UX continuation after Guest authenticates from a protected CTA.
 
@@ -564,16 +562,16 @@ Core Traceability الحالية متزامنة حتى `DEC-077`، وتشمل UR
 
 ## 3.15 خلاصة الفصل
 
-أصبح Core Analysis متسقًا نصيًا مع القرارات الحالية حتى DEC-077:
+أصبح Core Analysis متسقًا نصيًا مع القرارات الحالية حتى DEC-090:
 
 - Guest يستطيع Public Browse/Search/View فقط قبل Authentication، والوظائف المحمية تتطلب Login/Create Account.
 - Public Provider Profile لا يكشف phone/direct private-contact data أو البيانات الحساسة.
-- User Account واحد بعد Authentication.
-- Provider Profile واحد اختياري لكل User ومن نوع واحد فقط SERVICE أو PRODUCT.
+- User Account واحد بعد Authentication؛ Create Account يستخدم الاسم الرباعي بأربعة حقول + Mobile + Password + OTP، والبريد اختياري وموثق قبل استخدامه للدخول/الاستعادة.
+- Provider Profile واحد اختياري لكل User ومن نوع واحد فقط SERVICE أو PRODUCT؛ Trade Name اختياري لمقدم المنتج.
 - يمكن للمقدم امتلاك عدة تصنيفات داخل النوع، مع اشتراط واحد صالح على الأقل للأهلية.
 - Direct Search وCreate Request مساران أساسيان.
 - Conversation واحدة مستمرة لكل Beneficiary–Provider pair ويمكن أن تضم عدة Transactions.
-- Provider Response واحدة فعالة قابلة للتعديل/السحب قبل Selection.
+- Provider Response واحدة فعالة قابلة للتعديل/السحب قبل Selection ودون مدة مستقلة؛ Request inactivity 24h/48h/72h.
 - Direct Search Transaction تبدأ فقط بطلب + تأكيد الطرف الآخر.
 - لا يوجد Agreement entity مستقل.
 - العربون Yes/No فقط والدفع خارج YADD.
