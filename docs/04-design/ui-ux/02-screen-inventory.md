@@ -1,6 +1,6 @@
 # YADD Screen Inventory — Working Draft
 
-> **Status:** IN PROGRESS
+> **Status:** IN PROGRESS — SYNCHRONIZED 2026-09-18 THROUGH DEC-090
 >
 > This inventory is derived primarily from `docs/04-design/03-interface-design.md` and the currently approved project decisions. It is not a new source of requirements.
 
@@ -25,10 +25,12 @@
 
 | ID | Interface | Actor | Status | Notes |
 |---|---|---|---|---|
-| AUTH-01 | Sign In | Guest/User | Core | |
-| AUTH-02 | Create Account | Guest | Core | One `User` account per person |
-| AUTH-03 | Initial Portal Selection | User | Core | Beneficiary/provider choice is not a permanent account type |
-| AUTH-04 | Portal Switch | User | Core | Same account may switch when eligible |
+| AUTH-01 | Sign In | Guest/User | Core | Verified phone or verified email + password |
+| AUTH-02 | Create Account + Phone OTP | Guest | Core | Four-part name + mobile + password + optional email + Terms/Privacy; OTP required |
+| AUTH-03 | Initial Portal Selection | User | Core | Beneficiary/provider choice is not a permanent account type; system remembers last portal |
+| AUTH-04 | Portal Switch | User | Core | Same account may switch when eligible; incomplete provider profile routes to completion |
+| AUTH-05 | Forgot / Reset Password | User | Core | Phone OTP primary; verified email optional |
+| AUTH-06 | Manage / Deactivate Account | User | Core | Sensitive changes re-verified; no self-service hard delete |
 
 ## Beneficiary
 
@@ -51,12 +53,12 @@
 | PRO-03 | Published Request Details | Provider | Core | Before response |
 | PRO-04 | Create Provider Response | Provider | Core | |
 | PRO-05 | Edit / Withdraw Response | Provider | Core | |
-| PRO-06 | Manage Provider Profile | Provider | Core | |
+| PRO-06 | Manage Provider Profile | Provider | Core | Includes required areas/about; Product Provider may set optional Trade Name |
 | PRO-07 | Manage Portfolio | Service Provider | Core | |
 | PRO-08 | Manage Catalog | Product Provider | Core | |
-| PRO-09 | Verification Status | Provider | Core | |
-| PRO-10 | Verification Submission | Provider | Core | Minimum official ID + selfie with document |
-| PRO-11 | Subscription Status | Provider | Core | Collection is external/manual-confirmation path |
+| PRO-09 | Identity Verification Status | Service Provider | Core | SERVICE only; Product Provider has Account/Profile eligibility without Government ID |
+| PRO-10 | Identity Verification Submission | Service Provider | Core | National ID or Passport + document image + personal photo with document |
+| PRO-11 | Subscription Status / Renewal | Provider | Core | 30-day subscription; reminders at -3 days / -24h; payment confirmation external/manual |
 
 ## Shared Communication / Transactions
 
@@ -64,14 +66,14 @@
 |---|---|---|---|---|
 | SH-01 | Conversations List | User | Derived | Navigation to existing chats |
 | SH-02 | Private Chat | Beneficiary/Provider | Core | Chat alone does not create a transaction |
-| TRX-01 | Direct Transaction Start Confirmation | Other Party | Core | Required on direct-search route |
+| TRX-01 | Direct Transaction Start Confirmation | Other Party | Core | Pending request expires after 12h; one pending per pair |
 | TRX-02 | Transaction Details | Both Parties | Core | Central transaction state |
 | TRX-03 | My Transactions | User | Derived | Navigation to current/history transactions |
 | INV-01 | Create / Revise Invoice | Provider | Core | Invoice required for successful completion |
-| INV-02 | Invoice Review | Beneficiary | Core | Approve / request revision / complaint path |
-| RAT-01 | Rate Provider | Beneficiary | Core | After `Completed` |
+| INV-02 | Invoice Review | Beneficiary | Core | 24h/48h reminders; Overdue at 72h; no auto-approval |
+| RAT-01 | Rate Provider | Beneficiary | Core | Hybrid rating; may Later, 24h reminder, required before next Transaction |
 | RAT-02 | Rate Beneficiary | Provider | Core | After `Completed`; separate path |
-| SAFE-01 | Block User | User | Core | May be a dialog/sheet instead of full page |
+| SAFE-01 | Block / Unblock User | User | Core | Does not break an Active Transaction |
 | SAFE-02 | Report User / Content | User | Core | May be a dialog/sheet instead of full page |
 
 ## Administration
@@ -82,7 +84,7 @@
 | ADM-02 | Verification Requests | Authorized Admin | Core | |
 | ADM-03 | Verification Review | Authorized Admin | Core | Final decision remains human |
 | ADM-04 | Reports / Flags Queue | Authorized Admin | Core | |
-| ADM-05 | Report / Complaint Review | Authorized Admin | Core | Policy enforcement only |
+| ADM-05 | Report / Complaint Review | Authorized Admin | Core | Human outcomes: No Violation / Warning / Content Removal / Temporary Restriction / Suspension / Permanent Ban |
 | ADM-06 | Subscription Records | Authorized Admin | Core | |
 | ADM-07 | Subscription Confirmation | Authorized Admin | Core | Manual/external collection confirmation |
 
