@@ -1,8 +1,8 @@
 # Lifecycles & State Machines
 
-> **الحالة:** `PARTIALLY ANALYZED — SYNCHRONIZED 2026-09-04`
+> **الحالة:** `PARTIALLY ANALYZED — SYNCHRONIZED 2026-09-18 THROUGH DEC-087`
 >
-> يعكس هذا الملف القرارات الحالية مع إبقاء القيم الزمنية والـthresholds والسياسات المفتوحة دون افتراض.
+> يعكس هذا الملف القرارات الحالية؛ القيم الزمنية المغلقة في DEC-081/082/083/086/087 أصبحت معتمدة، بينما تبقى الـthresholds والسياسات الأخرى المفتوحة دون افتراض.
 >
 > **Modeling convention:** جميع أسماء الحالات والأفعال داخل المخططات باللغة الإنجليزية وفق DEC-072.
 
@@ -23,7 +23,7 @@ stateDiagram-v2
 
 - `Matched` يعني أن الطلب توقف عن استقبال استجابات جديدة وأن المعاملة الرسمية بدأت مع المقدم المختار.
 - إغلاق الطلب قبل اختيار مقدم ليس Transaction Cancellation.
-- مدة عدم النشاط وتوقيت/عدد التذكيرات: `REQ-EXP-Q01`.
+- Reminder بعد 24h و48h، وExpiry بعد 72h من عدم نشاط Beneficiary؛ النشاط الفعلي يعيد العداد. Republish ينشئ Request جديدًا.
 
 ## 2. Provider Response Lifecycle
 
@@ -43,6 +43,21 @@ stateDiagram-v2
 - يمكن تعديل الاستجابة أو سحبها ما دام Request في حالة `Open` ولم يتم اختيار المقدم.
 - Provider Response قد تتضمن سعرًا مقترحًا وملاحظة و`RequiresDeposit` نعم/لا.
 - لا توجد حالة Payment/Deposit مالية مرتبطة بالاستجابة.
+
+## 2.1 Direct Transaction Start Request Lifecycle
+
+```mermaid
+stateDiagram-v2
+    [*] --> Pending
+    Pending --> Confirmed: Other party confirms within 12h
+    Pending --> Rejected: Other party rejects
+    Pending --> Expired: 12h elapsed
+    Confirmed --> [*]
+    Rejected --> [*]
+    Expired --> [*]
+```
+
+لا يوجد أكثر من Pending Transaction Start Request واحد بين الطرفين، والرفض/الانتهاء لا يغلق Conversation.
 
 ## 3. Communication and Transaction Start
 
@@ -113,7 +128,7 @@ stateDiagram-v2
 - `Approved` يغلق العمل التوثيقي للفاتورة داخل YADD ويؤدي إلى `Transaction = Completed`، لكنه لا يثبت دفعًا إلكترونيًا.
 - `Disputed` يعني أن الفاتورة لم تعتمد وأن Transaction لا تصبح Completed.
 - الشكوى الإدارية لا تمنح YADD صلاحية الفصل في المبالغ أو إصدار Refund/Compensation؛ دور الإدارة هو تطبيق سياسة المنصة على السلوك والسجلات الداخلية.
-- سياسة التصعيد عند عدم الاستجابة الطويلة: `INV-PENDING-Q01`.
+- Invoice pending: Reminder 24h و48h، ثم Overdue عند 72h دون Auto-Approval.
 
 ## 6. Rating Lifecycles — Post-Transaction
 
@@ -123,7 +138,9 @@ stateDiagram-v2
 stateDiagram-v2
     [*] --> Locked
     Locked --> ProviderRatingRequired: Transaction completed
-    ProviderRatingRequired --> ProviderRatingSubmitted: Beneficiary rates provider 1-5 stars
+    ProviderRatingRequired --> Deferred: Later
+    Deferred --> ProviderRatingRequired: 24h reminder / before new Transaction
+    ProviderRatingRequired --> ProviderRatingSubmitted: Hybrid rating
     ProviderRatingSubmitted --> [*]
 ```
 
