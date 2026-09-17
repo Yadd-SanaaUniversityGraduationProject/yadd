@@ -1,8 +1,8 @@
 # YADD Brand System — Working Reference
 
-> **Status:** IN PROGRESS — visual direction approved in team working discussion, pending final geometric refinement and formal synchronization where required.
+> **Status:** APPROVED BRAND SYMBOL — refined symbol master v3 approved in team working discussion on 2026-09-17. Production wordmark/variant synchronization remains in progress.
 >
-> **Classification note:** This file records the current working design direction. It does not by itself create a new Approved Requirement or replace the Decision Register.
+> **Classification note:** This file records the current working design direction and explicit team design approvals. It does not by itself create a new Approved Requirement or replace the Decision Register.
 
 ## 1. Canonical Brand Name
 
@@ -11,9 +11,9 @@
 
 The canonical project name itself is governed by the Decision Register.
 
-## 2. Approved Working Visual Direction
+## 2. Approved Visual Direction
 
-Current working direction selected for the brand:
+The selected brand direction is:
 
 - Primary symbol: an **open/spread white hand including the wrist**, rising inside a rounded-square app icon.
 - Primary icon background: energetic green.
@@ -22,7 +22,30 @@ Current working direction selected for the brand:
 - The symbol must not read primarily as charity, donation, government service, healthcare, accessibility, or institutional assistance.
 - The icon must remain recognizable at small app-icon sizes.
 
-## 3. Brand Character
+The original A5 visual supplied by the team is the visual source of truth for the symbol concept and pose.
+
+## 3. Approved Symbol Master — v3
+
+**Team Decision — 2026-09-17:** the conservative geometric refinement identified as **Refined Vector Candidate v3** is approved as the current symbol master.
+
+The approved refinement preserves the A5 concept rather than redesigning it:
+
+- same hand pose and wrist-entry direction;
+- same five-finger spread concept;
+- same two yellow motion/accent marks;
+- smoother production-oriented vector geometry;
+- cleaned palm/finger transitions and outer contour;
+- maintained app-icon silhouette and visual balance.
+
+Small-size legibility was visually checked at:
+
+- `48 px`;
+- `32 px`;
+- `24 px`.
+
+A monochrome treatment is also required as a production variant, but approval of the master symbol does not automatically freeze every future export/layout variant.
+
+## 4. Brand Character
 
 Desired character:
 
@@ -34,7 +57,7 @@ Desired character:
 - Modern without looking over-technological.
 - Trustworthy without using institutional or security-heavy symbolism.
 
-## 4. Color Direction
+## 5. Color Direction
 
 Current approved working palette direction:
 
@@ -43,54 +66,69 @@ Current approved working palette direction:
 - **Deep Navy** — text, grounding, contrast.
 - **White / Neutral tones** — backgrounds and supporting surfaces.
 
-Exact production hex values are **not yet frozen** in this file and must be finalized in `05-ui-foundation.md` after contrast/accessibility checks.
+Current working design values used in Figma/UI work are:
 
-## 5. Typography Direction
+- Primary Green: `#10B981`
+- Energetic Yellow: `#FBBF24`
+- Deep Navy: `#0F172A`
+- Off White: `#F8FAFC`
+
+These values remain **working design tokens** until their production/accessibility freeze is synchronized in `05-ui-foundation.md`.
+
+## 6. Typography Direction
 
 Current working typography direction:
 
 - Arabic: **Tajawal**.
 - Latin: **Inter**.
 
-Exact weights, sizes, line heights, and fallback stack are not yet frozen.
+Exact weights, sizes, line heights, fallback stack, and the final production wordmark construction are not yet frozen.
 
-## 6. Logo Variants Required
+## 7. Logo Variants Required
 
-Before the brand package is considered complete, the following variants must exist:
+The approved symbol master must be propagated into these controlled variants:
 
-1. Primary lockup — symbol + `يد | YADD`.
+1. Primary lockup — symbol + `يَد | YADD`.
 2. Symbol / app icon.
 3. Horizontal lockup.
 4. Monochrome version.
 5. Dark-background usage version.
+6. Small-size checks at `48 / 32 / 24 px`.
 
-## 7. Pending Logo Refinement
+The symbol master itself is approved; the final bilingual wordmark construction remains a separate production-refinement task.
 
-The concept is selected, but the hand geometry still requires refinement before being treated as production-ready:
+## 8. Closed and Open Logo Work
 
-- Finger proportion and hierarchy.
-- Palm balance.
-- Wrist-to-palm transition.
-- Negative spaces between fingers.
-- Small-size legibility.
-- Alignment and scale of the two yellow motion marks.
-- Monochrome performance.
+### Closed by approval
 
-This refinement must preserve the selected concept rather than reopen logo ideation.
+- Concept direction.
+- Hand pose and wrist-entry direction.
+- Finger/palm geometric refinement for the v3 master.
+- Two-ray accent concept.
+- Small-size visual check at 48/32/24 px.
 
-## 8. Explicit Non-Decisions
+### Still open
+
+- Precise bilingual wordmark construction (`يَد | YADD`).
+- Final clear-space rule.
+- Minimum-size rule as a documented specification.
+- Final primary/light/dark/monochrome variant set in Figma.
+- Export naming and handoff package.
+
+These remaining items must not reopen the symbol concept unless a concrete production defect is found.
+
+## 9. Explicit Non-Decisions
 
 The following are **not automatically approved** merely because they appeared in generated brand boards or mockups:
 
 - Marketing slogans/taglines such as `خدمات ومنتجات .. أقرب إليك`.
 - Claims such as `Buy. Sell. Enable.`.
 - Any demographic persona assumptions.
-- Any specific color hex value generated by AI artwork.
 - Any exact AI-generated wordmark typography.
 
 These remain Proposal / Needs Verification unless separately adopted.
 
-## 9. Design Principle for UI Use
+## 10. Design Principle for UI Use
 
 Brand colors should not flood the entire interface. The UI should use:
 
@@ -98,4 +136,4 @@ Brand colors should not flood the entire interface. The UI should use:
 - Yellow as a limited accent, not a dominant surface color.
 - Navy/neutral text and large white/neutral areas for clarity.
 
-This principle is a current design proposal to be validated through the UI work.
+This principle remains a working design proposal to be validated through the UI work.
