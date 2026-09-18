@@ -97,6 +97,7 @@
 | DEC-089 | نتائج المراجعة الإدارية للبلاغات/Flags في MVP: `No Violation`, `Warning`, `Content Removal`, `Temporary Restriction`, `Account Suspension`, `Permanent Ban`. العقوبات عالية الأثر لا تنفذ آليًا بواسطة AI؛ تحتاج قرارًا بشريًا مخولًا. يسجل كل قرار مع السبب والموظف والتاريخ/الوقت والبلاغ/الدليل المرتبط. مدة Temporary Restriction يحددها الموظف وفق السياسة المعتمدة ولا تثبت كرقم عام الآن. | `APPROVED` | اعتماد الفريق — Requirements Closure 2026-09-18 | يوسع Trust & Safety operational outcomes مع بقاء فئات/thresholds التفصيلية مفتوحة |
 | DEC-090 | قناة الإشعارات الافتراضية في MVP هي `In-App Notification`. يستخدم SMS لـOTP وأحداث أمان الحساب والإجراءات الحرجة على الحساب، ويمكن استخدام البريد كقناة اختيارية فقط إذا كان Verified. لا يرسل SMS لكل حدث، وPush Notifications خارج النطاق الحالي للWeb MVP ويمكن إضافتها لاحقًا. | `APPROVED` | اعتماد الفريق — Requirements Closure 2026-09-18 | يحدد Notification policy دون اختيار مزود SMS بعينه |
 
+| DEC-091 | يعتمد YADD Stack التنفيذ الحالي: `ASP.NET Core` لواجهة Web MVC والـBackend/Web API، و`Entity Framework Core` كطبقة ORM/Data Access، و`Microsoft SQL Server` كـDBMS، و`ASP.NET Core Identity` لإدارة هوية الحسابات والمصادقة الأساسية. تستخدم واجهة Web مصادقة Cookie-based ضمن Identity، ويستخدم عميل Flutter/API `JWT Bearer` للطلبات المحمية. يتصل Flutter بالBackend/API نفسه وفق DEC-065. تكامل AI يكون عبر External APIs خلف Integration/Service Layer؛ اختيار مزود AI النهائي والعتبات وسياسات الاحتفاظ تبقى مفتوحة وفق `AI-PROV-Q01`/`AI-MOD-Q02`/`AI-RET-Q01`. | `APPROVED_AS_TECHNICAL_STACK` | اعتماد الفريق — 2026-09-19 + TECH-MS-01..03 | يثبت Framework/ORM/DBMS/Identity/Auth direction؛ لا يثبت مزود AI أو الاستضافة أو الإصدارات الدقيقة للحزم دون مراجعة توافق/دعم منفصلة |
 
 ## عناصر ما زالت مقترحة أو تحت التحليل
 
@@ -104,13 +105,17 @@
 |---|---|---|---|
 | PROP-COM-01 | رسائل صوتية داخل المحادثة | `PROPOSED` | تقييم ضرورة MVP والحجم التقني |
 
-## قرارات تقنية غير مثبتة بعد
+## قرارات تقنية
 
 | ID | الخيار | الحالة | ملاحظة |
 |---|---|---|---|
 | TECH-001 | Flutter كتطبيق Mobile لاحق يتصل بالBackend/API نفسه | `APPROVED_AS_DIRECTION` | الإطار العام معتمد في DEC-065؛ تفاصيل التنفيذ لاحقًا |
-| TECH-002 | ASP.NET Core API للخلفية | `PROPOSED` | مرشح قوي؛ DEC-065 يحسم دور Backend لا Framework النهائي |
-| TECH-003 | API-based AI | `PROPOSED` | وظيفة AI معتمدة لكن المزود/البنية النهائية لم تحسم |
+| TECH-002 | ASP.NET Core MVC + Web API للWeb/Backend | `APPROVED` | DEC-091؛ أصبح Framework التنفيذ المعتمد |
+| TECH-003 | API-based AI Integration | `APPROVED_AS_INTEGRATION_DIRECTION` | DEC-091؛ External APIs خلف Service/Integration Layer، بينما المزود/العتبات/الاحتفاظ ما تزال مفتوحة |
+| TECH-004 | Entity Framework Core | `APPROVED` | DEC-091؛ ORM/Data Access مع SQL Server |
+| TECH-005 | Microsoft SQL Server | `APPROVED` | DEC-091؛ DBMS التنفيذ المعتمد بدل إشارات PostgreSQL المشتقة السابقة |
+| TECH-006 | ASP.NET Core Identity | `APPROVED` | DEC-091؛ إدارة User identity/passwords/roles/claims/tokens مع تخصيص نموذج YADD |
+| TECH-007 | Web Cookies + JWT Bearer for Flutter/API | `APPROVED_AS_AUTH_DIRECTION` | DEC-091؛ التفاصيل الأمنية مثل token lifetime/refresh/key management تبقى ضمن التصميم الأمني |
 
 ## نقاط لم تُحسم بعد
 
