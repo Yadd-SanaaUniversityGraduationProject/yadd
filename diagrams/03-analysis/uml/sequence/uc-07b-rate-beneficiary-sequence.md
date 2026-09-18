@@ -1,6 +1,6 @@
 # UC-07B — Provider Rates Beneficiary Sequence Diagram
 
-> **Status:** `REVIEW DRAFT — NOT BASELINED`
+> **Status:** `REVIEW DRAFT — SYNCHRONIZED 2026-09-18 — NOT BASELINED`
 >
 > **Purpose:** Sequence Diagram مشتق من `UC-07B — Provider Rates Beneficiary` فقط. يمثل التقييم الاختياري للمستفيد بعد اكتمال Transaction، باعتباره Post-Transaction operation مستقلة.
 
@@ -8,7 +8,7 @@
 
 - **Approved behavior:** `UC-07B — Provider Rates Beneficiary` in `docs/03-analysis/08-use-cases.md`.
 - **Rating model:** `docs/03-analysis/18-rating-reputation-model.md`.
-- **Business/decision basis:** `DEC-063`, `DEC-071` and the corresponding rating/business rules.
+- **Business/decision basis:** `DEC-063`, `DEC-071`, `DEC-087` and the corresponding rating/business rules.
 - **Precondition:** Transaction is `Completed` between the same Provider and Beneficiary.
 - **Rating data:** three behavioral indicators are required if Provider chooses to rate, each from 1 to 5; text comment is optional.
 - **Optionality:** Provider may skip the rating.
