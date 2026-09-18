@@ -1,6 +1,6 @@
 # UC-01 — Search and Inquire Directly Sequence Diagrams
 
-> **Status:** `REVIEW DRAFT — NOT BASELINED`
+> **Status:** `REVIEW DRAFT — SYNCHRONIZED 2026-09-18 — NOT BASELINED`
 >
 > **Purpose:** Sequence modeling مشتق من `UC-01 — Search and Inquire Directly` فقط. تم تقسيم الـUse Case إلى سيناريوهين مترابطين حتى تبقى كل Sequence Diagram واضحة وقابلة للعرض على A4 بدل دمج البحث والمحادثة وبدء Transaction في رسم واحد مزدحم.
 
@@ -8,6 +8,7 @@
 
 - **Approved behavior:** `UC-01 — Search and Inquire Directly` in `docs/03-analysis/08-use-cases.md`.
 - **Decision/business basis:** `DEC-012`, `DEC-031..033`, `DEC-046`, `DEC-047`, `DEC-064`, `DEC-066`, `DEC-069`, `DEC-075`, `DEC-082` and the corresponding current business rules.
+- **Location UI synchronization:** user-facing discovery selects `Neighborhood` only; `District` remains part of the underlying location model and is derived internally from the selected Neighborhood under the approved UI contract.
 - **Core rule:** Chat alone never creates a Transaction.
 - **Direct-search start rule:** either party may request Transaction Start; the pending request is valid for 12 hours and only one may be pending between the pair; `Active Transaction` is created only after the other party confirms within the validity window.
 - **Alternative:** rejection or 12-hour expiry cancels only the start request and leaves the conversation without a Transaction.
@@ -29,12 +30,15 @@ sequenceDiagram
     participant PROF as ProviderProfile «entity»
     participant CONV as Conversation «entity»
 
-    B->>BUI: searchProviders(category, area)
-    BUI->>DC: searchProviders(category, area)
-    DC->>PROF: findEligibleProviders(category, area)
+    B->>BUI: searchProviders(category, neighborhood)
+    BUI->>DC: searchProviders(category, neighborhood)
+    DC->>DC: deriveDistrict(neighborhood)
+    DC->>PROF: findEligibleProviders(category, district, neighborhood)
     PROF-->>DC: matchingProviderProfiles
     DC-->>BUI: searchResults
     BUI-->>B: showProviders()
+
+    Note over B,DC: Neighborhood is user-facing; District is derived internally and is not a separate search field
 
     B->>BUI: openProviderProfile(providerId)
     BUI->>DC: getProviderProfile(providerId)
