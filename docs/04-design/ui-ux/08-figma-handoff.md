@@ -139,6 +139,26 @@ The user explicitly approved the synchronized public-browse/search baseline in F
 - Protected Authentication Gate includes an explicit return-to-browse action.
 - Unapproved slogan-like header copy replaced with contract/scope-oriented copy.
 
+
+## Visual QA Corrections from Wireflow 01 Review — Approved 2026-09-18
+
+The previously approved `Wireflow 01 — APPROVED Visual Baseline v4` is **reopened for visual correction** after explicit user review. Its approved Functional Screen Contracts remain unchanged.
+
+The following rules are now mandatory before v4 can again serve as the visual reference for later wireflows:
+
+1. **No emoji / arbitrary glyph icons.** Replace emoji and Unicode-symbol placeholders with one coherent vector icon family and semantic icons.
+2. **Standard component alignment.** Button icon + label must use shared Auto Layout and be centered as one group. App-bar icons/actions use defined RTL slots.
+3. **Coherent search scenario.** A static Search Results frame must visibly correspond to its active search/filter context. Do not show unrelated Service/Product categories as though they came from one narrow search.
+4. **Provider Profile header correction.** `PUB-04` does not currently approve a Share action. The existing Share icon in the visual baseline is therefore an unsupported design addition and must be removed rather than merely repositioned.
+5. **Low-digital-familiarity UX direction.** Use restrained, semantically clear icons to reinforce important navigation/actions. Important or unfamiliar actions should normally pair the icon with a clear Arabic label.
+6. **No generic AI-mockup visual language.** Avoid decorative sparkles, arbitrary category colors, emoji-like symbols, and repeated floating-icon tiles that do not communicate a documented function.
+
+### Approval-state effect
+
+Until these corrections are applied and visually checked, `40:55` remains the latest approved-content baseline but is **not the final visual template to copy forward**.
+
+Do not propagate its known visual defects into AUTH/BEN/PRO/Admin wireflows.
+
 ## Synchronization Rule
 
 If Figma and repository specifications disagree, do not silently pick one. Identify whether the mismatch requires:
