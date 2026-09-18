@@ -1,6 +1,6 @@
 # UC-09 — Service Provider Identity Verification / Provider Portal Eligibility Sequence Diagrams
 
-> **Status:** `REVIEW DRAFT — NOT BASELINED`
+> **Status:** `REVIEW DRAFT — SYNCHRONIZED 2026-09-18 — NOT BASELINED`
 >
 > **Purpose:** تم تفكيك `UC-09 — Service Provider Identity Verification / Provider Portal Eligibility` إلى سيناريوهين متماسكين داخل الملف نفسه حتى يبقى الرسم قابلًا للقراءة على A4: تقديم/إعادة تقديم التحقق، ثم المراجعة البشرية والقرار. هذا Scenario Decomposition داخل UC-09 ولا ينشئ Use Cases جديدة.
 
@@ -9,7 +9,7 @@
 - **Approved behavior:** `UC-09 — Service Provider Identity Verification / Provider Portal Eligibility` in `docs/03-analysis/08-use-cases.md`.
 - **Provider Verification Model:** `docs/03-analysis/21-provider-verification-model.md`.
 - **Team decisions:** `DEC-010`, `DEC-035`, `DEC-036`, `DEC-037..040`, `DEC-085`.
-- **Business rules:** `BR-027`, `BR-028` and the current verification rules.
+- **Business rules:** `BR-027`, `BR-028`, `BR-060`, `BR-061` and the current verification rules.
 - **Core verification rule:** Service Provider requires Identity Verification before provider functions; Product Provider does not require Government ID in MVP and follows Account/Profile eligibility instead.
 - **Minimum approved evidence for SERVICE:** verified phone + legal name + National ID or Passport + document image + personal photo with document.
 - **Human decision rule:** final `Verified`, `Resubmission Required`, or `Rejected` decision is made by authorized YADD staff. AI/automated checks are advisory only.
