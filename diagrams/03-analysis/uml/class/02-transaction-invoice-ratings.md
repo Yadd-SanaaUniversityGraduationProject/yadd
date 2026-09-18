@@ -52,6 +52,17 @@ classDiagram
         +confirmTransactionStart()
     }
 
+    class TransactionStartRequest {
+        -Identifier transactionStartRequestId
+        -String status
+        -DateTime requestedAt
+        -DateTime expiresAt
+        -DateTime respondedAt
+        +confirm()
+        +reject()
+        +expire()
+    }
+
     class Message {
         -Identifier messageId
         -String messageType
@@ -134,6 +145,8 @@ classDiagram
     User "1" --> "0..*" Message : sends
     Message "1" --> "0..*" MessageAttachment : has
     Conversation "1" --> "0..*" SystemEvent : records boundaries
+    Conversation "1" --> "0..*" TransactionStartRequest : start requests
+    User "1" --> "0..*" TransactionStartRequest : requests
 
     User "1" --> "0..*" Transaction : beneficiary party
     ProviderProfile "1" --> "0..*" Transaction : provider party
@@ -163,7 +176,7 @@ classDiagram
 - `SystemEvent` عنصر تحليل مشتق من DEC-075 لتمثيل الفواصل/الأحداث الواضحة عند بدء وانتهاء Transactions داخل Conversation المستمرة. الربط الفيزيائي الدقيق بين System Event أو Message وTransaction محددة لم يُحسم، لذلك لا يفرض هذا الرسم Association مباشرة من `SystemEvent` إلى `Transaction`.
 - `Message.textContent` يمثل الرسائل النصية المعتمدة، و`MessageAttachment` يمثل الصور/المرفقات المدعومة في التواصل. لا يثبت هذا الرسم storage provider أو file format أو retention policy.
 - قد تبدأ أو تستمر Conversation في سياق Request، لكن هذا الـView لا يفرض علاقة مباشرة `Request ↔ Conversation` لأن Conversation المستمرة قد تمر بعدة Request contexts عبر الزمن؛ طريقة تمثيل تلك السياقات تؤجل إلى Chapter Four.
-- Request Route يبدأ Transaction عند اختيار Provider، بينما Direct Search يحتاج Request Transaction Start ثم confirmation من الطرف الآخر خلال 12 ساعة؛ Pending واحد فقط بين الطرفين.
+- Request Route يبدأ Transaction عند اختيار Provider، بينما Direct Search يستخدم `TransactionStartRequest` مستقلًا قبل Transaction؛ يبقى Pending حتى 12 ساعة، وبحد أقصى Pending واحد بين الطرفين، ولا ينشئ Transaction إلا عند Confirmed.
 - Request واحدة تنتج صفر أو Transaction واحدة فقط.
 - عند الإلغاء يحتفظ Transaction بالطرف الذي ألغى والسبب والتوقيت؛ الإلغاء مسموح حتى ما قبل Invoice approval/Completed.
 - `Completed` النهاية الناجحة؛ `Cancelled` و`Disputed` نهايات بديلة، ولا توجد حالة `Closed`.
