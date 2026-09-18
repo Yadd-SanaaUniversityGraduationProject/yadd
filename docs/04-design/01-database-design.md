@@ -1,10 +1,12 @@
 # Database Design — Relation Schema
 
-> **الحالة:** `DRAFT FOR PRELIMINARY DEFENSE — RE-SYNCHRONIZED THROUGH DEC-090 — NOT BASELINED`
+> **الحالة:** `DRAFT FOR PRELIMINARY DEFENSE — RE-SYNCHRONIZED THROUGH DEC-091 — NOT BASELINED`
 >
-> **آخر مزامنة:** 2026-09-18
+> **آخر مزامنة:** 2026-09-19
 >
-> **المصدر:** `docs/03-analysis/11-ERD.md` + SRS v0.9.10 + Business Rules الحالية. هذه الوثيقة تصميم مشتق ولا تنشئ Requirement أو Team Decision جديدًا.
+> **المصدر:** `docs/03-analysis/11-ERD.md` + SRS v0.9.10 + Business Rules الحالية + DEC-091 للتقنيات التنفيذية. هذه الوثيقة تصميم مشتق ولا تنشئ Requirement أو Team Decision جديدًا.
+>
+> **Implementation DBMS/Data Access:** Microsoft SQL Server عبر Entity Framework Core. يستخدم ASP.NET Core Identity كآلية تنفيذ لإدارة الحسابات/المصادقة؛ تبقى `User` هنا علاقة منطقية للمجال، ويجب حسم الـphysical mapping إلى Identity/ApplicationUser وجداول المصادقة قبل Baseline النهائي.
 
 ## 1. Design Boundary
 
