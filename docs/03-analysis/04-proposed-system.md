@@ -1,6 +1,6 @@
 # وصف النظام المقترح — Proposed System Working Model
 
-> **الحالة:** `ANALYZED — SYNCHRONIZED 2026-09-15 THROUGH DEC-077`
+> **الحالة:** `ANALYZED — SYNCHRONIZED 2026-09-18 THROUGH DEC-090`
 >
 > هذه الوثيقة وصف تحليلي مشتق من Decision Register وSRS وBusiness Rules الحالية. لا تتغلب على مصادر الحقيقة الأعلى ولا تجعل SRS Baselined.
 
