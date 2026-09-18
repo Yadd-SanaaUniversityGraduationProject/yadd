@@ -372,11 +372,13 @@ classDiagram
 - `selectProviderType(type)` يمثل اختيار النوع أثناء إعداد Provider Profile؛ سياسة تغيير النوع لاحقًا لم تعتمد بعد. `tradeName` اختياري لمقدم PRODUCT فقط.
 - `Conversation` واحدة فقط لنفس زوج Beneficiary/Provider: **`{unique Conversation per Beneficiary–Provider pair}`**. multiplicities العامة تبقى `0..*` لأن الطرف الواحد يمكنه محادثة أطراف مختلفة.
 - `RequestImage`, `MessageAttachment`, `InvoiceImage`, و`SystemEvent` تبقى Derived Analysis Elements، ولا تعتمد storage/schema details نهائية.
-- `SafetyFlag.reasonCategory` يمثل سبب/فئة الاشتباه المطلوبة للمراجعة البشرية؛ قائمة القيم والـthresholds ما تزال مفتوحة. Identity Verification الحكومية تخص SERVICE فقط.
+- `SafetyFlag.reasonCategory` يمثل سبب/فئة الاشتباه المطلوبة للمراجعة البشرية؛ قائمة القيم والـthresholds ما تزال مفتوحة. Generic Report يتطلب Reason بينما Description ليست إلزامية عالميًا؛ Transaction Complaint يتطلب Reason + Description. Identity Verification الحكومية تخص SERVICE فقط.
 - `ProviderProfile ↔ Area` و`Area ↔ Area` Associations تقابل مفاهيميًا `PROVIDER_SERVICE_AREA` و`AREA_ADJACENCY` في الـERD. اختلاف التمثيل مقصود لأن الـERD يركز على بنية البيانات، بينما لا توجد حاليًا Attributes/Operations مستقلة تبرر Association Classes في مخطط الفئات.
 - `SafetyFlag` و`AdminAuditRecord` تظهران دون speculative associations لأن target mapping/retention/storage لم تعتمد بعد.
 - لا توجد Composition لأن object-lifetime/deletion ownership لم يثبت بعد.
 - لا توجد Payment/Refund/Escrow/Settlement entities في معاملات Beneficiary↔Provider.
+- واجهات location تعرض Neighborhood فقط؛ District مشتق داخليًا مع بقاء District/Neighborhood hierarchy في النموذج.
+- Subscription Expired لا يلغي Provider Portal access أو المعاملات الجارية؛ يمنع فقط التعاملات الجديدة المحددة في DEC-086 حتى التجديد.
 - التفصيل الفيزيائي، PK/FK mapping، indexes، SQL constraints، media storage، polymorphic mappings، والـframework-specific methods تبقى Chapter Four concerns.
 
 ## Defense explanation
