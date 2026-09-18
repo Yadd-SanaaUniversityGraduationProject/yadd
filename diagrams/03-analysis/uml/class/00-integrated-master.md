@@ -389,4 +389,4 @@ classDiagram
 
 ## Review note
 
-تمت مراجعة الـMaster دلاليًا بعد مزامنة DEC-078..090 مقابل Decision Register وSRS وBusiness Rules وUse Cases وERD وTraceability Matrix. يميز النموذج الآن بين Account Verification وService Provider Identity Verification، ويدعم Trade Name، Hybrid Rating، Unblock، Notification وقرارات الإدارة المسجلة. ما يزال مطلوبًا **Visual/A4 Review** قبل اعتباره جاهزًا للتقرير النهائي، كما أن SRS نفسه ما يزال `NOT BASELINED`.
+تمت مراجعة الـMaster دلاليًا بعد مزامنة DEC-078..090 مقابل Decision Register وSRS وBusiness Rules وUse Cases وERD وTraceability Matrix. يميز النموذج الآن بين Account Verification وService Provider Identity Verification، ويدعم Trade Name، Hybrid Rating، Unblock، Notification وقرارات الإدارة المسجلة، ويحافظ على Neighborhood-only UI مع District داخلي، وعلى الفرق بين Generic Report وTransaction Complaint. ما يزال مطلوبًا **Visual/A4 Review** قبل اعتباره جاهزًا للتقرير النهائي، كما أن SRS نفسه ما يزال `NOT BASELINED`.
