@@ -1,6 +1,6 @@
 # UC-10 — Manage Portfolio / Catalog Sequence Diagram
 
-> **Status:** `REVIEW DRAFT — NOT BASELINED`
+> **Status:** `REVIEW DRAFT — SYNCHRONIZED 2026-09-18 — NOT BASELINED`
 >
 > **Purpose:** Sequence Diagram مشتق من `UC-10 — Manage Portfolio / Catalog` فقط. يوضح إضافة عنصر Portfolio/Catalog وحفظ الأصل بصورة غير عامة وإنشاء نسخة عرض بعلامة مائية، دون خلط مسار البلاغ والمراجعة الإدارية الموجود أصلًا في UC-08.
 
@@ -10,6 +10,7 @@
 - **Team decision:** `DEC-064`.
 - **Requirements:** `FR-PORT-01` through `FR-PORT-05` in `docs/03-analysis/05-SRS.md`.
 - **Business rules:** `BR-035` and `BR-036`.
+- **Open policy boundary:** final Portfolio/Catalog item Edit/Delete behavior remains `Needs Verification`; this sequence intentionally models approved addition/display only.
 - **Traceability:** Portfolio/Catalog is represented by the current `SHOWCASE_ITEM` concept.
 - **Rights rule:** Provider must declare the right to publish the uploaded content.
 - **Storage/display rule:** the original image is kept non-public; YADD exposes a display copy carrying an identifying watermark associated with YADD and the Provider account.
