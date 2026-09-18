@@ -47,7 +47,7 @@ ProviderProfile(
   TradeName NULL,
   Description,
   ProfileImageReference NULL,
-  IdentityIdentityVerificationStatus NULL,
+  IdentityVerificationStatus NULL,
   ProfileStatus
 )
 
@@ -167,8 +167,17 @@ ProviderRating(
   TransactionId FK UNIQUE -> Transaction.TransactionId,
   BeneficiaryUserId FK -> User.UserId,
   ProviderProfileId FK -> ProviderProfile.ProviderProfileId,
-  Stars,
+  OverallStars,
+  WorkflowStatus,
   Comment NULL
+)
+
+ProviderRatingCriterion(
+  ProviderRatingCriterionId PK,
+  ProviderRatingId FK -> ProviderRating.ProviderRatingId,
+  CriterionType,
+  TextualValue,
+  CandidateKey(ProviderRatingId, CriterionType)
 )
 
 BeneficiaryRating(
