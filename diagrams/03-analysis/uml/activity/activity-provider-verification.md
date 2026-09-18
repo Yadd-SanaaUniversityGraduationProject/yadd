@@ -6,7 +6,7 @@
 
 ## Source basis
 
-- `UC-09 — Provider Verification / Portal Activation`
+- `UC-09 — Service Provider Identity Verification / Provider Portal Eligibility`
 - `DEC-010`, `DEC-035`, `DEC-036`, `DEC-037..040`, `DEC-085`
 - Current verification business rules
 - `docs/03-analysis/21-provider-verification-model.md`
@@ -37,7 +37,7 @@ flowchart TD
     L --> M{Human Review Decision}
 
     M -- Verified --> N[Set VerificationCase Verified]
-    N --> O[Mark Provider Profile Verified]
+    N --> O[Mark Service Provider Identity Verified]
     O --> ZV([End — Verification Approved])
 
     M -- Resubmission Required --> P[Record Review Note / Reason]
@@ -63,7 +63,7 @@ Product Provider does not enter this Government-ID flow in MVP; it uses Account 
 - Provider permissions remain subject to the other applicable conditions defined elsewhere in the project model.
 - Before `Verified`, the account may continue as Beneficiary but cannot use Provider functions that require verification.
 - Sensitive verification data is non-public and access-controlled.
-- Exact accepted document types, retention periods, and profession-specific licenses remain open and are not invented here.
+- Accepted MVP document types are National ID or Passport; retention periods and profession-specific licenses remain open.
 
 ## Presentation note
 
