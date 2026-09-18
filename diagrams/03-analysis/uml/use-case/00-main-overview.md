@@ -26,7 +26,7 @@ flowchart LR
             LOGIN(["Log In"]):::usecase
             REGISTER(["Create Account"]):::usecase
             FORGOT(["Forgot / Reset Password"]):::usecase
-            MANAGE_ACC(["Manage / Deactivate Account"]):::usecase
+            MANAGE_ACC(["Manage / Deactivate<br/>Account"]):::usecase
             SWITCH(["Switch Portal"]):::usecase
             UC00(["Browse Public Provider<br/>Information"]):::usecase
             UC01(["Search and Inquire<br/>Directly"]):::usecase
@@ -50,7 +50,7 @@ flowchart LR
 
         subgraph TRUST["Provider & Trust"]
             direction LR
-            BLOCK(["Block User"]):::usecase
+            BLOCK(["Block / Unblock User"]):::usecase
             REPORT(["Report User / Content"]):::usecase
             UC09(["Service Provider Identity<br/>Verification / Eligibility"]):::usecase
             UC10(["Manage Portfolio /<br/>Catalog"]):::usecase
