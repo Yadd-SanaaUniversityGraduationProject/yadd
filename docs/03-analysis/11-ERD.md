@@ -78,6 +78,7 @@ erDiagram
     TRANSACTION ||--o| PROVIDER_RATING : provider_rating
     USER ||--o{ PROVIDER_RATING : writes
     PROVIDER_PROFILE ||--o{ PROVIDER_RATING : receives
+    PROVIDER_RATING ||--|{ PROVIDER_RATING_CRITERION : contains
 
     TRANSACTION ||--o| BENEFICIARY_RATING : beneficiary_rating
     PROVIDER_PROFILE ||--o{ BENEFICIARY_RATING : writes
@@ -86,15 +87,26 @@ erDiagram
     USER {
       identifier user_id PK
       string account_status
-      string full_name
+      string first_name
+      string father_name
+      string grandfather_name
+      string family_name
       string phone
+      datetime phone_verified_at
+      string email
+      datetime email_verified_at
+      string last_portal
+      datetime deactivated_at
     }
 
     PROVIDER_PROFILE {
       identifier provider_profile_id PK
       identifier user_id FK
       string provider_type
-      string verification_status
+      string trade_name
+      string description
+      string profile_image_reference
+      string identity_verification_status
       string profile_status
     }
 
@@ -211,8 +223,16 @@ erDiagram
       identifier transaction_id FK
       identifier beneficiary_user_id FK
       identifier provider_profile_id FK
-      int stars
+      int overall_stars
+      string workflow_status
       string comment
+    }
+
+    PROVIDER_RATING_CRITERION {
+      identifier provider_rating_criterion_id PK
+      identifier provider_rating_id FK
+      string criterion_type
+      string textual_value
     }
 
     BENEFICIARY_RATING {
@@ -291,8 +311,8 @@ erDiagram
 ### INVOICE_VERSION / INVOICE_ITEM
 يمثلان الاحتفاظ بتاريخ نسخ الفاتورة بدل الكتابة فوق نسخة واحدة.
 
-### PROVIDER_RATING
-تقييم Beneficiary للمقدم بعد Transaction Completed: 1–5 stars، comment optional، وبحد أقصى تقييم واحد لكل Transaction. لا ينشئه Guest.
+### PROVIDER_RATING / PROVIDER_RATING_CRITERION
+تقييم Beneficiary للمقدم بعد Transaction Completed بنموذج Hybrid: `overall_stars` من 1–5 + خمسة Structured Textual Criteria تختلف تسمياتها حسب Provider Type + `comment` اختياري. يمكن تأجيل التقييم (`Later`) مع Reminder بعد 24h، ويجب إكمال التقييم المطلوب قبل بدء Transaction جديدة. بحد أقصى تقييم Provider واحد لكل Transaction، ولا ينشئه Guest. العرض العام لهوية المقيّم يقتصر على First Name مع دلالة Verified Transaction Review وفق DEC-087.
 
 ### BENEFICIARY_RATING
 تقييم Provider للمستفيد بعد Transaction Completed: optional، ثلاثة مؤشرات 1–5، comment optional، وبحد أقصى تقييم واحد لكل Transaction. سجل التفاعل ليس Public Guest data.
@@ -317,6 +337,7 @@ erDiagram
     USER ||--o{ USER_BLOCK : is_target_of
 
     USER ||--o{ REPORT : submits
+    USER ||--o{ NOTIFICATION : receives
     USER o|--o{ REPORT : may_target_user
     PROVIDER_PROFILE o|--o{ REPORT : may_target_provider
     SHOWCASE_ITEM o|--o{ REPORT : may_target_content
@@ -352,6 +373,9 @@ erDiagram
       identifier block_id PK
       identifier blocker_user_id FK
       identifier blocked_user_id FK
+      string status
+      datetime blocked_at
+      datetime unblocked_at
     }
 
     REPORT {
@@ -360,6 +384,7 @@ erDiagram
       string target_type
       identifier target_reference
       string reason
+      string description
       string status
       datetime created_at
     }
@@ -377,18 +402,31 @@ erDiagram
       string subject_type
       identifier subject_reference
       string event_type
+      string decision_outcome
+      string reason
       datetime recorded_at
+    }
+
+    NOTIFICATION {
+      identifier notification_id PK
+      identifier user_id FK
+      string type
+      string channel
+      string status
+      datetime created_at
+      datetime read_at
     }
 ```
 
 ### Supporting-model notes
 
-- `USER_BLOCK` يمثل Block كعلاقة حماية مباشرة مستقلة عن `REPORT`، وكلاهما يتطلب authenticated User؛ Guest لا ينشئهما قبل Authentication.
+- `USER_BLOCK` يمثل Block كعلاقة حماية مباشرة مستقلة عن `REPORT` ويدعم Unblock. Block يمنع التفاعل الجديد لكنه لا يكسر Active Transaction ولا يمنع إجراءاتها الأساسية/System Notifications — DEC-088.
 - `REPORT.target_reference` تمثيل مفاهيمي polymorphic؛ التنفيذ الفيزيائي قد يفصله إلى علاقات أكثر صرامة.
 - `VERIFICATION_CASE.review_note` يمثل الملاحظة/السبب عند طلب إعادة التقديم أو الرفض.
 - `SAFETY_FLAG.reason_category` يمثل سبب/فئة الاشتباه المطلوبة للمراجعة البشرية؛ taxonomy والـthresholds لم تعتمد بعد.
 - `SAFETY_FLAG` و`ADMIN_AUDIT_RECORD` مفاهيم تحليلية؛ schema/retention/thresholds لم تعتمد بعد.
 - Verification, Subscription, Reports, Flags and Audit are not public Guest data.
+- `NOTIFICATION` يدعم In-App كقناة افتراضية، SMS للأمان/OTP والإجراءات الحرجة، والبريد الموثق اختيارياً — DEC-090.
 
 ---
 
@@ -425,11 +463,11 @@ erDiagram
 13. Direct Search Transaction قد تكون بلا Request/Provider Response — DEC-066/069.
 14. Transaction الناتجة من Direct Search لا تنشأ إلا بعد Mutual Start Confirmation — DEC-069.
 15. كل Invoice Version تنتمي إلى Transaction واحدة وتحتوي بندًا واحدًا على الأقل.
-16. Transaction `Completed` تسمح Provider Rating واحدة بحد أقصى من Beneficiary.
+16. Transaction `Completed` تسمح Provider Rating واحدة بحد أقصى من Beneficiary، وتحتوي Overall Stars + خمسة Structured Textual Criteria + Optional Comment — DEC-087.
 17. Transaction `Completed` تسمح Beneficiary Rating واحدة بحد أقصى من Provider، وهي اختيارية.
 18. Transaction `Disputed` لا تسمح Ratings — DEC-073.
 19. `AREA_ADJACENCY` يمثل علاقة جوار مُدارة بين الأحياء.
-20. `USER_BLOCK` و`REPORT` مستقلان — DEC-053.
+20. `USER_BLOCK` و`REPORT` مستقلان؛ Unblock مدعوم، والحظر لا يكسر Active Transaction — DEC-053/088.
 21. Transaction Cancellation تسجل Actor/Reason/Time — DEC-048 / BR-019.
 22. DEC-077 لا يضيف جدول/كيان Guest؛ يجب أن تراعى public/private field exposure في API/query/interface design بدل اختراع persistence غير مطلوب.
 
