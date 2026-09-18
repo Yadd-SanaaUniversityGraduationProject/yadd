@@ -84,45 +84,72 @@ sequenceDiagram
     participant BUI as BeneficiaryUI «boundary»
     participant PUI as ProviderUI «boundary»
     participant TC as TransactionController «control»
+    participant SR as TransactionStartRequest «entity»
     participant TX as Transaction «entity»
+
+    Note over B,SR: Precondition: no other Pending Transaction Start Request exists for this pair
 
     alt Beneficiary requests Transaction Start
         B->>BUI: requestTransactionStart()
         BUI->>TC: requestTransactionStart(conversationId)
-        TC-->>PUI: requestStartConfirmation()
+        TC->>SR: createPending(requestedAt, expiresAt=+12h)
+        SR-->>TC: pendingStartRequest(startRequestId)
+        TC-->>PUI: requestStartConfirmation(startRequestId, expiresAt)
         PUI-->>P: showStartRequest()
 
         alt Provider confirms
             P->>PUI: confirmTransactionStart()
-            PUI->>TC: confirmTransactionStart(conversationId)
+            PUI->>TC: confirmTransactionStart(startRequestId)
+            TC->>SR: markConfirmed()
+            SR-->>TC: confirmedWithinValidity
             TC->>TX: createActiveTransaction(Beneficiary, Provider)
             TX-->>TC: transactionCreated(transactionId, ACTIVE)
             TC-->>BUI: transactionActive(transactionId)
             TC-->>PUI: transactionActive(transactionId)
             BUI-->>B: showActiveTransaction()
             PUI-->>P: showActiveTransaction()
-        else Provider does not confirm or rejects
+        else Provider rejects
+            P->>PUI: rejectTransactionStart()
+            PUI->>TC: rejectTransactionStart(startRequestId)
+            TC->>SR: markRejected()
             TC-->>BUI: noTransactionCreated()
+            BUI-->>B: keepConversationWithoutTransaction()
+        else 12 hours elapse without response
+            TC->>SR: markExpired()
+            TC-->>BUI: startRequestExpired()
+            TC-->>PUI: startRequestExpired()
             BUI-->>B: keepConversationWithoutTransaction()
         end
 
     else Provider requests Transaction Start
         P->>PUI: requestTransactionStart()
         PUI->>TC: requestTransactionStart(conversationId)
-        TC-->>BUI: requestStartConfirmation()
+        TC->>SR: createPending(requestedAt, expiresAt=+12h)
+        SR-->>TC: pendingStartRequest(startRequestId)
+        TC-->>BUI: requestStartConfirmation(startRequestId, expiresAt)
         BUI-->>B: showStartRequest()
 
         alt Beneficiary confirms
             B->>BUI: confirmTransactionStart()
-            BUI->>TC: confirmTransactionStart(conversationId)
+            BUI->>TC: confirmTransactionStart(startRequestId)
+            TC->>SR: markConfirmed()
+            SR-->>TC: confirmedWithinValidity
             TC->>TX: createActiveTransaction(Beneficiary, Provider)
             TX-->>TC: transactionCreated(transactionId, ACTIVE)
             TC-->>BUI: transactionActive(transactionId)
             TC-->>PUI: transactionActive(transactionId)
             BUI-->>B: showActiveTransaction()
             PUI-->>P: showActiveTransaction()
-        else Beneficiary does not confirm or rejects
+        else Beneficiary rejects
+            B->>BUI: rejectTransactionStart()
+            BUI->>TC: rejectTransactionStart(startRequestId)
+            TC->>SR: markRejected()
             TC-->>PUI: noTransactionCreated()
+            PUI-->>P: keepConversationWithoutTransaction()
+        else 12 hours elapse without response
+            TC->>SR: markExpired()
+            TC-->>BUI: startRequestExpired()
+            TC-->>PUI: startRequestExpired()
             PUI-->>P: keepConversationWithoutTransaction()
         end
     end
