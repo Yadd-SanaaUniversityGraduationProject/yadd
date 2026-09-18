@@ -88,9 +88,11 @@ flowchart TD
     U --> B[Beneficiary Portal]
     U --> HAS{Provider Profile Eligible?}
     HAS -->|No| CREATE[Create or Complete Provider Profile]
-    CREATE --> TYPE[Select Provider Type and Categories]
-    TYPE --> VERIFY[Provider Verification]
-    VERIFY -->|Approved and Other Conditions Met| P[Provider Portal]
+    CREATE --> TYPE{Select Provider Type}
+    TYPE -->|SERVICE| VERIFY[Service Provider Identity Verification]
+    VERIFY -->|Verified and Other Conditions Met| P[Provider Portal]
+    TYPE -->|PRODUCT| ELIG[Complete Account/Profile Eligibility]
+    ELIG -->|Other Conditions Met| P
     HAS -->|Yes| P
     B <-->|Switch Portal| P
 ```
@@ -114,10 +116,9 @@ flowchart TD
 
 ## 8. حدود تفاصيل التحقق — Verification Detail Boundary
 
-عملية `Provider Verification` نفسها معتمدة، وتتضمن كحد أدنى وثيقة هوية رسمية إضافة إلى صورة شخصية مع الوثيقة ومراجعة بشرية نهائية.
+عملية `Identity Verification` الحكومية تخص `Service Provider` فقط في MVP. الوثائق المقبولة هي `National ID` أو `Passport`، مع صورة الوثيقة وصورة شخصية مع الوثيقة ومراجعة بشرية نهائية. `Product Provider` لا يمر بهذا المسار ولا يحصل على `Identity Verified` لمجرد توثيق الهاتف.
 
 ما يزال مفتوحًا و**لا يجوز اختلاقه داخل المخططات**:
-- أنواع/جوانب وثائق الهوية المقبولة بدقة؛
 - مدة الاحتفاظ ببيانات الهوية/التحقق؛
 - فئات الأنشطة التي تتطلب ترخيصًا مهنيًا إضافيًا.
 
