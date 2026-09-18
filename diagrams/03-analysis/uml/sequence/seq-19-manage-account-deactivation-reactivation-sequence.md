@@ -1,6 +1,6 @@
 # Sequence 19 — Manage Account, Deactivation & Reactivation
 
-> **Status:** `REVIEW DRAFT — SYNCHRONIZED 2026-09-18 — NOT BASELINED`
+> **Status:** `REVIEW DRAFT — SYNCHRONIZED 2026-09-19 — NOT BASELINED`
 >
 > **Purpose:** Represents approved User-account management, verification-sensitive changes, Deactivate Account and Reactivation. It does not manage Provider Profile fields such as Product Trade Name.
 
@@ -15,6 +15,7 @@
 ## Diagram
 
 ```mermaid
+%%{init: {"theme":"base","themeVariables":{"background":"#FFFFFF","fontFamily":"Arial","actorBkg":"#F8E8C8","actorBorder":"#7E7E7E","actorTextColor":"#222222","actorLineColor":"#8A8A8A","signalColor":"#A07878","signalTextColor":"#5C3F3F","labelBoxBkgColor":"#FFFFFF","labelBoxBorderColor":"#7E7E7E","labelTextColor":"#222222","loopTextColor":"#222222","noteBkgColor":"#FFFFFF","noteBorderColor":"#7E7E7E","noteTextColor":"#222222","activationBkgColor":"#C8E0E8","activationBorderColor":"#7B969C","sequenceNumberColor":"#222222"}}}%%
 sequenceDiagram
     actor U as User
     participant UI as AccountUI «boundary»
