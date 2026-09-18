@@ -1,14 +1,14 @@
 # UC-06 — Create, Revise and Approve Final Invoice Sequence Diagrams
 
-> **Status:** `REVIEW DRAFT — NOT BASELINED`
+> **Status:** `REVIEW DRAFT — SYNCHRONIZED 2026-09-18 — NOT BASELINED`
 >
 > **Purpose:** تم تفكيك `UC-06 — Create, Revise and Approve Final Invoice` إلى سيناريوهين متماسكين بدل وضع دورة الفاتورة كاملة في Sequence Diagram واحدة كبيرة. هذا **Scenario Decomposition** داخل UC-06 وليس إنشاء Use Cases جديدة.
 
 ## Source basis
 
 - **Approved behavior:** `UC-06 — Create, Revise and Approve Final Invoice` in `docs/03-analysis/08-use-cases.md`.
-- **Requirements:** `FR-010`, `FR-010A`, `FR-011`, `FR-011A`, `FR-011B`, `FR-011C`, `FR-011D`, and the current completion requirement in `docs/03-analysis/05-SRS.md`.
-- **Business rules:** `BR-009` through `BR-013`, plus the current dispute/completion rules.
+- **Requirements:** `FR-010`, `FR-010A`, `FR-011..FR-011G`, `FR-012`, `FR-012A` in `docs/03-analysis/05-SRS.md`.
+- **Business rules:** `BR-009` through `BR-013`, plus `BR-057..059` and the current dispute/completion rules.
 - **Lifecycle:** Final Invoice is sent as `Pending Customer Approval`; reminders occur at 24h and 48h, and at 72h it becomes `Overdue` without Auto-Approval; approval makes Transaction `Completed`; revision returns the invoice to Provider and then back for review.
 - **Detailed model:** `docs/03-analysis/15-invoice-approval-and-dispute.md`.
 - **Derived modeling roles:** `ProviderUI`, `BeneficiaryUI`, `InvoiceController`, and `TransactionController` are Sequence modeling roles, not approved implementation class names.
@@ -88,6 +88,12 @@ sequenceDiagram
             BUI->>IC: requestRevision(invoiceId, note)
             IC->>I: recordRevisionRequest(note)
             I-->>IC: revisionRequestRecorded()
+
+            opt This is the second consecutive revision
+                IC-->>BUI: surfaceTransactionComplaintOption()
+                BUI-->>B: showComplaintOption()
+            end
+
             IC-->>PUI: revisionRequested(note)
             PUI-->>P: showRevisionRequest(note)
 
@@ -118,11 +124,17 @@ sequenceDiagram
         else Continued disagreement before approval
             Note over B,P: Continue to the separate Transaction Complaint / Administrative Review sequence
             Note over B,T: Raising a complaint does not by itself mean immediate automatic Disputed status
+
+        else No Beneficiary response
+            Note over B,I: 24h -> Reminder #1
+            Note over B,I: 48h -> Reminder #2
+            IC->>I: markPendingCustomerApprovalOverdueAt72h()
+            I-->>IC: overdueStatusRecorded()
+            IC-->>BUI: invoiceOverdue()
+            BUI-->>B: showPendingOverdueStatus()
+            Note over B,I: No response never becomes Auto-Approval
         end
     end
-
-    Note over B,I: No response keeps the invoice Pending Customer Approval — no Auto-Approval
-    Note over B,I: Reminder at 24h and 48h; at 72h invoice becomes Overdue — no Auto-Approval
 ```
 
 ## Scope boundary
