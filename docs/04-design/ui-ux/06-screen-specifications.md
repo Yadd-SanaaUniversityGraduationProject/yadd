@@ -1,6 +1,6 @@
 # YADD Screen Specifications — Working Draft
 
-> **Status:** IN PROGRESS — APPROVED UI CONTRACTS THROUGH PUB-06
+> **Status:** IN PROGRESS — APPROVED UI CONTRACTS THROUGH AUTH-06
 >
 > This document records detailed screen-level UI contracts derived from the current project requirements and explicitly reviewed UI decisions. It does not override the Decision Register, SRS, or Business Rules.
 >
@@ -612,6 +612,402 @@ A simple transition/session-check state may be shown when needed. No complex bus
 - **Mobile:** may be presented as a full screen or equivalent focused blocking surface.
 - **Desktop:** may be presented as a modal/dialog or focused screen.
 - The required actions remain exactly `Log In / Create Account / Back to Browsing` regardless of presentation.
+
+---
+
+# AUTH-01 — Sign In
+
+- **Contract status:** `APPROVED UI CONTRACT — 2026-09-18`
+- **Primary actor:** Guest / returning User.
+- **Related sources:** `FR-001C`; `FR-001D`; `FR-GST-05`; `DEC-077`; `DEC-078`; `BR-049`; `UF-01`; Screen Inventory `AUTH-01`.
+- **Classification:** Requirement-backed authentication + approved focused-auth presentation.
+
+## Goal
+
+Authenticate an existing YADD User using an approved verified identifier and password.
+
+## Required fields
+
+1. `رقم الهاتف أو البريد الإلكتروني`
+2. `كلمة المرور`
+
+Login accepts:
+
+- verified Mobile Number + Password; or
+- verified Email + Password.
+
+There is no independent Username in the current account model.
+
+## Actions
+
+### `تسجيل الدخول`
+
+Submits the credentials for Authentication.
+
+### `نسيت كلمة المرور؟`
+
+Opens `AUTH-05 Forgot / Reset Password`.
+
+### `إنشاء حساب جديد`
+
+Opens `AUTH-02 Create Account + Phone OTP`.
+
+### Back
+
+Returns to the previous public/authentication context where applicable.
+
+## States
+
+- Default.
+- Loading / submitting.
+- Invalid credentials.
+- General authentication error.
+
+Do not expose internal security details in error messages.
+
+## Navigation / presentation
+
+Authentication screens use a focused layout and do **not** display the public Mobile Bottom Navigation during the credential flow.
+
+## Explicit exclusions
+
+Do not add without a new decision/requirement:
+
+- independent Username;
+- Beneficiary/Provider choice inside the login form;
+- normal-login OTP field;
+- Google/Apple/social sign-in;
+- biometric login.
+
+---
+
+# AUTH-02 — Create Account + Phone OTP
+
+- **Contract status:** `APPROVED UI CONTRACT — 2026-09-18`
+- **Primary actor:** Guest.
+- **Related sources:** `FR-001A`; `FR-001B`; `DEC-078`; `BR-048`; Account & Portal Model; `UF-01`; Screen Inventory `AUTH-02`.
+- **Classification:** Requirement-backed registration + approved two-step UI presentation; password confirmation is derived UI validation.
+
+## Goal
+
+Create one YADD User account and verify the required Mobile Number before account creation is considered complete.
+
+## Step 1 — Account data
+
+Required fields:
+
+1. First Name / `الاسم الأول`.
+2. Father Name / `اسم الأب`.
+3. Grandfather Name / `اسم الجد`.
+4. Family Name / `اسم العائلة`.
+5. Mobile Number / `رقم الهاتف`.
+6. Password / `كلمة المرور`.
+7. acceptance of Terms / Privacy.
+
+Optional field:
+
+- Email Address / `البريد الإلكتروني`.
+
+### Derived UI validation — approved
+
+A `تأكيد كلمة المرور` field may be used to reduce input mistakes. It is a UI validation field and does not represent an additional account-domain attribute.
+
+### Main action
+
+`إنشاء الحساب والمتابعة`
+
+Continues to the mandatory phone-verification step.
+
+## Step 2 — Phone OTP
+
+Required UI:
+
+- indication of the Mobile Number being verified;
+- OTP input;
+- `تحقق` action;
+- `إعادة إرسال الرمز` action.
+
+The account does not complete successfully until phone OTP verification succeeds.
+
+## After successful verification
+
+Continue to:
+
+`AUTH-03 Initial Portal Selection`.
+
+## States
+
+- Form default.
+- Validation errors.
+- Submitting.
+- OTP awaiting input.
+- OTP verification error.
+- Resend state.
+- Verification success.
+
+## Open / not frozen
+
+Do not invent until separately verified/decided:
+
+- OTP lifetime such as 30/60 seconds;
+- resend cooldown value;
+- maximum OTP attempts;
+- account lockout thresholds;
+- final password-complexity policy beyond the requirements already defined elsewhere.
+
+## Explicit exclusions
+
+Account creation must not ask for:
+
+- permanent Beneficiary/Provider account type;
+- Provider Type (`SERVICE` / `PRODUCT`);
+- Provider Category;
+- Government ID / provider verification artifacts.
+
+Those belong to later portal/provider setup flows.
+
+## Navigation / presentation
+
+No Bottom Navigation during registration / OTP. Use the approved YADD identity and RTL-focused authentication layout.
+
+---
+
+# AUTH-03 — Initial Portal Selection
+
+- **Contract status:** `APPROVED UI CONTRACT — 2026-09-18`
+- **Primary actor:** authenticated User on initial use/onboarding.
+- **Related sources:** `FR-001E`; `DEC-008..011`; `DEC-078`; Account & Portal Model; `UF-01`; Screen Inventory `AUTH-03`.
+- **Classification:** Requirement-backed portal model + approved wording/presentation.
+
+## Goal
+
+Let the authenticated User choose the starting portal experience without creating a permanent account type.
+
+## Required concept
+
+The UI must communicate that this is a **starting portal choice**, not a permanent role/account classification.
+
+Recommended approved wording:
+
+`كيف تريد استخدام يَد الآن؟`
+
+Do not use wording equivalent to `اختر نوع حسابك`.
+
+## Options
+
+### `مستفيد`
+
+Supporting meaning:
+
+`ابحث عن مقدمي الخدمات والمنتجات وانشر طلباتك.`
+
+Behavior:
+
+→ open Beneficiary Portal.
+
+Beneficiary capabilities do not require a Provider Profile.
+
+### `مقدم`
+
+Supporting meaning:
+
+`قدّم خدماتك أو منتجاتك عبر ملف مقدم.`
+
+Behavior:
+
+- if an eligible Provider Profile already exists, continue to the Provider experience as applicable;
+- if Provider Profile is absent/incomplete, start or continue Create / Complete Provider Profile.
+
+## Account-model rule
+
+Selecting either option does not create two accounts and does not permanently lock the User to one role.
+
+## Navigation / presentation
+
+Use a focused onboarding layout. No public Bottom Navigation is required on this initial-choice screen.
+
+---
+
+# AUTH-04 — Portal Switch
+
+- **Contract status:** `APPROVED UI CONTRACT — 2026-09-18`
+- **Primary actor:** authenticated User.
+- **Related sources:** `FR-001F`; `DEC-008..011`; `DEC-074/076`; Account & Portal Model; `UF-01`; Screen Inventory `AUTH-04`.
+- **Classification:** Requirement-backed portal switching + derived UI control.
+
+## Goal
+
+Allow the same authenticated User account to switch between Beneficiary and Provider portals according to Provider Profile eligibility.
+
+## Switch destinations
+
+### Beneficiary Portal
+
+Available to the authenticated User without requiring a Provider Profile.
+
+### Provider Portal
+
+If Provider Profile is eligible:
+
+→ open Provider Portal.
+
+If Provider Profile does not exist or is incomplete/ineligible for the requested provider experience:
+
+→ start/continue the appropriate Provider Profile completion flow rather than creating another User account.
+
+## Persistence rule
+
+The system remembers the last Portal used and uses it as the default portal on later login, according to the current account model.
+
+## Explicit exclusions
+
+Do not model portal switching as:
+
+- logout + login into another account;
+- separate Beneficiary account;
+- separate Provider account.
+
+Provider Type change is a separate unresolved policy and must not be implied by Portal Switch.
+
+---
+
+# AUTH-05 — Forgot / Reset Password
+
+- **Contract status:** `APPROVED UI CONTRACT — 2026-09-18`
+- **Primary actor:** User who cannot access the account with the current password.
+- **Related sources:** `FR-001D`; `DEC-078`; `BR-049`; Account & Portal Model; Screen Inventory `AUTH-05`.
+- **Classification:** Requirement-backed recovery + derived multi-step UI.
+
+## Goal
+
+Restore account access through an approved verified recovery channel, then set a new password.
+
+## Primary recovery path — Phone OTP
+
+1. User supplies the account Mobile Number.
+2. System sends OTP through the approved phone-verification channel.
+3. User enters OTP.
+4. After successful verification, User sets a new password.
+
+## Additional recovery option
+
+A verified Email may be offered as an additional recovery option.
+
+An unverified Email must not be treated as a valid login/recovery identifier.
+
+## New-password UI
+
+Use:
+
+- `كلمة المرور الجديدة`;
+- `تأكيد كلمة المرور الجديدة` as derived UI validation.
+
+## Actions
+
+- `إرسال رمز التحقق`.
+- `تحقق`.
+- `تعيين كلمة المرور`.
+- `العودة لتسجيل الدخول` → `AUTH-01`.
+
+## States
+
+- recovery identifier input;
+- sending code;
+- awaiting verification;
+- verification error;
+- set-new-password;
+- success;
+- general error.
+
+## Open / not frozen
+
+Do not invent:
+
+- OTP duration;
+- resend cooldown;
+- maximum attempts;
+- lockout timing.
+
+## Explicit exclusions
+
+Do not add security questions or recovery-code mechanisms unless separately approved.
+
+---
+
+# AUTH-06 — Manage / Deactivate Account
+
+- **Contract status:** `APPROVED UI CONTRACT — 2026-09-18`
+- **Primary actor:** authenticated User.
+- **Related sources:** `FR-001G`; current Account / Portal model; `DEC-079`; `BR-050`; Screen Inventory `AUTH-06`.
+- **Classification:** Requirement-backed account management + derived confirmation UI.
+
+## Goal
+
+Allow the authenticated User to manage User-account data and deactivate/reactivate the account according to the current account policy.
+
+This screen manages the User Account, not the Provider Profile.
+
+## Manageable account data
+
+- four-part name;
+- Mobile Number;
+- Email Address;
+- Password;
+- profile image.
+
+## Verification-sensitive changes
+
+### Mobile Number change
+
+Requires new phone OTP verification.
+
+### Email change
+
+The new Email cannot be used for login/recovery until Verification succeeds.
+
+### Real-name change for verified Service Provider
+
+A real-name change requires re-review of the Service Provider identity-verification state according to the current verification policy.
+
+The account-management UI must communicate this consequence before the change is finalized where applicable.
+
+## Account deactivation
+
+Provide:
+
+`تعطيل الحساب`
+
+with an explicit confirmation step before execution.
+
+The MVP supports Deactivate / Reactivate.
+
+## Explicit exclusion — no self-service hard delete
+
+Do not provide a `حذف الحساب نهائيًا` self-service action in the MVP UI because direct self-service Hard Delete is not part of the current approved model.
+
+## States
+
+- loaded account data;
+- editing;
+- validation error;
+- re-verification required;
+- saving;
+- save success/error;
+- deactivation confirmation;
+- deactivated/reactivation context as applicable.
+
+## Responsive behavior
+
+- **Mobile:** account settings as a clear single-column settings flow.
+- **Tablet/Desktop:** grouped settings sections are allowed.
+- Verification and account-policy rules do not change across breakpoints.
+
+## Shared authentication UI rule — AUTH-01..06
+
+- Arabic-first / RTL.
+- Use the approved YADD identity.
+- Authentication, registration, OTP, recovery, and initial onboarding screens are focused flows without the public Bottom Navigation.
+- Do not introduce social login, biometric login, independent Username, unapproved OTP limits/timers, or permanent Beneficiary/Provider account types through visual design.
 
 ---
 
