@@ -1,6 +1,6 @@
 # YADD Screen Specifications — Working Draft
 
-> **Status:** IN PROGRESS — APPROVED UI CONTRACTS THROUGH PUB-03
+> **Status:** IN PROGRESS — APPROVED UI CONTRACTS THROUGH PUB-06
 >
 > This document records detailed screen-level UI contracts derived from the current project requirements and explicitly reviewed UI decisions. It does not override the Decision Register, SRS, or Business Rules.
 >
@@ -381,6 +381,237 @@ Do not add unless a later requirement/decision authorizes them:
 - Quick Call;
 - Quick Chat;
 - `اطلب الآن`.
+
+---
+
+# PUB-04 — Public Provider Profile
+
+- **Contract status:** `APPROVED UI CONTRACT — 2026-09-18`
+- **Primary actor:** Guest / User.
+- **Related sources:** `FR-GST-03/04`; `DEC-031`; `DEC-052`; `DEC-064`; `DEC-077`; `BR-017`; `BR-035`; `BR-044..047`; `UF-00`; Screen Inventory `PUB-04`.
+- **Classification:** Requirement-backed public profile + approved UI decisions for the primary CTA and navigation treatment.
+
+## Goal
+
+Allow the user to assess a Provider using public information only before deciding whether to communicate/inquire.
+
+## Public information
+
+The profile may display:
+
+- profile image/logo when available;
+- public display name;
+- Provider Type: Service Provider or Product Provider;
+- category/categories;
+- approved general service-area information such as district + neighborhood / service areas;
+- provider bio/about text;
+- completed YADD transaction count when actual public data exists;
+- public rating indicator when actual rating data exists;
+- Portfolio preview for Service Provider or Catalog preview for Product Provider.
+
+For a Product Provider, the optional Trade Name may be used as the public display name according to the current Product Provider rules.
+
+Static design must not fabricate ratings, transaction counts, users, or other factual-looking runtime data.
+
+## Main action — `تواصل / استفسر`
+
+- Authenticated User → opens the supported private conversation/inquiry path.
+- Guest → opens `PUB-06 Protected Action Authentication Gate`.
+- Opening Chat/Inquiry alone does not create a Transaction.
+
+## Portfolio / Catalog action
+
+- Service Provider → opens `PUB-05` as Portfolio / `معرض الأعمال`.
+- Product Provider → opens `PUB-05` as Catalog / `الكتالوج`.
+
+## Back navigation
+
+Returns to `PUB-03 Search Results` when entered from search results.
+
+## Approved UI decision — no direct Create Request CTA on this profile
+
+Do not add a separate `إنشاء طلب لهذا المقدم` / `طلب خدمة` CTA to this public profile in the current UI baseline.
+
+The direct-search route proceeds through communication/inquiry and then a separately confirmed Transaction Start. The platform-wide `Create Request` route remains the published-request discovery path.
+
+This is a screen-level UI decision and does not remove the system's general Create Request capability.
+
+## States
+
+- Loading.
+- Loaded.
+- Portfolio/Catalog preview empty.
+- Error.
+
+## Mobile global navigation — Approved UI Decision
+
+Keep the approved public Mobile global navigation on this detail screen for consistency:
+
+`الرئيسية | البحث | تسجيل الدخول/الحساب | المزيد`
+
+The screen also provides context-appropriate Back navigation.
+
+## Responsive behavior
+
+- **Mobile:** single-column detail hierarchy with prominent primary CTA.
+- **Tablet/Desktop:** profile information and Portfolio/Catalog preview may use wider columns/sections.
+- The public/private data boundary and actions remain unchanged across breakpoints.
+
+## Explicit exclusions
+
+Do not expose:
+
+- phone number;
+- WhatsApp/private direct-contact details;
+- precise/private address or GPS;
+- verification documents or identity artifacts;
+- private identity photos;
+- subscription internals;
+- Transactions / Invoices / Reports;
+- years of experience;
+- unapproved fixed service-price fields;
+- a verification claim that does not match the Provider Type and current verification policy.
+
+---
+
+# PUB-05 — Public Portfolio / Catalog
+
+- **Contract status:** `APPROVED UI CONTRACT — 2026-09-18`
+- **Primary actor:** Guest / User.
+- **Related sources:** `FR-GST-03/04`; `DEC-064`; `DEC-077`; `BR-035`; `BR-036`; `BR-044..047`; `UF-00`; Screen Inventory `PUB-05`.
+- **Classification:** Requirement-backed public portfolio/catalog + derived presentation behavior.
+
+## Goal
+
+Show the Provider's public work/product media in an expanded view without exposing private data or turning Portfolio/Catalog into an in-platform payment/store workflow.
+
+## Provider-type presentation
+
+- `SERVICE` Provider → title/presentation: `معرض الأعمال` / Portfolio.
+- `PRODUCT` Provider → title/presentation: `الكتالوج` / Catalog.
+
+The two are not combined on one Provider Profile in MVP because Provider Type is exclusive.
+
+## Public item content
+
+A public Portfolio/Catalog item may display, when present in the stored item data:
+
+- display image;
+- short title/name;
+- short description.
+
+Public display images follow the approved YADD watermark concept. The watermark is an identification/deterrence mechanism and is not a legal proof of ownership.
+
+## Actions
+
+### Open item
+
+Allows the user to view the public item in a larger/detail presentation.
+
+### Back
+
+Returns to `PUB-04 Public Provider Profile`.
+
+### `تواصل / استفسر`
+
+When provided from the Portfolio/Catalog context:
+
+- Guest → `PUB-06`.
+- Authenticated User → supported private conversation/inquiry path.
+
+## States
+
+- Loading.
+- Items available.
+- Empty: no currently published Portfolio/Catalog items.
+- Error.
+
+## Responsive behavior
+
+- **Mobile:** single-column or compact media grid suitable for touch.
+- **Tablet/Desktop:** denser media grid/lightbox presentation is allowed.
+- Data visibility and available actions remain functionally unchanged.
+
+## Explicit exclusions
+
+Do not turn this screen into an in-platform commerce/payment flow. Do not add as part of this contract:
+
+- Buy Now;
+- Cart;
+- online payment;
+- private phone/contact details;
+- private delivery/precise-location data;
+- claims that the watermark proves legal ownership.
+
+---
+
+# PUB-06 — Protected Action Authentication Gate
+
+- **Contract status:** `APPROVED UI CONTRACT — 2026-09-18`
+- **Primary actor:** Guest.
+- **Related sources:** `FR-GST-05/06`; `DEC-077`; `BR-045`; `BR-046`; `UF-00`; Screen Inventory `PUB-06`.
+- **Classification:** Requirement-backed authentication boundary + derived UI gate presentation.
+
+## Goal
+
+Stop only the protected action the Guest attempted while preserving unrestricted access to public browsing/search/profile content.
+
+This screen is an Authentication Gate, not a Sign In form.
+
+## Required content
+
+- YADD identity/brand.
+- Short authentication-required message, e.g. `سجّل الدخول للمتابعة`.
+- Contextual explanation that the attempted action requires an authenticated account.
+
+The gate may retain the attempted-action context, such as:
+
+- Create Request;
+- Communicate / Inquire;
+- another supported protected action.
+
+Retaining that context must not create the protected entity/action before Authentication succeeds.
+
+## Actions
+
+### `تسجيل الدخول`
+
+Opens `AUTH-01 Sign In`.
+
+### `إنشاء حساب جديد`
+
+Opens `AUTH-02 Create Account`.
+
+### `العودة إلى التصفح`
+
+Returns to the prior public screen without performing the protected action.
+
+## Explicit non-fields
+
+Do not place authentication credentials directly in the Gate. It contains no:
+
+- email field;
+- password field;
+- phone field;
+- OTP field.
+
+Those belong to dedicated Authentication screens.
+
+## Return-to-intended-action policy
+
+Exact automatic return/resume behavior after successful Authentication remains **Open / Needs UI Decision** in the current user-flow documentation.
+
+Therefore this contract does not freeze an automatic resume mechanism yet.
+
+## States
+
+A simple transition/session-check state may be shown when needed. No complex business-state model is introduced by this Gate.
+
+## Responsive behavior
+
+- **Mobile:** may be presented as a full screen or equivalent focused blocking surface.
+- **Desktop:** may be presented as a modal/dialog or focused screen.
+- The required actions remain exactly `Log In / Create Account / Back to Browsing` regardless of presentation.
 
 ---
 
