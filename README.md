@@ -8,7 +8,10 @@
 
 ## نقطة البدء
 
-ابدأ من [`docs/00-governance/README.md`](docs/00-governance/README.md). يحتوي على خريطة الوثائق، حالات الاعتماد، الأسئلة المفتوحة، وحالة التخطيط الحالية. خطة الأسبوعين السابقة أصبحت `LEGACY / SUPERSEDED` ولا تستخدم للتنفيذ.
+- **للذكاء الاصطناعي:** ابدأ من [`AI_CONTEXT.md`](AI_CONTEXT.md)، ثم اتبع [`docs/00-governance/00-ai-task-router.md`](docs/00-governance/00-ai-task-router.md). لا تقرأ المستودع كاملًا افتراضيًا.
+- **للقراءة البشرية/الحوكمة:** ابدأ من [`docs/00-governance/README.md`](docs/00-governance/README.md). يحتوي على خريطة الوثائق، حالات الاعتماد، الأسئلة المفتوحة، وحالة التخطيط الحالية.
+
+خطة الأسبوعين السابقة أصبحت `LEGACY / SUPERSEDED` ولا تستخدم للتنفيذ.
 
 ## هيكل التوثيق الحالي — Canonical
 
