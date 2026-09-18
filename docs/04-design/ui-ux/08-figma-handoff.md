@@ -116,6 +116,29 @@ Before a Figma wireflow is marked complete, it must pass the consistency gate de
 
 For user-facing location UI, the approved convention is now **Neighborhood only**. District remains internal/derived from the selected Neighborhood under the existing data/business model and must not reappear as an independent UI selector unless the decision is reopened.
 
+
+## Wireflow 01 — Approved Visual Baseline v4 — 2026-09-18
+
+The user explicitly approved the synchronized public-browse/search baseline in Figma.
+
+- Figma root: `40:55`
+- Figma name: `Wireflow 01 — APPROVED Visual Baseline v4`
+- Scope: `PUB-01 → PUB-02 → PUB-03 → PUB-04 → PUB-06`
+- Classification: **Approved Visual Baseline**.
+- This approval freezes the visual-language direction for subsequent wireflows unless explicitly reopened.
+- Subsequent wireflows must derive from the same shared design system and may differ only where their approved Functional Screen Contracts require different content/actions.
+
+### Synchronized corrections included in v4
+
+- District removed from user-facing Search UI; Neighborhood remains the visible location level.
+- Public guest navigation corrected to use Sign In/Account semantics rather than Beneficiary-only navigation.
+- Unsupported `الأقرب لك` ranking removed.
+- Fabricated numeric search-result count removed.
+- Public Provider location changed to Neighborhood-only presentation.
+- Unsupported profile quick-feature cards removed.
+- Protected Authentication Gate includes an explicit return-to-browse action.
+- Unapproved slogan-like header copy replaced with contract/scope-oriented copy.
+
 ## Synchronization Rule
 
 If Figma and repository specifications disagree, do not silently pick one. Identify whether the mismatch requires:
