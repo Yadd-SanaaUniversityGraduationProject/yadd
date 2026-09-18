@@ -93,7 +93,7 @@ flowchart LR
 6. إذا اختار Provider Portal ولا يوجد Provider Profile مستوفٍ للشروط، يبدأ/يستكمل Provider Profile بدل إنشاء حساب جديد.
 7. يختار Provider Profile نوعًا واحدًا فقط في MVP: `SERVICE` أو `PRODUCT`.
 8. يختار تصنيفًا واحدًا أو أكثر داخل النوع نفسه؛ يسمح Draft بصفر مؤقتًا، لكن أهلية وظائف التقديم تحتاج تصنيفًا صالحًا واحدًا على الأقل.
-9. يجتاز Provider Verification قبل وظائف التقديم، وتبقى شروط الأهلية الأخرى مطبقة.
+9. إذا كان النوع `SERVICE` يجتاز Identity Verification قبل وظائف التقديم؛ إذا كان `PRODUCT` فلا يطلب Government ID، وتبقى شروط Account/Profile eligibility والاشتراك مطبقة.
 10. بعد الأهلية يستطيع المستخدم التبديل بين Beneficiary Portal وProvider Portal عبر الحساب نفسه.
 
 ## Boundaries
@@ -372,7 +372,7 @@ flowchart LR
    - `Rejected`.
 8. عند ResubmissionRequired يسجل الموظف ملاحظة/سبب، ويستطيع Provider إعادة التقديم.
 9. رفع الوثائق وحده لا يفعّل Provider Profile تلقائيًا.
-10. أثناء الانتظار يستطيع الحساب الاستمرار كمستفيد، لكنه لا يستخدم وظائف Provider التي تتطلب Verification.
+10. أثناء انتظار Service Provider Identity Verification يستطيع الحساب الاستمرار كمستفيد، لكنه لا يستخدم وظائف Service Provider التي تتطلب Identity Verified.
 
 ## Sensitive-data boundary
 
@@ -381,8 +381,6 @@ flowchart LR
 
 ## Needs Verification
 
-- أنواع وثائق الهوية المقبولة بدقة.
-- الجوانب/الصور المطلوبة لكل وثيقة.
 - مدة الاحتفاظ ببيانات التحقق.
 - الأنشطة التي قد تحتاج ترخيصًا مهنيًا إضافيًا.
 
