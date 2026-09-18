@@ -1,10 +1,12 @@
 # Data Flow Diagrams — YADD Preliminary Defense
 
-> **الحالة:** `DRAFT FOR PRELIMINARY DEFENSE — CORE SYNCHRONIZED 2026-09-18 THROUGH DEC-090`
+> **الحالة:** `DRAFT FOR PRELIMINARY DEFENSE — CORE SYNCHRONIZED 2026-09-19 THROUGH DEC-091`
 >
-> **المراجع الحاكمة:** DEC-012/041/046/047/048/050/051/053/063/064/066/067/068/069/070/071/072/073/074/075/076/077/078..090 + `05-SRS.md` + `06-business-rules.md` + `07-lifecycles.md` + `08-use-cases.md`.
+> **المراجع الحاكمة:** DEC-012/041/046/047/048/050/051/053/063/064/066/067/068/069/070/071/072/073/074/075/076/077/078..091 + `05-SRS.md` + `06-business-rules.md` + `07-lifecycles.md` + `08-use-cases.md`.
 >
 > يستخدم المشروع DFD وUML معًا وفق DEC-060. يمثل DFD أدناه **تدفقات البيانات**، ولا يستخدم لوصف حالات الكائنات أو تسلسل الرسائل التفصيلي. جميع التسميات داخل الرسم النهائي باللغة الإنجليزية وفق DEC-072.
+
+> **DEC-091 boundary:** هذا DFD منطقي للفصل الثالث، لذلك لا يحول ASP.NET Core/EF Core/SQL Server/Identity أو مزود AI إلى Processes/Data Stores/Actors تحليلية. وظائف AI تبقى منطقيًا داخل Process 6، بينما تنفيذها عبر External APIs خلف Integration/Service Layer هو قرار Chapter Four/implementation direction؛ المزود والـpayload والاحتفاظ والعتبات ما تزال مفتوحة.
 
 ---
 
@@ -117,8 +119,10 @@ flowchart LR
 
     P -->|Provider Response Data; Response Edit or Withdrawal; Message Data; Transaction Start Request or Confirmation| P3
     B -->|Message Data; Provider Selection; Transaction Start Request or Confirmation| P3
+    P3 <--> D1
     P3 <--> D3
     P3 <--> D4
+    P3 <--> D8
     P3 -->|Provider Responses; Messages; Selection Result; Start Confirmation Request| B
     P3 -->|Messages; Response Status; Selection Status; Start Confirmation Request| P
     P3 -->|Selected Provider Data; Confirmed Direct Start Data| P4
@@ -176,7 +180,7 @@ Manages:
 - Neighborhood as the user-facing location selector/display level in discovery/request/provider-location UI, while District is derived internally and remains part of the data model;
 - public Provider Profile/Portfolio-Catalog discovery using only approved public fields;
 - creation/publication of Request for authenticated Beneficiary only;
-- discovery of eligible Providers using provider type/category/area constraints;
+- discovery of matching Providers using provider type/category/area constraints; public-search visibility when Subscription is Expired remains an open policy and is not inferred as an eligibility filter;
 - Request closure before Provider selection;
 - Request expiry and Republish as a new Request.
 
@@ -198,6 +202,7 @@ Manages:
 - one persistent Conversation per Beneficiary–Provider pair — DEC-075;
 - system separators/events that mark Transaction boundaries inside the persistent Conversation;
 - Provider selection in Request route;
+- validation of new-interaction eligibility before a new Provider Response or Direct Search Transaction: SERVICE requires Identity Verified + eligible profile + Active Subscription; PRODUCT requires eligible account/profile + Active Subscription — DEC-085/086;
 - `Transaction Start Request` and `Start Confirmation` in Direct Search route; pending start request expires after 12h and only one may be pending per pair — DEC-082.
 
 Chat alone does not create Transaction. A persistent Conversation may contain zero or multiple Transactions over time. Guest cannot create/join the private Conversation before Authentication.
@@ -206,7 +211,7 @@ Chat alone does not create Transaction. A persistent Conversation may contain ze
 
 Transaction becomes Active through either:
 1. Beneficiary selects one Provider in Request route; or
-2. one party sends a Transaction Start Request and the other confirms within 12h in Direct Search route.
+2. one party sends a Transaction Start Request and the other confirms within 12h in Direct Search route, with current Provider new-interaction eligibility still satisfied, including Active Subscription — DEC-086.
 
 Each Transaction belongs to the persistent Conversation between the same Beneficiary and Provider. Physical linking of individual messages/system events to a specific Transaction remains Chapter Four work.
 
@@ -242,7 +247,7 @@ Manages:
 - Transaction complaint review according to `DEC-073`;
 - administrative audit records.
 
-AI is an internal assistance mechanism, not an external actor in the main DFD. Safety Flags must preserve enough reason/category information for an authorized reviewer to understand the suspicion; exact categories/thresholds remain open. Transaction complaint review is limited to YADD policy/administrative action and does not create Payment, Refund, Compensation or Settlement processes.
+AI assistance is modeled as a logical internal capability of Process 6 in this Chapter Three DFD. DEC-091 fixes the implementation direction as External AI APIs behind an Integration/Service Layer, but the vendor/API is not modeled here as a business actor or logical data store. Safety Flags must preserve enough reason/category information for an authorized reviewer to understand the suspicion; exact categories/thresholds remain open. Transaction complaint review is limited to YADD policy/administrative action and does not create Payment, Refund, Compensation or Settlement processes.
 
 ---
 
@@ -275,7 +280,7 @@ AI is an internal assistance mechanism, not an external actor in the main DFD. S
 
 - [x] Context and Level 0 use the same four main external entities: Guest, Beneficiary, Provider, YADD Administrator.
 - [x] Guest public browse and Authentication boundary are aligned with DEC-077.
-- [x] Processes and stores are aligned with current SRS/Business Rules through DEC-090 in their applicable scope.
+- [x] Processes and stores are aligned with current SRS/Business Rules through DEC-091 in their applicable scope; DEC-091 does not change the logical process/store decomposition.
 - [x] `Provider Response` is the canonical term; no Offer store/process.
 - [x] edit/withdraw response rule is represented.
 - [x] Direct Search start request + confirmation is represented.
