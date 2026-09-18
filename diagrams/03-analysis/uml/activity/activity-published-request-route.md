@@ -88,6 +88,7 @@ flowchart TD
 
 ## Semantic constraints
 
+- Create Request UI uses Neighborhood as the user-facing location field; District is derived internally from Neighborhood under the approved UI convention.
 - Chat alone does not create a Transaction.
 - Request Route creates `Active Transaction` only after Provider selection.
 - عند اختيار Provider ينتقل Request من `Open` إلى `Matched`; يعني ذلك توقفه عن استقبال Responses جديدة وبدء المعاملة الرسمية مع Provider المختار.
@@ -95,6 +96,7 @@ flowchart TD
 - Request expiry uses 24h/48h reminders and 72h Expired from Beneficiary inactivity; meaningful Beneficiary activity resets the inactivity clock, while Provider Response arrival alone does not. Republish creates a new Request and old responses remain inactive.
 - **Location UI synchronization:** Request creation exposes Neighborhood to the Beneficiary; District is derived internally and remains part of the underlying data/location model.
 - Final Invoice uses 24h/48h reminders and Overdue at 72h without Auto-Approval; explicit approval makes Transaction `Completed`.
+- Invoice Revision has no hard maximum; every Revision Request requires a note, history is preserved, and after the second consecutive Revision the UI surfaces Transaction Complaint as an option without forcing it.
 - Complaint does not automatically make Transaction `Disputed`; `Disputed` occurs only when disagreement remains unresolved without agreement before final approval.
 - Ratings open only after `Completed`; Beneficiary→Provider uses Hybrid Rating with Later/24h reminder and completion before a new Transaction.
 - No Payment/Refund/Escrow lifecycle exists inside YADD.
