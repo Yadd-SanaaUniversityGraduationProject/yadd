@@ -1,6 +1,6 @@
 # Class Diagram — Integrated Master View
 
-> **Status:** `SEMANTICALLY VERIFIED — TEAM APPROVED — SYNCHRONIZED THROUGH DEC-090 — NOT BASELINED — VISUAL/A4 FINALIZATION PENDING`
+> **Status:** `SEMANTICALLY VERIFIED — TEAM APPROVED — SYNCHRONIZED THROUGH DEC-091 — NOT BASELINED — VISUAL/A4 FINALIZATION PENDING`
 >
 > **Type:** Integrated Master View of the same Detailed Analysis Class Model represented by Views 1–3.
 
@@ -8,7 +8,7 @@
 
 هذا الملف لا يمثل Class Model رابعًا مستقلًا. هو **Master Integration View** يجمع نفس الـAnalysis Classes الموجودة في الـViews الثلاثة في رسم واحد بعد إزالة التكرار، لإثبات أن الحزمة كلها نموذج Class واحد متكامل.
 
-- عدد الـClasses الفريدة في الـMaster بعد مزامنة DEC-078..090: **29**.
+- عدد الـClasses الفريدة في الـMaster بعد مزامنة DEC-078..091: **29**.
 - لا يضيف هذا الـView أي علاقة دلالية جديدة غير موجودة في Views 1–3.
 - الـClasses التي كانت تظهر في أكثر من View مثل `User`, `ProviderProfile`, `Request`, `ProviderResponse`, `Conversation`, `ShowcaseItem`, و`Transaction` تظهر هنا مرة واحدة فقط بعد جمع تفاصيلها المتوافقة.
 - هذا الـMaster يثبت التكامل والحدود بين المجالات، بينما تبقى Views 1–3 هي العرض الأكثر قابلية للقراءة عند مناقشة التفاصيل والطباعة على A4.
@@ -389,4 +389,4 @@ classDiagram
 
 ## Review note
 
-تمت مراجعة الـMaster دلاليًا بعد مزامنة DEC-078..090 مقابل Decision Register وSRS وBusiness Rules وUse Cases وERD وTraceability Matrix. يميز النموذج الآن بين Account Verification وService Provider Identity Verification، ويدعم Trade Name، Hybrid Rating، Unblock، Notification وقرارات الإدارة المسجلة، ويحافظ على Neighborhood-only UI مع District داخلي، وعلى الفرق بين Generic Report وTransaction Complaint. ما يزال مطلوبًا **Visual/A4 Review** قبل اعتباره جاهزًا للتقرير النهائي، كما أن SRS نفسه ما يزال `NOT BASELINED`.
+تمت مراجعة الـMaster دلاليًا بعد مزامنة DEC-078..091 مقابل Decision Register وSRS وBusiness Rules وUse Cases وERD وTraceability Matrix. يميز النموذج الآن بين Account Verification وService Provider Identity Verification، ويدعم Trade Name، Hybrid Rating، Unblock، Notification وقرارات الإدارة المسجلة، ويحافظ على Neighborhood-only UI مع District داخلي، وعلى الفرق بين Generic Report وTransaction Complaint. ما يزال مطلوبًا **Visual/A4 Review** قبل اعتباره جاهزًا للتقرير النهائي، كما أن SRS نفسه ما يزال `NOT BASELINED`.
