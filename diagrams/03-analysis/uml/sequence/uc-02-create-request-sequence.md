@@ -59,7 +59,7 @@ sequenceDiagram
 
 - `Close Open Request` لأنه إجراء لاحق مستقل زمنيًا عن إنشاء الطلب.
 - عرض الطلب على Providers أو `Provider Response`؛ هذه تخص السيناريو/Use Case التالي.
-- Request expiry/reminder timing لأن التفاصيل الرقمية ما تزال `Needs Verification / Proposed`.
+- تفاصيل Reminder/Expiry ليست جزءًا من Sequence إنشاء الطلب نفسه؛ السياسة المعتمدة هي 24h/48h reminders ثم Expired عند 72h من عدم نشاط Beneficiary.
 - Transaction, Invoice, Complaint, أو Ratings لأنها خارج UC-02.
 
 ## Postcondition
