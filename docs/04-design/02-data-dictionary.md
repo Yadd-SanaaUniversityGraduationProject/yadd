@@ -98,8 +98,13 @@
 | InvoiceItem | LineTotal | TBD | Yes | calculation/check TBD | إجمالي البند | ERD |
 | ProviderRating | ProviderRatingId | TBD | Yes | PK | تقييم Beneficiary للمقدم | DEC-051 |
 | ProviderRating | TransactionId | TBD | Yes | FK + Unique candidate | تقييم واحد بحد أقصى لكل Completed Transaction | DEC-051/071 |
-| ProviderRating | Stars | TBD | Yes | 1..5 | تقييم المقدم | DEC-051 |
-| ProviderRating | Comment | TBD | No | moderation policy applies | تعليق اختياري | DEC-051/052 |
+| ProviderRating | OverallStars | TBD | Yes | 1..5 | المؤشر الإجمالي للتقييم | DEC-051/087 |
+| ProviderRating | WorkflowStatus | TBD | Yes/derived | Required/Deferred/Submitted candidate | يدعم Later/Reminder/required-before-next-transaction | DEC-087 |
+| ProviderRating | Comment | TBD | No | moderation policy applies | تعليق اختياري | DEC-051/052/087 |
+| ProviderRatingCriterion | ProviderRatingCriterionId | TBD | Yes | PK | معرف بند التقييم المنظم | DEC-087 |
+| ProviderRatingCriterion | ProviderRatingId | TBD | Yes | FK | التقييم الأب | DEC-087 |
+| ProviderRatingCriterion | CriterionType | TBD | Yes | provider-type-specific approved criteria | نوع المؤشر النصي | DEC-087 |
+| ProviderRatingCriterion | TextualValue | TBD | Yes | Excellent/Good/Acceptable/NeedsImprovement candidate labels | القيمة النصية السريعة | DEC-087 |
 | BeneficiaryRating | BeneficiaryRatingId | TBD | Yes | PK | تقييم Provider للمستفيد | DEC-063 |
 | BeneficiaryRating | TransactionId | TBD | Yes | FK + Unique candidate | تقييم اختياري واحد بحد أقصى لكل Completed Transaction | DEC-063/071 |
 | BeneficiaryRating | RequestCommunicationScore | TBD | Yes when rating submitted | 1..5 | وضوح الطلب والتواصل | DEC-063 |
@@ -110,17 +115,24 @@
 | VerificationCase | ProviderProfileId | TBD | Yes | FK; SERVICE provider only | Service Provider Profile موضوع Identity Verification | DEC-085 |
 | VerificationCase | Status | TBD | Yes | lifecycle constraint | حالة التحقق | Verification model |
 | VerificationCase | ReviewNote | TBD | No/conditional | required on ResubmissionRequired/Rejected conceptually | ملاحظة/سبب المراجع | Verification model |
-| VerificationArtifact | ArtifactType | TBD | Yes | allowed types Needs Verification | نوع مستند/أثر تحقق، خاص/حساس | VER-DOC-Q01 / DEC-036 |
+| VerificationArtifact | ArtifactType | TBD | Yes | NationalID/Passport/PersonalPhotoWithDocument at analysis level | نوع مستند/أثر تحقق خاص بـService Provider | DEC-036/085 |
 | VerificationArtifact | PrivateMediaReference | TBD | Yes | private/non-public | مرجع وثيقة/وسيط تحقق غير عام | DEC-036/077 |
 | Subscription | Status | TBD | Yes | lifecycle/design constraint | حالة الاشتراك؛ ليست Public Guest data | DEC-042/043/077 |
-| Subscription | StartDate | TBD | Yes | date rule TBD | بداية فترة الاشتراك | DEC-042 |
-| Subscription | EndDate | TBD | Yes | date rule TBD | نهاية فترة الاشتراك | DEC-042 |
+| Subscription | StartDate | TBD | Yes | activation date | بداية فترة الاشتراك | DEC-042/086 |
+| Subscription | EndDate | TBD | Yes | StartDate + 30 days | نهاية فترة الاشتراك | DEC-086 |
 | UserBlock | BlockId | TBD | Yes | PK | سجل Block لمستخدم authenticated | DEC-053/077 |
+| UserBlock | Status | TBD | Yes | Active/Unblocked candidate | حالة الحظر | DEC-088 |
+| UserBlock | BlockedAt | TBD | Yes | timestamp | وقت الحظر | DEC-088 |
+| UserBlock | UnblockedAt | TBD | No | timestamp | وقت فك الحظر | DEC-088 |
 | Report | ReportId | TBD | Yes | PK | بلاغ/Complaint context للمراجعة الإدارية؛ Guest لا ينشئه قبل Authentication | DEC-053/073/077 |
 | Report | TargetType | TBD | Yes | allowed targets TBD | نوع الهدف المبلغ عنه | DEC-053/064/073 |
 | Report | TargetReference | TBD | Yes | physical implementation TBD | مرجع الهدف؛ polymorphic implementation غير محسوم | ERD / DEC-053/073 |
+| Report | Reason | TBD | Yes | policy categories/detail TBD | سبب البلاغ | DEC-053/089 |
+| Report | Description | TBD | Yes for transaction complaint; policy-dependent for generic report | content validation | وصف/تفاصيل البلاغ أو الشكوى | DEC-084/089 |
 | SafetyFlag | ReasonCategory | TBD | Yes when flag exists | taxonomy TBD | سبب/فئة الاشتباه اللازمة للمراجعة البشرية؛ ليست Public Guest data | SRS / Trust & Safety model |
 | AdminAuditRecord | EventType | TBD | Yes | taxonomy TBD | نوع حدث التدقيق الإداري الحساس؛ غير عام | Trust & Safety / ERD |
+| AdminAuditRecord | DecisionOutcome | TBD | Conditional | NoViolation/Warning/ContentRemoval/TemporaryRestriction/AccountSuspension/PermanentBan | نتيجة القرار الإداري | DEC-089 |
+| AdminAuditRecord | Reason | TBD | Conditional | required with administrative decision | سبب القرار | DEC-089 |
 
 ## Public / Private Visibility Boundary — DEC-077
 
@@ -156,7 +168,7 @@
 - physical Message/SystemEvent↔Transaction mapping within persistent Conversation.
 - public Provider Profile projection/API response design.
 - admin authorization tables.
-- verification document types/retention.
+- verification-data retention and physical artifact encoding.
 - AI flags/audit storage after policy decisions.
 - polymorphic Report target implementation.
 
