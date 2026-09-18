@@ -88,7 +88,6 @@ flowchart TD
 
 ## Semantic constraints
 
-- Create Request UI uses Neighborhood as the user-facing location field; District is derived internally from Neighborhood under the approved UI convention.
 - Chat alone does not create a Transaction.
 - Request Route creates `Active Transaction` only after Provider selection.
 - عند اختيار Provider ينتقل Request من `Open` إلى `Matched`; يعني ذلك توقفه عن استقبال Responses جديدة وبدء المعاملة الرسمية مع Provider المختار.
