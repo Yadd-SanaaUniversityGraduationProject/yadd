@@ -1,6 +1,6 @@
 # Requirements Traceability Matrix — Core Diagram Model
 
-> **الحالة:** `CORE TRACEABILITY SYNCHRONIZED 2026-09-18 THROUGH DEC-090 — DESIGN TRACEABILITY PARTIAL`
+> **الحالة:** `CORE TRACEABILITY SYNCHRONIZED 2026-09-19 THROUGH DEC-091 — DESIGN TRACEABILITY PARTIAL`
 >
 > الغرض من هذه النسخة هو منع اعتماد المخططات على FR/Entities تاريخية. المرجع الأعلى يبقى Decision Register ثم SRS وBusiness Rules.
 >
@@ -30,7 +30,7 @@
 | UR-OFF-01 | DEC-013/041 | BR-003/033 | UC-03 → Submit Provider Response | 3.0 | PROVIDER_RESPONSE | `ANALYZED_APPROVED` |
 | UR-OFF-02 | DEC-014/047 | BR-004/006 | UC-04 → Compare Provider Responses / Select Provider / Create Active Transaction | 3.0 / 4.0 | REQUEST, PROVIDER_RESPONSE, TRANSACTION | `ANALYZED_APPROVED` |
 | UR-OFF-03 | DEC-070 | BR-039 | UC-03 → Edit Provider Response / Withdraw Provider Response | 3.0 | PROVIDER_RESPONSE | `ANALYZED_APPROVED` |
-| UR-TX-01 | DEC-046/047/066/069/075 | BR-006/007/037/042 | UC-01 direct route → Request Transaction Start / Confirm Transaction Start / Create Active Transaction; UC-04 request route → Select Provider / Create Active Transaction | 3.0 / 4.0 | TRANSACTION, CONVERSATION, PROVIDER_RESPONSE | `ANALYZED_APPROVED` |
+| UR-TX-01 | DEC-046/047/066/069/075/086 | BR-006/007/037/042/062 | UC-01 direct route → Request Transaction Start / Confirm Transaction Start / Create Active Transaction; UC-04 request route → Select Provider / Create Active Transaction | 3.0 / 4.0 | TRANSACTION, CONVERSATION, PROVIDER_RESPONSE | `ANALYZED_APPROVED` |
 | UR-TX-02 | DEC-056 | BR-023 | Transaction management / Cancel Transaction | 4.0 | TRANSACTION (including cancellation actor/reason/time concept) | `ANALYZED_APPROVED` |
 | UR-TX-03 | DEC-071 | BR-010/016 | UC-06 → Approve Final Invoice / Complete Transaction; UC-07/07B post-transaction ratings | 4.0 / 5.0 | TRANSACTION | `ANALYZED_APPROVED` |
 | UR-TX-04 | DEC-073 | BR-040 | UC-06 dispute branch → Raise Transaction Complaint / Review Transaction Complaint | 4.0 / 6.0 | TRANSACTION, REPORT / complaint record | `ANALYZED_APPROVED` |
@@ -57,7 +57,7 @@
 | Request Transaction Start → Communicate / Inquire | `<<extend>>` | DEC-046/069 | `DERIVED_FROM_APPROVED_FLOW` |
 | Submit Provider Response → Validate Response Eligibility | `<<include>>` | DEC-043/074/076 / BR-030/041/043 | `DERIVED_FROM_APPROVED_RULE` |
 | Select Provider → Create Active Transaction | `<<include>>` | DEC-047/066 / BR-006 | `DERIVED_FROM_APPROVED_RULE` |
-| Confirm Transaction Start → Create Active Transaction | `<<include>>` | DEC-069 / BR-007 | `DERIVED_FROM_APPROVED_RULE` |
+| Confirm Transaction Start → Create Active Transaction | `<<include>>` | DEC-069/086 / BR-007/062; confirmation remains subject to current Provider new-interaction eligibility | `DERIVED_FROM_APPROVED_RULE` |
 | Approve Final Invoice → Review Final Invoice | `<<extend>>` | DEC-050/071 | `DERIVED_FROM_APPROVED_FLOW` |
 | Request Invoice Revision → Review Final Invoice | `<<extend>>` | DEC-025/050 | `DERIVED_FROM_APPROVED_FLOW` |
 | Raise Transaction Complaint → Review Final Invoice | `<<extend>>` | DEC-025/073 | `DERIVED_FROM_APPROVED_FLOW` |
@@ -102,7 +102,9 @@ The following must remain consistent across Use Case, DFD, Activity, Sequence, E
 29. Account Deactivate/Reactivate is supported; self-service Hard Delete is not part of MVP.
 30. Request inactivity: 24h/48h reminders, 72h Expired; meaningful Beneficiary activity resets the clock, Provider Response alone does not; Republish creates a new Request.
 31. Subscription Expired preserves login/Provider Portal and existing Active Transactions while blocking new Provider Responses and new Direct Search Transactions until renewal.
-32. Generic Report requires Reason; Description is not universally mandatory, while Transaction Complaint requires Reason + Description.
+32. Public-search visibility of an Expired Provider remains open; diagrams must not infer hidden/visible from the interaction-eligibility rule.
+33. DEC-091 does not alter logical DFD/ERD entities/processes; AI remains a logical capability in analysis while implementation uses External APIs behind an Integration/Service Layer. ASP.NET Core/EF Core/SQL Server/Identity mapping belongs to Chapter Four.
+34. Generic Report requires Reason; Description is not universally mandatory, while Transaction Complaint requires Reason + Description.
 
 ## Open Items and Traceability Scope
 
