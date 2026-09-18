@@ -196,17 +196,15 @@ flowchart LR
 11. `Request Transaction Start <<extend>> Communicate / Inquire` في Direct Search فقط؛ المحادثة قد تستمر أو تنتهي دون Transaction. أما عند `Confirm Transaction Start` الإيجابي فيتم تضمين `Create Active Transaction` وفق `DEC-069`.
 12. `Review Final Invoice` هو الأساس؛ `Approve Final Invoice` و`Request Invoice Revision` و`Raise Transaction Complaint` امتدادات شرطية لقرار المراجعة. عند الاعتماد فقط يتم `<<include>> Complete Transaction` لأن الاعتماد يجعل Transaction = `Completed` دائمًا.
 13. `Rate Provider` و`Rate Beneficiary` Use Cases مستقلة من ناحية Actor goal، لكنهما تتطلبان `Transaction = Completed`. الأولى إلزامية على Beneficiary بعد Completed، والثانية اختيارية على Provider؛ لذلك لا تمثل تبعية Completed بأسهم `include/extend`.
-14. `Cancel Transaction` تتطلب Transaction قائمة وفي حالة تسمح بالإلغاء. `Close Open Request` مختلفة عنها وتتطلب Request Open قبل الاختيار. `Republish Expired Request` ينشئ Request جديدة بعد مراجعة/تعديل البيانات ولا يعيد فتح الطلب القديم. `Republish Expired Request` ينشئ Request جديدة بعد المراجعة/التعديل ولا يعيد فتح القديمة.
+14. `Cancel Transaction` تتطلب Transaction قائمة وفي حالة تسمح بالإلغاء. `Close Open Request` مختلفة عنها وتتطلب Request Open قبل الاختيار. `Republish Expired Request` ينشئ Request جديدة بعد مراجعة/تعديل البيانات ولا يعيد فتح الطلب القديم.
 15. `Edit Provider Response` و`Withdraw Provider Response` تتطلبان استجابة فعالة مع Request Open وقبل selection وفق `DEC-070`; لا تربطان بعلاقة `include/extend` مصطنعة مع `Submit Provider Response`.
 16. `Revise Final Invoice` تتطلب `Revision Requested` سابقة؛ و`Review Provider Verification`/`Review Transaction Complaint` أهداف إدارية لاحقة مستقلة تعتمد على وجود submission/complaint، وليست أجزاء included داخل فعل المرسل.
 17. `Block / Unblock User` و`Report User / Content` منفصلتان؛ يستطيع المستخدم authenticated تنفيذ الحظر أو البلاغ بصورة مستقلة. Unblock يعيد التفاعل المستقبلي فقط ولا يلغي Report سابقًا أو يعيد Request/Transaction منتهية.
 18. `Create Active Transaction`, `Complete Transaction`, و`Validate Response Eligibility` تمثل سلوكًا نظاميًا مشتركًا/إلزاميًا، وليس Actor goals مستقلة؛ لذلك لا ترتبط مباشرة بـActor.
 19. استمرار Conversation وإعادة استخدامها بين نفس Beneficiary/Provider وفق DEC-075 هو قيد Domain/Interaction ولا يحتاج Use Case مستقلة في الرسم الرئيسي؛ يجب أن يبقى محفوظًا في Activity/Sequence/Class models.
 20. Public Provider Profile لا يعرض رقم الهاتف أو direct private-contact data أو البيانات الحساسة/الخاصة وفق DEC-036/046/077.
-21. `Switch Portal` يستخدم الحساب نفسه ويستعيد/يحفظ آخر Portal؛ لا يمثل تبديل حسابات. Expired Subscription لا يمنع Provider Portal access أو المعاملات الجارية لكنه يمنع Provider Response جديدة وDirect Search Transaction جديدة.
+21. `Switch Portal` يستخدم الحساب نفسه ويستعيد/يحفظ آخر Portal؛ لا يمثل تبديل حسابات. Expired Subscription لا يمنع Provider Portal access أو المعاملات الجارية لكنه يمنع Provider Response جديدة وDirect Search Transaction جديدة حتى التجديد.
 22. `View / Renew Provider Subscription` هو هدف Provider، بينما `Confirm Subscription Activation / Renewal` هدف إداري بشري بعد تحقق الدفع الخارجي؛ تفاصيل السعر ووسيلة/إثبات الدفع ما تزال مفتوحة.
-21. `Switch Portal` يعمل داخل User account نفسه ويحفظ `lastPortal`; Expired Subscription لا يمنع Provider Portal access لكنه يمنع Provider Response جديدة وDirect Search Transaction جديدة حتى التجديد.
-22. Provider يدير/يجدد اشتراكه، بينما `Confirm Subscription Activation / Renewal` قرار إداري يدوي لموظف مخول بعد تحقق الدفع الخارجي؛ سعر الاشتراك وإثبات الدفع ما يزالان مفتوحين.
 
 ### Preconditions / Postconditions التي يجب ألا تُفهم كـ`include`/`extend`
 
