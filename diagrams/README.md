@@ -146,13 +146,11 @@ Every current diagram must preserve these rules:
 
 Open policy/detail questions do not block the core diagrams, but their unresolved values must not be invented. Examples:
 
-- exact Request expiry/reminder timing;
-- long-pending invoice escalation timing;
 - abuse/AI thresholds;
 - final district/neighborhood seed list and expansion timing;
-- exact accepted identity-document types and retention periods;
+- verification-data retention and profession-specific licensing requirements;
 - AI provider/retention/appeal details;
-- subscription packages/prices/payment-proof procedure and some expiry effects;
+- final subscription price/payment-proof procedure and public-search visibility when Expired;
 - any numeric cap on concurrent Transactions;
 - Provider Type switching after initial selection;
 - physical linking of Message/System Event records to specific Transactions within the continuing Conversation;
