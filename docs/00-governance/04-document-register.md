@@ -37,9 +37,9 @@
 | Business Rules | قواعد النظام | `PARTIALLY ANALYZED — SYNCHRONIZED THROUGH DEC-090` | BR-048..067 تزامنت مع Requirements Closure؛ السياسات المفتوحة الباقية ظاهرة |
 | Lifecycles | حالات الطلب/المعاملة/الفاتورة/التقييم | `PARTIALLY ANALYZED — SYNCHRONIZED THROUGH DEC-087` | 24/48/72 request/invoice timing، 12h direct start، rating deferral synchronized |
 | Use Cases | سيناريوهات الاستخدام | `ANALYZED — CORE SYNCHRONIZED THROUGH DEC-090` | Current account/provider/timing/verification/rating/safety semantics synchronized; final academic visual redraw pending |
-| In-App Communication Model | التواصل قبل/بعد المعاملة | `ANALYZED_APPROVED — SYNCHRONIZED THROUGH DEC-077` | Guest لا يدخل Private Chat قبل Authentication؛ phone ليس public contact field |
+| In-App Communication Model | التواصل قبل/بعد المعاملة | `ANALYZED_APPROVED — SYNCHRONIZED THROUGH DEC-090` | 12h direct-start expiry + Block/active-transaction + notification semantics synchronized |
 | Account & Portal Model | الحساب والبوابات | `ANALYZED_APPROVED — SYNCHRONIZED THROUGH DEC-090` | Create Account/Auth/Portal switch/Manage Account/deactivation synchronized |
-| Provider Activity Model | نوع المقدم وتصنيفاته | `ANALYZED_APPROVED — SYNCHRONIZED THROUGH DEC-074/076` | نوع حصري SERVICE/PRODUCT؛ تصنيف واحد أو أكثر داخل النوع؛ Draft قد يبدأ بصفر |
+| Provider Activity Model | نوع المقدم وتصنيفاته | `ANALYZED_APPROVED — SYNCHRONIZED THROUGH DEC-086` | نوع حصري SERVICE/PRODUCT؛ Trade Name للPRODUCT؛ verification split والاشتراك 30d متزامنة |
 | Request Closure/Cancellation/Expiry | إغلاق الطلب والإلغاء والانتهاء | `ANALYZED_APPROVED — SYNCHRONIZED 2026-09-18 THROUGH DEC-083` | 24h/48h/72h policy closed; SAFE-REQ-Q01 remains open |
 | Rating & Provider Reputation | التقييم وسمعة المقدم | `ANALYZED_APPROVED — SYNCHRONIZED 2026-09-18 THROUGH DEC-087` | Hybrid rating + Later/24h reminder/public reviewer projection |
 | Location & Neighborhood Model | المطابقة والموقع | `ANALYZED_APPROVED / PARTIAL DATA` | LOC-DATA-Q01 وLOC-OPS-TIME-Q01 |
