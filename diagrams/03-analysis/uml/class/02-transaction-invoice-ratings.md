@@ -1,6 +1,6 @@
 # Class Diagram — Communication, Transaction, Invoice and Ratings
 
-> **Status:** `SEMANTICALLY VERIFIED — TEAM APPROVED — SYNCHRONIZED THROUGH DEC-087 — NOT BASELINED — VISUAL/A4 FINALIZATION PENDING`
+> **Status:** `SEMANTICALLY VERIFIED — TEAM APPROVED — SYNCHRONIZED THROUGH DEC-091 — NOT BASELINED — VISUAL/A4 FINALIZATION PENDING`
 >
 > **Type:** View 2 of one Detailed Analysis Class Model.
 
@@ -169,6 +169,8 @@ classDiagram
 ```
 
 ## Detailed analysis interpretation
+
+- DEC-086 eligibility is enforced across views: creating a new Direct Search Transaction requires current Provider eligibility including Active Subscription; the Subscription class itself is shown in View 3 rather than duplicated here.
 
 - `Conversation` قد توجد قبل Transaction؛ Chat وحدها لا تنشئ Transaction.
 - بين نفس Beneficiary ونفس Provider تبقى Conversation واحدة مستمرة، ويمكن أن تضم صفرًا أو عدة Transactions عبر الزمن — DEC-075.
