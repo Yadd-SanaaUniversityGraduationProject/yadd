@@ -1,6 +1,6 @@
 # Activity Diagram — Direct Search Route
 
-> **Status:** `REVIEW DRAFT — NOT BASELINED — SYNCHRONIZED 2026-09-18 THROUGH DEC-082`
+> **Status:** `REVIEW DRAFT — NOT BASELINED — SYNCHRONIZED 2026-09-18 THROUGH DEC-090`
 >
 > **Type:** Derived workflow view based on `UC-01 — Search and Inquire Directly` and the approved direct-start rules.
 
@@ -14,8 +14,9 @@
 
 ```mermaid
 flowchart TD
-    S([Start]) --> A[Beneficiary Searches Providers by Category and Area]
-    A --> B[View Provider Profile and Portfolio / Catalog]
+    S([Start]) --> A[Beneficiary Searches Providers by Category and Neighborhood]
+    A --> A1[System Derives District Internally from Neighborhood]
+    A1 --> B[View Provider Profile and Portfolio / Catalog]
     B --> C{Start or Continue Inquiry?}
     C -- No --> Z([End — No Transaction])
     C -- Yes --> D[Open or Reuse Continuing Conversation]
@@ -41,6 +42,8 @@ flowchart TD
 ```
 
 ## Semantic constraints
+
+- **Location UI synchronization:** the user selects/sees Neighborhood as the public discovery location level; District remains in the underlying location model and is derived internally. The authoritative Neighborhood→District mapping still depends on `LOC-DATA-Q01`.
 
 - بين نفس Beneficiary ونفس Provider توجد Conversation واحدة مستمرة وفق DEC-075؛ إذا كانت موجودة يعاد استخدامها، وإذا لم تكن موجودة تُفتح Conversation جديدة.
 - Private Chat by itself never creates a Transaction.
