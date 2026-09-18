@@ -25,6 +25,9 @@ flowchart LR
             direction LR
             LOGIN(["Log In"]):::usecase
             REGISTER(["Create Account"]):::usecase
+            FORGOT(["Forgot / Reset Password"]):::usecase
+            MANAGE_ACC(["Manage / Deactivate Account"]):::usecase
+            SWITCH(["Switch Portal"]):::usecase
             UC00(["Browse Public Provider<br/>Information"]):::usecase
             UC01(["Search and Inquire<br/>Directly"]):::usecase
         end
@@ -32,6 +35,7 @@ flowchart LR
         subgraph REQUESTS["Request & Matching"]
             direction LR
             UC02(["Create Request"]):::usecase
+            REPUBLISH(["Republish Expired Request"]):::usecase
             UC03(["Respond to Request"]):::usecase
             UC04(["Select Provider<br/>from Request"]):::usecase
         end
@@ -60,10 +64,14 @@ flowchart LR
 
     G --- LOGIN
     G --- REGISTER
+    G --- FORGOT
     G --- UC00
 
+    B --- MANAGE_ACC
+    B --- SWITCH
     B --- UC01
     B --- UC02
+    B --- REPUBLISH
     B --- UC04
     B --- UC05
     B --- UC06
@@ -71,6 +79,8 @@ flowchart LR
     B --- BLOCK
     B --- REPORT
 
+    MANAGE_ACC --- P
+    SWITCH --- P
     UC01 --- P
     UC03 --- P
     UC05 --- P
@@ -81,6 +91,7 @@ flowchart LR
     SP -. specializes .-> P
     UC09 --- SP
     UC10 --- P
+    SUB --- P
 
     REPORT --- A
     UC09 --- A
@@ -100,4 +111,4 @@ flowchart LR
 
 This overview answers only two questions: **Who interacts with YADD?** and **What major goals does each Actor have?** It intentionally avoids relationship-level detail so the diagram remains readable at repository and report scale. `Service Provider` is shown only where DEC-085 requires an actor-specific Government-ID verification goal.
 
-`Block User` and `Report User / Content` remain separate Use Cases because the current model explicitly treats blocking and reporting as independent concepts.
+`Block User` and `Report User / Content` remain separate Use Cases because the current model explicitly treats blocking and reporting as independent concepts. Account management includes the approved Deactivate/Reactivate policy without self-service Hard Delete; Portal Switch uses the same User account. Republish creates a new Request from an Expired Request rather than reopening the old one. Provider subscription is managed/renewed by the Provider while authorized staff performs the manual activation/renewal confirmation.
