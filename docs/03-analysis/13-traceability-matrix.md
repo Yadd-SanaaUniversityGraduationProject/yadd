@@ -97,6 +97,12 @@ The following must remain consistent across Use Case, DFD, Activity, Sequence, E
 24. `Close Open Request` is distinct from `Cancel Transaction`.
 25. No Beneficiary↔Provider Payment, Escrow, Refund or Settlement entity/process inside YADD.
 26. Diagram labels are English only according to DEC-072.
+27. User-facing discovery/request/service-area location uses Neighborhood; District is derived internally and remains part of the data model.
+28. Returning User authentication accepts verified Phone or verified Email + Password; Forgot Password is based on verified recovery channels; Portal Switch uses the same User account and remembers lastPortal.
+29. Account Deactivate/Reactivate is supported; self-service Hard Delete is not part of MVP.
+30. Request inactivity: 24h/48h reminders, 72h Expired; meaningful Beneficiary activity resets the clock, Provider Response alone does not; Republish creates a new Request.
+31. Subscription Expired preserves login/Provider Portal and existing Active Transactions while blocking new Provider Responses and new Direct Search Transactions until renewal.
+32. Generic Report requires Reason; Description is not universally mandatory, while Transaction Complaint requires Reason + Description.
 
 ## Open Items and Traceability Scope
 
