@@ -217,7 +217,7 @@ inDrive يدعم فهم النمط التشغيلي، لكنه لا يثبت م�
 | Rating | تقييمات عملاء ظاهرة | لا تعتمد هذه النسخة غياب/وجود نظام كامل دون Evidence إضافي | نعم | نعم | بعد Completed Transaction |
 | Financial handling | تدير/تتوسط في الدفع وفق شروطها | يختلف حسب خدمات المنصة | غير محور المقارنة هنا | تدفقات دفع خاصة بالنقل | دفع Beneficiary↔Provider خارج YADD |
 | Provider verification | سياسات المنصة تختلف | تعلن المنصة تحققًا/موثوقية | موافقة إدارة على مقدم الخدمة | نموذج خاص بالسائقين | Service Provider Identity Verification + human final decision; Product Provider no Government ID in MVP |
-| Service + product activity under one YADD-style provider profile | ليس نموذجها | نطاق أوسع ومختلف | خدمات ومنتجات | لا | نعم |
+| Supports service and product provider types within the same platform | ليس نموذجها | نطاق أوسع ومختلف | خدمات ومنتجات | لا | نعم — عبر Provider Profile من نوع حصري SERVICE أو PRODUCT |
 | Exact internal Technology Stack publicly verified | لا | لا | لا | لا حاجة للمقارنة | لم يعتمد نهائيًا بعد |
 
 ---
