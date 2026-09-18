@@ -46,6 +46,8 @@ flowchart LR
         UC1([Manage Account])
         UCL([Log In])
         UCR([Create Account])
+        UCF([Recover Password])
+        UCS([Switch Portal])
         UCF([Forgot / Reset Password])
         UCS([Switch Portal])
 
@@ -54,6 +56,7 @@ flowchart LR
         UCP([View Portfolio / Catalog])
         UC4([Create Request])
         UC5([Close Open Request])
+        UCRP([Republish Expired Request])
         UC5R([Republish Expired Request])
         UC6([Compare Provider Responses])
         UC7([Communicate / Inquire])
@@ -101,6 +104,7 @@ flowchart LR
     G --- UCL
     G --- UCR
     G --- UCF
+    G --- UCF
 
     B --- UC1
     B --- UCS
@@ -143,6 +147,7 @@ flowchart LR
     P --- UC31
     P --- UC32
     P --- UC36
+    P --- UC36
 
     SP -. specializes .-> P
     PP -. specializes .-> P
@@ -180,7 +185,7 @@ flowchart LR
 
 1. `Guest` معتمد وفق `DEC-077` للتصفح العام: `Browse Public Content`, `Search Providers`, `View Provider Profile`, و`View Portfolio / Catalog`، ويمكنه اختيار `Log In` أو `Create Account`.
 2. لا يرتبط Guest مباشرة بـ`Create Request`, `Communicate / Inquire`, Transaction, Ratings, Block/Report أو أي protected Use Case. ظهور CTA له لا يعني منحه الصلاحية؛ الضغط يوجّه إلى Authentication.
-3. `Log In`/`Create Account` لا يمثلان `<<include>>` داخل كل protected Use Case؛ Authentication هو Precondition للـauthenticated actor goals. `Forgot / Reset Password` يستخدم الهاتف الموثق كأساس وVerified Email كخيار إضافي، دون Username مستقل.
+3. `Log In`/`Create Account` لا يمثلان `<<include>>` داخل كل protected Use Case؛ Authentication هو Precondition للـauthenticated actor goals. `Recover Password` يستخدم Phone OTP أساسًا مع Verified Email كقناة إضافية ممكنة، ولا يوجد Username مستقل. `Forgot / Reset Password` يستخدم الهاتف الموثق كأساس وVerified Email كخيار إضافي، دون Username مستقل.
 4. `Service Provider` و`Product Provider` تخصصان من `Provider` وفق `DEC-067/074`. يظهران هنا فقط لأن `Submit Service Provider Verification` خاص بالـService Provider وفق DEC-085؛ بقية أهداف Provider العامة موروثة مفاهيميًا من Actor العام.
 5. لا توجد Use Case/Entity باسم `Agreement`; المسار القياسي في الطلب هو `Request → Provider Response → Selection → Transaction`.
 6. `View Provider Profile <<extend>> Search Providers` لأن البحث قد ينتهي دون فتح ملف بعينه.
@@ -191,13 +196,15 @@ flowchart LR
 11. `Request Transaction Start <<extend>> Communicate / Inquire` في Direct Search فقط؛ المحادثة قد تستمر أو تنتهي دون Transaction. أما عند `Confirm Transaction Start` الإيجابي فيتم تضمين `Create Active Transaction` وفق `DEC-069`.
 12. `Review Final Invoice` هو الأساس؛ `Approve Final Invoice` و`Request Invoice Revision` و`Raise Transaction Complaint` امتدادات شرطية لقرار المراجعة. عند الاعتماد فقط يتم `<<include>> Complete Transaction` لأن الاعتماد يجعل Transaction = `Completed` دائمًا.
 13. `Rate Provider` و`Rate Beneficiary` Use Cases مستقلة من ناحية Actor goal، لكنهما تتطلبان `Transaction = Completed`. الأولى إلزامية على Beneficiary بعد Completed، والثانية اختيارية على Provider؛ لذلك لا تمثل تبعية Completed بأسهم `include/extend`.
-14. `Cancel Transaction` تتطلب Transaction قائمة وفي حالة تسمح بالإلغاء. `Close Open Request` مختلفة عنها وتتطلب Request Open قبل الاختيار. `Republish Expired Request` ينشئ Request جديدة بعد المراجعة/التعديل ولا يعيد فتح القديمة.
+14. `Cancel Transaction` تتطلب Transaction قائمة وفي حالة تسمح بالإلغاء. `Close Open Request` مختلفة عنها وتتطلب Request Open قبل الاختيار. `Republish Expired Request` ينشئ Request جديدة بعد مراجعة/تعديل البيانات ولا يعيد فتح الطلب القديم. `Republish Expired Request` ينشئ Request جديدة بعد المراجعة/التعديل ولا يعيد فتح القديمة.
 15. `Edit Provider Response` و`Withdraw Provider Response` تتطلبان استجابة فعالة مع Request Open وقبل selection وفق `DEC-070`; لا تربطان بعلاقة `include/extend` مصطنعة مع `Submit Provider Response`.
 16. `Revise Final Invoice` تتطلب `Revision Requested` سابقة؛ و`Review Provider Verification`/`Review Transaction Complaint` أهداف إدارية لاحقة مستقلة تعتمد على وجود submission/complaint، وليست أجزاء included داخل فعل المرسل.
 17. `Block User` و`Report User / Content` منفصلتان؛ يستطيع المستخدم authenticated تنفيذ أحدهما دون الآخر، وReport يخضع لاحقًا لمراجعة إدارية.
 18. `Create Active Transaction`, `Complete Transaction`, و`Validate Response Eligibility` تمثل سلوكًا نظاميًا مشتركًا/إلزاميًا، وليس Actor goals مستقلة؛ لذلك لا ترتبط مباشرة بـActor.
 19. استمرار Conversation وإعادة استخدامها بين نفس Beneficiary/Provider وفق DEC-075 هو قيد Domain/Interaction ولا يحتاج Use Case مستقلة في الرسم الرئيسي؛ يجب أن يبقى محفوظًا في Activity/Sequence/Class models.
 20. Public Provider Profile لا يعرض رقم الهاتف أو direct private-contact data أو البيانات الحساسة/الخاصة وفق DEC-036/046/077.
+21. `Switch Portal` يستخدم الحساب نفسه ويستعيد/يحفظ آخر Portal؛ لا يمثل تبديل حسابات. Expired Subscription لا يمنع Provider Portal access أو المعاملات الجارية لكنه يمنع Provider Response جديدة وDirect Search Transaction جديدة.
+22. `View / Renew Provider Subscription` هو هدف Provider، بينما `Confirm Subscription Activation / Renewal` هدف إداري بشري بعد تحقق الدفع الخارجي؛ تفاصيل السعر ووسيلة/إثبات الدفع ما تزال مفتوحة.
 21. `Switch Portal` يعمل داخل User account نفسه ويحفظ `lastPortal`; Expired Subscription لا يمنع Provider Portal access لكنه يمنع Provider Response جديدة وDirect Search Transaction جديدة حتى التجديد.
 22. Provider يدير/يجدد اشتراكه، بينما `Confirm Subscription Activation / Renewal` قرار إداري يدوي لموظف مخول بعد تحقق الدفع الخارجي؛ سعر الاشتراك وإثبات الدفع ما يزالان مفتوحين.
 
