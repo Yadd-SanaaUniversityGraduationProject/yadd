@@ -37,6 +37,9 @@
 - `Conversation ↔ Transaction` محسومة مفاهيميًا وفق DEC-075: Conversation واحدة بين نفس Beneficiary وProvider يمكن أن تضم صفرًا أو عدة Transactions عبر الزمن، مع القيد **`{unique Conversation per Beneficiary–Provider pair}`**. طريقة الفرض الفيزيائي وربط الرسائل/الأحداث بمعاملة محددة تبقى Design concern في Chapter Four.
 - `ProviderProfile → ProviderActivity` محسومة مفاهيميًا وفق DEC-076: يمكن لـDraft Provider Profile امتلاك `0..*` Activities، لكن أهلية وظائف Provider التي تتطلب نشاطًا/تصنيفًا تشترط وجود Activity واحدة على الأقل. طريقة فرض هذا الشرط وقيود uniqueness/type consistency في قاعدة البيانات تبقى Design concern في Chapter Four.
 - `ProviderProfile ↔ Area` و`Area ↔ Area` ممثلتان كـAssociations في Class Model، وتقابلان مفاهيميًا associative entities `PROVIDER_SERVICE_AREA` و`AREA_ADJACENCY` في ERD. هذا اختلاف تمثيل بين نموذج سلوكي/كائني ونموذج بيانات، وليس تعارضًا دلاليًا.
+- User-facing location UI uses Neighborhood only; District remains represented internally in the Area hierarchy and is derived from Neighborhood.
+- Generic `Report.reason` is required, while generic `Report.description` is not universally mandatory; Transaction Complaint requires Reason + Description.
+- Subscription `Expired` does not remove Provider Portal or ongoing Transaction access; it blocks the new interactions specified by DEC-086.
 - `SafetyFlag.reasonCategory` يمثل سبب/فئة الاشتباه اللازمة للمراجعة البشرية؛ قائمة القيم والـthresholds تبقى مفتوحة.
 - لا تستخدم Composition في الحزمة الحالية لأن object-lifetime/deletion ownership لم يثبت بعد من مصادر التحليل المعتمدة.
 
