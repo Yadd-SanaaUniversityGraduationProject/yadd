@@ -1,6 +1,6 @@
 # UC-03 — Respond to Request Sequence Diagram
 
-> **Status:** `REVIEW DRAFT — NOT BASELINED`
+> **Status:** `REVIEW DRAFT — SYNCHRONIZED 2026-09-18 — NOT BASELINED`
 >
 > **Purpose:** Sequence Diagram مشتق من `UC-03 — Respond to Request` فقط. لا يمثل رحلة Published Request كاملة.
 
