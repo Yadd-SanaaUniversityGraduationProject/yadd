@@ -1,6 +1,6 @@
 # UC-03 — Respond to Request Sequence Diagram
 
-> **Status:** `REVIEW DRAFT — SYNCHRONIZED 2026-09-18 — NOT BASELINED`
+> **Status:** `REVIEW DRAFT — SYNCHRONIZED 2026-09-19 — NOT BASELINED`
 >
 > **Purpose:** Sequence Diagram مشتق من `UC-03 — Respond to Request` فقط. لا يمثل رحلة Published Request كاملة.
 
@@ -37,6 +37,8 @@ sequenceDiagram
 
     P->>UI: submitProviderResponse(responseData)
     UI->>C: submitProviderResponse(requestId, responseData)
+    C->>C: validateResponseEligibility(providerId)
+    Note over C: SERVICE = Identity Verified + eligible profile; PRODUCT = eligible account/profile; both require Active Subscription
     C->>RQ: checkRequestStillOpen(requestId)
     RQ-->>C: requestState
     C->>PR: findActiveResponse(providerId, requestId)
