@@ -111,7 +111,7 @@
 | BeneficiaryRating | AgreementCommitmentScore | TBD | Yes when rating submitted | 1..5 | الالتزام بالاتفاق | DEC-063 |
 | BeneficiaryRating | CooperationScore | TBD | Yes when rating submitted | 1..5 | حسن التعامل والتعاون | DEC-063 |
 | BeneficiaryRating | Comment | TBD | No | moderation policy applies | تعليق اختياري؛ سجل Beneficiary ليس public Guest data | DEC-063/077 |
-| VerificationCase | VerificationCaseId | TBD | Yes | PK | حالة تحقق مقدم؛ ليست Public Guest data | DEC-034..036/077 |
+| VerificationCase | VerificationCaseId | TBD | Yes | PK | حالة Identity Verification لمقدم خدمة؛ ليست Public Guest data | DEC-035/036/085 |
 | VerificationCase | ProviderProfileId | TBD | Yes | FK; SERVICE provider only | Service Provider Profile موضوع Identity Verification | DEC-085 |
 | VerificationCase | Status | TBD | Yes | lifecycle constraint | حالة التحقق | Verification model |
 | VerificationCase | ReviewNote | TBD | No/conditional | required on ResubmissionRequired/Rejected conceptually | ملاحظة/سبب المراجع | Verification model |
