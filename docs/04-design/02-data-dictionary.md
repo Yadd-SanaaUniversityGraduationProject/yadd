@@ -1,8 +1,8 @@
 # Data Dictionary
 
-> **الحالة:** `DRAFT FOR PRELIMINARY DEFENSE — CURRENT MODEL SKELETON — SYNCHRONIZED THROUGH DEC-090 — 2026-09-18`
+> **الحالة:** `DRAFT FOR PRELIMINARY DEFENSE — CURRENT MODEL SKELETON — SYNCHRONIZED THROUGH DEC-091 — 2026-09-19`
 >
-> **المصدر:** `docs/04-design/01-database-design.md` المشتق من `docs/03-analysis/11-ERD.md` وSRS v0.9.10. الأنواع الفيزيائية والقيود غير المثبتة تبقى `TBD` بدل اختراعها.
+> **المصدر:** `docs/04-design/01-database-design.md` المشتق من `docs/03-analysis/11-ERD.md` وSRS v0.9.10، مع DBMS/Data Access المعتمدين في DEC-091. Microsoft SQL Server أصبح DBMS التنفيذ، لكن أنواع SQL Server الدقيقة والقيود والـIdentity physical mapping غير المثبتة تبقى `TBD` بدل اختراعها.
 
 ## Current Dictionary Skeleton
 
@@ -168,7 +168,7 @@
 
 `TBD` لا يعني غياب التحليل، بل أن القرار الفيزيائي لم يعتمد بعد. من أهم ما يبقى للمراجعة:
 
-- SQL/PostgreSQL data types and lengths.
+- SQL Server data types and lengths.
 - exact Check/Unique/Foreign-key names and cascade behavior.
 - media storage model.
 - invoice revision physical model.
