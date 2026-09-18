@@ -100,7 +100,7 @@ The following must remain consistent across Use Case, DFD, Activity, Sequence, E
 
 ## Open Items and Traceability Scope
 
-Open numeric/policy items such as expiry timing, AI thresholds, exact identity-document types, geographic seed lists and subscription plan pricing remain `Needs Verification`. They must not be invented in diagrams and do not block the core diagram structure above.
+Open items such as AI/moderation thresholds, verification-data retention/licensing, geographic seed lists, final subscription price/payment-proof/public-visibility policy, Provider Type switching, and physical design details remain `Needs Verification` or Chapter Four concerns. Resolved request/invoice/direct-start/subscription timings and accepted Service Provider identity-document types must not be treated as open.
 
 The structural questions previously open are now resolved at the analysis level:
 
