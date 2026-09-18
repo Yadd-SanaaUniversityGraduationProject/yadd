@@ -35,14 +35,14 @@
 | DEC-027 | التقييم اختياري ومتبادل لمدة 14 يومًا وDouble-Blind. | `SUPERSEDED` | RAT-Q01 — 2026-08-12 | استبدل بـDEC-051 وDEC-063؛ لا يعاد Double-Blind أو مهلة 14 يومًا تلقائيًا |
 | DEC-028 | سمعة المستفيد مبنية على تقييم المقدمين له. | `SUPERSEDED` | RAT-Q01 — 2026-08-12 | استبدل بالنموذج المحدود في DEC-063 دون عقوبات آلية |
 | DEC-029 | يمتلك الحساب `Provider Profile` واحدًا ويمكن تفعيل Service Activity أو Product Activity أو كليهما. | `SUPERSEDED_BY_DEC-074` | BUS-Q02 — 2026-08-12 | استبدل بقرار حصرية نوع المقدم في MVP |
-| DEC-030 | الهوية والتحقق مشتركان على مستوى Provider Profile بينما بيانات النشاط قد تختلف. | `APPROVED` | BUS-Q02 — 2026-08-12 | — |
+| DEC-030 | الهوية والتحقق مشتركان على مستوى Provider Profile بينما بيانات النشاط قد تختلف. | `SUPERSEDED_IN_PART_BY_DEC-085` | BUS-Q02 — 2026-08-12 | هوية User الأساسية تبقى مشتركة، لكن Government-ID Identity Verification أصبح إلزاميًا لـService Provider فقط وفق DEC-085 |
 | DEC-031 | موقع الطلب = المديرية + الحي؛ لا يظهر العنوان الدقيق أو GPS للعامة ويمكن مشاركة موقع أدق في سياق التواصل الخاص عند الحاجة. | `APPROVED` | LOC-Q01 — 2026-08-12 | — |
 | DEC-032 | يحدد المقدم مناطق خدمته؛ يبدأ التوزيع في حي الطلب ويمكن التوسع عند الحاجة. | `APPROVED` | LOC-Q01 — 2026-08-12 | — |
 | DEC-033 | الأحياء المجاورة تعرف بقائمة علاقات جوار مُدارة داخل YADD وليس GPS Radius كأساس. | `APPROVED` | LOC-Q01 — 2026-08-12 | LOC-DATA-Q01 مفتوح |
 | DEC-034 | كل Provider Profile يمر بتحقق رسمي قبل التفعيل يتضمن وثيقة هوية وصورة شخصية مع الوثيقة. | `SUPERSEDED_IN_PART_BY_DEC-085` | VER-Q01 — 2026-08-12 | يبقى أساس التحقق البشري لمقدم الخدمة؛ لم يعد Government ID شرطًا على Product Provider وفق DEC-085 |
 | DEC-035 | قرار التحقق النهائي يدوي بواسطة موظف YADD مخول؛ AI مساعد فقط. | `APPROVED` | VER-Q01 — 2026-08-12 | — |
 | DEC-036 | بيانات التحقق حساسة وغير عامة وتخضع لصلاحيات وحماية وسجل تدقيق؛ مدة الاحتفاظ مفتوحة. | `APPROVED` | VER-Q01 — 2026-08-12 | VER-RET-Q01 |
-| DEC-037 | AI في MVP يدعم Provider Verification وTrust & Safety Moderation. | `APPROVED` | AI-Q01 — 2026-08-12 | — |
+| DEC-037 | AI في MVP يدعم Provider Verification وTrust & Safety Moderation. | `SUPERSEDED_IN_PART_BY_DEC-085` | AI-Q01 — 2026-08-12 | نطاق AI-assisted identity verification يخص Service Provider فقط؛ Trust & Safety يبقى عامًا |
 | DEC-038 | AI يمكن أن يساعد OCR/جودة الوثيقة/مطابقة البيانات والوجه/Liveness ومؤشرات الاحتيال دون قرار نهائي منفرد. | `APPROVED` | AI-Q01/VER-Q01 | — |
 | DEC-039 | AI يولد Risk Flags للمحتوى والأنشطة؛ الحالات الحساسة والعقوبات عالية الأثر تحتاج قرارًا بشريًا. | `APPROVED` | AI-Q01 — 2026-08-12 | — |
 | DEC-040 | تستخدم Rules/Regex للحالات الحتمية البسيطة وAI عندما يلزم فهم السياق. | `APPROVED` | AI-Q01 — 2026-08-12 | — |
