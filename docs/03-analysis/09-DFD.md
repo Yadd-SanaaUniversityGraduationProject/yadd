@@ -96,18 +96,18 @@ flowchart LR
 
     G -->|Public Search Criteria; Public Browse Request| P2
     P2 -->|Public Search Results; Public Provider Profile References; Public Portfolio or Catalog References| G
-    G -->|Log In or Create Account Data when chosen| P1
-    P1 -->|Authentication Result / Account Access| G
+    G -->|Log In / Create Account / Password Recovery Data when chosen| P1
+    P1 -->|Authentication / Recovery Result; Account Access| G
 
-    B -->|Account Data| P1
-    P -->|Account and Provider Profile Data; Service Area Data| P1
+    B -->|Account Management; Portal Switch; Deactivation / Reactivation Data| P1
+    P -->|Account and Provider Profile Data; Portal Switch; Service Area Data| P1
     P1 <--> D1
     P1 <--> D2
     P1 <--> D7
     P1 -->|Account and Profile Information| B
     P1 -->|Profile and Portal Information| P
 
-    B -->|Search Criteria; Request Data; Request Closure Data| P2
+    B -->|Search Criteria; Request Data; Request Closure / Republish Data| P2
     P2 <--> D1
     P2 <--> D2
     P2 <--> D3
@@ -158,11 +158,13 @@ flowchart LR
 
 Manages:
 - Guest transition to `Log In / Create Account` when Authentication is required;
+- returning-user Log In using verified phone or verified email + password, plus Forgot Password recovery through verified channels;
+- Manage Account, Deactivate/Reactivate and last-Portal persistence/switching for the same User account;
 - one User account per person;
 - one optional Provider Profile per User;
 - exactly one Provider Type (`SERVICE` or `PRODUCT`) per Provider Profile in MVP — DEC-074;
 - multiple Provider Activities/Categories inside that type, with at least one required before provider-function eligibility — DEC-076;
-- service areas;
+- service areas; user-facing location selection uses Neighborhood while District is derived internally from Neighborhood;
 - Portfolio/Catalog metadata and watermarked display copy.
 
 Guest itself is not stored as a domain account/entity merely because anonymous browsing exists.
@@ -175,11 +177,13 @@ Manages:
 - creation/publication of Request for authenticated Beneficiary only;
 - discovery of eligible Providers using provider type/category/area constraints;
 - Request closure before Provider selection;
-- Request expiry in principle.
+- Request expiry and Republish as a new Request.
 
 Public responses to Guest must not expose direct private-contact data such as provider phone number or sensitive/private records. If Guest attempts a protected action, UI/API routes to Authentication rather than creating the protected domain action — DEC-077.
 
-Request inactivity policy: Reminder after 24h and 48h, then Expired after 72h of Beneficiary inactivity; Republish creates a new Request — DEC-081.
+Request inactivity policy: Reminder after 24h and 48h, then Expired after 72h of Beneficiary inactivity; meaningful Beneficiary activity resets the inactivity clock, Provider Response arrival alone does not; Republish creates a new Request and never reopens the expired one — DEC-081.
+
+Discovery/Request UI uses Neighborhood as the user-facing location selector. District remains internal/derived from Neighborhood and continues to participate in the underlying data rules.
 
 ### 3.0 Manage Provider Responses & Communication
 
