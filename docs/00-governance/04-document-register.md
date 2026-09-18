@@ -48,7 +48,7 @@
 | AI Trust & Safety Model | التحقق والمراقبة المدعومة بالAI | `ANALYZED_APPROVED — SYNCHRONIZED THROUGH DEC-089 / PARTIAL POLICY` | human outcomes fixed; categories/thresholds/provider/retention remain open |
 | Provider Subscription Model | اشتراك المقدم | `ANALYZED_APPROVED — SYNCHRONIZED THROUGH DEC-086 / PARTIAL COMMERCIAL POLICY` | 30-day lifecycle/expiry behavior closed; price/payment proof/public visibility remain open |
 | Process/Data Specifications | مواصفات العمليات والتدفقات والمخازن | `ANALYZED — SYNCHRONIZED THROUGH DEC-091` | Logical DFD/process semantics synchronized; DEC-091 implementation boundary documented |
-| Chapter One v1 | الفصل الأول | `v1.1 — TEXT SYNCHRONIZED THROUGH DEC-091 — READY FOR PRELIMINARY DEFENSE REVIEW` | Derived Draft؛ technical stack updated; final feasibility/formatting review pending |
+| Chapter One v1 | الفصل الأول | `v1.2 — ACADEMIC STRUCTURE SYNCHRONIZED THROUGH DEC-091 — REVIEW OPEN` | Task Schedule + Gantt now explicit; PERT remains OPEN by university requirement; feasibility/final formatting review pending |
 | Chapter Two v1 | الفصل الثاني | `v1.1 — TEXT SYNCHRONIZED — CORE SOURCES VERIFIED — REVIEW OPEN` | final research/reference closure pending؛ DEC-077 قرار منتج ولا يغير الأدلة البحثية التاريخية |
 | Chapter Three v1 | الفصل الثالث | `v1.3 — WORKING DRAFT — TEXT SYNCHRONIZED THROUGH DEC-090` | Requirements Closure integrated; final diagrams/export pending |
 | DFD | تدفقات البيانات | `DRAFT FOR PRELIMINARY DEFENSE — CORE SYNCHRONIZED THROUGH DEC-091` | Logical AI/stack boundary + current eligibility flows synchronized; standard visual redraw/export pending |
