@@ -1,6 +1,6 @@
 # مواصفات العمليات وتدفقات البيانات ومخازن البيانات — Process, Data Flow & Data Store Specifications
 
-> **الحالة:** `ANALYZED — SYNCHRONIZED 2026-09-18 THROUGH DEC-090`
+> **الحالة:** `ANALYZED — SYNCHRONIZED 2026-09-19 THROUGH DEC-091`
 >
 > هذه الوثيقة مشتقة من `05-SRS.md`, `06-business-rules.md`, `07-lifecycles.md`, `08-use-cases.md`, و`09-DFD.md`. جميع التسميات داخل المخططات النهائية باللغة الإنجليزية وفق `DEC-072`.
 
@@ -10,10 +10,10 @@
 |---|---|---|---|---|---|
 | 1.0 | Manage Accounts & Provider Profiles | Log In/Create Account data when Guest authenticates; account data; provider profile data; service areas; portfolio/catalog data | authentication/account result; account/profile information; portal information | D1, D2, D7 | DEC-008..011/030/035/036/064/074/076/077/078/079/080/085/086/090 |
 | 2.0 | Manage Discovery & Requests | Guest/public search criteria and browse requests; authenticated search criteria; request data; request closure | public search results/public provider profile references; authenticated search results; matching requests; request status | D1, D2, D3, D7 | DEC-012..014/031..033/045/048/049/064/074/076/077/081 |
-| 3.0 | Manage Provider Responses & Communication | provider response data, response edit/withdrawal, messages, provider selection, transaction-start request/confirmation | responses, messages, selection/start result | D3, D4 | DEC-023/046/047/066/069/070/075/077/082/088/090 |
+| 3.0 | Manage Provider Responses & Communication | provider response data, response edit/withdrawal, messages, provider selection, transaction-start request/confirmation | responses, messages, selection/start result | D1, D3, D4, D8 | DEC-023/043/046/047/066/069/070/075/077/082/085/086/088/090 |
 | 4.0 | Manage Transactions & Invoices | selected provider, confirmed direct start, cancellation data, invoice/revision data, invoice approval, complaint data | transaction status, invoice status, completed transaction reference, complaint reference | D4, D5 | DEC-015/025/048/050/055/066/069/071/073/075/077/082/083/084 |
 | 5.0 | Manage Ratings & Reputation | hybrid provider rating, beneficiary behavioral rating | provider reputation, beneficiary interaction record | D4, D6 | DEC-051/052/063/071/073/077/087 |
-| 6.0 | Manage Administration, Verification & Safety | service-provider identity verification submission/decision, subscription updates, reports, complaint reference/evidence, moderation actions | verification/subscription/report/complaint status, flags, audit information | D1, D7, D8 | DEC-035..043/053/054/064/073/077/085/086/088/089/090 |
+| 6.0 | Manage Administration, Verification & Safety | service-provider identity verification submission/decision, subscription updates, reports, complaint reference/evidence, moderation actions | verification/subscription/report/complaint status, flags, audit information | D1, D7, D8 | DEC-035..043/053/054/064/073/077/085/086/088/089/090/091 |
 
 ## 2. مخازن البيانات المنطقية — Logical Data Stores
 
@@ -47,7 +47,7 @@
 - البيانات العامة للGuest لا تشمل رقم الهاتف أو direct private-contact data أو Verification/Subscription/Transaction/Report/Audit data أو أي بيانات حساسة/خاصة.
 - `Create Request` وRequest Closure وظائف authenticated Beneficiary وليست صلاحيات Guest؛ قد يظهر CTA للGuest لكن التنفيذ يتطلب Log In/Create Account أولًا.
 - يستخدم موقع `Request` الـ`District + Neighborhood`؛ ولا يكون العنوان الدقيق/GPS عامًا.
-- أهلية Provider للطلب تتطلب توافق `ProviderProfile.providerType` وCategory/ProviderActivity مع نوع وتصنيف Request.
+- Matching للطلب يتطلب توافق `ProviderProfile.providerType` وCategory/ProviderActivity مع نوع وتصنيف Request. لا يحسم هذا بند الظهور العام لمقدم اشتراكه Expired؛ هذه السياسة ما تزال مفتوحة.
 - Request expiry policy معتمدة: Reminder 24h/48h وExpired 72h من عدم نشاط Beneficiary؛ Republish ينشئ Request جديدًا.
 
 ### 3.0 Manage Provider Responses & Communication
@@ -62,11 +62,12 @@
 - يجب إظهار فواصل/أحداث نظام واضحة عند بدء وانتهاء Transactions داخل Conversation المستمرة.
 - في مسار `Request`: يبدأ اختيار `Beneficiary` للـ`Provider` الـ`Transaction`.
 - في مسار `Direct Search`: يرسل أي من الطرفين `Request Transaction Start`، ويجب أن يؤكد الطرف الآخر خلال 12 ساعة قبل إنشاء `Active Transaction`؛ الرفض أو انتهاء المهلة يلغي طلب البدء فقط. لا يسمح بأكثر من Pending Start Request واحد بين الطرفين في الوقت نفسه — DEC-082.
+- قبل إنشاء Provider Response جديدة أو Direct Search Transaction جديدة يجب إعادة التحقق من أهلية المقدم الحالية؛ SERVICE = Identity Verified + eligible profile + Active Subscription، PRODUCT = eligible account/profile + Active Subscription — DEC-085/086.
 
 ### 4.0 Manage Transactions & Invoices
 - جميع Transaction/Invoice actions تتطلب Actor authenticated وله الصلاحية المناسبة؛ Guest لا ينفذها — DEC-077.
 - لا توجد عملية أو Data Store مستقلة باسم `Agreement`.
-- يمكن أن تبدأ `Transaction` من اختيار مقدم داخل `Request` أو من بدء مؤكد في `Direct Search`.
+- يمكن أن تبدأ `Transaction` من اختيار مقدم داخل `Request` أو من بدء مؤكد في `Direct Search`; في Direct Search لا يكفي التأكيد وحده إذا فقد Provider أهلية بدء تعامل جديد/Active Subscription قبل الإنشاء.
 - كل Transaction ترتبط بالمحادثة المستمرة بين الطرفين؛ الربط الفيزيائي للرسائل/الأحداث بمعاملة محددة يؤجل إلى Chapter Four.
 - يمكن أن تكون الفاتورة `Pending Customer Approval`, `Overdue`, `Revision Requested` أو `Approved`; يرسل النظام Reminder عند 24h و48h، ويجعلها Overdue عند 72h دون `Auto-Approval` — DEC-083.
 - يؤدي اعتماد الفاتورة إلى جعل `Transaction = Completed`.
@@ -87,6 +88,7 @@
 - الوظائف الإدارية وVerification/Subscription/Report processing ليست بيانات أو صلاحيات عامة للGuest.
 - Government-ID Identity Verification تخص Service Provider فقط؛ المقبول National ID أو Passport + صورة الوثيقة + صورة شخصية مع الوثيقة، والقرار النهائي بشري. Product Provider لا يحتاج Government ID — DEC-085.
 - يمكن للـAI المساعدة وإنتاج `Flags` لكنه لا يصدر قرارات نهائية عالية الأثر وحده.
+- منطقيًا يبقى AI capability داخل Process 6 في DFD الفصل الثالث. تنفيذ هذه القدرة عبر External AI APIs خلف Integration/Service Layer معتمد كتوجيه تقني في DEC-091، بينما المزود والـpayload وسياسات الاحتفاظ والـthresholds ما تزال مفتوحة.
 - يجب أن يكون سبب/فئة الاشتباه في الـFlag قابلًا للفهم من الموظف المخول؛ القيم التفصيلية والـthresholds ما تزال مفتوحة.
 - تحصيل `Subscription` خارجي؛ الاشتراك مطلوب لكلا نوعي Provider ومدته 30 يومًا، مع Reminder قبل 3 أيام و24h. Expired يمنع تعاملات جديدة ولا يوقف المعاملات الجارية — DEC-086.
 - مراجعة شكوى `Transaction` تطبق سياسة YADD/الإجراء الإداري فقط، ولا تمنح سلطة تحكيم مالي/تجاري. نتائج مراجعة Reports/Flags عالية الأثر بشرية ومسجلة وفق قائمة DEC-089.
@@ -109,9 +111,9 @@
 
 - `SAFE-REQ-Q01`: عتبات إساءة الاستخدام.
 - `LOC-DATA-Q01`: القائمة الجغرافية النهائية، و`LOC-OPS-TIME-Q01`: التوقيت.
-- أنواع وثائق التحقق الدقيقة/الاحتفاظ/التراخيص.
+- احتفاظ بيانات التحقق والتراخيص المهنية؛ أنواع الوثائق المقبولة للـSERVICE في MVP حُسمت إلى National ID أو Passport.
 - تفاصيل سياسة/مزود/threshold/retention الخاصة بالـAI.
-- باقات الاشتراك/الأسعار/طريقة إثبات الدفع/الآثار التشغيلية لانتهاء الاشتراك.
+- سعر الاشتراك/طريقة إثبات الدفع، وسياسة الظهور العام في البحث عند Expired. أثر Expired على التعاملات الجديدة والجارية حُسم في DEC-086.
 - سياسة تغيير Provider Type بعد اختياره.
 - آلية UX الدقيقة للعودة إلى protected action بعد نجاح Authentication؛ هذه Design detail وليست Business Rule جديدة.
 
