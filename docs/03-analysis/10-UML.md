@@ -23,7 +23,7 @@
 
 `Guest` Actor غير authenticated للتصفح العام فقط؛ لا يمثل حسابًا أو Entity/Class. استخدام `YADD Administrator` في المخطط الرئيسي هو تبسيط نمذجي، ولا يعني أن موظفًا واحدًا يمتلك جميع الصلاحيات الإدارية.
 
-**DEC-085 actor specialization constraint:** `Submit Service Provider Verification` يخص `Service Provider` فقط؛ `Product Provider` لا يمر بمسار Government-ID Verification في MVP. إذا ظل Main Diagram يستخدم Actor العام `Provider` للبساطة، يجب توضيح هذا القيد كنطاق/Precondition لا كصلاحية عامة.
+**DEC-085 actor specialization constraint:** `Submit Service Provider Verification` يخص `Service Provider` فقط؛ `Product Provider` لا يمر بمسار Government-ID Verification في MVP. يعرض Main Semantic Diagram الآن تخصصي Service/Product صراحة عند نقطة التحقق فقط حتى لا يُفهم Government-ID Verification كصلاحية عامة لكل Provider.
 
 ---
 
@@ -37,6 +37,8 @@ flowchart LR
     G["Guest"]:::actor
     B["Beneficiary"]:::actor
     P["Provider"]:::actor
+    SP["Service Provider"]:::actor
+    PP["Product Provider"]:::actor
     A["YADD Administrator"]:::actor
 
     subgraph YADD["YADD System"]
@@ -123,7 +125,6 @@ flowchart LR
     P --- UC19
     P --- UC20
     P --- UC21
-    P --- UC22
     P --- UC23
     P --- UC24
     P --- UC25
@@ -133,6 +134,10 @@ flowchart LR
     P --- UC30
     P --- UC31
     P --- UC32
+
+    SP -. specializes .-> P
+    PP -. specializes .-> P
+    SP --- UC22
 
     A --- UC33
     A --- UC34
@@ -167,7 +172,7 @@ flowchart LR
 1. `Guest` معتمد وفق `DEC-077` للتصفح العام: `Browse Public Content`, `Search Providers`, `View Provider Profile`, و`View Portfolio / Catalog`، ويمكنه اختيار `Log In` أو `Create Account`.
 2. لا يرتبط Guest مباشرة بـ`Create Request`, `Communicate / Inquire`, Transaction, Ratings, Block/Report أو أي protected Use Case. ظهور CTA له لا يعني منحه الصلاحية؛ الضغط يوجّه إلى Authentication.
 3. `Log In`/`Create Account` لا يمثلان `<<include>>` داخل كل protected Use Case؛ Authentication هو Precondition للـauthenticated actor goals.
-4. `Service Provider` و`Product Provider` تخصصان من `Provider` وفق `DEC-067/074`، ولا يلزم تكرارهما داخل الرسم الرئيسي.
+4. `Service Provider` و`Product Provider` تخصصان من `Provider` وفق `DEC-067/074`. يظهران هنا فقط لأن `Submit Service Provider Verification` خاص بالـService Provider وفق DEC-085؛ بقية أهداف Provider العامة موروثة مفاهيميًا من Actor العام.
 5. لا توجد Use Case/Entity باسم `Agreement`; المسار القياسي في الطلب هو `Request → Provider Response → Selection → Transaction`.
 6. `View Provider Profile <<extend>> Search Providers` لأن البحث قد ينتهي دون فتح ملف بعينه.
 7. `View Portfolio / Catalog <<extend>> View Provider Profile` لأن فتح محتوى العرض تفصيل اختياري من الملف.
