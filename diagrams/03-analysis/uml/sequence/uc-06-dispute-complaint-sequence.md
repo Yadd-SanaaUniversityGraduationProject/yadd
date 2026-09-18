@@ -34,9 +34,9 @@ sequenceDiagram
 
     Note over B,T: Precondition: disagreement continues before final invoice approval
 
-    B->>BUI: raiseTransactionComplaint(transactionId, details)
-    BUI->>C: createTransactionComplaint(transactionId, details)
-    C->>R: recordComplaint(transactionId, details, evidenceRefs)
+    B->>BUI: raiseTransactionComplaint(transactionId, reason, description, optionalAttachments)
+    BUI->>C: createTransactionComplaint(transactionId, reason, description, optionalAttachments)
+    C->>R: recordComplaint(transactionId, reason, description, attachmentRefs)
     R-->>C: complaintCreated(complaintId)
     C-->>BUI: complaintRecorded(complaintId)
     C-->>PUI: complaintOpened(complaintId)
@@ -52,9 +52,9 @@ sequenceDiagram
     C-->>AUI: reviewContext
     AUI-->>A: showPlatformEvidence()
 
-    A->>AUI: recordPlatformPolicyReview(outcome)
-    AUI->>C: recordAdministrativeReviewOutcome(complaintId, outcome)
-    C->>R: saveAdministrativeReviewOutcome(outcome)
+    A->>AUI: recordPlatformPolicyReview(outcome, reason)
+    AUI->>C: recordAdministrativeReviewOutcome(complaintId, outcome, reason)
+    C->>R: saveAdministrativeReviewOutcome(outcome, reason)
     R-->>C: reviewOutcomeSaved()
 
     Note over A,C: Administration applies YADD policy only — no financial or commercial arbitration
