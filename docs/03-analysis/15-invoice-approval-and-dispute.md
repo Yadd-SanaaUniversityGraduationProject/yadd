@@ -1,8 +1,8 @@
 # Invoice Approval & Dispute Model
 
-> **الحالة:** `ANALYZED_APPROVED / PARTIAL POLICY — SYNCHRONIZED 2026-09-04`
+> **الحالة:** `ANALYZED_APPROVED / PARTIAL POLICY — SYNCHRONIZED 2026-09-19 THROUGH DEC-084`
 >
-> **القرارات المرجعية:** `DEC-015/016/025/041/050/051/055/063/071/073`.
+> **القرارات المرجعية:** `DEC-015/016/025/041/050/051/055/063/071/073/083/084`.
 
 ## 1. المبدأ
 
