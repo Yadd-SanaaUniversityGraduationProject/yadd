@@ -1,6 +1,6 @@
 # UC-02 — Create Request Sequence Diagram
 
-> **Status:** `REVIEW DRAFT — NOT BASELINED`
+> **Status:** `REVIEW DRAFT — SYNCHRONIZED 2026-09-18 — NOT BASELINED`
 >
 > **Purpose:** Sequence Diagram مشتق من `UC-02 — Create Request` فقط، وليس من Published Request Route بالكامل. صُمم ليكون صغيرًا وقابلًا للعرض على A4.
 
@@ -8,7 +8,8 @@
 
 - **Approved behavior:** `UC-02 — Create Request` in `docs/03-analysis/08-use-cases.md`.
 - **Requirements:** `FR-005`, `FR-005A`, `FR-005B` in `docs/03-analysis/05-SRS.md`.
-- **Business/decision basis:** `DEC-012`, `DEC-013` and the corresponding current business rules.
+- **Business/decision basis:** `DEC-012`, `DEC-013`, `DEC-031`, `DEC-048`, `DEC-081` and the corresponding current business rules.
+- **Location UI synchronization:** the Beneficiary selects `Neighborhood` only in the request UI; `District` is derived internally from that Neighborhood while the underlying location model remains `District + Neighborhood`.
 - **Derived modeling roles:** `RequestUI` and `RequestController` are modeling roles for the Sequence Diagram; they are not approved implementation class names.
 - **Derived error behavior:** generic validation failure is shown only as `Missing or invalid required data`. No unapproved numeric limits or validation thresholds are invented.
 
@@ -27,7 +28,8 @@ sequenceDiagram
     UI-->>B: showRequestForm()
     deactivate UI
 
-    Note over B,UI: Required: type, category, district, neighborhood, description
+    Note over B,UI: Required user-facing data: type, category, neighborhood, description
+    Note over UI,C: District is derived internally from the selected Neighborhood
     Note over B,UI: Optional: images, additional information, indicative price
 
     B->>UI: submitRequest(requestData)
