@@ -36,12 +36,13 @@ flowchart LR
         end
 
         subgraph SUBSCRIPTION["Subscription"]
-            MANAGE_SUBSCRIPTION(["Manage Provider Subscription"]):::usecase
+            MANAGE_SUBSCRIPTION(["Manage / Renew Provider Subscription"]):::usecase
+            CONFIRM_SUBSCRIPTION(["Confirm Subscription Activation / Renewal"]):::usecase
         end
 
         subgraph SAFETY["Safety & Moderation"]
             direction LR
-            BLOCK(["Block User"]):::usecase
+            BLOCK(["Block / Unblock User"]):::usecase
             REPORT(["Report User / Content"]):::usecase
             REVIEW_REPORTS(["Review Reports / Flags"]):::usecase
         end
@@ -54,6 +55,7 @@ flowchart LR
     P --- MANAGE_SHOWCASE
     P --- MANAGE_AREAS
     SP --- SUBMIT_VERIFICATION
+    P --- MANAGE_SUBSCRIPTION
     P --- BLOCK
     P --- REPORT
     SP -. specializes .-> P
@@ -62,7 +64,7 @@ flowchart LR
     B --- REPORT
 
     REVIEW_VERIFICATION --- A
-    MANAGE_SUBSCRIPTION --- A
+    CONFIRM_SUBSCRIPTION --- A
     REVIEW_REPORTS --- A
 
     classDef actor fill:#FFFFFF,stroke:#111827,stroke-width:1.8px,color:#111827,font-weight:bold;
@@ -81,7 +83,8 @@ flowchart LR
 - In MVP, a Provider Profile has one Provider Type only: `SERVICE` or `PRODUCT`; one or more categories may be selected within that type.
 - `Submit Service Provider Verification` and `Review Service Provider Verification` are separate Actor goals. Government-ID verification applies to Service Provider only; Product Provider does not execute this use case in MVP.
 - Final verification decision is human; AI may assist but does not decide independently.
-- Provider subscription administration applies to both provider types; current operational period is 30 days, while external payment collection remains outside YADD.
-- `Block User` and `Report User / Content` are separate concepts. Block does not break an Active Transaction, and administrative review outcomes follow DEC-089.
+- Provider subscription applies to both provider types. The Provider may view/manage/renew the subscription; an authorized employee confirms activation/renewal manually after operational verification of external payment. The period is 30 days from authorized activation. Price/payment-proof procedure remains open.
+- Expired subscription does not remove Provider Portal access or stop existing Active Transactions; it prevents new Provider Responses and new Direct Search Transactions until renewal.
+- `Block / Unblock User` and `Report User / Content` are separate concepts. Block does not break an Active Transaction; Unblock restores future interaction only and does not reopen ended Requests/Transactions or cancel a prior Report. Administrative review outcomes follow DEC-089.
 - `Review Reports / Flags` is an administrative goal triggered by existing reports/flags, not an extension relationship invented for sequence.
 - Guest is intentionally absent from protected Block/Report capabilities because DEC-077 requires authentication for them.
