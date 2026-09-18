@@ -23,10 +23,10 @@ The diagrams do not create new requirements or decisions. They visualize the cur
 | File | Purpose |
 |---|---|
 | `00-main-overview.md` | High-level system overview: actors and major YADD goals. |
-| `01-public-access-discovery.md` | Guest/public discovery, authentication entry points and direct inquiry. |
-| `02-request-provider-response.md` | Published Request route, Provider Responses, comparison and selection. |
+| `01-public-access-discovery.md` | Guest/public discovery, authentication/recovery entry points and direct inquiry. |
+| `02-request-provider-response.md` | Published Request lifecycle, expiry/republish, Provider Responses, comparison and selection. |
 | `03-transaction-invoice-rating.md` | Direct transaction start, cancellation, final invoice, complaint and ratings. |
-| `04-provider-management-verification-safety.md` | Provider profile management, verification, subscription and safety administration. |
+| `04-provider-management-verification-safety.md` | Provider profile management, Service-only identity verification, Provider subscription renewal/admin confirmation, and safety administration. |
 
 These are **views of the same Use Case Model**, not five independent models.
 
@@ -53,7 +53,10 @@ The Mermaid presentation is a working visual source. If the final academic repor
 - `Request → Provider Response → Selection → Transaction` is preserved.
 - Chat alone never creates a Transaction.
 - Ratings are available only after `Transaction = Completed`.
-- `Block User` and `Report User / Content` are separate concepts.
+- `Block User` and `Report User / Content` are separate concepts; Unblock restores future interaction only.
+- User-facing location UI exposes Neighborhood only; District remains internal/derived while retained in the underlying data model.
+- Generic Report requires Reason, while Description is not universally mandatory; Transaction Complaint requires Reason + Description.
+- Expired Subscription preserves Provider Portal and ongoing Transaction access but blocks new Provider Responses and new Direct Search Transactions.
 - Administrative complaint review does not grant financial/commercial settlement authority.
 - No unresolved numeric policy or implementation detail is invented in these diagrams.
 
