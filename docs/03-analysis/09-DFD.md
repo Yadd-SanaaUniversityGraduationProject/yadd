@@ -270,7 +270,7 @@ AI is an internal assistance mechanism, not an external actor in the main DFD. S
 
 - [x] Context and Level 0 use the same four main external entities: Guest, Beneficiary, Provider, YADD Administrator.
 - [x] Guest public browse and Authentication boundary are aligned with DEC-077.
-- [x] Processes and stores are aligned with current SRS/Business Rules through DEC-077 in their applicable scope.
+- [x] Processes and stores are aligned with current SRS/Business Rules through DEC-090 in their applicable scope.
 - [x] `Provider Response` is the canonical term; no Offer store/process.
 - [x] edit/withdraw response rule is represented.
 - [x] Direct Search start request + confirmation is represented.
