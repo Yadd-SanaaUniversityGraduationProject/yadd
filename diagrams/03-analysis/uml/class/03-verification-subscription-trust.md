@@ -147,9 +147,9 @@ classDiagram
 - `VerificationCase.reviewNote` يمثل الملاحظة/السبب المطلوب عند `ResubmissionRequired` أو `Rejected`; لا يثبت format أو length أو retention policy.
 - `VerificationCase` و`VerificationArtifact` يعكسان Service Provider verification: National ID أو Passport + صورة الوثيقة + صورة شخصية مع الوثيقة. مدة الاحتفاظ تبقى Needs Legal Verification.
 - `Identity Verified` شرط إضافي للـSERVICE فقط؛ الاشتراك النشط وحالة الملف/التصنيف شروط مستقلة لكلا النوعين.
-- `Subscription` مطلوبة لكلا نوعي Provider ومدتها 30 يومًا. التفعيل/التجديد يدوي بعد تحقق الدفع الخارجي؛ Reminder قبل 3 أيام و24h. Expired لا يوقف المعاملات الجارية لكنه يمنع تعاملات جديدة.
+- `Subscription` مطلوبة لكلا نوعي Provider ومدتها 30 يومًا من تاريخ التفعيل/التجديد اليدوي المخول بعد تحقق الدفع الخارجي؛ Reminder قبل 3 أيام و24h. Expired لا يمنع Portal access أو المعاملات الجارية، لكنه يمنع Provider Response جديدة وDirect Search Transaction جديدة حتى التجديد. السعر وآلية/إثبات الدفع الخارجي تبقيان مفتوحتين.
 - `UserBlock` مستقل عن Report ويدعم Unblock. Block يمنع التفاعل الجديد لكنه لا يكسر Active Transaction ولا يمنع إجراءاتها/إشعاراتها.
-- `Report` يمكن أن يرتبط بمستخدم، Provider context، Showcase Item، Conversation أو Transaction context. يبقى `targetReference` تمثيلًا polymorphic مفاهيميًا إلى أن يحسم Chapter Four mapping.
+- `Report` يمكن أن يرتبط بمستخدم، Provider context، Showcase Item، Conversation أو Transaction context. `reason` مطلوب للـGeneric Report؛ `description` ليست إلزامية عالميًا للـGeneric Report وتبقى context/policy-dependent، بينما Transaction Complaint تتطلب Reason + Description وتسمح بمرفقات اختيارية. يبقى `targetReference` تمثيلًا polymorphic مفاهيميًا إلى أن يحسم Chapter Four mapping.
 - `SafetyFlag` مفهوم تحليلي لنتيجة Rules/AI checks أو Behavioral signals، ولا يعني أن المخالفة مؤكدة أو أن العقوبة النهائية آلية.
 - `SafetyFlag.reasonCategory` مشتق من متطلب الحوكمة الذي يلزم أن يستطيع الموظف معرفة سبب/فئة الاشتباه التي ولدت الـFlag؛ لا يثبت هذا الرسم قائمة قيم نهائية أو threshold أو provider تقني.
 - `AdminAuditRecord` يمثل سجل التدقيق للقرارات الحساسة، بما في ذلك outcome بشري من القائمة المعتمدة في DEC-089 مع السبب والموظف/الزمن. الربط الفيزيائي يبقى Design concern.
