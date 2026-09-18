@@ -219,7 +219,10 @@ Subscription(
 UserBlock(
   BlockId PK,
   BlockerUserId FK -> User.UserId,
-  BlockedUserId FK -> User.UserId
+  BlockedUserId FK -> User.UserId,
+  Status,
+  BlockedAt,
+  UnblockedAt NULL
 )
 
 Report(
@@ -228,6 +231,7 @@ Report(
   TargetType,
   TargetReference,
   Reason,
+  Description NULL,
   Status,
   CreatedAt
 )
@@ -245,6 +249,8 @@ AdminAuditRecord(
   SubjectType,
   SubjectReference,
   EventType,
+  DecisionOutcome NULL,
+  Reason NULL,
   RecordedAt
 )
 
@@ -280,12 +286,15 @@ Notification(
 12. `RequiresDeposit` Boolean فقط؛ لا DepositAmount/PaymentStatus/Refund — DEC-041.
 13. Transaction Cancellation تحفظ actor/reason/time — DEC-048 / BR-019.
 14. `Completed` terminal successful Transaction state؛ `Disputed` terminal unsuccessful state — DEC-071/073.
-15. ProviderRating واحدة بحد أقصى لكل Completed Transaction، وهي مطلوبة في تدفق Beneficiary→Provider — DEC-051/071.
+15. ProviderRating واحدة بحد أقصى لكل Completed Transaction، وهي مطلوبة في تدفق Beneficiary→Provider، وتستخدم OverallStars + structured criteria + optional comment — DEC-051/071/087.
 16. BeneficiaryRating واحدة بحد أقصى لكل Completed Transaction، وهي اختيارية — DEC-063/071.
 17. لا Ratings لـCancelled/Disputed Transactions — DEC-073.
-18. Verification resubmission/rejection review يدعم ReviewNote/سبب للمراجع وفق نموذج التحقق الحالي.
+18. VerificationCase/Artifacts تستخدم لـService Provider Identity Verification فقط؛ المقبول National ID أو Passport + document image + personal photo with document، مع ReviewNote عند إعادة التقديم/الرفض — DEC-085.
 19. SafetyFlag يحتفظ بسبب/فئة الاشتباه بما يكفي للمراجعة البشرية؛ taxonomy/thresholds غير مثبتة — SRS/Trust & Safety model.
 20. Complaint/Report review لا ينشئ Financial Settlement relation أو سلطة Refund/Compensation — DEC-073.
+21. UserBlock يدعم Unblock ولا يؤدي إلى حذف/إخفاء Active Transaction — DEC-088.
+22. القرارات الإدارية عالية الأثر تسجل Outcome + Reason وتبقى بشرية — DEC-089.
+23. Notification channel policy = InApp default; SMS security/OTP/critical account; verified Email optional — DEC-090.
 
 ## 4. Public / Private Data Boundary — DEC-077
 
