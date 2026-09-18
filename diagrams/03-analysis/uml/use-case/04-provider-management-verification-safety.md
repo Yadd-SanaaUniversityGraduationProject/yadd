@@ -1,6 +1,6 @@
 # Use Case View 04 — Provider Management, Verification & Safety
 
-> **Status:** `REVIEW DRAFT — NOT BASELINED — SYNCHRONIZED THROUGH DEC-090`
+> **Status:** `REVIEW DRAFT — NOT BASELINED — SYNCHRONIZED THROUGH DEC-091`
 >
 > **Purpose:** Focused view of Provider profile management, verification, subscription administration and safety/report review.
 
