@@ -7,12 +7,13 @@
 ## Source basis
 
 - **Approved behavior:** dispute alternative in `UC-06` from `docs/03-analysis/08-use-cases.md`.
-- **Team decision:** `DEC-073`.
-- **Business rule:** `BR-040`.
+- **Team decisions:** `DEC-073`, `DEC-084`.
+- **Business rules:** `BR-040`, `BR-059`.
 - **Detailed model:** `docs/03-analysis/15-invoice-approval-and-dispute.md`.
 - **Precondition:** disagreement continues before final invoice approval.
+- **Complaint input:** reason + description are mandatory; supporting attachments are optional.
 - **Governance rule:** YADD Administration reviews evidence available inside YADD and applies platform policy only. It does not arbitrate financial/commercial rights and does not order Payment, Refund, or Compensation.
-- **Terminal rule:** Transaction becomes `Disputed` only when the disagreement remains unresolved and the parties do not reach agreement before invoice approval.
+- **Resolution rule:** if the parties resolve the issue, the flow returns to invoice revision/review as needed; if it remains unresolved, Transaction becomes `Disputed` and Ratings do not open.
 - **Rating rule:** `Disputed` Transactions do not open Ratings.
 - **Derived modeling roles:** `BeneficiaryUI`, `ProviderUI`, `AdminUI`, and `ComplaintController` are Sequence modeling roles, not approved implementation class names.
 
