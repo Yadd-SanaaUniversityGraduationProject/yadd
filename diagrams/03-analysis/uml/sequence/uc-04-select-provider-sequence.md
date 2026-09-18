@@ -1,6 +1,6 @@
 # UC-04 — Select Provider from Request Sequence Diagram
 
-> **Status:** `REVIEW DRAFT — NOT BASELINED`
+> **Status:** `REVIEW DRAFT — SYNCHRONIZED 2026-09-18 — NOT BASELINED`
 >
 > **Purpose:** Sequence Diagram مشتق من `UC-04 — Select Provider from Request` فقط. يوضح المقارنة والاختيار وبدء Transaction في Published Request Route دون دمج بقية رحلة النظام.
 
