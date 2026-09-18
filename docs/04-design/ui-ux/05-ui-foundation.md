@@ -147,6 +147,12 @@ These may use different labels because they serve different portals, but they mu
 
 Authentication/onboarding focused flows intentionally omit the public bottom navigation, but still use the same colors, type styles, buttons, fields, and surfaces.
 
+### Administration desktop baseline
+
+- `ADM-01..07` are **Desktop-only** in the current MVP design package.
+- Admin uses a shared YADD desktop shell (e.g. sidebar/header) rather than Mobile Bottom Navigation.
+- Desktop-only does **not** permit a separate visual identity: the same YADD tokens, Tajawal/Inter typography, RTL behavior, 52px shared Button baseline, inputs, cards, radius/spacing scale, icon family, and states remain mandatory.
+
 ## 10. Icons
 
 - Use one coherent icon family/style.
