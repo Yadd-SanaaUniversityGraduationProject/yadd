@@ -37,6 +37,7 @@ User(
   EmailVerifiedAt NULL,
   PasswordHash,
   LastPortal,
+  ProfilePhotoReference NULL,
   DeactivatedAt NULL
 )
 
@@ -128,6 +129,16 @@ Message(
   SenderUserId FK -> User.UserId,
   MessageType,
   SentAt
+)
+
+TransactionStartRequest(
+  TransactionStartRequestId PK,
+  ConversationId FK -> Conversation.ConversationId,
+  RequestedByUserId FK -> User.UserId,
+  Status,
+  RequestedAt,
+  ExpiresAt,
+  RespondedAt NULL
 )
 
 Transaction(
@@ -280,7 +291,8 @@ Notification(
 6. لكل Provider استجابة فعالة واحدة فقط لكل Request — DEC-070.
 7. Provider Response يمكن تعديلها/سحبها قبل Selection فقط — DEC-070.
 8. Request واحد ينتج صفر أو Transaction واحدة فقط في Request Route — DEC-047/066/070.
-9. Direct Search Transaction قد تكون بلا Request/ProviderResponse، ولا تنشأ إلا بعد Mutual Start Confirmation — DEC-069.
+9. Direct Search Transaction قد تكون بلا Request/ProviderResponse، ولا تنشأ إلا بعد `TransactionStartRequest` مؤكد خلال 12 ساعة — DEC-069/082.
+9A. يسمح بحد أقصى Pending TransactionStartRequest واحد لنفس Conversation/الطرفين، ويؤدي Reject/Expiry إلى بقاء Conversation دون Active Transaction — DEC-082.
 10. بين نفس Beneficiary وProvider توجد Conversation واحدة مستمرة؛ Candidate Key المفاهيمي `(BeneficiaryUserId, ProviderProfileId)` — DEC-075.
 11. Conversation يمكن أن تضم صفرًا أو عدة Transactions؛ Transaction تحمل ConversationId، ولا يوضع RequestId/TransactionId منفردان داخل Conversation بما يكسر الاستمرارية — DEC-075.
 12. `RequiresDeposit` Boolean فقط؛ لا DepositAmount/PaymentStatus/Refund — DEC-041.
