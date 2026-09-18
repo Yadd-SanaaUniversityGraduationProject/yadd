@@ -60,6 +60,6 @@
 
 - الاتجاه المعماري Client–Server مع Backend/API مركزي وواجهة Web أساسية حاليًا معتمد كاتجاه وفق DEC-065.
 - Flutter معتمد كاتجاه لعميل Mobile لاحق يتصل بالـAPI نفسه وفق DEC-065، وليس Framework التنفيذ الفوري الملزم لكل الواجهات الحالية.
-- ASP.NET Core ما يزال `PROPOSED` كخيار Backend تفصيلي حتى اكتمال Technical Feasibility واعتماد التقنية النهائية.
-- وظائف AI المساندة في Service Provider Identity Verification وTrust & Safety معتمدة في النطاق وفق DEC-037..040/085، بينما مزودو OCR/Face/Liveness/Moderation وبنية التكامل والتكلفة والاحتفاظ ما تزال تحتاج Feasibility وVerification.
+- اعتمد الفريق Stack التنفيذ وفق DEC-091: ASP.NET Core (MVC + Web API) + Entity Framework Core + Microsoft SQL Server + ASP.NET Core Identity. تستخدم واجهة Web Cookies ضمن Identity، ويستخدم Flutter/API اتجاه JWT Bearer للعمليات المحمية.
+- وظائف AI المساندة في Service Provider Identity Verification وTrust & Safety معتمدة في النطاق وفق DEC-037..040/085، واتجاه التكامل عبر External APIs خلف Service/Integration Layer معتمد في DEC-091؛ بينما مزودو OCR/Face/Liveness/Moderation والتكلفة والاحتفاظ والعتبات ما تزال تحتاج Feasibility وVerification.
 - المسؤولية عن تصميم قاعدة البيانات والتجهيز التقني والتنفيذ البرمجي موزعة حاليًا على محمد عبدالرحمن وفق Work Plan؛ وهذا توزيع عمل إداري ولا يعتمد اختيار Framework تفصيلي بحد ذاته.
