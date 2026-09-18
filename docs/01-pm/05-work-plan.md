@@ -110,7 +110,7 @@
 | Actors الأساسية | محمد حميد | 3 سبتمبر | `CLOSED` | Beneficiary / Provider / YADD Administrator للمخطط الرئيسي |
 | Core Flow | محمد حميد + الفريق | 3 سبتمبر | `CLOSED` | Discovery→Transaction→Invoice→Completed→Ratings مع Disputed كمسار غير ناجح |
 | Request/Response/Selection Model | محمد حميد | 3 سبتمبر | `CLOSED` | لا Agreement entity مستقل |
-| Architecture Direction | محمد عبدالرحمن + الفريق | 3 سبتمبر | `CLOSED AS DIRECTION` | Web/Backend-first؛ Flutter client لاحق؛ framework التفصيلي للBackend ما يزال Feasibility |
+| Architecture Direction | محمد عبدالرحمن + الفريق | 3 سبتمبر | `CLOSED AS DIRECTION + IMPLEMENTATION STACK CLOSED 2026-09-19` | Web/Backend-first؛ Flutter client لاحق؛ ASP.NET Core + EF Core + SQL Server + Identity اعتمدت في DEC-091 |
 | `DISPUTE-AUTH-Q01` | الفريق | 4 سبتمبر | `CLOSED` | DEC-073: Disputed terminal unsuccessful; Admin policy review بلا financial arbitration |
 | تحديث الدراسات السابقة | عمرو ناجي | 4 سبتمبر | `IN PROGRESS` | Chapter 2 v1.1 Core Sources Verified؛ يبقى الإغلاق النهائي للمراجع/الفجوة |
 | SRS blockers الحرجة | محمد حميد | 4 سبتمبر | `CORE P0 CLOSED — SRS v0.9.6 CURRENT, NOT BASELINED` | SRS متزامن عبر DEC-076؛ الباقي P1/P2 NV وغير مانع للنمذجة الحالية |
@@ -127,7 +127,7 @@
 | Data Dictionary | محمد عبدالرحمن | 8 سبتمبر | `RE-SYNC REQUIRED AFTER DEC-074..076` | current skeleton needs updated fields/constraints before closure |
 | Interface Design / Figma Review | عمرو ناجي | 8 سبتمبر | `CURRENT USE-CASE HIERARCHY DRAFT — CONSISTENCY/FIGMA REVIEW OPEN` | review impact of exclusive provider type and multiple categories |
 | Queries & Reports | محمد عبدالرحمن + عمرو ناجي | 8 سبتمبر | `REQUIREMENTS-ALIGNED DRAFT — REPORT DETAILS OPEN` | no invented KPIs; queries traced to current requirements |
-| Technical Feasibility | محمد عبدالرحمن | 8 سبتمبر | `OPEN` | Architecture direction is approved; framework/provider/cost/dependency feasibility remains open |
+| Technical Feasibility | محمد عبدالرحمن | 8 سبتمبر | `OPEN — STACK DECISION CLOSED` | Framework/ORM/DBMS/Identity/Auth direction closed by DEC-091; hosting, SQL Server deployment/licensing scenario, AI/SMS providers, costs, dependency/version support and operational evidence remain open |
 | Operational/UX Feasibility | عمرو ناجي + محمد حميد | 8 سبتمبر | `OPEN` | لا ادعاء نجاح UX قبل الاختبار |
 | PERT Diagram | عمرو ناجي + الفريق | 11 سبتمبر | `OPEN — REQUIRED BY UNIVERSITY STRUCTURE` | يحتاج مددًا واعتماديات موثقة؛ لا يُنشأ بتقديرات مخترعة |
 | Chapter 1 | عمرو ناجي | 9 سبتمبر | `v1.1 — READY FOR PRELIMINARY DEFENSE REVIEW` | مشتق من Sources of Truth؛ PERT/feasibility/final formatting review still affect closure |
