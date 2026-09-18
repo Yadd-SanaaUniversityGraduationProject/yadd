@@ -19,7 +19,7 @@ flowchart TD
     A --> B[Select Report Target + Required Reason]
     B --> B1[Optional Description / Supporting Evidence]
     B1 --> C[Submit Report]
-    C --> D[Record Report and Linked Evidence References]
+    C --> D[Record Reason + Optional Description / Evidence References]
     D --> E[Queue Report for Administrative Review]
     E --> F[Authorized Administrator Opens Report]
     F --> G[Review Report and Available YADD Evidence]
@@ -37,11 +37,13 @@ flowchart TD
 ## Semantic constraints
 
 - `Block User` is independent from `Report User / Content`; one does not require the other.
+- Generic Report requires a Reason; Description is not universally mandatory and remains policy/context dependent. Supporting evidence may be optional when supported by the context.
 - A Report is not proof of a violation and does not automatically justify a final punishment.
 - Administrative action must follow approved YADD policy and human authorization.
 - AI or behavioral Flags may support review elsewhere in Trust & Safety, but this Activity Diagram does not make AI a mandatory step for every Report.
 - Generic Report requires a Reason. Generic Description is not made universally mandatory; it remains context/policy-dependent. Transaction Complaint has its separate required Reason + Description rule.
 - No numeric risk threshold or automatic punishment is invented here. The approved outcome catalog is: No Violation, Warning, Content Removal, Temporary Restriction, Account Suspension, Permanent Ban; high-impact outcomes require human authorization.
+- Temporary Restriction duration is not hard-coded here; it follows the applicable approved operational policy.
 - A Temporary Restriction duration follows the applicable approved policy; no universal duration is hard-coded.
 
 ## Scope boundary
