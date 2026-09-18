@@ -350,17 +350,17 @@ flowchart LR
 
 # UF-07 — Provider Verification and Human Review
 
-- **Status:** Supported with open document/legal detail.
-- **Goal:** تفعيل أهلية Provider Profile بعد تحقق رسمي ومراجعة بشرية نهائية.
-- **Primary actor:** Provider.
+- **Status:** Supported with open retention/legal detail.
+- **Goal:** إدارة Government-ID Identity Verification الخاصة بـService Provider فقط مع مراجعة بشرية نهائية.
+- **Primary actor:** Service Provider.
 - **Supporting actor:** Verification Reviewer.
 - **Related screens:** `PRO-09 → PRO-10 → ADM-02 → ADM-03 → PRO-09`.
-- **Sources:** Provider Verification Model؛ DEC-034..040؛ BR-027/028؛ SRS Verification Model.
+- **Sources:** Provider Verification Model؛ DEC-035/085؛ FR-VER-01..06؛ BR-027/028/060/061؛ SRS Verification Model.
 
 ## Main path
 
-1. Provider Profile يكون في Draft/غير Verified.
-2. يفتح المستخدم Verification Status / Submission.
+1. يكون Service Provider Profile في حالة تحتاج التحقق من الهوية.
+2. يفتح Service Provider شاشة Verification Status / Submission.
 3. يرفع الحد الأدنى المعتمد حاليًا:
    - official identity document؛
    - personal photo with the document؛
@@ -373,8 +373,9 @@ flowchart LR
    - `ResubmissionRequired`؛
    - `Rejected`.
 8. عند ResubmissionRequired يسجل الموظف ملاحظة/سبب، ويستطيع Provider إعادة التقديم.
-9. رفع الوثائق وحده لا يفعّل Provider Profile تلقائيًا.
+9. رفع الوثائق وحده لا يفعّل وظائف Service Provider التي تتطلب Identity Verified تلقائيًا.
 10. أثناء انتظار Service Provider Identity Verification يستطيع الحساب الاستمرار كمستفيد، لكنه لا يستخدم وظائف Service Provider التي تتطلب Identity Verified.
+11. Product Provider خارج هذا Government-ID flow في MVP؛ يعتمد على Account/Profile eligibility ولا يعرض Identity Verified badge.
 
 ## Sensitive-data boundary
 
@@ -406,7 +407,7 @@ flowchart LR
 - **Primary actor:** Provider.
 - **Supporting actor:** Subscription Administrator.
 - **Related screens:** `PRO-11 → ADM-06 → ADM-07 → PRO-11`.
-- **Sources:** Provider Subscription Model؛ DEC-021/042/043؛ BR-026/029/030.
+- **Sources:** Provider Subscription Model؛ DEC-021/042/043/086؛ FR-SUB-01..06؛ BR-026/029/030.
 
 ## Conceptual flow
 
@@ -416,8 +417,8 @@ flowchart LR
 4. الحالة المفاهيمية تنتقل `PendingConfirmation → Active` بعد التأكيد.
 5. عند الوصول إلى EndDate تصبح `Expired`.
 6. يمكن العودة إلى `Active` بعد تجديد وتأكيد مخول جديد.
-7. إرسال Provider Responses جديدة يتطلب Provider Profile `Verified` وSubscription `Active`.
-8. عند `Expired` يمنع إرسال Responses جديدة حتى التجديد.
+7. إرسال Provider Responses جديدة يتطلب Subscription `Active` + أهلية النوع: Service Provider = Identity Verified؛ Product Provider = Account/Profile eligible دون Government-ID Verification.
+8. عند `Expired` يمنع إرسال Provider Responses جديدة وبدء Direct Transaction جديدة حتى التجديد، بينما تستمر Transactions القائمة ويمكن للمقدم تسجيل الدخول.
 
 ## Needs Verification
 
@@ -491,7 +492,7 @@ flowchart LR
 10. `Completed` هي النهاية الناجحة للTransaction، وRatings تأتي بعدها ولا تغير الحالة.
 11. لا Ratings بعد `Cancelled` أو `Disputed`.
 12. Verification final decision بشري؛ AI مساعد فقط.
-13. Provider Responses الجديدة تحتاج Verified + Active Subscription.
+13. Provider Responses الجديدة تحتاج Active Subscription + أهلية النوع: Service Provider = Identity Verified؛ Product Provider = Account/Profile eligible دون Government-ID Verification.
 14. Public Provider Profile لا يكشف private direct-contact أو sensitive verification data.
 15. Block وReport عمليتان مستقلتان.
 16. **Neighborhood-only UI:** في واجهات الموقع يختار/يرى المستخدم الحي فقط؛ District مشتق داخليًا ولا يُعرض كحقل مستقل، مع بقاء LOC-DATA-Q01 للتحقق من الربط.
