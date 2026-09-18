@@ -1,6 +1,6 @@
 # YADD Screen Specifications — Working Draft
 
-> **Status:** IN PROGRESS — APPROVED UI CONTRACTS THROUGH PRO-11
+> **Status:** IN PROGRESS — APPROVED UI CONTRACTS THROUGH SAFE-02
 >
 > This document records detailed screen-level UI contracts derived from the current project requirements and explicitly reviewed UI decisions. It does not override the Decision Register, SRS, or Business Rules.
 >
@@ -2086,6 +2086,612 @@ Subscription is reached from the Provider home/account context; the approved glo
 - Provider Response exposes only `RequiresDeposit Yes/No`, not a deposit/payment lifecycle.
 - Portfolio/Catalog public images use display copies; originals remain non-public.
 - Do not convert unresolved Portfolio/Catalog Edit/Delete behavior or subscription payment details into implicit requirements through visual design.
+
+
+---
+
+# SH-01 — Conversations List
+
+- **Contract status:** `APPROVED UI CONTRACT — 2026-09-18`
+- **Primary actor:** authenticated User.
+- **Related sources:** `FR-008..008E`; `DEC-046/075`; `BR-005/042`; Screen Inventory `SH-01`.
+- **Classification:** Derived navigation over approved private-conversation capability.
+
+## Goal
+
+Provide access to the User's existing private conversations without creating a separate conversation per Transaction.
+
+## Conversation list item
+
+A row/card may display, when available:
+
+- the other party's permitted display identity;
+- profile image/logo when applicable;
+- latest message preview or a short neutral conversation preview;
+- last activity time when supplied by runtime data;
+- unread indication when the messaging implementation supplies it.
+
+Do not fabricate presence information such as `Online` or `Last Seen`.
+
+## Conversation invariant
+
+Between the same Beneficiary and Provider there is one continuing Conversation that may span zero or multiple Transactions over time.
+
+Selecting a conversation opens:
+
+`SH-02 Private Chat`.
+
+## Navigation — Approved UI Decision
+
+Do not add a fifth permanent Mobile Bottom Navigation tab solely for Conversations.
+
+Conversation access must remain consistently reachable from the authenticated shell/home/account context and from relevant Request/Provider/Transaction contexts.
+
+---
+
+# SH-02 — Private Chat
+
+- **Contract status:** `APPROVED UI CONTRACT — 2026-09-18`
+- **Primary actors:** Beneficiary / Provider.
+- **Related sources:** `FR-008..008E`; `DEC-046/069/075`; `BR-005/007/008/042`; Screen Inventory `SH-02`.
+- **Classification:** Requirement-backed private communication + approved continuous-conversation presentation.
+
+## Goal
+
+Allow authenticated Beneficiary and Provider to communicate privately before and during formal Transactions without making Chat itself create a Transaction.
+
+## Core communication behavior
+
+- Messages are exchanged inside YADD.
+- Chat/Inquiry may occur before Transaction start.
+- Chat alone does not create a Transaction.
+- More precise location information may be shared privately when needed; it remains non-public.
+
+## Continuous Conversation / Transaction separators
+
+The same Beneficiary–Provider pair reuses one continuing Conversation over time.
+
+The UI must display clear **system events / separators** for the start and end of each Transaction so multiple Transactions do not visually merge into one undifferentiated conversation.
+
+## Direct Search action
+
+In the Direct Search route, an eligible party may use:
+
+`بدء معاملة`
+
+to create a pending `Request Transaction Start`.
+
+This does not create an Active Transaction until the other party confirms through `TRX-01`.
+
+## Published Request route boundary
+
+Chat may occur before Provider selection, but the published Request route starts the Transaction through Provider Selection, not through an ordinary Chat message.
+
+## Privacy / explicit exclusions
+
+- Do not expose the other party's phone number automatically.
+- Do not redirect the core communication model to WhatsApp as the default YADD flow.
+- General Chat image/file attachments are **not frozen by this contract** because the current reviewed requirement set does not sufficiently define that capability.
+
+---
+
+# TRX-01 — Direct Transaction Start Confirmation
+
+- **Contract status:** `APPROVED UI CONTRACT — 2026-09-18`
+- **Primary actor:** the other authenticated party receiving a Direct Search transaction-start request.
+- **Related sources:** `FR-009A..009D`; `DEC-069/082`; `BR-007/055`; Screen Inventory `TRX-01`.
+- **Classification:** Requirement-backed Direct Search confirmation.
+
+## Goal
+
+Require explicit confirmation from the other party before a Direct Search conversation becomes an Active Transaction.
+
+## Required information
+
+Show:
+
+- identity/display information of the requesting party;
+- the conversation/context from which the start request originated;
+- the pending state and its validity.
+
+## Actions
+
+### `تأكيد بدء المعاملة`
+
+Creates one `Active Transaction`.
+
+### `رفض`
+
+Rejects the pending transaction-start request.
+
+The Conversation remains available.
+
+## Timing / concurrency
+
+- Pending Transaction Start is valid for **12 hours**.
+- Expiry cancels only the pending start request; it does not close the Conversation.
+- Only one pending Transaction Start request may exist between the pair at a time.
+- A new request may be created later after rejection/expiry when otherwise eligible.
+
+## Explicit exclusion
+
+No standalone `Agreement` screen/entity exists between confirmation and Transaction creation.
+
+---
+
+# TRX-02 — Transaction Details
+
+- **Contract status:** `APPROVED UI CONTRACT — 2026-09-18`
+- **Primary actors:** Beneficiary / Provider.
+- **Related sources:** Transaction lifecycle; `UR-TX-01..04`; `FR-009..012A`; `DEC-047/048/050/071/073/083/084`; `BR-006/007/009..013/019/040/056..059`; Screen Inventory `TRX-02`.
+- **Classification:** Requirement-backed central Transaction state.
+
+## Goal
+
+Provide the shared authoritative UI view of an existing Transaction and expose only the actions valid for its current lifecycle state and actor.
+
+## Core information
+
+Display as applicable:
+
+- the two parties;
+- Transaction status;
+- origin context: Published Request Route or Direct Search when useful for understanding the transaction;
+- selected Provider Response when the Transaction originated from a published Request;
+- related Conversation access;
+- current Final Invoice / Invoice status when one exists;
+- cancellation/dispute information when applicable.
+
+## Supported lifecycle presentation
+
+The UI must support the current conceptual Transaction states:
+
+- `Active`;
+- `AwaitingInvoice`;
+- `RevisionRequested`;
+- `Completed`;
+- `Cancelled`;
+- `Disputed`.
+
+Invoice `Overdue` is presented as the pending-invoice review condition and must not be misrepresented as automatic Transaction completion.
+
+## Active Transaction actions
+
+### Conversation
+
+Open the continuing `SH-02` conversation.
+
+### Provider — create final invoice
+
+When the work/product preparation is complete and terms are stable:
+
+→ `INV-01 Create / Revise Final Invoice`.
+
+### Cancel Transaction
+
+Either party may cancel from Active Transaction creation until before Final Invoice approval / `Completed`.
+
+Cancellation requires:
+
+- mandatory reason;
+- confirmation before execution.
+
+The system records the cancelling party, reason, and time, and makes the recorded reason visible to the other party according to the approved rules.
+
+## Invoice-related states
+
+- Submitted Final Invoice → `AwaitingInvoice`.
+- Beneficiary revision request → `RevisionRequested`.
+- Approved Final Invoice → Transaction `Completed`.
+- unresolved complaint/dispute may end in `Disputed`.
+
+## Completed
+
+The approved Final Invoice is the final YADD record of the successful Transaction. Ratings are Post-Transaction actions and do not change `Completed`.
+
+## Financial boundary
+
+Do not present YADD as processing, holding, verifying, refunding, or settling payment between Beneficiary and Provider.
+
+Do not add a YADD payment-status field to Transaction Details.
+
+---
+
+# TRX-03 — My Transactions
+
+- **Contract status:** `APPROVED UI CONTRACT — 2026-09-18`
+- **Primary actor:** authenticated User.
+- **Related sources:** `UR-TX-01..04`; Transaction lifecycle; current Query specification `QRY-06`; Screen Inventory `TRX-03`.
+- **Classification:** Derived navigation/history over approved Transaction records.
+
+## Goal
+
+Allow the User to access current and historical Transactions within their authorized role/context.
+
+## Transaction list item
+
+May display:
+
+- other party;
+- Transaction status;
+- relevant origin/context;
+- creation or last-status time when supplied by runtime data.
+
+The UI may visually group current and historical states, but grouping must not create new lifecycle statuses.
+
+## Navigation
+
+Selecting a Transaction opens:
+
+`TRX-02 Transaction Details`.
+
+## Status boundary
+
+`Completed`, `Cancelled`, and `Disputed` are Transaction states and must not be presented as Request statuses.
+
+## Explicit exclusions
+
+Do not fabricate:
+
+- earnings dashboard;
+- spending dashboard;
+- payment ledger;
+- payment completion totals.
+
+YADD is not the Beneficiary↔Provider payment processor.
+
+---
+
+# INV-01 — Create / Revise Final Invoice
+
+- **Contract status:** `APPROVED UI CONTRACT — 2026-09-18`
+- **Primary actor:** Provider.
+- **Related sources:** `FR-010/010A`; `FR-011/011A/011E`; `DEC-015/025/050/055/083`; UC-06; Screen Inventory `INV-01`.
+- **Classification:** Requirement-backed Final Invoice creation/revision.
+
+## Goal
+
+Create the final YADD record of agreed items/prices after execution/preparation and, when requested, submit a revised Invoice version.
+
+## Invoice content
+
+The Final Invoice contains:
+
+- identities of the parties in the authorized transaction context;
+- at least one Invoice Item;
+- final total;
+- optional images according to the current requirements.
+
+Each Invoice Item includes the current modeled fields:
+
+- Description;
+- Quantity;
+- Unit Price;
+- calculated Line Total.
+
+## Main action
+
+`إرسال الفاتورة للمراجعة`
+
+After successful submission:
+
+- invoice becomes `Pending Customer Approval`;
+- Transaction moves into the corresponding `AwaitingInvoice` state.
+
+## Revision mode
+
+When the Beneficiary requests a revision:
+
+- Provider edits the Invoice as required;
+- submits a new Invoice version;
+- YADD preserves Version History.
+
+There is no fixed maximum number of revisions in the current policy.
+
+## Explicit financial exclusions
+
+Do not add to the Final Invoice workflow:
+
+- YADD payment method;
+- paid/unpaid verification by YADD;
+- escrow;
+- refund/settlement workflow.
+
+---
+
+# INV-02 — Invoice Review
+
+- **Contract status:** `APPROVED UI CONTRACT — 2026-09-18`
+- **Primary actor:** Beneficiary.
+- **Related sources:** `FR-011..011G`; `FR-012/012A`; `DEC-025/050/071/073/083/084`; `BR-012/013/040/057..059`; Screen Inventory `INV-02`.
+- **Classification:** Requirement-backed Invoice review/approval/revision/complaint.
+
+## Goal
+
+Allow the Beneficiary to review the current Final Invoice version and choose an approved outcome without automatic approval.
+
+## Review information
+
+Show:
+
+- current Invoice version;
+- Invoice Items;
+- prices and total;
+- optional Invoice images when present;
+- relevant version history/revision context when needed.
+
+## Actions
+
+### `اعتماد الفاتورة`
+
+Before final confirmation, show a clear warning that approval is final inside YADD.
+
+On approval:
+
+- current Final Invoice is approved;
+- Transaction becomes `Completed`.
+
+### `طلب تعديل`
+
+Requires a **mandatory note** describing the requested revision.
+
+The workflow returns to Provider revision through `INV-01`.
+
+### `رفع شكوى`
+
+Available for continuing disagreement before Invoice approval according to the current Transaction Complaint rules.
+
+After the second consecutive Revision, the UI shows a visible Complaint option/prompt, but does not force the Beneficiary to complain.
+
+## No-response policy
+
+- 24h → first Reminder.
+- 48h → second Reminder.
+- 72h → `Pending Customer Approval — Overdue`.
+- No response never becomes Auto-Approval.
+
+## Administrative/financial boundary
+
+A Transaction Complaint may be reviewed for YADD policy enforcement, but YADD administration does not issue a financial/commercial judgment requiring payment, refund, or compensation between the parties.
+
+---
+
+# RAT-01 — Rate Provider
+
+- **Contract status:** `APPROVED UI CONTRACT — 2026-09-18`
+- **Primary actor:** Beneficiary.
+- **Related sources:** `FR-013`; `FR-014/014A/014D/014G`; `DEC-051/087`; `BR-014/063/064`; Rating & Reputation Model; Screen Inventory `RAT-01`.
+- **Classification:** Requirement-backed required post-Completed Provider rating.
+
+## Goal
+
+Collect the required Beneficiary→Provider review for a Completed Transaction using the approved Hybrid Rating model.
+
+## Preconditions
+
+- Transaction = `Completed`.
+- Rating belongs to that Transaction and Provider.
+- No rating is available for `Cancelled` or `Disputed` Transactions.
+
+## Rating model
+
+Required:
+
+- Overall Stars: **1–5**;
+- five Structured Criteria appropriate to Provider Type.
+
+Optional:
+
+- text Comment.
+
+### Service Provider criteria
+
+1. جودة الخدمة.
+2. الالتزام بالموعد.
+3. الالتزام بالاتفاق.
+4. التواصل والاستجابة.
+5. التعامل والاحترافية.
+
+### Product Provider criteria
+
+1. مطابقة المنتج للوصف.
+2. جودة المنتج.
+3. الالتزام بالتجهيز/الموعد.
+4. التواصل والاستجابة.
+5. الالتزام بالاتفاق.
+
+## Actions
+
+### `إرسال التقييم`
+
+Submits the required Provider Rating.
+
+### `لاحقًا`
+
+Defers submission without changing Transaction status.
+
+If deferred:
+
+- Reminder after 24h;
+- before starting a new Transaction, the Beneficiary must complete any previous required Provider Rating that remains outstanding.
+
+## Public reviewer projection
+
+When the review is shown publicly, expose only:
+
+- reviewer's **First Name**;
+- a `Verified Transaction Review` / completed-transaction indication;
+- permitted rating/review content.
+
+Do not expose additional personal identity data.
+
+---
+
+# RAT-02 — Rate Beneficiary
+
+- **Contract status:** `APPROVED UI CONTRACT — 2026-09-18`
+- **Primary actor:** Provider.
+- **Related sources:** `FR-014B/014C/014E..014G`; `DEC-063/087`; Rating & Reputation Model; Screen Inventory `RAT-02`.
+- **Classification:** Requirement-backed optional post-Completed Beneficiary rating.
+
+## Goal
+
+Allow the Provider, optionally, to record transaction-specific interaction feedback about the Beneficiary after a Completed Transaction.
+
+## Behavior
+
+After `Completed`, show a prominent rating prompt.
+
+Provider may:
+
+- complete the rating; or
+- skip it.
+
+Skipping does not change Transaction status.
+
+## Rating criteria
+
+Each criterion is rated **1–5**:
+
+1. وضوح الطلب والتواصل.
+2. الالتزام بالاتفاق.
+3. حسن التعامل والتعاون.
+
+Optional:
+
+- text Comment.
+
+## Reputation boundary
+
+The UI must describe transaction behavior, not absolute personal character. Do not use an official field such as `محترم / غير محترم`.
+
+Low Beneficiary rating does not automatically cause suspension, blocking, visibility reduction, or another automated punishment in MVP.
+
+---
+
+# SAFE-01 — Block / Unblock User
+
+- **Contract status:** `APPROVED UI CONTRACT — 2026-09-18`
+- **Primary actor:** authenticated User.
+- **Related sources:** `FR-SAFE-01`; `DEC-053/088`; `BR-021/065`; Screen Inventory `SAFE-01`.
+- **Classification:** Requirement-backed Block/Unblock behavior.
+
+## Goal
+
+Allow a User to stop new direct interaction with another User while preserving required Transaction/history access.
+
+## Actions
+
+### `حظر المستخدم`
+
+Use an explicit confirmation before applying Block.
+
+### `إلغاء الحظر`
+
+Available after Block to restore future interaction where otherwise allowed.
+
+## Relationship to Report
+
+Block and Report are independent.
+
+Blocking a User must not automatically create a Report.
+
+## Active Transaction exception
+
+If an Active Transaction already exists, Block:
+
+- does not hide or terminate that Transaction;
+- does not disable its essential Invoice / Cancel / Complaint actions;
+- does not suppress required Transaction system notifications.
+
+Previous Conversations and records remain retained according to the current model.
+
+## Unblock behavior
+
+Unblock restores future interaction only.
+
+It does not:
+
+- reopen an ended Request;
+- reopen an ended Transaction;
+- cancel or erase an existing Report.
+
+---
+
+# SAFE-02 — Report User / Content / Transaction Complaint
+
+- **Contract status:** `APPROVED UI CONTRACT — 2026-09-18`
+- **Primary actor:** authenticated User.
+- **Related sources:** `FR-SAFE-02..04`; `DEC-053/054/073/084/089`; `BR-022/040/059/066`; Trust & Safety Model; Screen Inventory `SAFE-02`.
+- **Classification:** Requirement-backed reporting/complaint entry; generic reason taxonomy remains open.
+
+## Goal
+
+Submit a Report or Transaction Complaint for authorized administrative review without treating submission itself as proof of a violation.
+
+The UI may be implemented as a dedicated screen, modal, dialog, or sheet while preserving the same fields and behavior.
+
+## Supported contexts
+
+Current reporting scope includes, as applicable:
+
+- User;
+- Conversation / behavior;
+- Portfolio/Catalog Item;
+- Transaction Complaint.
+
+## Generic Report
+
+Required:
+
+- Reason.
+
+Generic report Description requirement remains **policy-dependent / not fully frozen**. Do not silently require it for every generic Report unless the relevant policy is closed.
+
+The final Reason-category taxonomy/thresholds are not frozen; do not invent a definitive list.
+
+## Transaction Complaint
+
+Required:
+
+- Reason;
+- Description.
+
+Optional:
+
+- Attachments.
+
+A Transaction Complaint is available during the approved pre-Invoice-approval disagreement flow.
+
+## Review boundary
+
+- Report/Complaint submission does not prove a violation.
+- AI/automated Flags may support review but do not independently impose a final high-impact punishment.
+- Authorized human review determines applicable YADD administrative outcomes.
+
+## Transaction Complaint outcome boundary
+
+While the complaint is unresolved, the Transaction is not `Completed`.
+
+If resolved, the workflow may return to Revision/Review as appropriate.
+
+If unresolved, the Transaction may end as `Disputed` and no Ratings are opened.
+
+YADD administration does not decide financial entitlement or compel Payment, Refund, or Compensation between the parties.
+
+---
+
+## Shared-package constraints — SH / TRX / INV / RAT / SAFE
+
+- One continuing Conversation per Beneficiary–Provider pair; clear Transaction separators/events are required.
+- Chat alone never creates a Transaction.
+- Direct Search Transaction Start requires other-party confirmation and expires after 12h if unconfirmed.
+- Transaction Cancellation requires a recorded mandatory reason and is allowed only before Final Invoice approval / Completed.
+- Final Invoice approval is required for successful `Completed`; no Auto-Approval.
+- Beneficiary→Provider rating is required after Completed but may be deferred under DEC-087.
+- Provider→Beneficiary rating remains optional.
+- Block/Report are independent; Block does not break an already Active Transaction.
+- No YADD Beneficiary↔Provider Payment/Escrow/Refund/Settlement workflow is introduced by these screens.
 
 ---
 
