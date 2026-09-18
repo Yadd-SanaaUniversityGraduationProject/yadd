@@ -244,7 +244,7 @@ Authentication هنا شرط للوصول إلى الوظائف المحمية،
 - القرار النهائي للمراجعة البشرية المخولة.
 - AI مساعد فقط ولا يصدر قرار Verified/Rejected نهائيًا منفردًا.
 
-**Needs Verification:** أنواع الوثائق الدقيقة، متطلبات الصور التفصيلية، مدة الاحتفاظ.
+**Needs Verification:** مدة الاحتفاظ ببيانات التحقق وأي تراخيص مهنية خاصة. الوثائق المقبولة في MVP لمقدم الخدمة حُسمت إلى National ID أو Passport مع صورة الوثيقة وصورة شخصية مع الوثيقة.
 
 ### 3.6.4 Discovery and Location
 
@@ -481,7 +481,7 @@ YADD لا يدير أي حركة مالية بين Beneficiary وProvider.
 - `UC-07` Rate Provider.
 - `UC-07B` Provider Rates Beneficiary.
 - `UC-08` Block and Report User / Content.
-- `UC-09` Provider Verification / Portal Activation.
+- `UC-09` Service Provider Identity Verification / Provider Portal Eligibility.
 - `UC-10` Manage Portfolio / Catalog.
 
 الـMain Use Case Diagram يفكك هذه المواصفات إلى Actor goals أصغر عند الحاجة. `Log In` و`Create Account` لا يستخدمان كـ`<<include>>` ميكانيكي داخل كل protected Use Case؛ Authentication يمثل Precondition، بينما محاولة Guest لفعل محمي توجهه إلى Authentication Gate وفق DEC-077.
@@ -503,8 +503,8 @@ YADD لا يدير أي حركة مالية بين Beneficiary وProvider.
 
 **الحالة الحالية:**
 
-- `09-DFD.md`: Working Context + Level 0 semantics متزامنة حتى DEC-077 وتشمل Guest كExternal Entity؛ final standard redraw/export pending.
-- `10-UML.md`: Working Use Case model متزامن حتى DEC-077؛ Guest/Public/Auth boundary مضافة؛ النسخة البصرية النهائية تحتاج إعادة رسم وفق المرجع الأكاديمي المعتمد ومراجعة A4.
+- `09-DFD.md`: Working Context + Level 0 semantics متزامنة حتى DEC-090 وتشمل Guest كExternal Entity؛ final standard redraw/export pending.
+- `10-UML.md`: Working Use Case/Class semantics متزامنة حتى DEC-090؛ النسخة البصرية النهائية تحتاج مراجعة/تصدير A4.
 - Activity/Sequence core protected flows تبقى صالحة بافتراض actor authenticated؛ يمكن إضافة Guest auth-gate scenario عند الحاجة الأكاديمية دون تغيير Domain semantics.
 - Class package: Detailed Analysis Class Model واحد مع Integrated Master + ثلاث Detailed Views؛ Guest لا يضيف Class.
 - `11-ERD.md`: Core Conceptual ERD يبقى صحيحًا بنيويًا؛ Guest لا يضيف Entity لمجرد التصفح العام، ويلزم فقط إبقاء public/private visibility في التصميم.
