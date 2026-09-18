@@ -31,6 +31,7 @@ classDiagram
         -DateTime emailVerifiedAt
         -String accountStatus
         -String lastPortal
+        -String profilePhotoReference
         +createRequest() Request
         +createProviderProfile() ProviderProfile
         +deactivate()
