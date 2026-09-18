@@ -55,7 +55,7 @@ diagrams/
 
 - `docs/` يحكم معنى المشروع والتحليل والمتطلبات.
 - `diagrams/03-analysis/uml/` يحتوي Working Diagram Sources المشتقة من تلك الوثائق.
-- قاعدة التنظيم الحالية: **one rendered diagram = one working source file**، مع README/index للحزمة عندما توجد عدة Views لنموذج واحد.
+- قاعدة التنظيم الحالية: **one coherent diagram/scenario source per working file**. بعض ملفات Sequence التاريخية تحتوي أكثر من Scenario/Diagram مترابط داخل الملف نفسه لتحسين التتبع والقراءة؛ لذلك عدد ملفات Sequence لا يساوي بالضرورة عدد الرسومات rendered.
 - لا ننشئ نسخًا مكررة من DFD/ERD/Use Case فقط لأجل التنظيم؛ تبقى مصادرها الحالية في وثائق التحليل إلى أن يتم إعداد editable visual source نهائي. إعادة تنظيم `diagrams/` لتجميع DFD/ERD/Use Case مستقبلًا تحتاج Repository Structure approval منفصل.
 - عند إنشاء ملفات `.puml` أو `.drawio` أو ما يعادلها لاحقًا، توضع تحت نوع المخطط المناسب داخل `diagrams/` مع الحفاظ على التتبع إلى الوثيقة الحاكمة.
 - Generated exports مثل SVG/PNG/PDF لا تصبح Source of Truth، ولا يجوز تعديلها يدويًا بما يجعلها تختلف عن المصدر القابل للتعديل.
