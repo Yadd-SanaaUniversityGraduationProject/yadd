@@ -1,6 +1,6 @@
 # YADD Screen Specifications — Working Draft
 
-> **Status:** IN PROGRESS — APPROVED UI CONTRACTS THROUGH AUTH-06
+> **Status:** IN PROGRESS — APPROVED UI CONTRACTS THROUGH BEN-07
 >
 > This document records detailed screen-level UI contracts derived from the current project requirements and explicitly reviewed UI decisions. It does not override the Decision Register, SRS, or Business Rules.
 >
@@ -16,6 +16,16 @@ Information classification used here:
 - **Derived UI:** presentation/interaction behavior derived from approved requirements without changing business meaning.
 - **Approved UI Decision:** explicitly approved during UI review; governs design consistency but is not automatically a Decision Register business decision.
 - **Open / Needs Verification:** not yet stable enough to freeze.
+
+
+## Approved Location UI Convention — 2026-09-18
+
+- **Approved UI Decision:** user-facing discovery/request/provider-location interfaces expose **Neighborhood only** as the location selector/display level.
+- A standalone District selector/display is not shown in those interfaces.
+- The current underlying project model remains `District + Neighborhood`; District is derived internally from the selected Neighborhood and may remain stored/used by backend/data rules.
+- This UI decision does not override `DEC-031`, `FR-003`, or `FR-005`.
+- **Needs Verification — LOC-DATA-Q01:** the authoritative Neighborhood list and the mapping of each Neighborhood to its District must be verified before implementation.
+- Precise/private address and GPS remain outside public display.
 
 ## Per-Screen Template
 
@@ -179,8 +189,9 @@ Allow the user to search for Providers using the project-supported public discov
 1. Search text: `ابحث عن خدمة أو منتج`.
 2. Provider type: `خدمة` or `منتج`.
 3. Category.
-4. District.
-5. Neighborhood.
+4. Neighborhood / `الحي`.
+
+**Approved UI Decision:** no standalone District field is shown to the user. The system derives District internally from the selected Neighborhood while retaining the current underlying `District + Neighborhood` model.
 
 The Provider Type control is a derived UI control based on the exclusive `SERVICE` / `PRODUCT` Provider Profile model.
 
@@ -285,7 +296,7 @@ A result card may display:
 - profile image/logo when available;
 - Provider Type: Service Provider or Product Provider;
 - compatible category/categories;
-- district + neighborhood / approved general service-area information;
+- Neighborhood / approved general service-area information; District is not shown as a separate user-facing value;
 - public rating indicator when actual data is available;
 - completed YADD transaction count when actual public data is available;
 - Portfolio/Catalog preview when available.
@@ -403,7 +414,7 @@ The profile may display:
 - public display name;
 - Provider Type: Service Provider or Product Provider;
 - category/categories;
-- approved general service-area information such as district + neighborhood / service areas;
+- approved general service-area information using Neighborhood / service areas; District is not shown as a separate user-facing value;
 - provider bio/about text;
 - completed YADD transaction count when actual public data exists;
 - public rating indicator when actual rating data exists;
@@ -1008,6 +1019,447 @@ Do not provide a `حذف الحساب نهائيًا` self-service action in the
 - Use the approved YADD identity.
 - Authentication, registration, OTP, recovery, and initial onboarding screens are focused flows without the public Bottom Navigation.
 - Do not introduce social login, biometric login, independent Username, unapproved OTP limits/timers, or permanent Beneficiary/Provider account types through visual design.
+
+
+---
+
+# BEN-01 — Beneficiary Home / Discovery State
+
+- **Contract status:** `APPROVED UI CONTRACT — 2026-09-18`
+- **Primary actor:** authenticated User using Beneficiary Portal.
+- **Related sources:** Account & Portal Model; `UR-DIS-01`; `UR-REQ-01`; `FR-001E/F`; `DEC-008..012`; `UF-01..03`; Screen Inventory `BEN-01`.
+- **Classification:** Requirement-backed portal capabilities + approved Beneficiary navigation.
+
+## Goal
+
+Provide the authenticated Beneficiary entry state without creating a separate Beneficiary account.
+
+## Primary actions
+
+### `ابحث عن مقدم`
+
+Opens the public/direct discovery flow beginning at `PUB-02`.
+
+### `انشر طلبًا`
+
+Opens `BEN-03 Create Request`.
+
+### `طلباتي`
+
+Opens `BEN-02 My Requests`.
+
+### Portal switch
+
+Provide access to the approved Portal Switch behavior in `AUTH-04`.
+
+## Beneficiary Mobile Navigation — Approved UI Decision
+
+`الرئيسية | البحث | طلباتي | الحساب`
+
+- `الرئيسية` is active on `BEN-01`.
+- `البحث` opens/represents discovery.
+- `طلباتي` opens `BEN-02`.
+- `الحساب` provides account/settings context including access to Portal Switch.
+- `إنشاء طلب` remains a prominent page CTA rather than a permanent bottom-navigation tab.
+
+On Tablet/Desktop the same navigation functions may be represented in a header/sidebar.
+
+## Explicit exclusions
+
+Do not add without separate authorization:
+
+- recommendation algorithm;
+- `الأقرب إليك`;
+- promotional/advertising modules;
+- fabricated usage statistics;
+- unapproved personalization features.
+
+---
+
+# BEN-02 — My Requests
+
+- **Contract status:** `APPROVED UI CONTRACT — 2026-09-18`
+- **Primary actor:** Beneficiary.
+- **Related sources:** `UR-REQ-01..04`; `FR-005..005F`; `DEC-048`; `DEC-081`; `BR-018`; `BR-020`; `BR-052/053`; Screen Inventory `BEN-02`.
+- **Classification:** Requirement-backed Request lifecycle + approved Neighborhood-only UI convention.
+
+## Goal
+
+Show the Beneficiary's current and historical Requests and allow entry to the appropriate Request Details state.
+
+## Request card content
+
+A Request Card may display:
+
+- Request Type: Service / Product;
+- Category;
+- Neighborhood;
+- short description;
+- indicative price when present;
+- actual Request status;
+- creation date/time when provided by runtime data;
+- actual Provider Response count when provided by runtime data.
+
+District is not shown as a separate user-facing field; it remains internally derived from Neighborhood.
+
+## Request statuses
+
+Use the current Request lifecycle terminology:
+
+- `Open`;
+- `Matched`;
+- `ClosedByBeneficiary`;
+- `Expired`.
+
+Do not use `Completed` as a Request status. Transaction completion is a separate lifecycle.
+
+## Actions
+
+### Open Request card
+
+→ `BEN-04 Request Details`.
+
+### Expired Request — `إعادة نشر الطلب`
+
+Republish does not reopen the expired Request. It creates a **new Request** after the user reviews/edits the copied data; the old Request remains `Expired`.
+
+### Empty state
+
+`لا توجد لديك طلبات بعد`
+
+Action:
+
+`إنشاء طلب` → `BEN-03`.
+
+## Mobile navigation
+
+Use the approved Beneficiary navigation:
+
+`الرئيسية | البحث | طلباتي | الحساب`
+
+`طلباتي` is active.
+
+---
+
+# BEN-03 — Create Request
+
+- **Contract status:** `APPROVED UI CONTRACT — 2026-09-18`
+- **Primary actor:** authenticated Beneficiary.
+- **Related sources:** `UR-REQ-01/02`; `FR-005/005A/005B`; `DEC-012/013/031/081`; `BR-001/002/031/052/053`; Screen Inventory `BEN-03`.
+- **Classification:** Requirement-backed Request creation + approved Neighborhood-only UI convention.
+
+## Goal
+
+Create and publish a Service or Product Request to suitable Providers.
+
+## Required user-facing fields
+
+1. Request Type: `خدمة` or `منتج`.
+2. Category compatible with Request Type.
+3. Neighborhood / `الحي`.
+4. Request Description / `وصف الطلب`.
+
+**Approved UI Decision:** no separate District field is shown. The system derives District internally from the selected Neighborhood, preserving the underlying location model.
+
+## Optional fields
+
+- images;
+- additional information;
+- indicative price.
+
+The indicative price must be presented as **optional and non-binding**.
+
+## Main action — `نشر الطلب`
+
+On valid successful publication:
+
+`Request.status = Open`
+
+Then open `BEN-04 Request Details`.
+
+## Secondary actions
+
+- Back.
+- Cancel/leave the form before publication.
+
+## Neighborhood expansion
+
+Expansion from the Request Neighborhood to adjacent neighborhoods requires Beneficiary approval under the current location rules.
+
+The exact UI moment/mechanism for requesting that approval remains **Open / Needs UI Decision**; do not invent a toggle in this screen yet.
+
+## States
+
+- Default.
+- Validation errors.
+- Uploading optional images.
+- Publishing.
+- Publication success/error.
+
+## Explicit exclusions
+
+Do not add without a new verified requirement/decision:
+
+- standalone District selector;
+- public precise address;
+- mandatory GPS;
+- binding budget;
+- deposit/payment field;
+- payment method;
+- user-selected Request expiry date;
+- required number of Providers;
+- invented image-count, file-size, or text-length limits.
+
+## Mobile navigation
+
+The Beneficiary global navigation may remain visible when consistent with the final form layout; it must not introduce additional functions.
+
+---
+
+# BEN-04 — Request Details
+
+- **Contract status:** `APPROVED UI CONTRACT — 2026-09-18`
+- **Primary actor:** Beneficiary.
+- **Related sources:** `UR-REQ-01..04`; `FR-005C..005F`; `FR-009`; `DEC-048`; `DEC-081`; `BR-018/020/052/053`; Screen Inventory `BEN-04`.
+- **Classification:** Requirement-backed Request lifecycle + approved Neighborhood-only UI convention.
+
+## Goal
+
+Show Request data, current state, and only the actions valid for that state.
+
+## Request data
+
+Display as applicable:
+
+- Request Type;
+- Category;
+- Neighborhood;
+- Description;
+- optional images;
+- optional additional information;
+- optional indicative price;
+- Request Status;
+- actual Provider Response count when runtime data exists.
+
+District is not displayed as a separate user-facing value.
+
+## Open state
+
+Available actions:
+
+### `عرض الاستجابات`
+
+→ `BEN-05 Provider Responses`.
+
+### `إغلاق الطلب`
+
+Allowed while Request is `Open` before Provider selection.
+
+This is **Request Closure**, not Transaction Cancellation.
+
+Use an explicit confirmation before closing.
+
+## Inactivity policy
+
+The UI must be able to communicate:
+
+- first Reminder after 24h of Beneficiary inactivity;
+- second Reminder after 48h;
+- `Expired` after 72h.
+
+A Reminder may provide:
+
+`ما زلت أحتاج هذا الطلب`
+
+as a clear Beneficiary activity confirming continued need and resetting the inactivity timer.
+
+Provider Response arrival alone does not reset the inactivity timer.
+
+### Editing an Open Request
+
+`DEC-081` recognizes Request editing as Beneficiary activity, but the full edit policy—what fields may change and how existing Provider Responses are affected—is not sufficiently specified as an independent UI flow.
+
+Therefore a general `تعديل الطلب` capability is **not frozen by this contract** and remains Needs Verification/Decision before final UI design.
+
+## Expired state
+
+Action:
+
+`إعادة نشر الطلب`
+
+Republish starts a reviewed/editable copy for a **new Request**. The old Request remains `Expired`, and its old Provider Responses do not become active again.
+
+## Matched state
+
+Show that a Provider was selected and the Request no longer accepts new Provider Responses.
+
+Provide navigation to the linked active Transaction.
+
+## Mobile navigation
+
+Use the approved Beneficiary navigation where appropriate; `طلباتي` remains the relevant active section.
+
+---
+
+# BEN-05 — Provider Responses
+
+- **Contract status:** `APPROVED UI CONTRACT — 2026-09-18`
+- **Primary actor:** Beneficiary.
+- **Related sources:** `UR-OFF-01..03`; `FR-007..007E`; `FR-008`; `DEC-013/041/046/070/082`; `BR-003/005/033/039/054`; Screen Inventory `BEN-05`.
+- **Classification:** Requirement-backed Provider Response viewing.
+
+## Goal
+
+Show the active Provider Responses received for an Open Request so the Beneficiary can inspect, communicate, and compare.
+
+## Provider Response card
+
+May display:
+
+- Provider public display name;
+- profile image/logo when available;
+- whether the Provider accepts the indicative price or proposes another price;
+- proposed price when applicable;
+- optional response note;
+- `يتطلب عربونًا: نعم / لا`;
+- actual public rating when available;
+- actual completed YADD transaction count when available.
+
+Do not fabricate runtime numbers in static designs.
+
+## Deposit boundary
+
+Only:
+
+`RequiresDeposit = Yes / No`
+
+Do not display/store through this response UI:
+
+- deposit amount;
+- deposit percentage;
+- payment status;
+- refund status/process.
+
+## Actions
+
+- Open Provider Profile → `PUB-04`.
+- `تواصل / استفسر` → supported private Chat/Inquiry.
+- `مقارنة الاستجابات` → `BEN-06`.
+
+Chat before selection is allowed and does not create a Transaction.
+
+## Empty state
+
+`لم تصل استجابات إلى طلبك حتى الآن.`
+
+Do not invent an expected waiting time.
+
+## Mobile navigation
+
+`طلباتي` remains the relevant Beneficiary navigation section.
+
+---
+
+# BEN-06 — Compare Provider Responses
+
+- **Contract status:** `APPROVED UI CONTRACT — 2026-09-18`
+- **Primary actor:** Beneficiary.
+- **Related sources:** `UR-OFF-02`; `FR-007A/B`; `FR-009`; `DEC-014/041/047`; `BR-004/006/033/037`; Screen Inventory `BEN-06`.
+- **Classification:** Requirement-backed comparison + approved neutral comparison presentation.
+
+## Goal
+
+Allow the Beneficiary to compare Provider Responses without YADD deciding which Provider is the “best”.
+
+## Comparison content
+
+For each response, present as applicable:
+
+- Provider public display name;
+- relevant Provider Type/Category;
+- accepted indicative price or proposed price;
+- response note;
+- `RequiresDeposit = Yes/No`;
+- actual public rating when available;
+- actual completed YADD transaction count when available;
+- link to public Provider Profile;
+- access to the related private conversation.
+
+## Neutrality rule
+
+Do not add without a separate requirement/decision:
+
+- `الأفضل لك`;
+- winner badge;
+- AI recommendation of a Provider;
+- internal provider score;
+- automatic cheapest-first decision logic.
+
+The Beneficiary makes the selection.
+
+## Action — `اختيار هذا المقدم`
+
+→ `BEN-07 Confirm Provider Selection`.
+
+## Mobile navigation
+
+`طلباتي` remains the relevant Beneficiary navigation section.
+
+---
+
+# BEN-07 — Confirm Provider Selection
+
+- **Contract status:** `APPROVED UI CONTRACT — 2026-09-18`
+- **Primary actor:** Beneficiary.
+- **Related sources:** `UR-OFF-02`; `UR-TX-01`; `FR-009/009B`; `DEC-014/047/066`; `BR-004/006/037`; Screen Inventory `BEN-07`.
+- **Classification:** Requirement-backed selection transition + derived confirmation UI.
+
+## Goal
+
+Confirm the Beneficiary's selection before converting the published Request route into an Active Transaction.
+
+## Confirmation summary
+
+Show:
+
+- selected Provider;
+- selected Provider Response;
+- accepted/proposed price;
+- `RequiresDeposit = Yes/No`;
+- relevant response note when present.
+
+Display a clear consequence statement equivalent to:
+
+`عند التأكيد سيُغلق الطلب أمام الاستجابات الجديدة وتبدأ معاملة رسمية مع المقدم المختار.`
+
+## Actions
+
+### `تأكيد اختيار المقدم`
+
+On confirmation:
+
+- Request → `Matched`;
+- selected Provider Response → `Selected`;
+- other Provider Responses → `NotSelected`;
+- create `Active Transaction` directly.
+
+Then:
+
+→ `TRX-02 Transaction Details`.
+
+### `العودة للمقارنة`
+
+→ `BEN-06`.
+
+## Explicit exclusions
+
+- No standalone `Agreement` screen/entity between selection and Transaction.
+- No second Provider confirmation is required in the **published Request route**.
+- Other-party confirmation belongs to the **Direct Search Transaction Start** route, not this one.
+
+## Mobile navigation
+
+This is a focused confirmation within the `طلباتي` context; no additional navigation capability is introduced.
 
 ---
 
