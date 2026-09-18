@@ -46,7 +46,7 @@
 | ACTOR-MODEL-01 | 2026-09-15 | القرار الأصلي حدد Beneficiary, Provider, YADD Administrator. بقيت هذه Actors صحيحة للمستخدمين المسجلين والإدارة، لكن **حصر** المخطط بها واستبعاد Guest استبدله DEC-077؛ Main Actor Model الحالي يضيف Guest. | DEC-067 (superseded in part) / DEC-077 |
 | CORE-FLOW-01 | 2026-09-03 | Search/Request → Chat/Selection/Agreement-to-start → Transaction → Fulfillment → Final Invoice → Approval/Revision → Completed → Ratings. | DEC-068 |
 | REQ-RESP-SEL-01 | 2026-09-03 | Request → Provider Response → Selection → Transaction، بلا Agreement entity مستقل في MVP. | DEC-066 |
-| ARCH-DIR-01 | 2026-09-03 | Backend/API مركزي هو المرجع للصلاحيات وقواعد العمل؛ واجهة الويب أساسية حاليًا، وFlutter عميل Mobile لاحق. | DEC-065 |
+| ARCH-DIR-01 | 2026-09-03 | Backend/API مركزي هو المرجع للصلاحيات وقواعد العمل؛ واجهة الويب أساسية حاليًا، وFlutter عميل Mobile لاحق. ثبت Stack التنفيذ لاحقًا في 2026-09-19: ASP.NET Core + EF Core + SQL Server + Identity/Auth direction. | DEC-065/091 |
 | BUS-Q01 | 2026-08-12 | حساب User واحد؛ اختيار البداية بوابة لا نوع حساب؛ Provider Profile داخل الحساب نفسه. | DEC-008..011 |
 | DISC-Q01 | 2026-08-12 | طريقتا اكتشاف: بحث مباشر أو نشر طلب جغرافي. | DEC-012 |
 | PRICE-Q01 | 2026-08-12 | سعر الطلب اختياري واسترشادي ويجوز للمقدم اقتراح سعر آخر. | DEC-013/014 |
