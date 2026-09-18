@@ -19,6 +19,7 @@
 | User | Email | TBD | No | unique when present | بريد اختياري | DEC-078 |
 | User | EmailVerifiedAt | TBD | No | verification timestamp | يلزم قبل استخدام البريد في Login/Recovery | DEC-078 |
 | User | LastPortal | TBD | No | BENEFICIARY/PROVIDER | آخر Portal مستخدم | DEC-078 |
+| User | ProfilePhotoReference | TBD | No | private/account media reference | صورة الحساب الاختيارية | DEC-079 |
 | User | DeactivatedAt | TBD | No | lifecycle field | يدعم self-deactivation/reactivation | DEC-079 |
 | ProviderProfile | ProviderProfileId | TBD | Yes | PK | معرف ملف المقدم | DEC-010/074 |
 | ProviderProfile | UserId | TBD | Yes | FK + Unique candidate | يربط Provider Profile بحساب User واحد | DEC-008..011/074 |
@@ -73,6 +74,13 @@
 | Message | SenderUserId | TBD | Yes | FK | المرسل authenticated | DEC-046/077 |
 | Message | MessageType | TBD | Yes | allowed values TBD | نوع الرسالة | ERD |
 | Message | SentAt | TBD | Yes | timestamp | وقت الإرسال | ERD |
+| TransactionStartRequest | TransactionStartRequestId | TBD | Yes | PK | معرف طلب بدء المعاملة المباشر | DEC-082 |
+| TransactionStartRequest | ConversationId | TBD | Yes | FK | المحادثة المستمرة بين الطرفين | DEC-075/082 |
+| TransactionStartRequest | RequestedByUserId | TBD | Yes | FK | الطرف الذي طلب بدء المعاملة | DEC-082 |
+| TransactionStartRequest | Status | TBD | Yes | Pending/Confirmed/Rejected/Expired | حالة طلب البدء | DEC-082 |
+| TransactionStartRequest | RequestedAt | TBD | Yes | timestamp | وقت الطلب | DEC-082 |
+| TransactionStartRequest | ExpiresAt | TBD | Yes | RequestedAt + 12h | انتهاء صلاحية الطلب | DEC-082 |
+| TransactionStartRequest | RespondedAt | TBD | No | timestamp | وقت التأكيد/الرفض إن حدث | DEC-082 |
 | Transaction | TransactionId | TBD | Yes | PK | معرف المعاملة الرسمية | DEC-047/066/069 |
 | Transaction | BeneficiaryUserId | TBD | Yes | FK | Beneficiary في المعاملة | ERD |
 | Transaction | ProviderProfileId | TBD | Yes | FK | Provider في المعاملة | ERD |
@@ -87,7 +95,7 @@
 | InvoiceVersion | InvoiceVersionId | TBD | Yes | PK | نسخة فاتورة مرتبطة بالمعاملة | DEC-015/025/050 |
 | InvoiceVersion | TransactionId | TBD | Yes | FK | المعاملة صاحبة الفاتورة | DEC-015 |
 | InvoiceVersion | VersionNumber | TBD | Yes | uniqueness per transaction TBD | ترتيب النسخة لحفظ تاريخ التعديل | DEC-025 |
-| InvoiceVersion | Status | TBD | Yes | lifecycle constraint | Draft/PendingCustomerApproval/Approved/RevisionRequested وفق التصميم النهائي | DEC-025/050 |
+| InvoiceVersion | Status | TBD | Yes | lifecycle constraint | Draft/PendingCustomerApproval/Overdue/Approved/RevisionRequested وفق التصميم النهائي | DEC-025/050 |
 | InvoiceVersion | TotalAmount | TBD | Yes | calculated/check constraint TBD | إجمالي الفاتورة؛ لا يثبت دفعًا | DEC-015/018 |
 | InvoiceVersion | RevisionNote | TBD | No | content constraint TBD | ملاحظة المراجعة/التعديل | DEC-025 |
 | InvoiceItem | InvoiceItemId | TBD | Yes | PK | بند فاتورة | DEC-015 |
