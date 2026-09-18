@@ -43,7 +43,7 @@ flowchart LR
 
     subgraph YADD["YADD System"]
         UC0([Browse Public Content])
-        UC1([Manage Account])
+        UC1([Manage / Deactivate Account])
         UCL([Log In])
         UCR([Create Account])
         UCF([Recover Password])
@@ -87,7 +87,7 @@ flowchart LR
         UC29([Revise Final Invoice])
         UC30([Rate Beneficiary])
 
-        UC31([Block User])
+        UC31([Block / Unblock User])
         UC32([Report User / Content])
 
         UC33([Review Service Provider Verification])
@@ -192,14 +192,14 @@ flowchart LR
 7. `View Portfolio / Catalog <<extend>> View Provider Profile` لأن فتح محتوى العرض تفصيل اختياري من الملف.
 8. `Communicate / Inquire <<extend>> View Provider Profile` في Direct Search، ويمتد أيضًا من `Compare Provider Responses` في Request Route لأن الاستفسار قبل الاختيار اختياري، ويتطلب Authentication.
 9. `Select Provider <<extend>> Compare Provider Responses`: المقارنة يمكن أن تنتهي دون اختيار، بينما الاختيار يحدث عند قرار المستفيد. عند حدوث الاختيار فهو **يتضمن** `Create Active Transaction` لأن `DEC-047/066` يفرضان بدء Transaction في Request Route.
-10. `Submit Provider Response <<extend>> View Matching Requests`: مشاهدة الطلب لا تلزم Provider بالاستجابة. وعند الإرسال يجب دائمًا تنفيذ `Validate Response Eligibility` الذي يمثل شرط Verified Provider + Active Subscription + Open Request.
+10. `Submit Provider Response <<extend>> View Matching Requests`: مشاهدة الطلب لا تلزم Provider بالاستجابة. وعند الإرسال يجب دائمًا تنفيذ `Validate Response Eligibility`: SERVICE يتطلب Identity Verified + بقية أهلية الملف، PRODUCT يتطلب Account/Profile eligibility دون Government-ID verification، وكلاهما يتطلب Active Subscription + Open Request.
 11. `Request Transaction Start <<extend>> Communicate / Inquire` في Direct Search فقط؛ المحادثة قد تستمر أو تنتهي دون Transaction. أما عند `Confirm Transaction Start` الإيجابي فيتم تضمين `Create Active Transaction` وفق `DEC-069`.
 12. `Review Final Invoice` هو الأساس؛ `Approve Final Invoice` و`Request Invoice Revision` و`Raise Transaction Complaint` امتدادات شرطية لقرار المراجعة. عند الاعتماد فقط يتم `<<include>> Complete Transaction` لأن الاعتماد يجعل Transaction = `Completed` دائمًا.
 13. `Rate Provider` و`Rate Beneficiary` Use Cases مستقلة من ناحية Actor goal، لكنهما تتطلبان `Transaction = Completed`. الأولى إلزامية على Beneficiary بعد Completed، والثانية اختيارية على Provider؛ لذلك لا تمثل تبعية Completed بأسهم `include/extend`.
 14. `Cancel Transaction` تتطلب Transaction قائمة وفي حالة تسمح بالإلغاء. `Close Open Request` مختلفة عنها وتتطلب Request Open قبل الاختيار. `Republish Expired Request` ينشئ Request جديدة بعد مراجعة/تعديل البيانات ولا يعيد فتح الطلب القديم. `Republish Expired Request` ينشئ Request جديدة بعد المراجعة/التعديل ولا يعيد فتح القديمة.
 15. `Edit Provider Response` و`Withdraw Provider Response` تتطلبان استجابة فعالة مع Request Open وقبل selection وفق `DEC-070`; لا تربطان بعلاقة `include/extend` مصطنعة مع `Submit Provider Response`.
 16. `Revise Final Invoice` تتطلب `Revision Requested` سابقة؛ و`Review Provider Verification`/`Review Transaction Complaint` أهداف إدارية لاحقة مستقلة تعتمد على وجود submission/complaint، وليست أجزاء included داخل فعل المرسل.
-17. `Block User` و`Report User / Content` منفصلتان؛ يستطيع المستخدم authenticated تنفيذ أحدهما دون الآخر، وReport يخضع لاحقًا لمراجعة إدارية.
+17. `Block / Unblock User` و`Report User / Content` منفصلتان؛ يستطيع المستخدم authenticated تنفيذ الحظر أو البلاغ بصورة مستقلة. Unblock يعيد التفاعل المستقبلي فقط ولا يلغي Report سابقًا أو يعيد Request/Transaction منتهية.
 18. `Create Active Transaction`, `Complete Transaction`, و`Validate Response Eligibility` تمثل سلوكًا نظاميًا مشتركًا/إلزاميًا، وليس Actor goals مستقلة؛ لذلك لا ترتبط مباشرة بـActor.
 19. استمرار Conversation وإعادة استخدامها بين نفس Beneficiary/Provider وفق DEC-075 هو قيد Domain/Interaction ولا يحتاج Use Case مستقلة في الرسم الرئيسي؛ يجب أن يبقى محفوظًا في Activity/Sequence/Class models.
 20. Public Provider Profile لا يعرض رقم الهاتف أو direct private-contact data أو البيانات الحساسة/الخاصة وفق DEC-036/046/077.
