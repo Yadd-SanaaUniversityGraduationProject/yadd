@@ -83,6 +83,7 @@ Expand context only if a dependency, conflict, or verification gap appears
 - Target diagram file only.
 
 **THEN LOAD REFERENCES ONLY**
+- Before trusting a focused model, compare its status/date/reference list with the target artifact. If the focused model appears older, verify the newer referenced DEC/BR directly rather than loading the whole repository.
 - Relevant `UC-*` section from `08-use-cases.md`.
 - Relevant `BR-*` from `06-business-rules.md`.
 - Relevant `DEC-*` from Decision Register.
@@ -172,7 +173,7 @@ Expand context only if a dependency, conflict, or verification gap appears
 ### R8 — Academic Chapter / Report Draft
 
 **MUST READ**
-- Original university requirement/source relevant to the requested chapter.
+- Original university requirement/source relevant to the requested chapter. For large university PDFs, read only the exact pages/section that define the requested chapter or deliverable; do not load the full guide by default.
 - Target chapter draft under `docs/05-report-drafts/`.
 - Only canonical source documents needed by that chapter section.
 
@@ -183,6 +184,8 @@ Expand context only if a dependency, conflict, or verification gap appears
 - Chapter 4 → database/interface/query/report design artifacts relevant to the requested section.
 
 **Rule:** Chapter Draft is derived output, never Source of Truth.
+
+**Academic structure check:** before reviewing prose quality, verify required headings/subheadings and mandatory artifacts (for example tables/charts/diagrams) against the original university structure.
 
 ---
 
