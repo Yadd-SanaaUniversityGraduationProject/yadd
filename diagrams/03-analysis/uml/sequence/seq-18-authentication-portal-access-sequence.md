@@ -38,12 +38,12 @@ sequenceDiagram
                 AC->>DB: loadProviderProfile(userId)
                 DB-->>AC: providerProfileState
 
-                alt Provider Profile exists
-                    AC-->>UI: authenticationSucceeded(Provider)
-                    UI-->>U: openProviderPortal()
-                else Provider Profile absent
+                alt Provider Profile absent or incomplete
                     AC-->>UI: authenticationSucceeded(ProviderSetup)
                     UI-->>U: continueProviderProfileSetup()
+                else Provider Profile exists
+                    AC-->>UI: authenticationSucceeded(Provider)
+                    UI-->>U: openProviderPortalWithCurrentEligibilityState()
                 end
             end
         else Invalid credentials or unusable identifier
@@ -101,12 +101,12 @@ sequenceDiagram
             AC->>DB: saveLastPortal(Provider)
             DB-->>AC: saved()
 
-            alt Provider Profile exists
-                AC-->>UI: providerPortalReady()
-                UI-->>U: openProviderPortal()
-            else Provider Profile absent
+            alt Provider Profile absent or incomplete
                 AC-->>UI: providerSetupRequired()
                 UI-->>U: continueProviderProfileSetup()
+            else Provider Profile exists
+                AC-->>UI: providerPortalReady()
+                UI-->>U: openProviderPortalWithCurrentEligibilityState()
             end
         end
     end
