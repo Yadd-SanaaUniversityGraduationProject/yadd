@@ -8,8 +8,8 @@
 
 - **Approved behavior:** `UC-05 — Cancel Active Transaction` in `docs/03-analysis/08-use-cases.md`.
 - **Business rule:** `BR-019` — after Transaction start, cancellation requires a recorded reason shown to the other party and reviewable administratively.
-- **Lifecycle:** current Transaction lifecycle allows `Active → Cancelled` with a recorded reason.
-- **Related decisions:** `DEC-048`, `DEC-054`.
+- **Lifecycle:** cancellation is allowed from Active Transaction creation until before Final Invoice approval/`Completed`, with a recorded reason.
+- **Related decisions:** `DEC-048`, `DEC-054`, `DEC-083`.
 - **Derived modeling roles:** `TransactionUI` and `TransactionController` are Sequence modeling roles; they are not approved implementation class names.
 - **Derived consistency/error behavior:** the current Transaction state is checked at execution time before cancellation is committed.
 
@@ -24,7 +24,7 @@ sequenceDiagram
     participant C as TransactionController «control»
     participant T as Transaction «entity»
 
-    Note over B,T: Precondition: Transaction is in a cancellable state
+    Note over B,T: Precondition: Transaction is Active and Final Invoice has not been approved / Transaction is not Completed
 
     alt Beneficiary initiates cancellation
         B->>UI: cancelTransaction(transactionId, reason)
@@ -88,3 +88,7 @@ sequenceDiagram
 ## Modeling note
 
 فرع `Transaction not cancellable or reason missing` يمثل حماية تنفيذية مشتقة من الـprecondition ومن إلزامية السبب. لم تُخترع أي مهلة زمنية أو سياسة مالية أو threshold إضافي.
+
+## DEC-083 boundary
+
+Cancellation remains available throughout the Active Transaction before Final Invoice approval. Once the Final Invoice is approved and the Transaction becomes `Completed`, cancellation is no longer available; a complaint is a separate pre-approval dispute route and does not extend cancellation after completion.
