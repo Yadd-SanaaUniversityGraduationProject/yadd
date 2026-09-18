@@ -106,6 +106,12 @@ Different wireflows may contain different functions, fields, and navigation labe
 
 Before a Figma wireflow is marked complete, it must pass the consistency gate defined in `05-ui-foundation.md`.
 
+### Administration presentation
+
+- `ADM-01..07` are designed as **Desktop-only** interfaces in the current MVP Figma package.
+- Do not create Admin Mobile frames or Admin Mobile Bottom Navigation.
+- Admin desktop layouts must still reuse the same shared YADD design system and components; Desktop is a layout/presentation decision, not a second product style.
+
 ### Location UI synchronization
 
 For user-facing location UI, the approved convention is now **Neighborhood only**. District remains internal/derived from the selected Neighborhood under the existing data/business model and must not reappear as an independent UI selector unless the decision is reopened.
