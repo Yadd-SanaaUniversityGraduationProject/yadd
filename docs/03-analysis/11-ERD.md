@@ -274,7 +274,7 @@ erDiagram
 
 ### CATEGORY / AREA / PROVIDER_SERVICE_AREA / AREA_ADJACENCY
 - `CATEGORY` تصنيف النشاط/الطلب، وله `category_type` يجب أن يتوافق مع نوع Provider Profile عند استخدامه في ProviderActivity.
-- `AREA` تمثل District/Neighborhood بصورة مفاهيمية parent-child.
+- `AREA` تمثل District/Neighborhood بصورة مفاهيمية parent-child. واجهات discovery/request/service-area تعرض Neighborhood فقط، بينما District مشتق داخليًا من الـNeighborhood ويبقى ممثلًا في نموذج البيانات.
 - `PROVIDER_SERVICE_AREA` تمثل المناطق التي يخدمها Provider.
 - `AREA_ADJACENCY` تمثل قائمة الجوار المُدارة بين الأحياء وفق DEC-033؛ العلاقة المنطقية جوار متبادل، بينما طريقة فرض symmetry/uniqueness في قاعدة البيانات تؤجل إلى Chapter Four.
 - الموقع الدقيق/GPS ليس بيانات عامة في هذا النموذج.
@@ -437,6 +437,7 @@ erDiagram
 
 - `USER_BLOCK` يمثل Block كعلاقة حماية مباشرة مستقلة عن `REPORT` ويدعم Unblock. Block يمنع التفاعل الجديد لكنه لا يكسر Active Transaction ولا يمنع إجراءاتها الأساسية/System Notifications — DEC-088.
 - `REPORT.target_reference` تمثيل مفاهيمي polymorphic؛ التنفيذ الفيزيائي قد يفصله إلى علاقات أكثر صرامة.
+- `REPORT.reason` مطلوب للبلاغ العام. `REPORT.description` لا يعد إلزاميًا لكل Generic Report؛ في Transaction Complaint تكون Reason + Description إلزاميتين والمرفقات اختيارية وفق DEC-084.
 - `VERIFICATION_CASE.review_note` يمثل الملاحظة/السبب عند طلب إعادة التقديم أو الرفض.
 - `SAFETY_FLAG.reason_category` يمثل سبب/فئة الاشتباه المطلوبة للمراجعة البشرية؛ taxonomy والـthresholds لم تعتمد بعد.
 - `SAFETY_FLAG` و`ADMIN_AUDIT_RECORD` مفاهيم تحليلية؛ schema/retention/thresholds لم تعتمد بعد.
