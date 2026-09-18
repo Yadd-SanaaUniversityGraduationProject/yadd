@@ -58,7 +58,6 @@ flowchart LR
     P --- MANAGE_SUBSCRIPTION
     P --- BLOCK
     P --- REPORT
-    P --- VIEW_RENEW_SUB
     SP -. specializes .-> P
 
     B --- BLOCK
@@ -89,4 +88,3 @@ flowchart LR
 - `Block / Unblock User` and `Report User / Content` are separate concepts. Block does not break an Active Transaction; Unblock restores future interaction only and does not reopen ended Requests/Transactions or cancel a prior Report. Administrative review outcomes follow DEC-089.
 - `Review Reports / Flags` is an administrative goal triggered by existing reports/flags, not an extension relationship invented for sequence.
 - Guest is intentionally absent from protected Block/Report capabilities because DEC-077 requires authentication for them.
-- Expired Subscription does not remove Provider Portal access or ongoing Active Transaction access; it prevents new Provider Responses and new Direct Search Transactions until renewal.
