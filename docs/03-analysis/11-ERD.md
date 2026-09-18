@@ -438,10 +438,8 @@ erDiagram
 ## 7. Remaining Design Decisions / Needs Verification
 
 - Provider Type switching policy after initial selection.
-- Accepted identity document types / Verification Artifact details.
 - Retention period for verification data, conversations and AI flags.
-- Subscription plans/prices/payment-proof details.
+- Final subscription price/payment-proof details and public-search visibility when Expired.
 - AI provider/threshold/storage model and final reason-category taxonomy.
-- Numeric request-expiry/reminder timing.
 - Physical enforcement of Conversation pair uniqueness and Message/SystemEvent↔Transaction mapping.
 - Exact technical implementation of public Provider Profile projection and authentication continuation after a protected Guest CTA; the semantic boundary is already fixed by DEC-077.
