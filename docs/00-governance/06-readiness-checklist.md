@@ -20,9 +20,9 @@
 ## Requirements
 - [x] Stakeholders/Actors الأساسية متزامنة مع `DEC-067/077`: Guest, Beneficiary, Provider, YADD Administrator.
 - [ ] User Requirements مراجعة مراجعة Baseline نهائية.
-- [x] FR مرقمة وحالاتها ظاهرة في SRS v0.9.9، بما فيها `UR/FR-GST-*`.
+- [x] FR مرقمة وحالاتها ظاهرة في SRS v0.9.10، بما فيها `UR/FR-GST-*`.
 - [ ] NFR قابلة للقياس قدر الإمكان؛ البنود التي تحتاج Prototype/Evidence تبقى صريحة.
-- [x] Business Rules للعمليات الحرجة متزامنة مع Core Decisions الحالية حتى `DEC-077` في نطاقها.
+- [x] Business Rules للعمليات الحرجة متزامنة مع Core Decisions الحالية حتى `DEC-090` في نطاقها.
 - [x] Public/private access boundary موثقة: Guest public browse فقط، protected actions authenticated، phone/direct private contact غير Public Profile.
 - [ ] AI detailed policy/provider/threshold/retention ما تزال Needs Verification؛ لا تعتبر محسومة.
 - [x] الاستثناءات الأساسية والإلغاء والنزاعات موثقة؛ Request 24/48/72، Direct Start 12h، Invoice 24/48/72، Subscription 30d أغلقت. السياسات الأخرى المفتوحة تبقى Needs Verification.
@@ -49,12 +49,12 @@
 
 ## Consistency
 - [ ] لا يوجد متطلب نهائي بلا مصدر/قرار بعد المراجعة النهائية.
-- [x] DEC-077 متتبع حاليًا عبر SRS → Business Rules → Actors/Use Cases → DFD → Traceability → ERD/Class boundary → Interface/Database/Data Dictionary drafts.
+- [x] DEC-078..090 متتبعة حاليًا عبر SRS → Business Rules → Use Cases/Lifecycles → DFD/Traceability → ERD/Class boundary → Interface/Database/Data Dictionary drafts.
 - [ ] لا توجد ميزة في التصميم غير موجودة في SRS/قرار حاكم.
 - [ ] لا يوجد كيان ERD/Relation Schema بلا حاجة موثقة.
 - [ ] لا توجد حالات Lifecycle متعارضة بين الوثائق الحالية.
-- [x] حالة الوثائق المتأثرة بـDEC-077 محدثة في Document Register بعد مزامنة 2026-09-15.
-- [x] Chapter Three derived draft أعيدت مزامنته نصيًا عبر DEC-077؛ يبقى final diagram redraw/export.
+- [x] حالة الوثائق المتأثرة بـDEC-078..090 محدثة في Document Register بعد مزامنة 2026-09-18.
+- [x] Chapter Three derived draft أعيدت مزامنته نصيًا عبر DEC-090؛ يبقى final diagram redraw/export.
 - [ ] الفصول المشتقة النهائية تشير إلى النسخ الحالية ولا تتغلب على Sources of Truth.
 
 بعد اجتياز هذه البوابة يمكن تثبيت Preliminary Defense Snapshot ثم الانتقال لاحقًا إلى Baseline رسمي بحسب مراجعة الفريق/المشرف. الفصول الموجودة في `docs/05-report-drafts/` تبقى Derived Drafts حتى ذلك الحين.
