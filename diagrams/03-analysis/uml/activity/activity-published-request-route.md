@@ -1,6 +1,6 @@
 # Activity Diagram — Published Request Route
 
-> **Status:** `REVIEW DRAFT — NOT BASELINED — SYNCHRONIZED 2026-09-18 THROUGH DEC-090`
+> **Status:** `REVIEW DRAFT — NOT BASELINED — SYNCHRONIZED 2026-09-19 THROUGH DEC-091`
 >
 > **Type:** Derived workflow view. هذا المخطط لا ينشئ Requirement أو Use Case جديدة؛ يجمع المسار الرئيسي من `Create Request` حتى نهاية Transaction الناجحة/غير الناجحة لعرض القرارات الأساسية بصورة واحدة.
 
