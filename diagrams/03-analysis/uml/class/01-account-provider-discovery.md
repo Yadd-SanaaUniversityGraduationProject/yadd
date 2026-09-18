@@ -1,13 +1,13 @@
 # Class Diagram — Account, Provider, Discovery and Portfolio
 
-> **Status:** `SEMANTICALLY VERIFIED — TEAM APPROVED — SYNCHRONIZED THROUGH DEC-090 — NOT BASELINED — VISUAL/A4 FINALIZATION PENDING`
+> **Status:** `SEMANTICALLY VERIFIED — TEAM APPROVED — SYNCHRONIZED THROUGH DEC-091 — NOT BASELINED — VISUAL/A4 FINALIZATION PENDING`
 >
 > **Type:** View 1 of one Detailed Analysis Class Model.
 
 ## Source basis
 
 - `docs/03-analysis/11-ERD.md` — corrected Conceptual ERD and conceptual identifiers/attributes.
-- `docs/03-analysis/05-SRS.md` — current requirements through DEC-090.
+- `docs/03-analysis/05-SRS.md` — current requirements through DEC-091.
 - `docs/03-analysis/08-use-cases.md` — UC-01, UC-02, UC-03, UC-04, UC-09 and UC-10.
 - `docs/03-analysis/19-provider-activity-model.md` — current Provider Type / Activity rules.
 - `docs/03-analysis/20-location-and-neighborhood-model.md` — current Area / adjacency / service-area rules.
