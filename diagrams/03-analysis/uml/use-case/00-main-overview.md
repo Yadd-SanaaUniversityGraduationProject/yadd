@@ -48,7 +48,7 @@ flowchart LR
             direction LR
             BLOCK(["Block User"]):::usecase
             REPORT(["Report User / Content"]):::usecase
-            UC09(["Provider Verification /<br/>Portal Activation"]):::usecase
+            UC09(["Service Provider Identity<br/>Verification / Eligibility"]):::usecase
             UC10(["Manage Portfolio /<br/>Catalog"]):::usecase
             SUB(["Manage Provider<br/>Subscription"]):::usecase
         end
