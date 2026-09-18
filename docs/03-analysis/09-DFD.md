@@ -22,8 +22,8 @@ flowchart LR
     A[YADD Administrator]
     Y((YADD System))
 
-    G -->|Public Search Criteria; Public Browse Requests| Y
-    Y -->|Public Search Results; Public Provider Profiles; Public Portfolio or Catalog Data; Authentication Prompt for Protected Actions| G
+    G -->|Public Search Criteria; Public Browse Requests; Log In / Create Account / Password Recovery Data when chosen| Y
+    Y -->|Public Search Results; Public Provider Profiles; Public Portfolio or Catalog Data; Authentication / Recovery Result or Prompt| G
 
     B -->|Account Data; Search Criteria; Request Data; Messages; Provider Selection; Transaction Start Request or Confirmation; Invoice Response; Complaint Data; Rating Data; Report Data| Y
     Y -->|Search Results; Provider Information; Provider Responses; Messages; Transaction Start Confirmation Request; Transaction Status; Invoice Data; Complaint Status; Notifications; History| B
@@ -159,11 +159,9 @@ flowchart LR
 Manages:
 - Guest transition to `Log In / Create Account` when Authentication is required;
 - returning-user Log In using verified phone or verified email + password, plus Forgot Password recovery through verified channels;
-- Manage Account, Deactivate/Reactivate and last-Portal persistence/switching for the same User account;
 - one User account per person;
 - one optional Provider Profile per User;
-- last-Portal persistence and switching between Beneficiary/Provider contexts using the same User account;
-- User Account management including verification-sensitive Mobile/Email changes and Deactivate/Reactivate according to the current account policy;
+- Manage Account, verification-sensitive Mobile/Email changes, Deactivate/Reactivate, and last-Portal persistence/switching between Beneficiary/Provider contexts using the same User account;
 - exactly one Provider Type (`SERVICE` or `PRODUCT`) per Provider Profile in MVP — DEC-074;
 - multiple Provider Activities/Categories inside that type, with at least one required before provider-function eligibility — DEC-076;
 - service areas; user-facing location selection uses Neighborhood while District is derived internally from Neighborhood;
