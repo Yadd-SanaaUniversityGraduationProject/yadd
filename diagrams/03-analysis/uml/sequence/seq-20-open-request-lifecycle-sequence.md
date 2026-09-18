@@ -1,6 +1,6 @@
 # Sequence 20 — Open Request Closure, Inactivity, Expiry & Republish
 
-> **Status:** `REVIEW DRAFT — SYNCHRONIZED 2026-09-18 — NOT BASELINED`
+> **Status:** `REVIEW DRAFT — SYNCHRONIZED 2026-09-19 — NOT BASELINED`
 >
 > **Purpose:** Represents the approved lifecycle of an already-published Open Request after creation: Beneficiary closure, inactivity reminders/expiry, activity reset and Republish as a new Request.
 
@@ -15,6 +15,7 @@
 ## Diagram
 
 ```mermaid
+%%{init: {"theme":"base","themeVariables":{"background":"#FFFFFF","fontFamily":"Arial","actorBkg":"#F8E8C8","actorBorder":"#7E7E7E","actorTextColor":"#222222","actorLineColor":"#8A8A8A","signalColor":"#A07878","signalTextColor":"#5C3F3F","labelBoxBkgColor":"#FFFFFF","labelBoxBorderColor":"#7E7E7E","labelTextColor":"#222222","loopTextColor":"#222222","noteBkgColor":"#FFFFFF","noteBorderColor":"#7E7E7E","noteTextColor":"#222222","activationBkgColor":"#C8E0E8","activationBorderColor":"#7B969C","sequenceNumberColor":"#222222"}}}%%
 sequenceDiagram
     actor B as Beneficiary
     participant UI as RequestUI «boundary»
