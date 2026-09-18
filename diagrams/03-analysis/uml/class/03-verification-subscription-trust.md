@@ -1,6 +1,6 @@
 # Class Diagram — Verification, Subscription and Trust / Administration
 
-> **Status:** `SEMANTICALLY VERIFIED — TEAM APPROVED — SYNCHRONIZED THROUGH DEC-090 — NOT BASELINED — VISUAL/A4 FINALIZATION PENDING`
+> **Status:** `SEMANTICALLY VERIFIED — TEAM APPROVED — SYNCHRONIZED THROUGH DEC-091 — NOT BASELINED — VISUAL/A4 FINALIZATION PENDING`
 >
 > **Type:** View 3 of one Detailed Analysis Class Model.
 
