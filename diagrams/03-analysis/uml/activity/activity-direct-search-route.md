@@ -1,13 +1,13 @@
 # Activity Diagram — Direct Search Route
 
-> **Status:** `REVIEW DRAFT — NOT BASELINED — SYNCHRONIZED 2026-09-18 THROUGH DEC-090`
+> **Status:** `REVIEW DRAFT — NOT BASELINED — SYNCHRONIZED 2026-09-19 THROUGH DEC-091`
 >
 > **Type:** Derived workflow view based on `UC-01 — Search and Inquire Directly` and the approved direct-start rules.
 
 ## Source basis
 
 - `UC-01 — Search and Inquire Directly`
-- `DEC-012`, `DEC-031..033`, `DEC-046`, `DEC-047`, `DEC-064`, `DEC-066`, `DEC-069`, `DEC-075`, `DEC-082`
+- `DEC-012`, `DEC-031..033`, `DEC-046`, `DEC-047`, `DEC-064`, `DEC-066`, `DEC-069`, `DEC-075`, `DEC-082`, `DEC-086`
 - Current communication and Transaction-start business rules.
 - Approved Location UI convention: Neighborhood is user-facing; District is derived internally from the selected Neighborhood.
 
@@ -31,7 +31,10 @@ flowchart TD
     E -- Yes --> G[Create Pending Transaction Start Request]
     G --> G1[Set Expiry = 12 Hours]
     G1 --> H{Other Party Response Before Expiry?}
-    H -- Confirm --> I[Create Active Transaction]
+    H -- Confirm --> H1{Provider eligible for new interaction?}
+    H1 -- Yes --> I[Create Active Transaction]
+    H1 -- No --> H2[Reject New Transaction Start / Keep Conversation Available]
+    H2 --> K
     I --> J[Continue Through Common Transaction / Invoice Flow]
     J --> ZE([End of Direct-Search Activity View])
 
@@ -49,7 +52,8 @@ flowchart TD
 - بين نفس Beneficiary ونفس Provider توجد Conversation واحدة مستمرة وفق DEC-075؛ إذا كانت موجودة يعاد استخدامها، وإذا لم تكن موجودة تُفتح Conversation جديدة.
 - Private Chat by itself never creates a Transaction.
 - Either Beneficiary or Provider may request Transaction Start.
-- `Active Transaction` is created only after the other party confirms within 12 hours.
+- `Active Transaction` is created only after the other party confirms within 12 hours **and** the Provider remains eligible for a new interaction, including Active Subscription under DEC-086.
+- Expired Subscription does not close the Provider Portal or an existing Transaction, but it blocks creation of a new Direct Search Transaction until renewal. Public-search visibility while expired remains an open policy and is not inferred here.
 - Only one Pending Transaction Start Request may exist between the pair at a time.
 - Rejection or 12-hour expiry cancels only the start request; the continuing Conversation remains available and a new start request may be sent later.
 - There is no standalone `Agreement` entity/form in this route.
