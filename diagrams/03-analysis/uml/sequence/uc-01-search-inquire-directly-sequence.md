@@ -1,13 +1,13 @@
 # UC-01 — Search and Inquire Directly Sequence Diagrams
 
-> **Status:** `REVIEW DRAFT — SYNCHRONIZED 2026-09-18 — NOT BASELINED`
+> **Status:** `REVIEW DRAFT — SYNCHRONIZED 2026-09-19 — NOT BASELINED`
 >
 > **Purpose:** Sequence modeling مشتق من `UC-01 — Search and Inquire Directly` فقط. تم تقسيم الـUse Case إلى سيناريوهين مترابطين حتى تبقى كل Sequence Diagram واضحة وقابلة للعرض على A4 بدل دمج البحث والمحادثة وبدء Transaction في رسم واحد مزدحم.
 
 ## Source basis
 
 - **Approved behavior:** `UC-01 — Search and Inquire Directly` in `docs/03-analysis/08-use-cases.md`.
-- **Decision/business basis:** `DEC-012`, `DEC-031..033`, `DEC-046`, `DEC-047`, `DEC-064`, `DEC-066`, `DEC-069`, `DEC-075`, `DEC-082` and the corresponding current business rules.
+- **Decision/business basis:** `DEC-012`, `DEC-031..033`, `DEC-046`, `DEC-047`, `DEC-064`, `DEC-066`, `DEC-069`, `DEC-075`, `DEC-082`, `DEC-086` and the corresponding current business rules.
 - **Location UI synchronization:** user-facing discovery selects `Neighborhood` only; `District` remains part of the underlying location model and is derived internally from the selected Neighborhood under the approved UI contract.
 - **Core rule:** Chat alone never creates a Transaction.
 - **Direct-search start rule:** either party may request Transaction Start; the pending request is valid for 12 hours and only one may be pending between the pair; `Active Transaction` is created only after the other party confirms within the validity window.
@@ -33,7 +33,7 @@ sequenceDiagram
     B->>BUI: searchProviders(category, neighborhood)
     BUI->>DC: searchProviders(category, neighborhood)
     DC->>DC: deriveDistrict(neighborhood)
-    DC->>PROF: findEligibleProviders(category, district, neighborhood)
+    DC->>PROF: findPublicProviders(category, district, neighborhood)
     PROF-->>DC: matchingProviderProfiles
     DC-->>BUI: searchResults
     BUI-->>B: showProviders()
@@ -88,10 +88,12 @@ sequenceDiagram
     participant BUI as BeneficiaryUI «boundary»
     participant PUI as ProviderUI «boundary»
     participant TC as TransactionController «control»
+    participant PROF as ProviderProfile «entity»
     participant SR as TransactionStartRequest «entity»
     participant TX as Transaction «entity»
 
-    Note over B,SR: Precondition: no other Pending Transaction Start Request exists for this pair
+    Note over B,SR: Precondition: authenticated parties + no other Pending Transaction Start Request exists for this pair
+    Note over PROF,TX: Creating a new Direct Search Transaction requires current Provider eligibility, including Active Subscription
 
     alt Beneficiary requests Transaction Start
         B->>BUI: requestTransactionStart()
@@ -106,6 +108,8 @@ sequenceDiagram
             PUI->>TC: confirmTransactionStart(startRequestId)
             TC->>SR: markConfirmed()
             SR-->>TC: confirmedWithinValidity
+            TC->>PROF: validateNewInteractionEligibility(providerId)
+            PROF-->>TC: providerEligibilityState
             TC->>TX: createActiveTransaction(Beneficiary, Provider)
             TX-->>TC: transactionCreated(transactionId, ACTIVE)
             TC-->>BUI: transactionActive(transactionId)
@@ -138,6 +142,8 @@ sequenceDiagram
             BUI->>TC: confirmTransactionStart(startRequestId)
             TC->>SR: markConfirmed()
             SR-->>TC: confirmedWithinValidity
+            TC->>PROF: validateNewInteractionEligibility(providerId)
+            PROF-->>TC: providerEligibilityState
             TC->>TX: createActiveTransaction(Beneficiary, Provider)
             TX-->>TC: transactionCreated(transactionId, ACTIVE)
             TC-->>BUI: transactionActive(transactionId)
@@ -190,3 +196,8 @@ The diagrams intentionally do not include Cancellation, Final Invoice, Complaint
 ## Modeling note
 
 The two diagrams above are a **scenario decomposition of one approved Use Case**, not two new Use Cases. This is a presentation/modeling choice intended to preserve readability and A4 print quality without changing project scope or requirements.
+
+
+## Search-visibility boundary
+
+`findPublicProviders(...)` intentionally does not encode subscription-expiry visibility policy. Whether an Expired Provider remains publicly visible in search is still an open operational item (`SUB-OPS-Q01`). Active Subscription is enforced when starting a new Provider interaction/Direct Search Transaction, not silently converted here into a public-search visibility rule.
