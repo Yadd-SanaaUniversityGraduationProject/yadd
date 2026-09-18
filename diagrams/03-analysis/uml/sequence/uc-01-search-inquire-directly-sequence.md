@@ -7,10 +7,10 @@
 ## Source basis
 
 - **Approved behavior:** `UC-01 — Search and Inquire Directly` in `docs/03-analysis/08-use-cases.md`.
-- **Decision/business basis:** `DEC-012`, `DEC-031..033`, `DEC-046`, `DEC-047`, `DEC-064`, `DEC-066`, `DEC-069` and the corresponding current business rules.
+- **Decision/business basis:** `DEC-012`, `DEC-031..033`, `DEC-046`, `DEC-047`, `DEC-064`, `DEC-066`, `DEC-069`, `DEC-075`, `DEC-082` and the corresponding current business rules.
 - **Core rule:** Chat alone never creates a Transaction.
-- **Direct-search start rule:** either party may request Transaction Start, but `Active Transaction` is created only after the other party confirms.
-- **Alternative:** no confirmation or rejection leaves the conversation without a Transaction.
+- **Direct-search start rule:** either party may request Transaction Start; the pending request is valid for 12 hours and only one may be pending between the pair; `Active Transaction` is created only after the other party confirms within the validity window.
+- **Alternative:** rejection or 12-hour expiry cancels only the start request and leaves the conversation without a Transaction.
 - **Derived modeling roles:** `BeneficiaryUI`, `ProviderUI`, `DiscoveryController`, `CommunicationController`, and `TransactionController` are Sequence modeling roles, not approved implementation class names.
 
 ---
@@ -145,10 +145,16 @@ If the other party does not confirm or rejects:
 
 UC-01 ends when either:
 
-- the parties remain in direct inquiry/chat without a Transaction, or
-- the other party confirms Transaction Start and YADD creates an `Active Transaction`.
+- the parties remain in direct inquiry/chat without a Transaction, including after rejection/12-hour expiry of a start request, or
+- the other party confirms Transaction Start within 12 hours and YADD creates an `Active Transaction`.
 
 The diagrams intentionally do not include Cancellation, Final Invoice, Complaint, Completion, or Ratings. Those are later Use Cases/Scenarios and must not be folded into UC-01.
+
+## DEC-082 constraints
+
+- Only one Pending Transaction Start Request may exist between the same pair at a time.
+- Pending validity = 12 hours.
+- Reject/Expiry does not close the persistent Conversation; a later new request is allowed.
 
 ## Modeling note
 
