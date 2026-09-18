@@ -77,6 +77,19 @@ YADD is Arabic-first.
 
 ## 5. Buttons — Shared Component Contract
 
+### Button content alignment — Approved 2026-09-18
+
+Button content must be laid out as **one centered component group**, not as independently positioned text and icon layers.
+
+- Current standard control height remains **52 px**.
+- When an action icon is used, the icon and label use shared Auto Layout.
+- Use the shared spacing token between icon and label (current baseline: `spacing/2`, approximately 8 px).
+- In Arabic action buttons, the normal functional icon sits on the RTL-leading side of the label unless directional semantics require another treatment.
+- The combined icon+label group is centered as a whole.
+- Do not center the text independently while pinning the icon to an arbitrary edge.
+- Do not use icon placement that makes two visually identical buttons appear to have different alignment rules.
+
+
 The current Figma Button component baseline includes:
 
 - Primary button.
@@ -135,7 +148,26 @@ Rules:
 - use the same radius scale for comparable component classes;
 - responsive layouts may reflow, stack, or change column count without changing the component's visual identity.
 
-## 9. Navigation Consistency
+## 9. Mobile App Bar / Header Alignment
+
+Use defined header patterns rather than placing icons opportunistically.
+
+### Top-level public/home screens
+
+- Brand identity may occupy the RTL-leading/right area according to the shared Header component.
+- Only approved global actions may occupy the opposite action area.
+- Do not crowd the brand with unrelated contextual action icons.
+
+### Detail screens
+
+- Use the shared RTL Detail App Bar.
+- Back/navigation control occupies the RTL-leading/right navigation slot and uses the correct RTL directional icon.
+- Screen title uses the shared title alignment rule.
+- Approved contextual actions, when they exist, occupy the opposite/left action slot.
+- If no contextual action is approved, do not invent one merely to balance the header visually.
+- Do not mix a logo, Share icon, and Back icon in ad-hoc positions.
+
+## 10. Navigation Consistency
 
 Approved navigation models remain function-specific but visually componentized:
 
@@ -153,20 +185,28 @@ Authentication/onboarding focused flows intentionally omit the public bottom nav
 - Admin uses a shared YADD desktop shell (e.g. sidebar/header) rather than Mobile Bottom Navigation.
 - Desktop-only does **not** permit a separate visual identity: the same YADD tokens, Tajawal/Inter typography, RTL behavior, 52px shared Button baseline, inputs, cards, radius/spacing scale, icon family, and states remain mandatory.
 
-## 10. Icons
+## 11. Icons — Mandatory Shared Icon System
 
-- Use one coherent icon family/style.
-- Production UI must not substitute random emoji for functional icons.
+- Use **one coherent vector icon family/style** across YADD.
+- Production UI must not use emoji as interface icons.
+- Do not use arbitrary Unicode glyphs such as `✦`, `◇`, `◫`, `◉`, `★` as icon substitutes.
 - Comparable actions reuse the same icon throughout all wireflows.
 - Icon direction must respect RTL where directional meaning exists.
+- Default functional icon optical size is kept within the shared 20–24 px family; component-specific sizes must be named variants.
+- Icon-only interactive controls must provide a sufficiently large interaction target; current design target is at least 44×44 px where layout permits.
+- Important or non-obvious actions use **icon + Arabic label**, not an unexplained icon alone.
+- Category icons, if used, share the same stroke/fill language, optical size, container size, and color treatment.
+- Do not introduce random per-category colors unless a future approved taxonomy/design rule defines them.
+- Icons are semantic aids, not decoration.
 
-## 11. States
+
+## 12. States
 
 Loading, empty, error, success, disabled, warning, pending, and destructive states must use shared visual patterns.
 
 A business state may have different copy, but should not receive a completely new visual treatment in each wireflow.
 
-## 12. Cross-Wireflow Consistency Gate
+## 13. Cross-Wireflow Consistency Gate
 
 Before any wireflow is considered visually complete, check:
 
@@ -177,13 +217,16 @@ Before any wireflow is considered visually complete, check:
 5. Inputs/filters reuse shared controls.
 6. Cards/surfaces use the common radius/spacing language.
 7. Navigation uses the relevant approved model but shared visual component treatment.
-8. Icons use the same family.
-9. No new visual token/component was introduced locally without first updating the design system.
-10. Functional differences come from the approved Screen Contract, not from designer improvisation.
+8. Icons use the same vector family; no emoji/Unicode-icon substitutes are present.
+9. Button icon+label groups use shared alignment rather than independent absolute positioning.
+10. App-bar/navigation actions use the approved structural slots.
+11. Static mockup data forms one coherent scenario and matches visible filters/context.
+12. No new visual token/component was introduced locally without first updating the design system.
+13. Functional differences come from the approved Screen Contract, not from designer improvisation.
 
 A wireflow that fails this gate is **not design-consistent**, even if its individual screens look polished.
 
-## 13. Governance
+## 14. Governance
 
 If a screen requires a new visual pattern:
 
@@ -195,7 +238,7 @@ Do not:
 
 If Figma and this baseline disagree, identify the mismatch as Synchronization / Design Decision before continuing.
 
-## 14. Open Production Work
+## 15. Open Production Work
 
 Still requiring final validation/freeze:
 
