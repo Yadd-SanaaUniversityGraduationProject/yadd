@@ -44,8 +44,7 @@ flowchart TD
 
 ## Semantic constraints
 
-- Direct Search UI exposes Neighborhood as the location selector/display level; District remains internal/derived and the underlying model remains District + Neighborhood.
-- **Location UI synchronization:** the user selects/sees Neighborhood as the public discovery location level; District remains in the underlying location model and is derived internally. The authoritative Neighborhood→District mapping still depends on `LOC-DATA-Q01`.
+- Direct Search UI exposes Neighborhood as the location selector/display level; District remains internal/derived and the underlying model remains District + Neighborhood. The authoritative Neighborhood→District mapping still depends on `LOC-DATA-Q01`.
 
 - بين نفس Beneficiary ونفس Provider توجد Conversation واحدة مستمرة وفق DEC-075؛ إذا كانت موجودة يعاد استخدامها، وإذا لم تكن موجودة تُفتح Conversation جديدة.
 - Private Chat by itself never creates a Transaction.
