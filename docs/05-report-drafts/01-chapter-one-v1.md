@@ -91,7 +91,7 @@
 
 ## 1.6 أهمية المشروع — Project Significance
 
-يحاول YADD تقليل تشتت عملية البحث والتواصل والتوثيق ضمن مسار أكثر تنظيمًا. بالنسبة للمقدم، يوفر نموذجًا لعرض النشاط وPortfolio/Catalog والوصول إلى طلبات مناسبة حسب الفئة والمنطقة. كما يربط التقييمات بمعاملات مكتملة ويوفر Provider Verification وBlock + Report كعناصر ثقة وسلامة.
+يحاول YADD تقليل تشتت عملية البحث والتواصل والتوثيق ضمن مسار أكثر تنظيمًا. بالنسبة للمقدم، يوفر نموذجًا لعرض النشاط وPortfolio/Catalog والوصول إلى طلبات مناسبة حسب الفئة والمنطقة. كما يربط التقييمات بمعاملات مكتملة ويوفر Service Provider Identity Verification وBlock + Report كعناصر ثقة وسلامة.
 
 بلغ متوسط أثر تحقق المنصة من هوية مقدم الخدمة على ثقة المستفيد 4.29 من 5 ضمن عينة المستفيدين في `SUR-01`. هذه نتيجة استكشافية ولا تعني تلقائيًا أن آلية تحقق محددة ستنجح تشغيليًا.
 
@@ -108,15 +108,15 @@
 - منتجات الأسر المنتجة والمشاريع المنزلية.
 - User Account واحد للشخص.
 - Beneficiary Portal وProvider Portal بالحساب نفسه.
-- Provider Profile يمكنه Service Activity أو Product Activity أو كليهما.
+- Provider Profile واحد بنوع حصري `SERVICE` أو `PRODUCT` في MVP، مع تصنيف واحد أو أكثر داخل النوع.
 - Direct Search وCreate Request.
 - Provider Responses والمقارنة والاختيار.
 - Private Chat قبل/بعد Transaction.
-- Provider Verification قبل صلاحيات التقديم.
+- Service Provider يحتاج Identity Verification قبل صلاحيات التقديم؛ Product Provider لا يحتاج Government ID في MVP.
 - Portfolio / Product Catalog داخل Provider Profile.
 - Transaction + Final Invoice + Ratings.
 - Block + Report والمراجعة الإدارية.
-- سجل اشتراك المقدم داخل YADD مع تحصيل خارجي.
+- اشتراك 30 يومًا لكلا نوعي Provider داخل YADD مع تحصيل خارجي وتأكيد إداري.
 
 ### 1.7.2 خارج نطاق الـMVP
 
@@ -130,11 +130,10 @@
 
 ### 1.7.3 قيود تحتاج Verification ولا تغير Scope الحالي
 
-- أنواع وثائق الهوية المقبولة ومدة الاحتفاظ بها.
+- مدة الاحتفاظ ببيانات Identity Verification وأي تراخيص مهنية خاصة.
 - بيانات الأحياء الرسمية وعلاقات الجوار.
-- القيم الرقمية لExpiry والتذكيرات.
 - سياسات AI التفصيلية ومزودو الخدمة والعتبات.
-- تفاصيل خطط الاشتراك وأسعارها وإثبات الدفع الخارجي.
+- سعر الاشتراك النهائي وإثبات/إجراء الدفع الخارجي والظهور العام عند Expired.
 - Usability في ظروف الاتصال الفعلية.
 
 ---
