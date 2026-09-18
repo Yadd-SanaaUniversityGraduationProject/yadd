@@ -226,7 +226,7 @@
   5. يراجع موظف مخول حالة التحقق.
   6. القرار النهائي في Service Identity Verification بشري؛ عند Verified تتاح صلاحيات Service Provider حسب بقية الشروط. Product Provider يعتمد Account/Profile eligibility والاشتراك دون Identity Verified badge.
 - **Open:** مدة الاحتفاظ والتراخيص الخاصة في `VER-RET-Q01 / VER-LIC-Q01`.
-- **Related:** DEC-010/034..040/077.
+- **Related:** DEC-010/035..040/077/085.
 
 ---
 
@@ -294,7 +294,7 @@
 - `Manage Provider Profile`
 - `Manage Portfolio / Catalog`
 - `Manage Service Areas`
-- `Submit Verification`
+- `Submit Service Provider Verification`
 - `View Matching Requests`
 - `Submit Provider Response`
 - `Edit Provider Response`
@@ -310,7 +310,7 @@
 - `Report User / Content`
 
 #### YADD Administrator
-- `Review Provider Verification`
+- `Review Service Provider Verification`
 - `Review Reports / Flags`
 - `Review Transaction Complaint`
 - `Manage Provider Subscription`
@@ -353,9 +353,9 @@
 | `Edit Provider Response` / `Withdraw Provider Response` | Active response exists; Request Open; before selection | Precondition from DEC-070 |
 | `Review Final Invoice` | Final Invoice is `Pending Customer Approval` | Precondition from DEC-050 |
 | `Revise Final Invoice` | Beneficiary previously requested revision | Precondition / previous-event dependency |
-| `Review Provider Verification` | Verification submission exists | Precondition; separate Admin goal, not included inside Provider submission |
+| `Review Service Provider Verification` | Service Provider verification submission exists | Precondition; separate Admin goal, not included inside Provider submission |
 | `Review Transaction Complaint` | Complaint exists | Precondition; asynchronous Admin goal |
-| `Submit Provider Response` | Provider Verified + Subscription Active | enforced by included `Validate Response Eligibility` and business rules |
+| `Submit Provider Response` | Type-specific provider eligibility + Subscription Active | SERVICE requires Identity Verified; PRODUCT requires Account/Profile eligibility; enforced by `Validate Response Eligibility` |
 
 > **Important:** وجود `Rate Provider` أو `Rate Beneficiary` كـUse Case مستقلة لا يعني أنهما متاحتان في أي وقت. استقلال الـActor goal عن الرسم الزمني شيء مختلف عن Lifecycle dependency؛ لذلك تمثل تبعية `Completed` كـPrecondition صريحة بدل استخدام `include/extend` بصورة غير صحيحة.
 
