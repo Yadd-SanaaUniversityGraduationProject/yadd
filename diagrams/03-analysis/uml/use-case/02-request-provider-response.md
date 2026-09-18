@@ -26,7 +26,6 @@ flowchart LR
             CREATE_REQ(["Create Request"]):::usecase
             CLOSE_REQ(["Close Open Request"]):::usecase
             REPUBLISH(["Republish Expired Request"]):::usecase
-            REPUBLISH(["Republish Expired Request"]):::usecase
             COMPARE(["Compare Provider Responses"]):::usecase
             CHAT(["Communicate / Inquire"]):::usecase
             SELECT(["Select Provider"]):::usecase
@@ -92,5 +91,4 @@ flowchart LR
 - Request inactivity: reminders at 24h/48h and Expired at 72h; meaningful Beneficiary activity resets the clock, Provider Response arrival alone does not; Republish creates a new editable Request and never reopens the expired one.
 - User-facing Request location uses Neighborhood only; District is derived internally from the selected Neighborhood.
 - Provider Response has no independent expiry; it ends with Withdraw/Selection/Request Close/Expiry.
-- Request/discovery location UI exposes Neighborhood only; District is derived internally from the selected Neighborhood while the underlying location model remains District + Neighborhood.
 - Submit Provider Response eligibility is type-specific: SERVICE requires Identity Verified; PRODUCT requires Account/Profile eligible; both require Active Subscription.
