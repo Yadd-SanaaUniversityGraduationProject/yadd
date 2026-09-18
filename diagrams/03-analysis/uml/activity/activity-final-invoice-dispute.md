@@ -1,6 +1,6 @@
 # Activity Diagram — Final Invoice, Revision and Dispute
 
-> **Status:** `REVIEW DRAFT — NOT BASELINED — SYNCHRONIZED 2026-09-18`
+> **Status:** `REVIEW DRAFT — NOT BASELINED — SYNCHRONIZED 2026-09-18 THROUGH DEC-090`
 >
 > **Type:** Derived workflow view focused on the decision-heavy part of `UC-06`.
 
