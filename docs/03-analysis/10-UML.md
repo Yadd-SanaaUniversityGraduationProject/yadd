@@ -46,12 +46,15 @@ flowchart LR
         UC1([Manage Account])
         UCL([Log In])
         UCR([Create Account])
+        UCF([Forgot / Reset Password])
+        UCS([Switch Portal])
 
         UC2([Search Providers])
         UC3([View Provider Profile])
         UCP([View Portfolio / Catalog])
         UC4([Create Request])
         UC5([Close Open Request])
+        UC5R([Republish Expired Request])
         UC6([Compare Provider Responses])
         UC7([Communicate / Inquire])
         UC8([Select Provider])
@@ -87,7 +90,8 @@ flowchart LR
         UC33([Review Service Provider Verification])
         UC34([Review Reports / Flags])
         UC35([Review Transaction Complaint])
-        UC36([Manage Provider Subscription])
+        UC36([Manage / Renew Provider Subscription])
+        UC37([Confirm Subscription Activation / Renewal])
     end
 
     G --- UC0
@@ -96,13 +100,16 @@ flowchart LR
     G --- UCP
     G --- UCL
     G --- UCR
+    G --- UCF
 
     B --- UC1
+    B --- UCS
     B --- UC2
     B --- UC3
     B --- UCP
     B --- UC4
     B --- UC5
+    B --- UC5R
     B --- UC6
     B --- UC7
     B --- UC8
@@ -118,6 +125,7 @@ flowchart LR
     B --- UC32
 
     P --- UC1
+    P --- UCS
     P --- UC7
     P --- UC9
     P --- UC10
@@ -134,6 +142,7 @@ flowchart LR
     P --- UC30
     P --- UC31
     P --- UC32
+    P --- UC36
 
     SP -. specializes .-> P
     PP -. specializes .-> P
@@ -142,7 +151,7 @@ flowchart LR
     A --- UC33
     A --- UC34
     A --- UC35
-    A --- UC36
+    A --- UC37
 
     UC3 -.->|«extend»| UC2
     UCP -.->|«extend»| UC3
@@ -163,7 +172,7 @@ flowchart LR
 
     classDef usecase fill:#ADD8E6,stroke:#9ABFCB,stroke-width:1px,color:#1F2933;
     classDef actor fill:#FFFFFF,stroke:#FFFFFF,color:#222222,font-weight:bold;
-    class UC0,UC1,UCL,UCR,UC2,UC3,UCP,UC4,UC5,UC6,UC7,UC8,UC9,UC10,UC11,UC12,UC13,UC14,UC15,UC16,UC17,UC18,UC19,UC20,UC21,UC22,UC23,UC24,UC25,UC26,UC27,UC28,UC29,UC30,UC31,UC32,UC33,UC34,UC35,UC36 usecase;
+    class UC0,UC1,UCL,UCR,UCF,UCS,UC2,UC3,UCP,UC4,UC5,UC5R,UC6,UC7,UC8,UC9,UC10,UC11,UC12,UC13,UC14,UC15,UC16,UC17,UC18,UC19,UC20,UC21,UC22,UC23,UC24,UC25,UC26,UC27,UC28,UC29,UC30,UC31,UC32,UC33,UC34,UC35,UC36,UC37 usecase;
     style YADD fill:#FFFFFF,stroke:#B7B7B7,stroke-width:1.5px,color:#222222;
 ```
 
@@ -171,7 +180,7 @@ flowchart LR
 
 1. `Guest` معتمد وفق `DEC-077` للتصفح العام: `Browse Public Content`, `Search Providers`, `View Provider Profile`, و`View Portfolio / Catalog`، ويمكنه اختيار `Log In` أو `Create Account`.
 2. لا يرتبط Guest مباشرة بـ`Create Request`, `Communicate / Inquire`, Transaction, Ratings, Block/Report أو أي protected Use Case. ظهور CTA له لا يعني منحه الصلاحية؛ الضغط يوجّه إلى Authentication.
-3. `Log In`/`Create Account` لا يمثلان `<<include>>` داخل كل protected Use Case؛ Authentication هو Precondition للـauthenticated actor goals.
+3. `Log In`/`Create Account` لا يمثلان `<<include>>` داخل كل protected Use Case؛ Authentication هو Precondition للـauthenticated actor goals. `Forgot / Reset Password` يستخدم الهاتف الموثق كأساس وVerified Email كخيار إضافي، دون Username مستقل.
 4. `Service Provider` و`Product Provider` تخصصان من `Provider` وفق `DEC-067/074`. يظهران هنا فقط لأن `Submit Service Provider Verification` خاص بالـService Provider وفق DEC-085؛ بقية أهداف Provider العامة موروثة مفاهيميًا من Actor العام.
 5. لا توجد Use Case/Entity باسم `Agreement`; المسار القياسي في الطلب هو `Request → Provider Response → Selection → Transaction`.
 6. `View Provider Profile <<extend>> Search Providers` لأن البحث قد ينتهي دون فتح ملف بعينه.
@@ -182,13 +191,15 @@ flowchart LR
 11. `Request Transaction Start <<extend>> Communicate / Inquire` في Direct Search فقط؛ المحادثة قد تستمر أو تنتهي دون Transaction. أما عند `Confirm Transaction Start` الإيجابي فيتم تضمين `Create Active Transaction` وفق `DEC-069`.
 12. `Review Final Invoice` هو الأساس؛ `Approve Final Invoice` و`Request Invoice Revision` و`Raise Transaction Complaint` امتدادات شرطية لقرار المراجعة. عند الاعتماد فقط يتم `<<include>> Complete Transaction` لأن الاعتماد يجعل Transaction = `Completed` دائمًا.
 13. `Rate Provider` و`Rate Beneficiary` Use Cases مستقلة من ناحية Actor goal، لكنهما تتطلبان `Transaction = Completed`. الأولى إلزامية على Beneficiary بعد Completed، والثانية اختيارية على Provider؛ لذلك لا تمثل تبعية Completed بأسهم `include/extend`.
-14. `Cancel Transaction` تتطلب Transaction قائمة وفي حالة تسمح بالإلغاء. `Close Open Request` مختلفة عنها وتتطلب Request Open قبل الاختيار.
+14. `Cancel Transaction` تتطلب Transaction قائمة وفي حالة تسمح بالإلغاء. `Close Open Request` مختلفة عنها وتتطلب Request Open قبل الاختيار. `Republish Expired Request` ينشئ Request جديدة بعد المراجعة/التعديل ولا يعيد فتح القديمة.
 15. `Edit Provider Response` و`Withdraw Provider Response` تتطلبان استجابة فعالة مع Request Open وقبل selection وفق `DEC-070`; لا تربطان بعلاقة `include/extend` مصطنعة مع `Submit Provider Response`.
 16. `Revise Final Invoice` تتطلب `Revision Requested` سابقة؛ و`Review Provider Verification`/`Review Transaction Complaint` أهداف إدارية لاحقة مستقلة تعتمد على وجود submission/complaint، وليست أجزاء included داخل فعل المرسل.
 17. `Block User` و`Report User / Content` منفصلتان؛ يستطيع المستخدم authenticated تنفيذ أحدهما دون الآخر، وReport يخضع لاحقًا لمراجعة إدارية.
 18. `Create Active Transaction`, `Complete Transaction`, و`Validate Response Eligibility` تمثل سلوكًا نظاميًا مشتركًا/إلزاميًا، وليس Actor goals مستقلة؛ لذلك لا ترتبط مباشرة بـActor.
 19. استمرار Conversation وإعادة استخدامها بين نفس Beneficiary/Provider وفق DEC-075 هو قيد Domain/Interaction ولا يحتاج Use Case مستقلة في الرسم الرئيسي؛ يجب أن يبقى محفوظًا في Activity/Sequence/Class models.
 20. Public Provider Profile لا يعرض رقم الهاتف أو direct private-contact data أو البيانات الحساسة/الخاصة وفق DEC-036/046/077.
+21. `Switch Portal` يعمل داخل User account نفسه ويحفظ `lastPortal`; Expired Subscription لا يمنع Provider Portal access لكنه يمنع Provider Response جديدة وDirect Search Transaction جديدة حتى التجديد.
+22. Provider يدير/يجدد اشتراكه، بينما `Confirm Subscription Activation / Renewal` قرار إداري يدوي لموظف مخول بعد تحقق الدفع الخارجي؛ سعر الاشتراك وإثبات الدفع ما يزالان مفتوحين.
 
 ### Preconditions / Postconditions التي يجب ألا تُفهم كـ`include`/`extend`
 
@@ -241,8 +252,18 @@ flowchart LR
 | UC-08 — Block and Report User / Content | `diagrams/03-analysis/uml/sequence/uc-08-block-report-sequence.md` | `REVIEW DRAFT — NOT BASELINED` |
 | UC-09 — Service Provider Identity Verification / Provider Portal Eligibility | `diagrams/03-analysis/uml/sequence/uc-09-provider-verification-sequence.md` | `REVIEW DRAFT — NOT BASELINED` |
 | UC-10 — Manage Portfolio / Catalog | `diagrams/03-analysis/uml/sequence/uc-10-manage-portfolio-catalog-sequence.md` | `REVIEW DRAFT — NOT BASELINED` |
+| Guest Public Browsing & Protected Action Gate | `diagrams/03-analysis/uml/sequence/seq-17-guest-public-browsing-sequence.md` | `REVIEW DRAFT — SYNCHRONIZED 2026-09-18 — NOT BASELINED` |
+| Authentication & Portal Access | `diagrams/03-analysis/uml/sequence/seq-18-authentication-portal-access-sequence.md` | `REVIEW DRAFT — SYNCHRONIZED 2026-09-18 — NOT BASELINED` |
+| Manage Account, Deactivation & Reactivation | `diagrams/03-analysis/uml/sequence/seq-19-manage-account-deactivation-reactivation-sequence.md` | `REVIEW DRAFT — SYNCHRONIZED 2026-09-18 — NOT BASELINED` |
+| Open Request Closure, Inactivity, Expiry & Republish | `diagrams/03-analysis/uml/sequence/seq-20-open-request-lifecycle-sequence.md` | `REVIEW DRAFT — SYNCHRONIZED 2026-09-18 — NOT BASELINED` |
 
-`UC-00` Guest browsing/auth-gate sequence has not yet been exported as a standalone Sequence Diagram; this is a presentation/documentation item, not a missing requirement. Existing protected-flow sequences assume an authenticated actor unless explicitly showing Authentication.
+تمت إضافة Standalone Sequence sources للتغطيات التي كانت غير ممثلة بصريًا:
+- `seq-17-guest-public-browsing-sequence.md`
+- `seq-18-authentication-portal-access-sequence.md`
+- `seq-19-manage-account-deactivation-reactivation-sequence.md`
+- `seq-20-open-request-lifecycle-sequence.md`
+
+هذه الملفات لا تنشئ Requirements جديدة؛ هي Interaction decompositions لمتطلبات وقرارات معتمدة.
 
 ### Sequence modeling rules
 
