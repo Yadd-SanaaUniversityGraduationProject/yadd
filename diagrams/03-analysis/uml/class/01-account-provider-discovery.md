@@ -128,13 +128,13 @@ classDiagram
 
 ## Detailed analysis interpretation
 
-- `User` واحد يمكنه امتلاك صفر أو `ProviderProfile` واحد؛ Beneficiary/Provider ليست Classes لحسابين منفصلين. الاسم القانوني مخزن في أربعة أجزاء، والهاتف موثق بـOTP، والبريد اختياري ولا يصبح login/recovery identifier قبل التحقق.
+- `User` واحد يمكنه امتلاك صفر أو `ProviderProfile` واحد؛ Beneficiary/Provider ليست Classes لحسابين منفصلين. الاسم القانوني مخزن في أربعة أجزاء، والهاتف موثق بـOTP، والبريد اختياري ولا يصبح login/recovery identifier قبل التحقق. `lastPortal` يدعم استعادة آخر Portal مستخدم، وDeactivate/Reactivate تبقيان ضمن نفس User account دون Hard Delete ذاتي.
 - `ProviderProfile.providerType` في MVP يأخذ نوعًا واحدًا فقط: `SERVICE` أو `PRODUCT`، ولا يمكن الجمع بينهما على الملف نفسه — DEC-074. `tradeName` اختياري ومسموح كاسم عرض عام للنوع PRODUCT فقط.
 - `selectProviderType(type)` تمثل اختيار نوع Provider Profile أثناء إنشاء/إعداد الملف. **تغيير النوع بعد ذلك غير محسوم حاليًا ولا يستنتج من هذه العملية**.
 - يمكن لـProviderProfile امتلاك عدة `ProviderActivity`، وكل Activity تمثل تصنيفًا داخل نوع المقدم نفسه — DEC-076.
 - `0..*` بين ProviderProfile وProviderActivity تسمح بوجود Draft Provider Profile دون تصنيفات مؤقتًا؛ قبل أهلية وظائف التقديم يجب وجود Activity واحدة على الأقل. Service Provider يحتاج Identity Verified؛ Product Provider لا يحتاج Government ID ولكنه يحتاج Account/Profile eligibility.
 - يجب أن يكون `Category.categoryType` متوافقًا مع `ProviderProfile.providerType` لكل ProviderActivity.
-- `Area` يمثل District/Neighborhood hierarchy بصورة تحليلية. علاقة `adjacent to` تمثل الجوار المدار داخل YADD، وليس GPS Radius.
+- `Area` يمثل District/Neighborhood hierarchy بصورة تحليلية. **UI convention:** المستخدم يختار/يرى Neighborhood فقط في discovery/request/service-area interfaces، بينما District مشتق داخليًا من الـNeighborhood ويبقى جزءًا من نموذج البيانات. علاقة `adjacent to` تمثل الجوار المدار داخل YADD، وليس GPS Radius.
 - تمثل علاقة `ProviderProfile ↔ Area` مفهوم مناطق الخدمة مباشرة في Class View بدل إبقاء `ProviderServiceArea` كصندوق Class بلا سلوك أو Attributes مستقلة على مستوى التحليل. إذا احتاجت العلاقة Attributes مستقلة في التصميم الفيزيائي، يمكن إعادة تمثيلها Association Class في Chapter Four.
 - تمثل علاقة `Area ↔ Area : adjacent to` مفهوم `AreaAdjacency` مباشرة في Class View بدل إبقاء Class بلا سلوك أو Attributes مستقلة. كيفية فرض symmetry/uniqueness تبقى Design concern في Chapter Four.
 - اختلاف هذا التمثيل عن الـConceptual ERD مقصود: الـERD يستخدم associative entities `PROVIDER_SERVICE_AREA` و`AREA_ADJACENCY` لإظهار بنية البيانات، بينما الـClass View يعرضهما Associations لأن التحليل الحالي لا يثبت لهما state/behavior مستقلًا.
