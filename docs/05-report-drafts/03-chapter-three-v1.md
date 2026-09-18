@@ -333,7 +333,7 @@ Authentication هنا شرط للوصول إلى الوظائف المحمية،
 - النموذج التجاري الحالي اشتراك دوري من Providers دون عمولة معاملات.
 - YADD يدير Subscription record.
 - التحصيل خارجي ويؤكده موظف مخول.
-- تقديم Provider Responses جديدة يتطلب Provider Verified + Subscription Active.
+- تقديم Provider Responses جديدة يتطلب Active Subscription وأهلية النوع: Service Provider = Identity Verified، وProduct Provider = Account/Profile eligible دون Government ID.
 
 ### 3.6.13 Financial Boundary
 
