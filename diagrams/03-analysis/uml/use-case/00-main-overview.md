@@ -69,8 +69,11 @@ flowchart LR
 
     B --- MANAGE_ACC
     B --- SWITCH
+    B --- MANAGE_ACCOUNT
+    B --- SWITCH_PORTAL
     B --- UC01
     B --- UC02
+    B --- REPUBLISH
     B --- REPUBLISH
     B --- UC04
     B --- UC05
@@ -81,6 +84,8 @@ flowchart LR
 
     MANAGE_ACC --- P
     SWITCH --- P
+    MANAGE_ACCOUNT --- P
+    SWITCH_PORTAL --- P
     UC01 --- P
     UC03 --- P
     UC05 --- P
@@ -111,4 +116,6 @@ flowchart LR
 
 This overview answers only two questions: **Who interacts with YADD?** and **What major goals does each Actor have?** It intentionally avoids relationship-level detail so the diagram remains readable at repository and report scale. `Service Provider` is shown only where DEC-085 requires an actor-specific Government-ID verification goal.
 
-`Block User` and `Report User / Content` remain separate Use Cases because the current model explicitly treats blocking and reporting as independent concepts. Account management includes the approved Deactivate/Reactivate policy without self-service Hard Delete; Portal Switch uses the same User account. Republish creates a new Request from an Expired Request rather than reopening the old one. Provider subscription is managed/renewed by the Provider while authorized staff performs the manual activation/renewal confirmation.
+`Block User` and `Report User / Content` remain separate Use Cases because the current model explicitly treats blocking and reporting as independent concepts.
+
+`Manage Provider Subscription` is shown at overview level as a shared Provider/Admin goal: Provider views/renews its subscription context, while an authorized administrator performs the manual activation/renewal confirmation after external payment verification. Detailed payment-proof procedure remains open. Account management includes the approved Deactivate/Reactivate policy without self-service Hard Delete; Portal Switch uses the same User account. Republish creates a new Request from an Expired Request rather than reopening the old one. Provider subscription is managed/renewed by the Provider while authorized staff performs the manual activation/renewal confirmation.
