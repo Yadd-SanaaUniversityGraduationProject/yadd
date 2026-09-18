@@ -2,9 +2,9 @@
 
 > **الإصدار:** `v1.3`
 >
-> **الحالة:** `WORKING DRAFT — TEXT SYNCHRONIZED THROUGH DEC-077 — FINAL VISUAL REVIEW PENDING`
+> **الحالة:** `WORKING DRAFT — TEXT SYNCHRONIZED THROUGH DEC-090 — FINAL VISUAL REVIEW PENDING`
 >
-> هذه النسخة مشتقة من Decision Register وSRS v0.9.9 وBusiness Rules وLifecycles وUse Cases وDFD/UML/ERD الحالية حتى `DEC-077`. لا تتغلب على Sources of Truth ولا تجعل SRS Baselined. Working diagrams موجودة في وثائق التحليل، بينما الرسم/التصدير النهائي بالترميز القياسي والمراجعة البشرية ما يزال مطلوبًا قبل Freeze.
+> هذه النسخة مشتقة من Decision Register وSRS v0.9.10 وBusiness Rules وLifecycles وUse Cases وDFD/UML/ERD الحالية حتى `DEC-090`. لا تتغلب على Sources of Truth ولا تجعل SRS Baselined. Working diagrams موجودة في وثائق التحليل، بينما الرسم/التصدير النهائي بالترميز القياسي والمراجعة البشرية ما يزال مطلوبًا قبل Freeze.
 
 ---
 
@@ -104,7 +104,7 @@
 - في MVP يكون Provider Profile من نوع واحد فقط: `SERVICE` أو `PRODUCT`، ولا يمكن تفعيل النوعين معًا على الملف نفسه — `DEC-074`.
 - داخل النوع المختار يمكن ربط تصنيف واحد أو أكثر عبر `ProviderActivity` و`Category` — `DEC-076`.
 - يسمح Draft Provider Profile مؤقتًا بصفر تصنيفات، لكن أهلية وظائف التقديم تتطلب تصنيفًا صالحًا واحدًا على الأقل.
-- Provider Verification شرط قبل وظائف التقديم، وإرسال Provider Responses جديدة يحتاج كذلك Active Subscription.
+- Provider Verification شرط قبل وظائف التقديم حسب نوع Provider: Service Provider يحتاج Identity Verification، بينما Product Provider لا يحتاج Government ID؛ وكلاهما يحتاج Active Subscription لبدء تعاملات جديدة.
 - سياسة تغيير Provider Type بعد اختياره لم تعتمد بعد.
 
 ### 3.3.4 نموذج Actors الرئيسي
