@@ -65,6 +65,7 @@ erDiagram
     PROVIDER_PROFILE ||--o{ CONVERSATION : provider_party
     CONVERSATION ||--o{ MESSAGE : contains
     USER ||--o{ MESSAGE : sends
+    CONVERSATION ||--o{ TRANSACTION_START_REQUEST : receives
 
     USER ||--o{ TRANSACTION : beneficiary_party
     PROVIDER_PROFILE ||--o{ TRANSACTION : provider_party
@@ -96,6 +97,7 @@ erDiagram
       string email
       datetime email_verified_at
       string last_portal
+      string profile_photo_reference
       datetime deactivated_at
     }
 
@@ -184,6 +186,16 @@ erDiagram
       identifier sender_user_id FK
       string message_type
       datetime sent_at
+    }
+
+    TRANSACTION_START_REQUEST {
+      identifier transaction_start_request_id PK
+      identifier conversation_id FK
+      identifier requested_by_user_id FK
+      string status
+      datetime requested_at
+      datetime expires_at
+      datetime responded_at
     }
 
     TRANSACTION {
@@ -291,6 +303,9 @@ erDiagram
 القيد المفاهيمي هو **`{unique Conversation per Beneficiary–Provider pair}`**. طريقة فرض uniqueness فعليًا، وكذلك ربط Message/System Event بمعاملة محددة، تؤجل إلى Chapter Four.
 
 > لا يفرض Core ERD علاقة مباشرة بين `REQUEST` و`CONVERSATION`: قد تبدأ أو تستمر المحادثة في سياق Request، لكن نفس Conversation المستمرة قد تمر بعدة Request contexts عبر الزمن. طريقة تمثيل وربط تلك السياقات تؤجل إلى Physical/Interaction Design في Chapter Four دون كسر القرار المفاهيمي أعلاه.
+
+### TRANSACTION_START_REQUEST
+يمثل طلب بدء Transaction في Direct Search قبل إنشاء Transaction الفعلية. يبقى `Pending` لمدة 12 ساعة فقط، ويسمح بطلب Pending واحد بين نفس الطرفين في الوقت نفسه؛ يمكن أن ينتهي `Confirmed` أو `Rejected` أو `Expired` دون إغلاق Conversation — DEC-082.
 
 ### TRANSACTION
 هو الكيان المركزي بعد بدء التعامل الرسمي.
@@ -461,7 +476,7 @@ erDiagram
 11. Conversation واحدة بين نفس الطرفين يمكن أن ترتبط بعدة Transactions عبر الزمن — DEC-075.
 12. يجب أن يكون زوج `(beneficiary_user_id, provider_profile_id)` فريدًا مفاهيميًا داخل `CONVERSATION`; آلية فرضه الفيزيائية تحسم في Chapter Four.
 13. Direct Search Transaction قد تكون بلا Request/Provider Response — DEC-066/069.
-14. Transaction الناتجة من Direct Search لا تنشأ إلا بعد Mutual Start Confirmation — DEC-069.
+14. `TRANSACTION_START_REQUEST` في Direct Search يبقى Pending حتى 12 ساعة، وبحد أقصى Pending واحد لكل Conversation/طرفين؛ Confirmed فقط ينشئ Transaction — DEC-082.
 15. كل Invoice Version تنتمي إلى Transaction واحدة وتحتوي بندًا واحدًا على الأقل.
 16. Transaction `Completed` تسمح Provider Rating واحدة بحد أقصى من Beneficiary، وتحتوي Overall Stars + خمسة Structured Textual Criteria + Optional Comment — DEC-087.
 17. Transaction `Completed` تسمح Beneficiary Rating واحدة بحد أقصى من Provider، وهي اختيارية.
