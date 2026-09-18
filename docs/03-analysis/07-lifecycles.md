@@ -144,7 +144,7 @@ stateDiagram-v2
     ProviderRatingSubmitted --> [*]
 ```
 
-- النجوم 1–5 إلزامية والتعليق اختياري.
+- تقييم Provider هو Hybrid: Overall Stars 1–5 + خمسة Structured Textual Criteria حسب Provider Type إلزامية، والتعليق النصي اختياري.
 - لا يفتح التقييم لمعاملة ملغاة أو `Disputed` أو غير مكتملة.
 - اكتمال هذا التقييم لا يغير Transaction من `Completed` إلى حالة أخرى.
 
