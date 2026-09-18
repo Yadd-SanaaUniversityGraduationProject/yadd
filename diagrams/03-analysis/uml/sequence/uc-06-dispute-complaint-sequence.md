@@ -1,13 +1,13 @@
 # UC-06 — Transaction Complaint / Administrative Review Sequence Diagram
 
-> **Status:** `REVIEW DRAFT — NOT BASELINED`
+> **Status:** `REVIEW DRAFT — SYNCHRONIZED 2026-09-18 — NOT BASELINED`
 >
 > **Purpose:** Sequence Diagram مشتق من **Alternative — Dispute** داخل `UC-06 — Create, Revise and Approve Final Invoice`. هذا الملف لا ينشئ Use Case جديدة؛ هو Scenario منفصل لأن مسار الشكوى والمراجعة الإدارية معقد بما يكفي ليكون رسمًا مستقلًا وقابلًا للعرض على A4.
 
 ## Source basis
 
 - **Approved behavior:** dispute alternative in `UC-06` from `docs/03-analysis/08-use-cases.md`.
-- **Team decisions:** `DEC-073`, `DEC-084`.
+- **Team decisions:** `DEC-073`, `DEC-084`, `DEC-089` where an administrative moderation outcome is applicable.
 - **Business rules:** `BR-040`, `BR-059`.
 - **Detailed model:** `docs/03-analysis/15-invoice-approval-and-dispute.md`.
 - **Precondition:** disagreement continues before final invoice approval.
