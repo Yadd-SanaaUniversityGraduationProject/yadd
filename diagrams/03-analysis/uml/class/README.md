@@ -1,6 +1,6 @@
 # UML Class Diagram Package — Detailed Analysis Class Model
 
-> **Status:** `SEMANTICALLY VERIFIED — TEAM APPROVED — NOT BASELINED — SYNCHRONIZED THROUGH DEC-090 — VISUAL/A4 FINALIZATION PENDING`
+> **Status:** `SEMANTICALLY VERIFIED — TEAM APPROVED — NOT BASELINED — SYNCHRONIZED THROUGH DEC-091 — VISUAL/A4 FINALIZATION PENDING`
 >
 > هذه الحزمة تمثل **Detailed Analysis Class Model واحدًا** مشتقًا من مصادر التحليل الحاكمة في المشروع. يوجد **Integrated Master View** للنموذج كاملًا، إضافة إلى ثلاث Detailed Subject-Area Views مستقلة بصريًا لأسباب الوضوح والطباعة على A4. هذا لا يعني وجود أربعة نماذج أو Designs منفصلة.
 
@@ -22,6 +22,8 @@
 الـMaster يجمع هذه المناطق في رسم واحد، بينما الـDetailed Views تعرض كل منطقة بمستوى قراءة أفضل. الـClasses المشتركة بين المناطق تعمل كـAnchor Classes ولا تمثل نسخًا مستقلة.
 
 ## Modeling rules
+
+- DEC-091 is an implementation-stack decision. It does not convert this Detailed Analysis Class Model into a physical/code class design; exact ASP.NET Core / EF Core / Identity / SQL Server mappings remain Chapter Four design work.
 
 - المصدر الأعلى للمعنى يبقى Decision Register ثم SRS/Business Rules/Lifecycles/Use Cases والـConceptual ERD.
 - `Guest` المعتمد في DEC-077 هو **Actor خارجي غير authenticated** وليس Domain Class/Entity؛ لذلك لا يضاف Class باسم `Guest` ولا علاقة لهوية مخزنة قبل Create Account/Log In.
