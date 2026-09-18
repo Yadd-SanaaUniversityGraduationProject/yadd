@@ -83,8 +83,12 @@ diagrams/
 - `03-analysis/uml/sequence/uc-08-block-report-sequence.md`
 - `03-analysis/uml/sequence/uc-09-provider-verification-sequence.md`
 - `03-analysis/uml/sequence/uc-10-manage-portfolio-catalog-sequence.md`
+- `03-analysis/uml/sequence/seq-17-guest-public-browsing-sequence.md`
+- `03-analysis/uml/sequence/seq-18-authentication-portal-access-sequence.md`
+- `03-analysis/uml/sequence/seq-19-manage-account-deactivation-reactivation-sequence.md`
+- `03-analysis/uml/sequence/seq-20-open-request-lifecycle-sequence.md`
 
-`UC-00` Guest browsing/auth-gating behavior is currently specified semantically in `08-use-cases.md`/`10-UML.md`; a standalone Sequence/Activity source may be added only if needed for the final academic package.
+`UC-00` Guest browsing/auth-gating now has a standalone Sequence source. Authentication/portal access, account management/deactivation/reactivation, and the Open Request inactivity/expiry/republish lifecycle also have standalone Sequence sources. These are interaction decompositions of approved behavior, not new domain scope.
 
 ### Class
 
@@ -139,6 +143,11 @@ Every current diagram must preserve these rules:
 - Beneficiary→Provider rating is mandatory; Provider→Beneficiary rating is optional.
 - Block and Report are separate concepts; neither implies the other.
 - Neighborhood adjacency is managed data, not GPS-radius logic.
+- User-facing discovery/request/service-area UI exposes Neighborhood only; District remains internal/derived from Neighborhood.
+- Request inactivity uses 24h/48h reminders and 72h Expired; meaningful Beneficiary activity resets the clock, Provider Response arrival alone does not; Republish creates a new Request.
+- Returning-user login uses verified phone or verified email + password; Forgot Password uses verified recovery channels; Portal switching uses the same User account and remembers lastPortal.
+- Deactivate/Reactivate exists; no self-service Hard Delete in MVP.
+- Expired Subscription does not remove Provider Portal access or stop existing Active Transactions; it blocks new Provider Responses and new Direct Search Transactions until renewal.
 - Transaction cancellation records actor, reason and time.
 - No Beneficiary↔Provider Payment/Escrow/Refund/Settlement process/entity inside YADD.
 
