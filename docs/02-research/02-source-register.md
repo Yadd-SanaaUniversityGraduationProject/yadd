@@ -43,6 +43,10 @@
 | PST-EXT-07 | Similar international system | 99designs | — | وصف دراسة قدمه الفريق؛ المصدر الرسمي سيضاف | International Overview | بانتظار التحقق الرسمي |
 | PST-EXT-08 | Similar international system | Toptal | — | وصف دراسة قدمه الفريق؛ المصدر الرسمي سيضاف | International Overview | بانتظار التحقق الرسمي |
 
+| TECH-MS-01 | Official technical docs | Microsoft — SQL Server EF Core Database Provider | 2026 current | https://learn.microsoft.com/en-us/ef/core/providers/sql-server/ | DEC-091 / Technical Feasibility: official EF Core provider and configuration for Microsoft SQL Server | نعم — 2026-09-19 |
+| TECH-MS-02 | Official technical docs | Microsoft — Introduction to Identity on ASP.NET Core | current | https://learn.microsoft.com/en-us/aspnet/core/security/authentication/identity | DEC-091: Identity capabilities and its typical SQL Server/EF Core persistence model | نعم — 2026-09-19 |
+| TECH-MS-03 | Official technical docs | Microsoft — Configure JWT bearer authentication in ASP.NET Core | current | https://learn.microsoft.com/en-us/aspnet/core/security/authentication/configure-jwt-bearer-authentication | DEC-091: JWT Bearer direction for protected Flutter/API requests | نعم — 2026-09-19 |
+
 ## ملاحظات صلاحية المصدر الجغرافي
 
 - `YEM-GEO-01` يذكر 10 مديريات و89 حيًا في أمانة العاصمة، لكنه يستند إلى بيانات تعداد 2004؛ لذلك يستخدم كدليل على **هيكل إداري قابل للإدارة** فقط، ولا يعتمد كقائمة نهائية حالية لأسماء الأحياء أو علاقات الجوار.
