@@ -162,6 +162,8 @@ Manages:
 - Manage Account, Deactivate/Reactivate and last-Portal persistence/switching for the same User account;
 - one User account per person;
 - one optional Provider Profile per User;
+- last-Portal persistence and switching between Beneficiary/Provider contexts using the same User account;
+- User Account management including verification-sensitive Mobile/Email changes and Deactivate/Reactivate according to the current account policy;
 - exactly one Provider Type (`SERVICE` or `PRODUCT`) per Provider Profile in MVP — DEC-074;
 - multiple Provider Activities/Categories inside that type, with at least one required before provider-function eligibility — DEC-076;
 - service areas; user-facing location selection uses Neighborhood while District is derived internally from Neighborhood;
@@ -173,6 +175,7 @@ Guest itself is not stored as a domain account/entity merely because anonymous b
 
 Manages:
 - public Direct Search/browse for Guest and authenticated Beneficiary;
+- Neighborhood as the user-facing location selector/display level in discovery/request/provider-location UI, while District is derived internally and remains part of the data model;
 - public Provider Profile/Portfolio-Catalog discovery using only approved public fields;
 - creation/publication of Request for authenticated Beneficiary only;
 - discovery of eligible Providers using provider type/category/area constraints;
