@@ -1,6 +1,6 @@
 # Activity Diagram — Report and Administrative Review
 
-> **Status:** `REVIEW DRAFT — NOT BASELINED — SYNCHRONIZED 2026-09-18 THROUGH DEC-089`
+> **Status:** `REVIEW DRAFT — NOT BASELINED — SYNCHRONIZED 2026-09-18 THROUGH DEC-090`
 >
 > **Type:** Derived workflow view focused on the Report branch of `UC-08 — Block and Report User / Content`.
 
@@ -16,8 +16,9 @@
 ```mermaid
 flowchart TD
     S([Start]) --> A[User Chooses Report]
-    A --> B[Select Report Target and Enter Details]
-    B --> C[Submit Report]
+    A --> B[Select Report Target + Required Reason]
+    B --> B1[Optional Description / Supporting Evidence]
+    B1 --> C[Submit Report]
     C --> D[Record Report and Linked Evidence References]
     D --> E[Queue Report for Administrative Review]
     E --> F[Authorized Administrator Opens Report]
@@ -26,10 +27,10 @@ flowchart TD
     G --> H{Administrative Action Warranted Under Approved Policy?}
     H -- Yes --> I{Select Human-Authorized Outcome}
     I --> I1[Warning / Content Removal / Temporary Restriction / Account Suspension / Permanent Ban]
-    I1 --> J[Save Outcome + Reason + Admin + Timestamp]
+    I1 --> J[Save Outcome + Reason + Admin + Timestamp + Linked Evidence]
     J --> Z1([End — Review Recorded])
 
-    H -- No --> K[Record No Violation + Reason / Review Context]
+    H -- No --> K[Record No Violation + Reason + Admin + Timestamp + Linked Evidence]
     K --> Z2([End — Review Recorded])
 ```
 
@@ -39,7 +40,9 @@ flowchart TD
 - A Report is not proof of a violation and does not automatically justify a final punishment.
 - Administrative action must follow approved YADD policy and human authorization.
 - AI or behavioral Flags may support review elsewhere in Trust & Safety, but this Activity Diagram does not make AI a mandatory step for every Report.
+- Generic Report requires a Reason. Generic Description is not made universally mandatory; it remains context/policy-dependent. Transaction Complaint has its separate required Reason + Description rule.
 - No numeric risk threshold or automatic punishment is invented here. The approved outcome catalog is: No Violation, Warning, Content Removal, Temporary Restriction, Account Suspension, Permanent Ban; high-impact outcomes require human authorization.
+- A Temporary Restriction duration follows the applicable approved policy; no universal duration is hard-coded.
 
 ## Scope boundary
 
