@@ -127,7 +127,7 @@ flowchart LR
 
 ## Main success path
 
-1. يحدد Beneficiary التصنيف والمنطقة/الفلاتر المتاحة.
+1. يحدد Beneficiary التصنيف والحي/الفلاتر المتاحة؛ لا يظهر District كحقل مستقل ويُستنتج داخليًا من الحي.
 2. يعرض YADD Providers المؤهلين للعرض وفق القواعد الحالية.
 3. يفتح Beneficiary Provider Profile ويستعرض Portfolio/Catalog.
 4. يبدأ/يفتح التواصل الخاص مع Provider.
@@ -161,17 +161,17 @@ flowchart LR
 
 # UF-03 — Create, Publish and Close Request
 
-- **Status:** Supported with open expiry policy.
+- **Status:** Supported.
 - **Goal:** تمكين Beneficiary من نشر حاجة لخدمة/منتج بدل البحث عن Provider مباشرة.
 - **Primary actor:** Beneficiary.
 - **Related screens:** `BEN-01 → BEN-03 → BEN-04 / BEN-02`.
-- **Sources:** UC-02؛ UR-REQ-01/02/03؛ BR-001/002/018/020/031؛ DEC-012/013/048/049.
+- **Sources:** UC-02؛ UR-REQ-01/02/03/04؛ BR-001/002/018/020/031/052/053؛ DEC-012/013/031/048/049/081.
 
 ## Main success path
 
 1. يبدأ Beneficiary `Create Request`.
 2. يحدد Service أو Product والفئة المناسبة.
-3. يحدد المديرية والحي.
+3. يختار الحي في الواجهة؛ يستنتج النظام المديرية داخليًا من الحي المختار وفق نموذج الموقع الحالي.
 4. يضيف وصفًا حرًا.
 5. يمكنه إضافة صور ومعلومات إضافية اختيارية.
 6. يمكنه إضافة سعر استرشادي اختياري.
@@ -183,10 +183,12 @@ flowchart LR
 - قبل اختيار Provider يستطيع Beneficiary إغلاق الطلب إذا لم يعد يحتاجه.
 - هذا `Request Closure` وليس `Transaction Cancellation`.
 
-## Open policy
+## Request expiry and location policy
 
-- Reminder/Expiry معتمد: 24h ثم 48h ثم Expired عند 72h من عدم نشاط Beneficiary؛ Republish ينشئ Request جديدًا.
+- Reminder بعد 24h ثم 48h، ثم `Expired` عند 72h من عدم نشاط Beneficiary؛ Republish ينشئ Request جديدًا — DEC-081.
+- **Approved UI Decision:** واجهات المستخدم تعرض/تطلب الحي فقط؛ المديرية لا تظهر كحقل مستقل وتُستنتج داخليًا من الحي مع بقاء نموذج `District + Neighborhood` في طبقة البيانات/القواعد.
 - التوسع إلى الأحياء المجاورة يحتاج موافقة Beneficiary؛ بيانات الجوار والتوقيت التشغيلي ما تزال مفتوحة.
+- **Needs Verification — LOC-DATA-Q01:** قائمة الأحياء وربط كل حي بمديريته يجب التحقق منها قبل التنفيذ.
 
 ```mermaid
 flowchart LR
@@ -492,6 +494,7 @@ flowchart LR
 13. Provider Responses الجديدة تحتاج Verified + Active Subscription.
 14. Public Provider Profile لا يكشف private direct-contact أو sensitive verification data.
 15. Block وReport عمليتان مستقلتان.
+16. **Neighborhood-only UI:** في واجهات الموقع يختار/يرى المستخدم الحي فقط؛ District مشتق داخليًا ولا يُعرض كحقل مستقل، مع بقاء LOC-DATA-Q01 للتحقق من الربط.
 
 # 4. Design Decisions Still Not Authorized by These Flows
 
@@ -501,7 +504,6 @@ flowchart LR
 - هل بعض الحالات Page أو Modal أو Sheet.
 - آلية exact return-to-intended-action بعد Authentication.
 - ترتيب Search ranking أو recommendation algorithm.
-- مدد Request expiry/reminders.
 - أنواع وثائق Verification التفصيلية وسياسة retention.
 - Subscription plans/prices/external-payment evidence procedure.
 - أثر Expired subscription على search visibility أو already-active Transactions.
