@@ -1,8 +1,8 @@
 # الفصل الأول — المقدمة
 
-> **الإصدار:** `v1.1`
+> **الإصدار:** `v1.2`
 >
-> **الحالة:** `TEXT SYNCHRONIZED — READY FOR PRELIMINARY DEFENSE REVIEW`
+> **الحالة:** `v1.2 — ACADEMIC STRUCTURE SYNCHRONIZED — PRELIMINARY DEFENSE REVIEW OPEN`
 >
 > هذه النسخة محدثة وفق متطلبات الجامعة الأصلية وDecision Register وSRS الحالي. تبقى بعض نقاط الجدوى والتحقق مصنفة `Needs Verification` ولا تحول إلى Facts أو قرارات نهائية دون Evidence.
 
@@ -179,13 +179,65 @@ SRS الحالي ما يزال `NOT BASELINED`، لذلك لا يعني عرض �
 
 ---
 
-## 1.10 خطة العمل — Work Plan
+## 1.10 خطة العمل — Project Work Plan
 
-خارطة العمل الحالية هي `PRELIMINARY DEFENSE ROADMAP v3`، مع أولوية إغلاق الفصول الأربعة والمخططات والتصميم قبل Freeze داخلي في **11 سبتمبر 2026**، وتبدأ فترة المناقشات الأولية في **12 سبتمبر 2026**. يوم مناقشة YADD نفسه غير مثبت حاليًا.
+وفق هيكل الجامعة، يجب أن يتضمن هذا القسم **Task Schedule + Gantt Chart + PERT Chart**. المصدر التشغيلي للخطة هو `docs/01-pm/05-work-plan.md` بحالة `ACTIVE — PRELIMINARY DEFENSE ROADMAP v3`.
 
-المسار الحرج:
+> **ملاحظة حالة:** التواريخ التالية هي التواريخ المسجلة في Work Plan الحالي. بما أن بعض هذه التواريخ أصبحت ماضية زمنيًا، فإن أي إعادة جدولة فعلية لاحقة يجب أن تُحدّث أولًا في Work Plan ثم تُزامن هنا، ولا تُخترع داخل الفصل.
+
+### 1.10.1 جدول المهام — Task Schedule
+
+| المرحلة / المخرج | التاريخ/النافذة المسجلة | الحالة التشغيلية في Work Plan |
+|---|---|---|
+| تثبيت الحوكمة والمتطلبات الحرجة | 3 سبتمبر 2026 | أُغلق معظم Core meaning؛ تبقى عناصر تحقق غير مانعة |
+| بناء ومراجعة المخططات الرئيسية | 4 سبتمبر 2026 | Working models موجودة؛ المراجعة/التصدير النهائي بقي مفتوحًا |
+| حزمة مراجعة المخططات للمشرف | 5 سبتمبر 2026 | Gate مسجل؛ الإغلاق النهائي البصري/التسليم يحتاج تحققًا من الحالة الحالية |
+| استكمال التصحيح + Database Design + Interfaces + Feasibility | 6–8 سبتمبر 2026 | أعمال تصميم/جدوى كانت مفتوحة في الخطة |
+| تجميع Chapters 1–4 | 9 سبتمبر 2026 | توجد Working Drafts؛ الإغلاق النهائي يعتمد على الاتساق والمخرجات الناقصة |
+| Traceability and Consistency Audit | 10 سبتمبر 2026 | كان مقررًا كمرحلة مراجعة نهائية |
+| Final Freeze / PPT / Print | 11 سبتمبر 2026 | Internal target مسجل في Work Plan |
+| Preliminary Defense Window | تبدأ 12 سبتمبر 2026 | اليوم الدقيق لفريق YADD غير مثبت في المصدر الحالي |
+
+المسار الحرج المسجل:
 
 `Research/Requirements stabilization → Chapter 3 models → ERD → Chapter 4 design → Chapters integration → Consistency/Traceability audit → Freeze`
+
+### 1.10.2 مخطط جانت — Gantt Chart
+
+المخطط التالي مشتق مباشرة من `docs/01-pm/05-work-plan.md` ولا يضيف تواريخ جديدة:
+
+```mermaid
+gantt
+    title YADD Preliminary Defense Readiness — September 2026
+    dateFormat  YYYY-MM-DD
+    axisFormat  %d %b
+    section Urgent Diagram Gate
+    Governance/SRS/Core sync              :crit, p0, 2026-09-03, 1d
+    Main diagrams build/review            :crit, p1, 2026-09-04, 1d
+    Supervisor diagram package            :milestone, d0, 2026-09-05, 0d
+    section Analysis & Design
+    Diagram corrections / DB / UI         :crit, p2, 2026-09-06, 3d
+    section Academic Draft
+    Chapters 1-4 integration              :crit, p3, 2026-09-09, 1d
+    Audit                                 :crit, p4, 2026-09-10, 1d
+    Final freeze / PPT / print            :crit, p5, 2026-09-11, 1d
+    section Defense Window
+    Preliminary discussions begin         :milestone, d1, 2026-09-12, 0d
+```
+
+### 1.10.3 مخطط PERT — PERT Chart
+
+**الحالة الحالية: `OPEN — REQUIRED BY UNIVERSITY STRUCTURE`.**
+
+لا يوجد في Work Plan الحالي PERT Diagram فعلي يمكن نقله إلى الفصل. وجود كلمة PERT في عنوان الخطة لا يعني إنجاز المخطط. يحتاج PERT إلى **اعتماديات ومدد موثقة للأنشطة**؛ لذلك لن تُنشأ مدد متفائلة/مرجحة/متشائمة أو علاقات شبكة تخمينية فقط لإكمال الشكل.
+
+قبل الإغلاق الأكاديمي لهذا البند يجب:
+1. تثبيت الأنشطة التي ستدخل شبكة PERT من Work Plan الفعلي.
+2. توثيق Dependencies بينها.
+3. توثيق/اعتماد المدد المستخدمة.
+4. رسم الشبكة وحساب المسار الحرج بالطريقة التي يعتمدها الفريق/المشرف.
+
+حتى تنفيذ ذلك، يبقى هذا البند فجوة أكاديمية معلنة ولا يُوسم كمكتمل.
 
 ---
 
