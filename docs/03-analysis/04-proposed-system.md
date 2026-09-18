@@ -154,16 +154,16 @@ Create Account: First/Father/Grandfather/Family Name + Mobile + Password + Terms
 
 يدعم النظام:
 
-- Provider Verification قبل صلاحيات التقديم.
-- مراجعة بشرية نهائية لقرار Verification.
-- AI كمساعد في Verification وTrust & Safety، دون قرار نهائي منفرد عالي الأثر.
+- Service Provider Identity Verification قبل صلاحيات التقديم، بينما Product Provider لا يحتاج Government ID في MVP.
+- مراجعة بشرية نهائية لقرار Service Provider Identity Verification.
+- AI كمساعد في Service Provider Identity Verification وTrust & Safety، دون قرار نهائي منفرد عالي الأثر.
 - Safety Flags تحتوي ما يكفي ليفهم الموظف سبب/فئة الاشتباه، بينما قائمة الفئات والـthresholds ما تزال مفتوحة.
 - Block + Report للمستخدم authenticated؛ Guest لا ينفذهما قبل Authentication.
 - مراجعة البلاغات/Flags إداريًا.
 - إدارة سجل اشتراك Provider Profile، مع تحصيل خارجي وتأكيد من موظف مخول.
 - مراجعة Complaint المرتبطة بمعاملة وفق حدود `DEC-073`: تطبيق سياسة المنصة وإجراءاتها الإدارية فقط، دون تحكيم مالي/تجاري.
 
-**المرجع:** DEC-034..043/053/054/073/077.
+**المرجع:** DEC-035..043/053/054/073/077/085/086/088/089/090.
 
 ## 9. Financial and Fulfillment Boundaries
 
@@ -213,7 +213,7 @@ Create Account: First/Father/Grandfather/Family Name + Mobile + Password + Terms
 12. Create, Revise and Approve Final Invoice.
 13. Raise Complaint / Administrative Review for unresolved pre-approval disputes.
 14. Rate Provider and optionally Rate Beneficiary after Completed.
-15. Provider Verification.
+15. Service Provider Identity Verification / Product Provider eligibility.
 16. Block, Report and Administrative Review.
 17. Manage Provider Subscription Records.
 
@@ -223,13 +223,11 @@ Create Account: First/Father/Grandfather/Family Name + Mobile + Password + Terms
 
 النقاط التالية لا تُملأ بتخمين ولا تمنع Core Flow الحالي:
 
-- Request expiry/reminder timing.
-- Pending invoice escalation timing/policy.
 - Abuse detection thresholds.
 - Usability and low-connectivity validation.
 - Official district/neighborhood seed data.
-- Accepted identity document types and retention periods.
+- Verification-data retention period and any profession-specific licensing requirements.
 - Detailed AI provider/threshold/retention policy.
-- Subscription package prices/payment-proof details and exact expiry effects.
+- Final subscription price/payment-proof details and whether an Expired Provider remains visible in public search.
 - Provider Type switching policy after initial selection.
 - Exact UX continuation after Guest authenticates from a protected CTA; this does not change the authorization rule.
