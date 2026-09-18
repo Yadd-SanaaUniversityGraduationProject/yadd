@@ -1,6 +1,6 @@
 # YADD Diagrams — Working Sources and Governance
 
-> **Diagram drafting status:** `WORKING PACKAGE SYNCHRONIZED 2026-09-18 THROUGH DEC-090`
+> **Diagram drafting status:** `WORKING PACKAGE SYNCHRONIZED 2026-09-19 THROUGH DEC-091`
 >
 > هذه الصفحة تحدد مصادر السلطة، بنية ملفات الرسم، وقواعد التصدير حتى لا تختلط Semantic Models مع Editable Diagram Sources أو Generated Exports.
 
@@ -116,6 +116,8 @@ The following are Legacy/derived/stale paths and must **not** be used as the sou
 Legacy material is retained for history during stabilization; it is not the current modeling source.
 
 ## 5. Current Diagram Invariants
+
+> **DEC-091 technical-stack boundary:** DEC-091 fixes the implementation stack (ASP.NET Core / EF Core / SQL Server / Identity / Cookie + JWT direction / external AI APIs), but it does not turn analysis-level `*UI`, `*Controller`, scheduler, or assistant roles into approved implementation classes. Diagram semantics remain governed by the analysis decisions and requirements.
 
 Every current diagram must preserve these rules:
 
