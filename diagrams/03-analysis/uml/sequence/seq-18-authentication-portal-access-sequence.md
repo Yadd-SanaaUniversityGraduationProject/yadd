@@ -1,6 +1,6 @@
 # Sequence 18 — Authentication & Portal Access
 
-> **Status:** `REVIEW DRAFT — SYNCHRONIZED 2026-09-18 — NOT BASELINED`
+> **Status:** `REVIEW DRAFT — SYNCHRONIZED 2026-09-19 — NOT BASELINED`
 >
 > **Purpose:** Represents approved returning-user Authentication, password recovery, last-portal restoration and portal switching without creating separate Beneficiary/Provider accounts.
 
@@ -14,6 +14,7 @@
 ## Diagram
 
 ```mermaid
+%%{init: {"theme":"base","themeVariables":{"background":"#FFFFFF","fontFamily":"Arial","actorBkg":"#F8E8C8","actorBorder":"#7E7E7E","actorTextColor":"#222222","actorLineColor":"#8A8A8A","signalColor":"#A07878","signalTextColor":"#5C3F3F","labelBoxBkgColor":"#FFFFFF","labelBoxBorderColor":"#7E7E7E","labelTextColor":"#222222","loopTextColor":"#222222","noteBkgColor":"#FFFFFF","noteBorderColor":"#7E7E7E","noteTextColor":"#222222","activationBkgColor":"#C8E0E8","activationBorderColor":"#7B969C","sequenceNumberColor":"#222222"}}}%%
 sequenceDiagram
     actor U as User
     participant UI as AuthenticationUI «boundary»
