@@ -8,7 +8,7 @@
 
 هذا الملف لا يمثل Class Model رابعًا مستقلًا. هو **Master Integration View** يجمع نفس الـAnalysis Classes الموجودة في الـViews الثلاثة في رسم واحد بعد إزالة التكرار، لإثبات أن الحزمة كلها نموذج Class واحد متكامل.
 
-- عدد الـClasses الفريدة في الـMaster بعد مزامنة DEC-078..090: **28**.
+- عدد الـClasses الفريدة في الـMaster بعد مزامنة DEC-078..090: **29**.
 - لا يضيف هذا الـView أي علاقة دلالية جديدة غير موجودة في Views 1–3.
 - الـClasses التي كانت تظهر في أكثر من View مثل `User`, `ProviderProfile`, `Request`, `ProviderResponse`, `Conversation`, `ShowcaseItem`, و`Transaction` تظهر هنا مرة واحدة فقط بعد جمع تفاصيلها المتوافقة.
 - هذا الـMaster يثبت التكامل والحدود بين المجالات، بينما تبقى Views 1–3 هي العرض الأكثر قابلية للقراءة عند مناقشة التفاصيل والطباعة على A4.
@@ -38,6 +38,7 @@ classDiagram
         -DateTime emailVerifiedAt
         -String accountStatus
         -String lastPortal
+        -String profilePhotoReference
         +createRequest() Request
         +createProviderProfile() ProviderProfile
         +deactivate()
@@ -121,6 +122,17 @@ classDiagram
         +sendMessage() Message
         +requestTransactionStart()
         +confirmTransactionStart()
+    }
+
+    class TransactionStartRequest {
+        -Identifier transactionStartRequestId
+        -String status
+        -DateTime requestedAt
+        -DateTime expiresAt
+        -DateTime respondedAt
+        +confirm()
+        +reject()
+        +expire()
     }
 
     class Message {
@@ -300,6 +312,8 @@ classDiagram
     User "1" --> "0..*" Message : sends
     Message "1" --> "0..*" MessageAttachment : has
     Conversation "1" --> "0..*" SystemEvent : records boundaries
+    Conversation "1" --> "0..*" TransactionStartRequest : start requests
+    User "1" --> "0..*" TransactionStartRequest : requests
 
     User "1" --> "0..*" Transaction : beneficiary party
     ProviderProfile "1" --> "0..*" Transaction : provider party
