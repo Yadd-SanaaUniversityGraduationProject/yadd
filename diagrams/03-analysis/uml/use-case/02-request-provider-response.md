@@ -25,6 +25,7 @@ flowchart LR
             direction LR
             CREATE_REQ(["Create Request"]):::usecase
             CLOSE_REQ(["Close Open Request"]):::usecase
+            REPUBLISH(["Republish Expired Request"]):::usecase
             COMPARE(["Compare Provider Responses"]):::usecase
             CHAT(["Communicate / Inquire"]):::usecase
             SELECT(["Select Provider"]):::usecase
@@ -49,6 +50,7 @@ flowchart LR
 
     B --- CREATE_REQ
     B --- CLOSE_REQ
+    B --- REPUBLISH
     B --- COMPARE
     B --- CHAT
     B --- SELECT
@@ -80,12 +82,13 @@ flowchart LR
 - Request Closure is allowed before Provider selection and is not Transaction Cancellation.
 - A Provider may keep only one active Provider Response per Request.
 - `Edit Provider Response` and `Withdraw Provider Response` require an existing active response, an `Open` Request and no selected Provider.
-- `Validate Response Eligibility` is mandatory for a new Provider Response and enforces the current eligibility rules, including Verified Provider, Active Subscription and Open Request.
+- `Validate Response Eligibility` is mandatory for a new Provider Response and enforces type-specific eligibility + Active Subscription + Open Request. SERVICE requires Identity Verified; PRODUCT does not require Government-ID verification.
 - `Select Provider` always creates one Active Transaction for the selected Provider and closes the Request to new responses.
 - `Communicate / Inquire` before selection is optional and therefore extends comparison rather than being required by it.
 
 ## DEC-081/082/085/086 synchronization
 
-- Request inactivity: reminders at 24h/48h and Expired at 72h; Republish creates a new Request.
+- Request inactivity: reminders at 24h/48h and Expired at 72h; meaningful Beneficiary activity resets the clock, Provider Response arrival alone does not; Republish creates a new editable Request and never reopens the expired one.
+- User-facing Request location uses Neighborhood only; District is derived internally from the selected Neighborhood.
 - Provider Response has no independent expiry; it ends with Withdraw/Selection/Request Close/Expiry.
 - Submit Provider Response eligibility is type-specific: SERVICE requires Identity Verified; PRODUCT requires Account/Profile eligible; both require Active Subscription.
