@@ -1,6 +1,6 @@
 # UC-05 — Cancel Active Transaction Sequence Diagram
 
-> **Status:** `REVIEW DRAFT — NOT BASELINED`
+> **Status:** `REVIEW DRAFT — SYNCHRONIZED 2026-09-18 — NOT BASELINED`
 >
 > **Purpose:** Sequence Diagram مشتق من `UC-05 — Cancel Active Transaction` فقط. يوضح إلغاء Transaction بعد أن تكون قد بدأت رسميًا، ولا يخلط ذلك مع إغلاق Request قبل الاختيار.
 
