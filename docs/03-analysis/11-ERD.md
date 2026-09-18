@@ -1,10 +1,10 @@
 # Conceptual ERD — YADD Preliminary Defense
 
-> **الحالة:** `DRAFT FOR PRELIMINARY DEFENSE — CORE SYNCHRONIZED 2026-09-18 THROUGH DEC-090`
+> **الحالة:** `DRAFT FOR PRELIMINARY DEFENSE — CORE SYNCHRONIZED 2026-09-19 THROUGH DEC-091`
 >
 > هذا ERD **مفاهيمي للفصل الثالث** وليس Relation Schema أو Database Design نهائيًا. الأنواع الفيزيائية، PK/FK التفصيلية، الفهارس، القيود التنفيذية وأسماء الجداول النهائية تنتقل إلى Chapter Four.
 >
-> **المراجع الحاكمة:** DEC-008..016/018/019/021/023..025/030..043/046..056/063..090 + `05-SRS.md` + `06-business-rules.md` + `07-lifecycles.md` + `08-use-cases.md`.
+> **المراجع الحاكمة:** DEC-008..016/018/019/021/023..025/030..043/046..056/063..091 + `05-SRS.md` + `06-business-rules.md` + `07-lifecycles.md` + `08-use-cases.md`.
 >
 > جميع التسميات داخل الرسم النهائي تكون باللغة الإنجليزية وفق DEC-072.
 
@@ -35,6 +35,7 @@
 21. `SAFETY_FLAG` و`ADMIN_AUDIT_RECORD` مفهومان داعمان معتمدان من Trust & Safety / D8؛ تمثيلهما هنا مفاهيمي فقط، بينما schema التخزين والاحتفاظ والـthresholds تبقى قرارات تصميم/سياسة مفتوحة.
 22. يجب أن يحفظ `SAFETY_FLAG` سبب/فئة الاشتباه بما يكفي للمراجعة البشرية؛ قائمة الفئات وقيم المخاطر والعتبات التفصيلية لا تزال مفتوحة.
 23. وجود `USER.phone` في النموذج لا يعني أنه حقل عام؛ وفق DEC-077 لا يعرض رقم الهاتف ضمن Public Provider Profile للGuest.
+24. DEC-091 يثبت Stack التنفيذ لكنه لا يغير الـConceptual ERD: `USER` هنا Domain concept وليس تصريحًا بأن جدول Identity الفيزيائي مطابق له، وMapping إلى ASP.NET Core Identity/EF Core/SQL Server يبقى Chapter Four. كما أن External AI API لا يضيف Entity مفاهيمية بحد ذاته ما لم يعتمد Requirement تخزين مستقل.
 
 ---
 
@@ -294,6 +295,7 @@ erDiagram
 - يمكن أن يحتوي proposed price وملاحظة و`requires_deposit`.
 - لا يوجد DepositAmount أو PaymentStatus أو Refund Entity.
 - لكل Provider Response فعالة واحدة لكل Request.
+- إنشاء Provider Response جديدة يتطلب أهلية النوع الحالية + `Active Subscription`: SERVICE يحتاج Identity Verified + ملف مؤهل، وPRODUCT يحتاج Account/Profile eligible دون Government-ID verification — DEC-085/086.
 - يجوز تعديلها أو سحبها فقط ما دام Request Open ولم يتم اختيار Provider.
 
 ### CONVERSATION / MESSAGE
@@ -313,7 +315,7 @@ erDiagram
 
 يمكن أن ينشأ:
 1. من Provider Response مختارة في Request Route.
-2. مباشرة في Direct Search Route بعد Mutual Start Confirmation.
+2. مباشرة في Direct Search Route بعد Mutual Start Confirmation **ومع بقاء Provider مؤهلًا لبدء تعامل جديد، بما في ذلك Active Subscription** — DEC-086.
 
 كل Transaction ترتبط بالمحادثة المستمرة بين الطرفين. `request_id` و`selected_response_id` اختياريان مفاهيميًا، بينما Beneficiary وProvider وConversation إلزاميون.
 
@@ -438,11 +440,10 @@ erDiagram
 
 - `USER_BLOCK` يمثل Block كعلاقة حماية مباشرة مستقلة عن `REPORT` ويدعم Unblock. Block يمنع التفاعل الجديد لكنه لا يكسر Active Transaction ولا يمنع إجراءاتها الأساسية/System Notifications — DEC-088.
 - `REPORT.target_reference` تمثيل مفاهيمي polymorphic؛ التنفيذ الفيزيائي قد يفصله إلى علاقات أكثر صرامة.
-- في Generic Report يكون `reason` مطلوبًا، بينما `description` ليست إلزامية عالميًا لكل بلاغ. Transaction Complaint تتطلب `reason + description` والمرفقات اختيارية؛ القيود الفيزيائية المناسبة حسب النوع تحسم في Chapter Four.
-- `REPORT.reason` مطلوب للبلاغ العام. `REPORT.description` لا يعد إلزاميًا لكل Generic Report؛ في Transaction Complaint تكون Reason + Description إلزاميتين والمرفقات اختيارية وفق DEC-084.
+- في Generic Report يكون `reason` مطلوبًا، بينما `description` ليست إلزامية عالميًا لكل بلاغ. Transaction Complaint تتطلب `reason + description` والمرفقات اختيارية وفق DEC-084؛ القيود الفيزيائية المناسبة حسب النوع تحسم في Chapter Four.
 - `VERIFICATION_CASE.review_note` يمثل الملاحظة/السبب عند طلب إعادة التقديم أو الرفض.
 - `SAFETY_FLAG.reason_category` يمثل سبب/فئة الاشتباه المطلوبة للمراجعة البشرية؛ taxonomy والـthresholds لم تعتمد بعد.
-- `SAFETY_FLAG` و`ADMIN_AUDIT_RECORD` مفاهيم تحليلية؛ schema/retention/thresholds لم تعتمد بعد.
+- `SAFETY_FLAG` و`ADMIN_AUDIT_RECORD` مفاهيم تحليلية؛ schema/retention/thresholds لم تعتمد بعد. عدم رسم target associations ثابتة لهما مقصود لتجنب اختراع polymorphic physical mapping قبل Chapter Four.
 - Verification, Subscription, Reports, Flags and Audit are not public Guest data.
 - `NOTIFICATION` يدعم In-App كقناة افتراضية، SMS للأمان/OTP والإجراءات الحرجة، والبريد الموثق اختيارياً — DEC-090.
 
