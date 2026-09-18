@@ -1,6 +1,6 @@
 # ميثاق المشروع — Project Charter — يَد | YADD
 
-> **حالة الوثيقة:** `EXISTING_NEEDS_TEAM_REVIEW — SYNCHRONIZED THROUGH DEC-076`
+> **حالة الوثيقة:** `EXISTING_NEEDS_TEAM_REVIEW — SYNCHRONIZED THROUGH DEC-091`
 >
 > هذه الوثيقة تثبت التوجه الإداري عالي المستوى فقط. تفاصيل الميزات لا تتحول إلى Functional Requirements إلا عبر SRS وقرار اعتماد.
 
