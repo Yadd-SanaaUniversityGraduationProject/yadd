@@ -1,6 +1,6 @@
 # مواصفات العمليات وتدفقات البيانات ومخازن البيانات — Process, Data Flow & Data Store Specifications
 
-> **الحالة:** `ANALYZED — SYNCHRONIZED 2026-09-15 THROUGH DEC-077`
+> **الحالة:** `ANALYZED — SYNCHRONIZED 2026-09-18 THROUGH DEC-090`
 >
 > هذه الوثيقة مشتقة من `05-SRS.md`, `06-business-rules.md`, `07-lifecycles.md`, `08-use-cases.md`, و`09-DFD.md`. جميع التسميات داخل المخططات النهائية باللغة الإنجليزية وفق `DEC-072`.
 
@@ -37,7 +37,7 @@
 - يمكن لـ`User` امتلاك صفر أو `Provider Profile` واحد.
 - في MVP يختار `Provider Profile` نوعًا واحدًا فقط: `SERVICE` أو `PRODUCT`، ولا يجمع النوعين معًا — DEC-074.
 - يمكن اختيار تصنيف واحد أو أكثر داخل النوع المختار؛ Draft قد يحتوي صفرًا مؤقتًا، لكن أهلية وظائف التقديم تتطلب تصنيفًا صالحًا واحدًا على الأقل — DEC-076.
-- تتطلب وظائف التقديم الخاصة بالمقدم التحقق المطلوب؛ كما يتطلب إرسال الاستجابات `Active Subscription`.
+- تتطلب وظائف التقديم أهلية النوع: `Service Provider` يحتاج Identity Verification، بينما `Product Provider` لا يحتاج Government ID في MVP؛ وكلاهما يحتاج `Active Subscription` لبدء تعاملات جديدة.
 - سياسة تغيير Provider Type بعد الاختيار لم تعتمد بعد.
 - الـBackend/API يفرض Authentication/Authorization للوظائف المحمية؛ Redirect في الواجهة ليس آلية الحماية الوحيدة — DEC-065/077.
 
@@ -61,7 +61,7 @@
 - بين نفس Beneficiary ونفس Provider توجد Conversation مستمرة واحدة يمكن أن ترتبط بصفر أو عدة Transactions عبر الزمن — DEC-075.
 - يجب إظهار فواصل/أحداث نظام واضحة عند بدء وانتهاء Transactions داخل Conversation المستمرة.
 - في مسار `Request`: يبدأ اختيار `Beneficiary` للـ`Provider` الـ`Transaction`.
-- في مسار `Direct Search`: يرسل أي من الطرفين `Request Transaction Start`، ويجب أن يؤكد الطرف الآخر قبل إنشاء `Active Transaction`.
+- في مسار `Direct Search`: يرسل أي من الطرفين `Request Transaction Start`، ويجب أن يؤكد الطرف الآخر خلال 12 ساعة قبل إنشاء `Active Transaction`؛ الرفض أو انتهاء المهلة يلغي طلب البدء فقط.
 
 ### 4.0 Manage Transactions & Invoices
 - جميع Transaction/Invoice actions تتطلب Actor authenticated وله الصلاحية المناسبة؛ Guest لا ينفذها — DEC-077.
