@@ -1,6 +1,6 @@
 # YADD Screen Specifications — Working Draft
 
-> **Status:** IN PROGRESS — APPROVED UI CONTRACTS THROUGH BEN-07
+> **Status:** IN PROGRESS — APPROVED UI CONTRACTS THROUGH PRO-11
 >
 > This document records detailed screen-level UI contracts derived from the current project requirements and explicitly reviewed UI decisions. It does not override the Decision Register, SRS, or Business Rules.
 >
@@ -1460,6 +1460,632 @@ Then:
 ## Mobile navigation
 
 This is a focused confirmation within the `طلباتي` context; no additional navigation capability is introduced.
+
+
+---
+
+# PRO-01 — Provider Home / Work State
+
+- **Contract status:** `APPROVED UI CONTRACT — 2026-09-18`
+- **Primary actor:** authenticated User using Provider Portal.
+- **Related sources:** `FR-001F`; `FR-002..002F`; `FR-006/007`; `FR-SUB-01..06`; `DEC-074/076/080/085/086`; Account & Portal Model; Screen Inventory `PRO-01`.
+- **Classification:** Requirement-backed provider entry state + approved Provider mobile navigation.
+
+## Goal
+
+Provide the Provider Portal entry state for the same User account and clearly show what provider functions are currently available based on profile, verification, and subscription eligibility.
+
+## Required entry points
+
+The screen provides access, as applicable, to:
+
+- `الطلبات المناسبة` → `PRO-02`;
+- `إدارة ملف المقدم` → `PRO-06`;
+- Service Provider: `معرض الأعمال` → `PRO-07`;
+- Product Provider: `الكتالوج` → `PRO-08`;
+- Service Provider only: `حالة التحقق` → `PRO-09`;
+- `الاشتراك` → `PRO-11`;
+- `معاملاتي` → `TRX-03`;
+- Portal Switch → `AUTH-04`.
+
+## Eligibility-aware CTAs
+
+- Incomplete Provider Profile → show a clear `استكمال ملف المقدم` action.
+- Service Provider not Identity Verified → show `استكمال التحقق من الهوية` / verification status entry.
+- Expired Subscription → show `تجديد الاشتراك` and do not imply that new Provider Responses or Direct Transactions can be started.
+- Product Provider must not be routed to Government-ID verification.
+
+## Provider Mobile Navigation — Approved UI Decision
+
+`الرئيسية | الطلبات | معاملاتي | الحساب`
+
+- `الرئيسية` is active on `PRO-01`.
+- `الطلبات` opens/represents suitable Request discovery.
+- `معاملاتي` opens `TRX-03`.
+- `الحساب` provides account/provider settings context including Portal Switch.
+- Profile, Portfolio/Catalog, Verification, and Subscription remain accessible from the Provider home/account contexts rather than becoming additional permanent tabs.
+
+On Tablet/Desktop the same navigation functions may be represented in a header/sidebar.
+
+## Explicit exclusions
+
+Do not fabricate earnings, completed-work statistics, profile views, request counts, or other runtime metrics in static design.
+
+---
+
+# PRO-02 — Suitable Requests
+
+- **Contract status:** `APPROVED UI CONTRACT — 2026-09-18`
+- **Primary actor:** Provider.
+- **Related sources:** `FR-006`; `FR-007`; `DEC-031..033/043/074/076/085/086`; `BR-030/031/041/043`; Screen Inventory `PRO-02`.
+- **Classification:** Requirement-backed matching request list + approved Neighborhood-only UI convention.
+
+## Goal
+
+Show Open Requests suitable for the Provider according to Provider Type, compatible Category, service area, and the current eligibility rules.
+
+## Request card content
+
+A suitable Request Card may display:
+
+- Request Type: Service / Product;
+- Category;
+- Neighborhood;
+- short description;
+- indicative price when present;
+- optional image preview when present.
+
+District is not shown as a separate user-facing value; it remains internally derived from Neighborhood under the approved location UI convention.
+
+## Primary interaction
+
+Selecting a Request Card opens:
+
+`PRO-03 Published Request Details`.
+
+## Eligibility / visibility behavior
+
+- Requests that are `Expired`, `ClosedByBeneficiary`, or `Matched` are not presented as Open opportunities for a new Provider Response.
+- Sending a new Provider Response requires Active Subscription and type-specific eligibility:
+  - Service Provider → Identity Verified + other profile eligibility;
+  - Product Provider → Account/Profile eligible; no Government-ID verification requirement.
+- When an action is unavailable because of eligibility/subscription state, the UI should explain the applicable reason rather than presenting a misleading enabled Submit action.
+
+## Explicit exclusions
+
+Do not introduce unapproved ranking such as `الأقرب`, `الأفضل`, or a hidden recommendation score as a user-facing business rule.
+
+## Mobile navigation
+
+Use the approved Provider navigation:
+
+`الرئيسية | الطلبات | معاملاتي | الحساب`
+
+`الطلبات` is active.
+
+---
+
+# PRO-03 — Published Request Details
+
+- **Contract status:** `APPROVED UI CONTRACT — 2026-09-18`
+- **Primary actor:** Provider.
+- **Related sources:** `FR-005..006`; `FR-007..007E`; `FR-008`; `DEC-031/041/043/046/070/082/085/086`; Screen Inventory `PRO-03`.
+- **Classification:** Requirement-backed Request details + eligibility-aware actions.
+
+## Goal
+
+Allow the Provider to review an Open published Request before deciding whether to submit/manage a Provider Response or communicate.
+
+## Request data
+
+Display as applicable:
+
+- Request Type;
+- Category;
+- Neighborhood;
+- Description;
+- optional images;
+- optional additional information;
+- optional indicative price;
+- Request Status.
+
+District is not shown as a separate user-facing value.
+
+Do not expose private Beneficiary contact details, precise address, or GPS.
+
+## Actions
+
+### No active response + eligible Provider + Open Request
+
+`إرسال استجابة` → `PRO-04`.
+
+### Existing active Provider Response
+
+`عرض / إدارة استجابتي` → `PRO-05`.
+
+### Communication
+
+Where the supported conversation context exists:
+
+`تواصل / استفسر` → shared private Chat/Inquiry.
+
+Chat alone does not create a Transaction.
+
+## Ineligible state
+
+If a new response cannot be sent, the screen may explain the specific applicable blocker, such as:
+
+- Provider Profile incomplete;
+- Service Provider Identity Verification required;
+- Subscription not Active;
+- Request no longer Open.
+
+Product Provider must not be told that Government-ID Identity Verification is required.
+
+---
+
+# PRO-04 — Create Provider Response
+
+- **Contract status:** `APPROVED UI CONTRACT — 2026-09-18`
+- **Primary actor:** eligible Provider.
+- **Related sources:** `FR-007/007A/007B/007D`; `DEC-013/041/043/070/085/086`; `BR-003/030/033/039`; Screen Inventory `PRO-04`.
+- **Classification:** Requirement-backed Provider Response creation.
+
+## Goal
+
+Submit one active Provider Response for an Open Request.
+
+## Preconditions
+
+Before submission, the system enforces:
+
+- Request is `Open`;
+- no other active Provider Response exists from the same Provider for this Request;
+- Subscription is `Active`;
+- type-specific provider eligibility:
+  - Service Provider → Identity Verified + profile eligibility;
+  - Product Provider → Account/Profile eligible without Government-ID verification.
+
+## Response fields / controls
+
+### Indicative price handling
+
+If the Request includes an indicative price, allow the Provider to:
+
+- accept the indicative price; or
+- propose a different price.
+
+### Proposed price
+
+Optional when a separate proposed price is applicable.
+
+### Note
+
+Optional Provider note.
+
+### `RequiresDeposit`
+
+Required Boolean presentation:
+
+`نعم / لا`
+
+## Main action
+
+`إرسال الاستجابة`
+
+On success, continue to `PRO-05 Edit / Withdraw Response` or the equivalent submitted-response state.
+
+## Deposit boundary
+
+YADD records only `RequiresDeposit = Yes/No`.
+
+Do not add:
+
+- deposit amount;
+- percentage;
+- payment method;
+- paid/unpaid status;
+- refund data/process.
+
+## States
+
+- Default.
+- Validation error.
+- Eligibility blocked.
+- Submitting.
+- Success/error.
+
+---
+
+# PRO-05 — Edit / Withdraw Response
+
+- **Contract status:** `APPROVED UI CONTRACT — 2026-09-18`
+- **Primary actor:** Provider with an active Provider Response.
+- **Related sources:** `FR-007C/007D/007E`; `FR-008`; `DEC-046/070/082`; `BR-005/039/054`; Screen Inventory `PRO-05`.
+- **Classification:** Requirement-backed response management.
+
+## Goal
+
+Allow the Provider to manage the single active Provider Response while the Request remains Open and before selection.
+
+## Display
+
+Show the current response information:
+
+- accepted/proposed price;
+- optional note;
+- `RequiresDeposit = Yes/No`;
+- response status;
+- related Request context.
+
+## Actions while editable
+
+### `تعديل الاستجابة`
+
+Allows changing the response fields permitted by the current response model and saving the same active response rather than creating a duplicate response.
+
+### `سحب الاستجابة`
+
+Requires an explicit confirmation before withdrawal.
+
+### `تواصل / استفسر`
+
+Opens the supported private conversation context. Chat does not create a Transaction.
+
+## Availability rule
+
+Edit/Withdraw is available only while:
+
+- Request = `Open`; and
+- no Provider has been selected for that Request.
+
+After Withdraw, Selection, Request Closure, or Request Expiry, the response is no longer an active editable response.
+
+Provider Response has no independent expiry timer.
+
+---
+
+# PRO-06 — Manage Provider Profile
+
+- **Contract status:** `APPROVED UI CONTRACT — 2026-09-18`
+- **Primary actor:** Provider.
+- **Related sources:** `FR-002..002F`; `FR-003C`; `DEC-074/076/080/085`; `BR-041/043/051`; Screen Inventory `PRO-06`.
+- **Classification:** Requirement-backed Provider Profile management + approved Neighborhood-only UI convention.
+
+## Goal
+
+Create and maintain the Provider Profile and the profile data required for provider-function eligibility.
+
+## Provider Profile fields
+
+### Provider Type
+
+Exactly one:
+
+- `SERVICE`; or
+- `PRODUCT`.
+
+The MVP does not activate both types on one Provider Profile.
+
+### Categories
+
+One or more compatible Categories may be selected within the chosen Provider Type.
+
+A Draft Provider Profile may temporarily contain zero Categories, but provider-function eligibility requires at least one valid Category.
+
+### Service Areas
+
+The user selects **Neighborhoods only** in the UI.
+
+District is derived internally from the selected Neighborhoods and is not shown as an independent selector.
+
+### About / Description
+
+Required before provider-function eligibility.
+
+### Profile image / Logo
+
+Optional.
+
+### Product Provider only — Trade Name
+
+Optional `Trade Name`.
+
+When provided, it may become the public display name for the Product Provider while the real User identity remains in the User Account.
+
+## Draft and eligibility
+
+Provider Profile may be saved as Draft before completion.
+
+Before provider-function eligibility, the profile requires the current required profile data including:
+
+- Provider Type;
+- at least one valid Category;
+- Service Areas;
+- About/Description;
+- applicable type-specific verification/account eligibility;
+- applicable Active Subscription for functions that require it.
+
+Portfolio/Catalog and profile image/logo are optional and must not be presented as mandatory eligibility fields.
+
+## Open policy — Provider Type change
+
+Changing `ProviderProfile.providerType` after initial selection/activation remains **Needs Verification**.
+
+Do not add a final `تغيير نوع المقدم` flow unless that policy is separately decided.
+
+---
+
+# PRO-07 — Manage Portfolio
+
+- **Contract status:** `APPROVED UI CONTRACT — 2026-09-18`
+- **Primary actor:** Service Provider.
+- **Related sources:** `FR-PORT-01..05`; `DEC-064`; `BR-035/036`; UC-10; Screen Inventory `PRO-07`.
+- **Classification:** Requirement-backed Portfolio addition/display; item edit/delete policy remains open.
+
+## Goal
+
+Allow a Service Provider to add public work images to the Provider Profile under the current rights and watermark rules.
+
+## Add item
+
+The approved addition flow contains:
+
+- work image;
+- optional description;
+- Provider declaration that they have the right to publish the content.
+
+## Media handling
+
+- YADD keeps the original media non-public.
+- YADD generates a public display copy with the approved identifying watermark.
+- The public display copy may appear in the Provider Profile / public Portfolio.
+- The watermark is not legal proof of ownership.
+
+## Existing items
+
+The screen may list the Provider's existing Portfolio items and their public display copies.
+
+## Open / Needs Verification
+
+The current approved requirements do not sufficiently define the final **Edit/Delete policy for Portfolio items**.
+
+Therefore this contract does not freeze final Edit/Delete buttons, deletion semantics, retention behavior, or their effect on reported content.
+
+---
+
+# PRO-08 — Manage Catalog
+
+- **Contract status:** `APPROVED UI CONTRACT — 2026-09-18`
+- **Primary actor:** Product Provider.
+- **Related sources:** `FR-PORT-01..05`; `DEC-064`; `BR-035/036`; UC-10; Screen Inventory `PRO-08`.
+- **Classification:** Requirement-backed Catalog addition/display; item edit/delete policy remains open.
+
+## Goal
+
+Allow a Product Provider to add public product images to the Provider Profile Catalog under the current rights and watermark rules.
+
+## Add item
+
+The approved addition flow contains:
+
+- product image;
+- optional description;
+- Provider declaration that they have the right to publish the content.
+
+## Media handling
+
+- original media remains non-public;
+- YADD creates a public watermarked display copy;
+- the watermark is an identification/deterrence measure, not proof of legal ownership.
+
+## Explicit commerce boundary
+
+This Catalog is not an in-platform checkout store.
+
+Do not add as part of this contract:
+
+- Cart;
+- Buy Now;
+- in-platform payment.
+
+## Open / Needs Verification
+
+The final Edit/Delete policy for Catalog items is not sufficiently defined by the current approved requirements and is not frozen by this contract.
+
+---
+
+# PRO-09 — Identity Verification Status
+
+- **Contract status:** `APPROVED UI CONTRACT — 2026-09-18`
+- **Primary actor:** Service Provider only.
+- **Related sources:** `FR-VER-01..06`; `DEC-035/085`; `BR-027/060/061`; Provider Verification Model; Screen Inventory `PRO-09`.
+- **Classification:** Requirement-backed Service Provider identity-verification status.
+
+## Goal
+
+Show the Service Provider's Government-ID Identity Verification status and the valid next action.
+
+## Supported conceptual states
+
+- `Draft`;
+- `Submitted`;
+- `UnderReview`;
+- `Verified`;
+- `ResubmissionRequired`;
+- `Rejected`.
+
+## State behavior
+
+### Draft
+
+`بدء التحقق` → `PRO-10`.
+
+### Submitted / UnderReview
+
+Show that verification is awaiting/under authorized human review. Do not promise an unapproved completion time.
+
+### Verified
+
+Show the verified status.
+
+### ResubmissionRequired
+
+Show the available reviewer reason/note and:
+
+`إعادة التقديم` → `PRO-10`.
+
+### Rejected
+
+Show the available decision/reviewer note. Do not imply an automatic right to resubmit after Rejected unless that policy is separately supported.
+
+## Product Provider boundary
+
+Product Provider:
+
+- does not use this Government-ID verification flow in MVP;
+- must not receive an Identity Verified badge merely from Account/Profile eligibility.
+
+## Human-decision rule
+
+AI/automated checks may assist and create review flags. Final `Verified/Rejected` decision remains human.
+
+---
+
+# PRO-10 — Identity Verification Submission
+
+- **Contract status:** `APPROVED UI CONTRACT — 2026-09-18`
+- **Primary actor:** Service Provider only.
+- **Related sources:** `FR-VER-01..05`; `DEC-085`; Provider Verification Model; Screen Inventory `PRO-10`.
+- **Classification:** Requirement-backed sensitive verification submission.
+
+## Goal
+
+Collect the approved minimum evidence for Service Provider Identity Verification and submit it for authorized human review.
+
+## Required verification basis
+
+The flow requires:
+
+- verified phone from the User Account;
+- real name from the User Account;
+- document type: `National ID` or `Passport`;
+- image of the identity document;
+- personal photo with the document.
+
+Account name/phone may be displayed from the existing account context; the user must not be encouraged to create a different public/legal identity within this verification screen.
+
+## Main action
+
+`إرسال طلب التحقق`
+
+After successful submission, move to the submitted/review state represented through `PRO-09`.
+
+## Sensitive-data boundary
+
+Verification documents, identity photos, and related artifacts are private and must not be exposed in Public Provider Profile or public discovery.
+
+## Human / AI boundary
+
+AI may perform assistive checks and produce flags, but cannot independently issue the final high-impact verification decision.
+
+## Open / Needs Verification
+
+The final retention period and deletion/legal policy for sensitive verification artifacts remains `VER-RET-Q01` / Needs Verification.
+
+Do not display an invented retention promise.
+
+---
+
+# PRO-11 — Subscription Status / Renewal
+
+- **Contract status:** `APPROVED UI CONTRACT — 2026-09-18`
+- **Primary actor:** Service Provider / Product Provider.
+- **Related sources:** `FR-SUB-01..06`; `DEC-042/043/086`; `BR-026/029/030`; Provider Subscription Model; Screen Inventory `PRO-11`.
+- **Classification:** Requirement-backed subscription state; price/payment procedure remains partially open.
+
+## Goal
+
+Show the Provider's subscription eligibility and support the current external/manual renewal process without implying an in-platform Payment Gateway.
+
+## Subscription information
+
+Display, when available:
+
+- Subscription Status;
+- StartDate;
+- EndDate;
+- current MVP duration: **30 days**.
+
+Conceptual states include:
+
+- `PendingConfirmation`;
+- `Active`;
+- `Expired`.
+
+## Activation / renewal model
+
+- subscription payment/collection occurs outside YADD;
+- an authorized YADD staff member manually confirms activation/renewal;
+- confirmation activates the subscription period.
+
+## Reminder policy
+
+The system sends:
+
+- reminder 3 days before EndDate;
+- reminder 24 hours before EndDate.
+
+## Expired behavior
+
+When `Expired`:
+
+Provider may still:
+
+- log in;
+- access the Provider account/profile;
+- continue existing Active Transactions;
+- start the renewal process.
+
+Provider may not:
+
+- submit new Provider Responses;
+- start a new Direct Search Transaction;
+
+until the subscription is renewed and Active again.
+
+## Main action
+
+`تجديد الاشتراك`
+
+This opens the supported external/manual renewal process once operational payment instructions are defined.
+
+## Open / Needs Verification
+
+Do not invent in Figma or implementation:
+
+- final subscription price;
+- specific external payment method/account;
+- evidence-of-payment procedure;
+- unapproved plan names/count;
+- search-visibility behavior solely from subscription expiry unless separately decided.
+
+## Mobile navigation
+
+Subscription is reached from the Provider home/account context; the approved global Provider navigation remains:
+
+`الرئيسية | الطلبات | معاملاتي | الحساب`
+
+---
+
+## Provider-package shared constraints — PRO-01..11
+
+- Service Provider Government-ID verification and Product Provider account/profile eligibility are distinct; never represent Product Provider as Government-ID Identity Verified without that process.
+- New Provider Responses require Active Subscription plus type-specific eligibility.
+- Neighborhood is the only user-facing location selector/display level in provider-location UI; District remains internal/derived.
+- Provider Response exposes only `RequiresDeposit Yes/No`, not a deposit/payment lifecycle.
+- Portfolio/Catalog public images use display copies; originals remain non-public.
+- Do not convert unresolved Portfolio/Catalog Edit/Delete behavior or subscription payment details into implicit requirements through visual design.
 
 ---
 
