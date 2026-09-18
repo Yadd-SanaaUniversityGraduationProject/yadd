@@ -136,7 +136,7 @@ Guest does not have protected Beneficiary/Provider permissions before Authentica
 - Web Interface is the primary current client direction.
 - Flutter is a later Mobile client direction using the same Backend/API.
 - For Guest protected CTAs, client redirect to Log In/Create Account is UX behavior; Backend/API still enforces the protection independently — DEC-065/077.
-- exact Web/Backend frameworks and providers remain design/feasibility decisions; they do not affect current analysis diagrams.
+- implementation stack is approved by DEC-091: ASP.NET Core MVC/Web API + EF Core + Microsoft SQL Server + ASP.NET Core Identity, with Web Cookies and JWT Bearer direction for Flutter/API. Exact package versions, hosting/SMS/AI providers, AI thresholds and retention remain design/feasibility decisions; the technology choice does not change the conceptual analysis diagrams.
 
 ## 8. Academic Delivery Direction
 
