@@ -239,7 +239,7 @@ flowchart LR
 | UC-07 — Rate Provider | `diagrams/03-analysis/uml/sequence/uc-07-rate-provider-sequence.md` | `REVIEW DRAFT — NOT BASELINED` |
 | UC-07B — Provider Rates Beneficiary | `diagrams/03-analysis/uml/sequence/uc-07b-rate-beneficiary-sequence.md` | `REVIEW DRAFT — NOT BASELINED` |
 | UC-08 — Block and Report User / Content | `diagrams/03-analysis/uml/sequence/uc-08-block-report-sequence.md` | `REVIEW DRAFT — NOT BASELINED` |
-| UC-09 — Provider Verification / Portal Activation | `diagrams/03-analysis/uml/sequence/uc-09-provider-verification-sequence.md` | `REVIEW DRAFT — NOT BASELINED` |
+| UC-09 — Service Provider Identity Verification / Provider Portal Eligibility | `diagrams/03-analysis/uml/sequence/uc-09-provider-verification-sequence.md` | `REVIEW DRAFT — NOT BASELINED` |
 | UC-10 — Manage Portfolio / Catalog | `diagrams/03-analysis/uml/sequence/uc-10-manage-portfolio-catalog-sequence.md` | `REVIEW DRAFT — NOT BASELINED` |
 
 `UC-00` Guest browsing/auth-gate sequence has not yet been exported as a standalone Sequence Diagram; this is a presentation/documentation item, not a missing requirement. Existing protected-flow sequences assume an authenticated actor unless explicitly showing Authentication.
