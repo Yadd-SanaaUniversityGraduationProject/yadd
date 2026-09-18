@@ -1,6 +1,6 @@
 # UC-08 — Block and Report User / Content Sequence Diagrams
 
-> **Status:** `REVIEW DRAFT — NOT BASELINED`
+> **Status:** `REVIEW DRAFT — SYNCHRONIZED 2026-09-18 — NOT BASELINED`
 >
 > **Purpose:** تم تفكيك `UC-08 — Block and Report User / Content` إلى سيناريوهين مستقلين داخل الملف نفسه لأن `Block User` و`Report User / Content` هدفان منفصلان للمستخدم، ولا يشترط أحدهما الآخر. هذا متوافق مع Traceability الحالية ولا ينشئ Use Cases جديدة.
 
@@ -11,7 +11,8 @@
 - **Business rules:** `BR-021`, `BR-022`, `BR-065`, `BR-066`.
 - **Traceability:** `UR-SAFE-01` maps to `UC-08 → Block User / Report User-Content / Review Reports-Flags` and to `REPORT / moderation records`.
 - **Trust & Safety rule:** Report and AI/behavioral Flags are inputs for review and do not by themselves prove a violation or authorize an automatic final high-impact punishment.
-- **Open items intentionally excluded:** AI/moderation thresholds and detailed policy categories remain open and are not invented here.
+- **Report input synchronization:** generic Report requires a `Reason`; generic Description remains policy-dependent and is not silently made mandatory. Optional supporting evidence may be attached when the context supports it.
+- **Open items intentionally excluded:** AI/moderation thresholds, detailed policy categories, appeal flow, and a universal Temporary Restriction duration remain open and are not invented here.
 - **Derived modeling roles:** `UserUI`, `SafetyController`, `AdminUI`, and `ModerationController` are Sequence modeling roles, not approved implementation class names.
 
 ### Actor note
@@ -35,6 +36,14 @@ sequenceDiagram
     UI-->>U: showBlockConfirmation()
 
     Note over U,SC: New direct interaction is stopped; any Active Transaction remains accessible with its required actions/system notifications
+
+    opt User later unblocks the same target
+        U->>UI: unblockUser(targetUserId)
+        UI->>SC: unblockUser(userId, targetUserId)
+        SC-->>UI: unblockApplied()
+        UI-->>U: showUnblockConfirmation()
+        Note over U,SC: Unblock restores future interaction only; it does not reopen ended Requests/Transactions or cancel an existing Report
+    end
 ```
 
 ### Scenario A postcondition
@@ -58,9 +67,9 @@ sequenceDiagram
     participant AUI as AdminUI «boundary»
     participant MC as ModerationController «control»
 
-    U->>UI: submitReport(targetType, targetRef, details)
-    UI->>SC: createReport(reporterId, targetType, targetRef, details)
-    SC->>R: recordReport(details, evidenceRefs)
+    U->>UI: submitReport(targetType, targetRef, reason, optionalDescription, optionalEvidence)
+    UI->>SC: createReport(reporterId, targetType, targetRef, reason, optionalDescription, optionalEvidence)
+    SC->>R: recordReport(reason, optionalDescription, evidenceRefs)
     R-->>SC: reportCreated(reportId)
     SC-->>UI: reportSubmitted(reportId)
     SC-->>AUI: reportReadyForReview(reportId)
@@ -77,13 +86,14 @@ sequenceDiagram
     AUI-->>A: showReviewContext()
 
     A->>AUI: recordReviewOutcome(outcome, reason)
-    AUI->>MC: recordAuthorizedReviewOutcome(reportId, outcome, reason)
-    MC->>R: saveReviewOutcome(outcome, reason)
+    AUI->>MC: recordAuthorizedReviewOutcome(reportId, outcome, reason, administrator, timestamp)
+    MC->>R: saveReviewOutcome(outcome, reason, administrator, timestamp, linkedEvidence)
     R-->>MC: outcomeSaved()
     MC-->>AUI: reviewRecorded()
     AUI-->>A: showReviewConfirmation()
 
     Note over A,MC: Allowed outcomes: No Violation / Warning / Content Removal / Temporary Restriction / Account Suspension / Permanent Ban — human authorization required
+    Note over A,MC: Temporary Restriction duration follows approved policy; no universal duration is hard-coded here
 ```
 
 ## Scope boundary
@@ -101,13 +111,14 @@ sequenceDiagram
 
 ### Block
 
-- يتوقف التواصل المباشر بين المستخدمين المعنيين.
+- يتوقف التواصل/التعامل الجديد بين المستخدمين المعنيين، مع بقاء Active Transaction القائمة وإجراءاتها النظامية عند وجودها.
+- Unblock يعيد التفاعل المستقبلي فقط ولا يلغي Report سابقًا أو يعيد كيانًا منتهيًا.
 
 ### Report
 
 - يتم حفظ Report كسجل قابل للمراجعة الإدارية.
 - يراجع موظف مخول Report والأدلة المتاحة داخل YADD.
-- يسجل Review Outcome وسببه والموظف والتوقيت وفق السياسة؛ النتائج المسموحة معتمدة في DEC-089.
+- يسجل Review Outcome وسببه والموظف والتوقيت والبلاغ/الدليل المرتبط وفق DEC-089.
 - Report وحده لا يساوي إدانة، ولا يؤدي تلقائيًا إلى حظر نهائي أو عقوبة عالية الأثر.
 
 ## Modeling note
