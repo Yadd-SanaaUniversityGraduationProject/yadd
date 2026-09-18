@@ -1,6 +1,6 @@
 # UC-09 — Service Provider Identity Verification / Provider Portal Eligibility Sequence Diagrams
 
-> **Status:** `REVIEW DRAFT — SYNCHRONIZED 2026-09-18 — NOT BASELINED`
+> **Status:** `REVIEW DRAFT — SYNCHRONIZED 2026-09-19 — NOT BASELINED`
 >
 > **Purpose:** تم تفكيك `UC-09 — Service Provider Identity Verification / Provider Portal Eligibility` إلى سيناريوهين متماسكين داخل الملف نفسه حتى يبقى الرسم قابلًا للقراءة على A4: تقديم/إعادة تقديم التحقق، ثم المراجعة البشرية والقرار. هذا Scenario Decomposition داخل UC-09 ولا ينشئ Use Cases جديدة.
 
@@ -68,7 +68,7 @@ sequenceDiagram
 - لا يتم تفعيل Provider Profile تلقائيًا بمجرد رفع البيانات.
 - بعد الإرسال تكون الحالة المفاهيمية `Submitted`، وتنتقل إلى `UnderReview` عند بدء المراجعة البشرية وفق lifecycle المعتمد.
 - أثناء انتظار المراجعة يمكن للحساب الاستمرار كمستفيد، لكن لا تُفتح وظائف Provider المعتمدة على التحقق.
-- لم يُفترض نوع وثيقة محدد أو عدد صور أو مدة صلاحية تشغيلية لأن هذه التفاصيل ما تزال مفتوحة.
+- أنواع وثائق الهوية المقبولة في MVP محصورة حاليًا في `National ID` أو `Passport` وفق DEC-085. لا يحدد هذا المخطط تفاصيل فرعية غير معتمدة مثل تنسيقات الملفات/الدقة/الحجم أو مدد صلاحية تشغيلية إضافية.
 
 ---
 
