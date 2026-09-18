@@ -1,6 +1,6 @@
 # Activity Diagram — Published Request Route
 
-> **Status:** `REVIEW DRAFT — NOT BASELINED — SYNCHRONIZED 2026-09-18 THROUGH DEC-087`
+> **Status:** `REVIEW DRAFT — NOT BASELINED — SYNCHRONIZED 2026-09-18 THROUGH DEC-090`
 >
 > **Type:** Derived workflow view. هذا المخطط لا ينشئ Requirement أو Use Case جديدة؛ يجمع المسار الرئيسي من `Create Request` حتى نهاية Transaction الناجحة/غير الناجحة لعرض القرارات الأساسية بصورة واحدة.
 
@@ -22,7 +22,8 @@ flowchart TD
     S([Start]) --> A[Beneficiary Creates Request]
     A --> B{Request Data Valid?}
     B -- No --> A
-    B -- Yes --> C[Publish Open Request]
+    B -- Yes --> B1[System Derives District Internally from Selected Neighborhood]
+    B1 --> C[Publish Open Request]
 
     C --> D{Request remains open for matching?}
     D -- Beneficiary closes --> ZR([End — ClosedByBeneficiary])
@@ -91,7 +92,8 @@ flowchart TD
 - Request Route creates `Active Transaction` only after Provider selection.
 - عند اختيار Provider ينتقل Request من `Open` إلى `Matched`; يعني ذلك توقفه عن استقبال Responses جديدة وبدء المعاملة الرسمية مع Provider المختار.
 - Beneficiary may close an `Open` Request before selection; this is `Request Closure`, not `Transaction Cancellation`.
-- Request expiry uses 24h/48h reminders and 72h Expired from Beneficiary inactivity; Republish creates a new Request and old responses remain inactive.
+- Request expiry uses 24h/48h reminders and 72h Expired from Beneficiary inactivity; meaningful Beneficiary activity resets the inactivity clock, while Provider Response arrival alone does not. Republish creates a new Request and old responses remain inactive.
+- **Location UI synchronization:** Request creation exposes Neighborhood to the Beneficiary; District is derived internally and remains part of the underlying data/location model.
 - Final Invoice uses 24h/48h reminders and Overdue at 72h without Auto-Approval; explicit approval makes Transaction `Completed`.
 - Complaint does not automatically make Transaction `Disputed`; `Disputed` occurs only when disagreement remains unresolved without agreement before final approval.
 - Ratings open only after `Completed`; Beneficiary→Provider uses Hybrid Rating with Later/24h reminder and completion before a new Transaction.
