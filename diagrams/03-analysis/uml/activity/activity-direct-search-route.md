@@ -9,6 +9,7 @@
 - `UC-01 — Search and Inquire Directly`
 - `DEC-012`, `DEC-031..033`, `DEC-046`, `DEC-047`, `DEC-064`, `DEC-066`, `DEC-069`, `DEC-075`, `DEC-082`
 - Current communication and Transaction-start business rules.
+- Approved Location UI convention: Neighborhood is user-facing; District is derived internally from the selected Neighborhood.
 
 ## Diagram
 
@@ -43,6 +44,7 @@ flowchart TD
 
 ## Semantic constraints
 
+- Direct Search UI exposes Neighborhood as the location selector/display level; District remains internal/derived and the underlying model remains District + Neighborhood.
 - **Location UI synchronization:** the user selects/sees Neighborhood as the public discovery location level; District remains in the underlying location model and is derived internally. The authoritative Neighborhood→District mapping still depends on `LOC-DATA-Q01`.
 
 - بين نفس Beneficiary ونفس Provider توجد Conversation واحدة مستمرة وفق DEC-075؛ إذا كانت موجودة يعاد استخدامها، وإذا لم تكن موجودة تُفتح Conversation جديدة.
