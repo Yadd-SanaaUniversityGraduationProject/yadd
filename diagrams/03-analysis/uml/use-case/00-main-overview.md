@@ -55,6 +55,7 @@ flowchart LR
     end
 
     P["Provider"]:::actor
+    SP["Service Provider"]:::actor
     A["YADD Administrator"]:::actor
 
     G --- LOGIN
@@ -77,7 +78,8 @@ flowchart LR
     UC07B --- P
     BLOCK --- P
     REPORT --- P
-    UC09 --- P
+    SP -. specializes .-> P
+    UC09 --- SP
     UC10 --- P
 
     REPORT --- A
@@ -96,6 +98,6 @@ flowchart LR
 
 ## Reading note
 
-This overview answers only two questions: **Who interacts with YADD?** and **What major goals does each Actor have?** It intentionally avoids relationship-level detail so the diagram remains readable at repository and report scale.
+This overview answers only two questions: **Who interacts with YADD?** and **What major goals does each Actor have?** It intentionally avoids relationship-level detail so the diagram remains readable at repository and report scale. `Service Provider` is shown only where DEC-085 requires an actor-specific Government-ID verification goal.
 
 `Block User` and `Report User / Content` remain separate Use Cases because the current model explicitly treats blocking and reporting as independent concepts.
