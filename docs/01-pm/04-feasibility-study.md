@@ -1,6 +1,6 @@
 # دراسة الجدوى — Feasibility Study
 
-> **الحالة:** `SKELETON — DATA REQUIRED — SYNCHRONIZED THROUGH DEC-076`
+> **الحالة:** `SKELETON — DATA REQUIRED — SYNCHRONIZED THROUGH DEC-091`
 >
 > لا توضع أرقام تكلفة أو ادعاءات قدرة تقنية دون دليل. هذه الوثيقة تميز بين الاتجاهات المعتمدة والخيارات التقنية التفصيلية التي ما تزال تحتاج تحققًا.
 
@@ -8,6 +8,7 @@
 
 ### البيانات المطلوبة
 - تكلفة الاستضافة/الخادم في سيناريو MVP.
+- نسخة/ترخيص SQL Server المستهدف في سيناريو التطوير والتشغيل وتكلفته إن وجدت؛ لا يفترض أن تكلفة بيئة التطوير تمثل تكلفة تشغيل إنتاجي.
 - تكلفة التخزين والوسائط والإشعارات وأي خدمة خارجية لازمة.
 - تكلفة مزودات OCR/Face/Liveness/Moderation المقترحة إن استخدمت.
 - تكلفة النشر/الاختبار والأجهزة المتاحة للفريق.
@@ -29,9 +30,12 @@
 - واجهة Web هي الواجهة الأساسية الحالية — DEC-065.
 - Flutter اتجاه معتمد لعميل Mobile لاحق يتصل بالـAPI نفسه — DEC-065.
 - AI-assisted Service Provider Identity Verification وTrust & Safety داخل نطاق MVP، مع Human Review للقرارات الحساسة — DEC-037..040/085.
+- Stack التنفيذ المعتمد: ASP.NET Core (MVC + Web API) + Entity Framework Core + Microsoft SQL Server + ASP.NET Core Identity — DEC-091.
+- Authentication direction: Cookies للWeb وJWT Bearer لعميل Flutter/API — DEC-091.
+- AI integration direction: External APIs خلف Service/Integration Layer، مع بقاء المزود والسياسات التفصيلية مفتوحة — DEC-091.
 
 ### خيارات/تفاصيل ما تزال `PROPOSED / NEEDS VERIFICATION`
-- ASP.NET Core كـBackend Framework نهائي.
+- الإصدارات التنفيذية الدقيقة والمتوافقة للحزم قبل بدء البرمجة، مع مراجعة دورة الدعم والتوافق بين ASP.NET Core وEF Core وSQL Server.
 - مزود/مزودو OCR/Face/Liveness/Moderation — `AI-PROV-Q01`.
 - بنية التكامل الدقيقة مع خدمات AI وتكلفتها وسياسة الاحتفاظ بالنتائج.
 - تفاصيل الاستضافة والتخزين والأمن التشغيلي ومزود SMS؛ سياسة القنوات نفسها معتمدة في DEC-090.
