@@ -65,7 +65,7 @@ The flow and its content constraints remain approved in the repository working p
 When recreated, it must preserve the approved constraints:
 
 - Sana'a / Amanat Al Asimah scope only.
-- District + neighborhood location model.
+- User-facing location uses Neighborhood only; District remains internal/derived under the existing location model.
 - No corporate/large-store provider examples.
 - No service-price search filter.
 - No years-of-experience field.
@@ -85,6 +85,30 @@ Any recreated/account/provider/transaction screens must now preserve DEC-078..09
 - Provider rating is Hybrid, not stars-only.
 - Subscription is 30 days for both provider types with -3 day/-24h reminders.
 - Block must not hide/break an Active Transaction; moderation outcomes are human-authorized.
+
+## Cross-Wireflow Visual Consistency Rule — Approved 2026-09-18
+
+All Figma wireflows and final screens must derive from the shared UI Foundation rather than being styled independently.
+
+Mandatory consistency includes:
+
+- shared semantic colors / Figma variables;
+- Tajawal for Arabic and Inter for Latin;
+- Arabic-first RTL layout and alignment;
+- shared Button component variants, with the current standard Button component height of 52 px;
+- shared input/select/search components;
+- shared spacing/radius/surface language;
+- shared icon family;
+- shared navigation visual treatment;
+- shared loading/empty/error/status patterns.
+
+Different wireflows may contain different functions, fields, and navigation labels only when their approved Screen Contracts require those differences. Visual styling alone must not create a new function, remove a function, or create a wireflow-specific design system.
+
+Before a Figma wireflow is marked complete, it must pass the consistency gate defined in `05-ui-foundation.md`.
+
+### Location UI synchronization
+
+For user-facing location UI, the approved convention is now **Neighborhood only**. District remains internal/derived from the selected Neighborhood under the existing data/business model and must not reappear as an independent UI selector unless the decision is reopened.
 
 ## Synchronization Rule
 
