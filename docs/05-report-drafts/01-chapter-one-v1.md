@@ -201,9 +201,9 @@ SRS الحالي ما يزال `NOT BASELINED`، لذلك لا يعني عرض �
 
 الاتجاه المعماري المعتمد حاليًا هو:
 
-`Web Interface → YADD Backend/API → PostgreSQL`
+`ASP.NET Core MVC Web → ASP.NET Core Backend/Web API → Entity Framework Core → Microsoft SQL Server`
 
-مع Flutter كعميل Mobile لاحق يتصل بالAPI نفسه. أما ASP.NET Core كFramework خلفي نهائي فما يزال Proposal حتى اعتماده بصورة منفصلة.
+مع Flutter كعميل Mobile لاحق يتصل بالAPI نفسه. اعتمد الفريق ASP.NET Core وEntity Framework Core وMicrosoft SQL Server وASP.NET Core Identity كStack تنفيذ وفق DEC-091، مع Cookies للWeb واتجاه JWT Bearer للFlutter/API. أما تكامل AI فيتم عبر External APIs ويبقى اختيار المزود والعتبات وسياسات الاحتفاظ مفتوحًا.
 
 يمكن تقييم قابلية التنفيذ فقط مقابل خبرة الفريق الفعلية، الوقت، الوسائط، التحقق، الإشعارات، الخصوصية، والاعتماد على خدمات خارجية.
 
