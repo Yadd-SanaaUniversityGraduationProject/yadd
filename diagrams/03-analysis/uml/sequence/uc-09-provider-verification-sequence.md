@@ -6,7 +6,7 @@
 
 ## Source basis
 
-- **Approved behavior:** `UC-09 — Provider Verification / Portal Activation` in `docs/03-analysis/08-use-cases.md`.
+- **Approved behavior:** `UC-09 — Service Provider Identity Verification / Provider Portal Eligibility` in `docs/03-analysis/08-use-cases.md`.
 - **Provider Verification Model:** `docs/03-analysis/21-provider-verification-model.md`.
 - **Team decisions:** `DEC-010`, `DEC-035`, `DEC-036`, `DEC-037..040`, `DEC-085`.
 - **Business rules:** `BR-027`, `BR-028` and the current verification rules.
@@ -145,7 +145,7 @@ sequenceDiagram
 - نوع مزود AI أو OCR/Face/Liveness service بعينه. `VerificationAssistant` مجرد modeling role ولا يثبت اختيار Vendor أو API.
 - أي قرار نهائي آلي بالقبول أو الرفض.
 - وصولًا إلى قواعد بيانات حكومية أو سجل جنائي، لأن ذلك غير معتمد.
-- أنواع وثائق محددة، مدة الاحتفاظ، أو تراخيص مهنية خاصة، لأنها ما تزال `Needs Verification`.
+- مدة الاحتفاظ أو تراخيص مهنية خاصة؛ أما الوثائق المقبولة في MVP فهي National ID أو Passport وفق DEC-085.
 - عرض بيانات التحقق الحساسة لأي Beneficiary أو Provider آخر.
 - تفاصيل إنشاء/تعديل Provider Profile والنشاط ومناطق الخدمة؛ هذه أهداف نمذجة مستقلة في Main Use Case decomposition، بينما هذا الملف يركز على Verification/Activation interaction نفسها.
 
@@ -154,12 +154,12 @@ sequenceDiagram
 ### Verified
 
 - `VerificationCase.status = Verified`.
-- يصبح Provider Profile متحققًا.
+- يصبح Service Provider Profile `Identity Verified`.
 - يمكن فتح وظائف Provider المناسبة فقط مع استيفاء الشروط الأخرى ذات الصلة.
 
 ### Resubmission Required
 
-- لا يصبح Provider Profile Verified.
+- لا يصبح Service Provider Profile Identity Verified.
 - يتلقى المستخدم ملاحظة/سبب إعادة التقديم ويستطيع تقديم Evidence محدثة.
 
 ### Rejected
