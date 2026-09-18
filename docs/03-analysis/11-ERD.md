@@ -275,7 +275,7 @@ erDiagram
 ### CATEGORY / AREA / PROVIDER_SERVICE_AREA / AREA_ADJACENCY
 - `CATEGORY` تصنيف النشاط/الطلب، وله `category_type` يجب أن يتوافق مع نوع Provider Profile عند استخدامه في ProviderActivity.
 - `AREA` تمثل District/Neighborhood بصورة مفاهيمية parent-child.
-- وفق Approved UI Convention، واجهات discovery/request/provider-location تعرض/تختار Neighborhood فقط؛ District يظل في نموذج البيانات ويُشتق داخليًا من Neighborhood. واجهات discovery/request/service-area تعرض Neighborhood فقط، بينما District مشتق داخليًا من الـNeighborhood ويبقى ممثلًا في نموذج البيانات.
+- وفق Approved UI Convention، واجهات discovery/request/provider-location/service-area تعرض/تختار Neighborhood فقط؛ District يظل في نموذج البيانات ويُشتق داخليًا من Neighborhood.
 - `PROVIDER_SERVICE_AREA` تمثل المناطق التي يخدمها Provider.
 - `AREA_ADJACENCY` تمثل قائمة الجوار المُدارة بين الأحياء وفق DEC-033؛ العلاقة المنطقية جوار متبادل، بينما طريقة فرض symmetry/uniqueness في قاعدة البيانات تؤجل إلى Chapter Four.
 - الموقع الدقيق/GPS ليس بيانات عامة في هذا النموذج.
