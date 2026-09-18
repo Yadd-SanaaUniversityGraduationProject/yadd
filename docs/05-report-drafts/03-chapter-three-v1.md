@@ -104,7 +104,7 @@
 - في MVP يكون Provider Profile من نوع واحد فقط: `SERVICE` أو `PRODUCT`، ولا يمكن تفعيل النوعين معًا على الملف نفسه — `DEC-074`.
 - داخل النوع المختار يمكن ربط تصنيف واحد أو أكثر عبر `ProviderActivity` و`Category` — `DEC-076`.
 - يسمح Draft Provider Profile مؤقتًا بصفر تصنيفات، لكن أهلية وظائف التقديم تتطلب تصنيفًا صالحًا واحدًا على الأقل.
-- Provider Verification شرط قبل وظائف التقديم حسب نوع Provider: Service Provider يحتاج Identity Verification، بينما Product Provider لا يحتاج Government ID؛ وكلاهما يحتاج Active Subscription لبدء تعاملات جديدة.
+- أهلية وظائف التقديم تعتمد نوع Provider: Service Provider يحتاج Identity Verification، بينما Product Provider لا يحتاج Government ID؛ وكلاهما يحتاج Active Subscription لبدء تعاملات جديدة.
 - سياسة تغيير Provider Type بعد اختياره لم تعتمد بعد.
 
 ### 3.3.4 نموذج Actors الرئيسي
