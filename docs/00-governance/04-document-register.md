@@ -5,7 +5,8 @@
 
 | الوثيقة | الغرض | الحالة الحالية | شرط الإغلاق/الملاحظة |
 |---|---|---|---|
-| Governance README | قواعد القراءة وSingle Source of Truth | `SYNCHRONIZED 2026-09-11` | ملفات الجامعة الأصلية أعلى سلطة أكاديمية؛ بنية Legacy الحالية موثقة |
+| Governance README | قواعد القراءة وSingle Source of Truth | `SYNCHRONIZED 2026-09-19 — AI ROUTING ADDED` | ملفات الجامعة الأصلية أعلى سلطة أكاديمية؛ AI uses task router before selective reading |
+| AI Task Router | توجيه Context للذكاء الاصطناعي حسب نوع المهمة | `ACTIVE — NAVIGATION ONLY — 2026-09-19` | ليس Source of Truth؛ يحدد Minimum Context وRoutes ولا يكرر حقائق المشروع |
 | University Requirements Map | تحويل متطلبات الجامعة إلى مخرجات | `SOURCE_DERIVED — DECISION STATUS SYNCHRONIZED 2026-09-05` | ملفات الجامعة الأصلية أعلى سلطة أكاديمية |
 | Decision Register | فصل القرار عن المقترح وحفظ superseded history | `ACTIVE — CURRENT THROUGH DEC-091 / 2026-09-19` | DEC-078..090 توثق Requirements Closure؛ DEC-091 يثبت Technology Stack التنفيذي |
 | Open Questions | منع الافتراضات الصامتة | `ACTIVE — RESOLVED ITEMS MOVED TO CLOSED — SYNCHRONIZED 2026-09-18` | REQ-EXP-Q01 وINV-PENDING-Q01 وVER-DOC-Q01 أُغلقت؛ بقيت السياسات المفتوحة ظاهرة |
