@@ -189,7 +189,7 @@ Create Account: First/Father/Grandfather/Family Name + Mobile + Password + Terms
 
 `ASP.NET Core MVC Web → ASP.NET Core Backend/Web API → Entity Framework Core → Microsoft SQL Server`
 
-والـBackend/API المركزي هو المرجع النهائي للمعالجة والصلاحيات وBusiness Rules والوصول إلى قاعدة البيانات. Flutter عميل Mobile لاحق يتصل بالAPI نفسه. يعتمد التنفيذ ASP.NET Core Identity لإدارة هوية الحسابات، مع Cookies للWeb واتجاه JWT Bearer للFlutter/API. تكامل AI يتم عبر External APIs من خلال Service/Integration Layer، بينما يبقى مزود AI النهائي والسياسات التفصيلية مفتوحة — DEC-091.
+والـBackend/API المركزي هو المرجع النهائي للمعالجة والصلاحيات وBusiness Rules والوصول إلى قاعدة البيانات. Flutter عميل Mobile لاحق يتصل بالAPI نفسه. يعتمد التنفيذ ASP.NET Core Identity لإدارة هوية الحسابات، مع Cookies للWeb واتجاه JWT Bearer للFlutter/API. تكامل AI يتم عبر External APIs من خلال Service/Integration Layer، بينما يبقى مزود AI النهائي والسياسات التفصيلية مفتوحة — DEC-091. يعتمد التنفيذ ASP.NET Core Identity لإدارة هوية الحسابات، مع Cookies للWeb واتجاه JWT Bearer للFlutter/API. تكامل AI يتم عبر External APIs من خلال Service/Integration Layer، بينما يبقى مزود AI النهائي والسياسات التفصيلية مفتوحة — DEC-091.
 
 بالنسبة لـGuest، يمكن للواجهة إظهار protected CTA وتوجيهه إلى Authentication، لكن Backend/API يجب أن يفرض Authentication/Authorization فعليًا لكل protected operation — DEC-065/077.
 
