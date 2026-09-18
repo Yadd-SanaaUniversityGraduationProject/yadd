@@ -1,6 +1,6 @@
 # Use Case View 01 — Public Access & Discovery
 
-> **Status:** `REVIEW DRAFT — NOT BASELINED — SYNCHRONIZED THROUGH DEC-090`
+> **Status:** `REVIEW DRAFT — NOT BASELINED — SYNCHRONIZED THROUGH DEC-091`
 >
 > **Purpose:** Focused view of Guest/public discovery, authentication entry points and authenticated direct inquiry.
 
