@@ -144,15 +144,13 @@ Every current diagram must preserve these rules:
 - Beneficiary→Provider rating is mandatory but may be deferred with Later; it is Hybrid (Overall Stars 1–5 + five type-specific Structured Criteria + optional Comment), with 24h reminder and completion before a new Transaction. Provider→Beneficiary rating is optional.
 - Block and Report are separate concepts; neither implies the other. Generic Report requires Reason; Description is not universally mandatory, while Transaction Complaint requires Reason + Description.
 - Neighborhood adjacency is managed data, not GPS-radius logic.
-- User-facing discovery/request/provider-location UI exposes Neighborhood only; District remains internal/derived while the underlying data model stays District + Neighborhood.
-- User-facing discovery/request/service-area UI exposes Neighborhood only; District remains internal/derived from Neighborhood.
+- User-facing discovery/request/provider-location/service-area UI exposes Neighborhood only; District remains internal/derived while the underlying data model stays District + Neighborhood.
 - Request inactivity uses 24h/48h reminders and 72h Expired; meaningful Beneficiary activity resets the clock, Provider Response arrival alone does not; Republish creates a new Request.
 - Returning-user login uses verified phone or verified email + password; Forgot Password uses verified recovery channels; Portal switching uses the same User account and remembers lastPortal.
 - Deactivate/Reactivate exists; no self-service Hard Delete in MVP.
-- Expired Subscription does not remove Provider Portal access or stop existing Active Transactions; it blocks new Provider Responses and new Direct Search Transactions until renewal.
+- Provider Portal access is distinct from new-interaction eligibility: Expired Subscription allows login/profile/ongoing Transaction/renewal, but blocks new Provider Responses and new Direct Search Transactions.
 - Transaction cancellation records actor, reason and time.
 - No Beneficiary↔Provider Payment/Escrow/Refund/Settlement process/entity inside YADD.
-- Provider Portal access is distinct from new-interaction eligibility: Expired Subscription allows login/profile/ongoing Transaction/renewal, but blocks new Provider Responses and new Direct Search Transactions.
 
 ## 6. Open Items That Must Not Be Invented
 
