@@ -26,6 +26,7 @@ flowchart LR
             direction LR
             LOGIN(["Log In"]):::usecase
             REGISTER(["Create Account"]):::usecase
+            RECOVER(["Recover Password"]):::usecase
             FORGOT(["Forgot / Reset Password"]):::usecase
         end
 
@@ -74,6 +75,7 @@ flowchart LR
 - Public Provider Profile excludes phone/direct private-contact data and sensitive Verification, Subscription, Transaction and Report data.
 - `Communicate / Inquire` requires an authenticated user. A Guest attempting a protected CTA is redirected to `Log In` or `Create Account`.
 - Authentication is a **precondition**, not an `<<include>>` relationship.
+- `Recover Password` uses phone OTP as the primary recovery path; verified Email may be an additional recovery channel. Unverified Email is not a valid login/recovery identifier.
 - Returning users may use `Forgot / Reset Password`: phone OTP is primary; verified Email may be an additional recovery channel. No Username, security questions, invented OTP lifetime, resend limit or lockout threshold is introduced.
 - **Location UI synchronization:** public search exposes Neighborhood to the user; District is derived internally from the selected Neighborhood.
 - The three `<<extend>>` relationships shown above are the approved relationships from the current Use Case model.
