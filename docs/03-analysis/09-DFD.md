@@ -230,7 +230,7 @@ Ratings do not change Transaction status. No ratings are created for `Cancelled`
 ### 6.0 Manage Administration, Verification & Safety
 
 Manages:
-- Provider Verification;
+- Service Provider Identity Verification;
 - Provider Subscription state;
 - Reports / Moderation / Flags;
 - reported Portfolio/Catalog content;
@@ -261,7 +261,7 @@ AI is an internal assistance mechanism, not an external actor in the main DFD. S
 - `Agreement` process/store/entity.
 - Guest-created protected domain actions before Authentication.
 - Public exposure of phone/direct private-contact data or sensitive/private records.
-- numeric values that remain open such as expiry timing and AI thresholds.
+- numeric/policy values that remain open, such as AI/moderation thresholds and location-data timing where applicable.
 - Provider Type switching behavior not yet approved.
 
 ---
