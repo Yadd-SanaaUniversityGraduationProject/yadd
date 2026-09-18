@@ -1,6 +1,6 @@
 # YADD Screen Specifications — Working Draft
 
-> **Status:** IN PROGRESS — APPROVED UI CONTRACTS THROUGH SAFE-02
+> **Status:** FUNCTIONAL SCREEN CONTRACTS COMPLETE — APPROVED THROUGH ADM-07 — 48/48 INVENTORY ENTRIES COVERED
 >
 > This document records detailed screen-level UI contracts derived from the current project requirements and explicitly reviewed UI decisions. It does not override the Decision Register, SRS, or Business Rules.
 >
@@ -2692,6 +2692,449 @@ YADD administration does not decide financial entitlement or compel Payment, Ref
 - Provider→Beneficiary rating remains optional.
 - Block/Report are independent; Block does not break an already Active Transaction.
 - No YADD Beneficiary↔Provider Payment/Escrow/Refund/Settlement workflow is introduced by these screens.
+
+
+---
+
+# ADM-01 — Admin Work Queue / Entry
+
+- **Contract status:** `APPROVED UI CONTRACT — 2026-09-18`
+- **Primary actor:** Authorized Admin / authorized specialized administrative staff.
+- **Related sources:** `FR-015..015C`; administrative actor model; `DEC-085/086/089`; Screen Inventory `ADM-01`.
+- **Classification:** Derived administrative navigation over approved administrative functions.
+- **Platform presentation:** **Desktop-only UI baseline for the current MVP design package.**
+
+## Goal
+
+Provide one desktop entry/work-queue surface for the administrative functions the current authorized staff member is permitted to access, without inventing an analytics product.
+
+## Authorized work areas
+
+Show only work areas permitted to the current administrative role/context, including as applicable:
+
+- `طلبات التحقق` → `ADM-02`;
+- `البلاغات والتنبيهات` → `ADM-04`;
+- `سجلات الاشتراكات` → `ADM-06`.
+
+Conceptual specialized roles include:
+
+- Verification Reviewer;
+- Content Moderator;
+- Subscription Administrator.
+
+Using a unified Admin entry screen does not imply that every administrative user has every permission.
+
+## Queue counts
+
+A pending-item count may be displayed only when provided by actual runtime data.
+
+Do not fabricate counts in static design.
+
+## Desktop layout — Approved UI Decision
+
+- Administration screens are designed for **Desktop**, not Mobile, in the current MVP UI package.
+- Use an RTL desktop shell with shared YADD header/sidebar patterns as appropriate.
+- Do not create an Admin mobile bottom navigation.
+- Desktop presentation must still use the same YADD design tokens, typography, controls, surfaces, icon family, and state patterns as the rest of the product.
+
+## Explicit exclusions
+
+Do not add unsupported administrative analytics such as:
+
+- revenue charts;
+- fabricated user totals;
+- KPI dashboard;
+- AI-performance dashboard;
+- unsupported business-intelligence metrics.
+
+---
+
+# ADM-02 — Verification Requests
+
+- **Contract status:** `APPROVED UI CONTRACT — 2026-09-18`
+- **Primary actor:** Authorized Verification Reviewer / authorized Admin.
+- **Related sources:** `FR-VER-01..06`; `FR-015/015A/015B`; `DEC-085`; Provider Verification Model; Screen Inventory `ADM-02`.
+- **Classification:** Requirement-backed Service Provider verification review queue.
+- **Platform presentation:** Desktop-only.
+
+## Goal
+
+Show Service Provider Government-ID verification submissions that require or previously received authorized review.
+
+Product Provider does not enter the Government-ID verification queue in MVP.
+
+## Queue item
+
+A verification row/card may display, as permitted and available:
+
+- real account name;
+- Verification status;
+- document type: `National ID` or `Passport`;
+- submission date/time when supplied by runtime data;
+- concise review context needed to identify the case.
+
+## Supported verification states
+
+The administrative UI must be able to represent:
+
+- `Submitted`;
+- `UnderReview`;
+- `ResubmissionRequired`;
+- `Verified`;
+- `Rejected`.
+
+Organization into UI tabs/filters such as pending/history is permitted as Derived UI, but must not create new Verification lifecycle states.
+
+## Primary interaction
+
+Selecting a Verification Request opens:
+
+`ADM-03 Verification Review`.
+
+## Sensitive-data boundary
+
+Do not expose large identity-document previews or sensitive evidence directly in a general queue when not needed.
+
+Detailed sensitive artifacts belong inside the authorized case review context.
+
+## Desktop layout
+
+Use a desktop table/list/queue pattern consistent with the shared YADD UI Foundation.
+
+---
+
+# ADM-03 — Verification Review
+
+- **Contract status:** `APPROVED UI CONTRACT — 2026-09-18`
+- **Primary actor:** Authorized Verification Reviewer / authorized Admin.
+- **Related sources:** `FR-VER-02..06`; `FR-015A/015B`; `DEC-085`; Provider Verification Model; AI Trust & Safety Model; Screen Inventory `ADM-03`.
+- **Classification:** Requirement-backed sensitive human-review interface.
+- **Platform presentation:** Desktop-only.
+
+## Goal
+
+Allow an authorized human reviewer to examine a Service Provider verification case and issue the approved final human decision.
+
+## Review information
+
+Show only to authorized staff:
+
+- real name from User Account;
+- verified phone context;
+- document type;
+- identity-document image;
+- personal photo with the document;
+- current Verification state;
+- relevant previous review note(s);
+- AI/automated assistance flags when they exist and are permitted for reviewer use.
+
+## Human decisions
+
+### `اعتماد`
+
+→ Verification status becomes `Verified`.
+
+### `طلب إعادة تقديم`
+
+→ Verification status becomes `ResubmissionRequired`.
+
+A review note/reason must be recorded.
+
+### `رفض`
+
+→ Verification status becomes `Rejected`.
+
+A review note/reason must be recorded.
+
+## Human / AI boundary
+
+AI may provide assistive checks, flags, or risk signals.
+
+AI must not autonomously issue the final `Verified` / `Rejected` high-impact decision.
+
+The final decision is made by an authorized human reviewer.
+
+## Audit / sensitivity
+
+Sensitive administrative review and decision events must remain traceable according to the current audit model.
+
+Verification artifacts remain private and must not appear in public Provider UI.
+
+## Explicit exclusions / open policy
+
+Do not introduce:
+
+- Auto Verify;
+- Auto Reject;
+- Product Provider Government-ID review;
+- an AI score that forces the human outcome;
+- an invented retention period for verification artifacts.
+
+Retention remains Needs Verification.
+
+---
+
+# ADM-04 — Reports / Flags Queue
+
+- **Contract status:** `APPROVED UI CONTRACT — 2026-09-18`
+- **Primary actor:** Authorized Content Moderator / authorized Admin.
+- **Related sources:** `FR-SAFE-02..04`; `FR-AI-02..03A`; `FR-015A/015B`; `DEC-053/054/084/089`; `BR-022/059/066`; AI Trust & Safety Model; Screen Inventory `ADM-04`.
+- **Classification:** Requirement-backed human-review queue; taxonomy/thresholds remain partially open.
+- **Platform presentation:** Desktop-only.
+
+## Goal
+
+Provide one review queue for Reports, Transaction Complaints, and Safety/AI Flags that require authorized human assessment.
+
+## Supported queue sources
+
+As applicable:
+
+- User Report;
+- Conversation / behavior Report;
+- Portfolio/Catalog Item Report;
+- Transaction Complaint;
+- AI / behavioral Safety Flag.
+
+## Queue item
+
+Display, when available and authorized:
+
+- source type: `Report / Flag / Complaint`;
+- target/context reference;
+- supplied reason or reason category;
+- creation date/time;
+- current review state when provided by the administrative workflow.
+
+Selecting an item opens:
+
+`ADM-05 Report / Complaint Review`.
+
+## Neutral review language
+
+A Report or Flag is an input to review, not proof of a violation.
+
+Do not label an unreviewed subject as a confirmed violator.
+
+Use neutral states such as `بانتظار المراجعة` where appropriate.
+
+## AI Flag boundary
+
+When an AI/automated Flag exists, expose enough reason/category information for a human reviewer to understand why it was raised.
+
+Do not freeze or invent:
+
+- numeric risk thresholds;
+- mandatory risk score values;
+- final exhaustive moderation category taxonomy.
+
+Those remain Needs Verification.
+
+---
+
+# ADM-05 — Report / Complaint Review
+
+- **Contract status:** `APPROVED UI CONTRACT — 2026-09-18`
+- **Primary actor:** Authorized Content Moderator / authorized Admin.
+- **Related sources:** `FR-SAFE-02..04`; `FR-015A..015C`; `DEC-053/054/073/084/089`; `BR-022/040/059/066`; AI Trust & Safety Model; Screen Inventory `ADM-05`.
+- **Classification:** Requirement-backed human moderation / complaint review.
+- **Platform presentation:** Desktop-only.
+
+## Goal
+
+Allow an authorized human reviewer to examine relevant YADD evidence and record an approved administrative outcome without treating Reports/Flags as automatic proof or turning YADD into a financial arbitration authority.
+
+## Review information
+
+Show, according to case type, permissions, and available records:
+
+- Reporter / target context;
+- Report reason;
+- Description when supplied/required;
+- optional attachments;
+- relevant Conversation/message context;
+- related Portfolio/Catalog item;
+- Transaction / Invoice history relevant to a Transaction Complaint;
+- related AI / Safety Flags;
+- relevant administrative audit/history needed for the decision.
+
+## Approved administrative outcomes
+
+The administrative outcome must be one of the approved MVP values:
+
+1. `No Violation`;
+2. `Warning`;
+3. `Content Removal`;
+4. `Temporary Restriction`;
+5. `Account Suspension`;
+6. `Permanent Ban`.
+
+A human decision is required for high-impact outcomes.
+
+## Decision record
+
+The administrative decision records the applicable:
+
+- outcome;
+- reason;
+- authorized staff member;
+- date/time;
+- linked report/evidence/context.
+
+## Temporary Restriction
+
+When `Temporary Restriction` is selected, the duration is determined according to the applicable approved operational policy.
+
+Do not hard-code an invented universal duration such as 7/14/30 days.
+
+## Transaction Complaint boundary
+
+For a Transaction Complaint, administration may:
+
+- review YADD records/evidence;
+- apply YADD platform policy;
+- take an appropriate administrative action when a violation is found.
+
+Administration must not:
+
+- decide payment entitlement;
+- compel payment;
+- compel refund;
+- compel compensation.
+
+If the underlying Invoice disagreement is resolved, the transaction flow may return to Revision/Review as appropriate.
+
+If it remains unresolved under the current dispute flow, Transaction may end as `Disputed`, and Ratings do not open.
+
+## Open / Needs Verification
+
+The detailed user appeal path for high-impact moderation outcomes remains open (`AI-APPEAL-Q01`).
+
+Do not invent an Appeal screen/flow in this contract.
+
+---
+
+# ADM-06 — Subscription Records
+
+- **Contract status:** `APPROVED UI CONTRACT — 2026-09-18`
+- **Primary actor:** Authorized Subscription Administrator / authorized Admin.
+- **Related sources:** `FR-SUB-01..06`; `FR-015`; `DEC-042/043/086`; Provider Subscription Model; Screen Inventory `ADM-06`.
+- **Classification:** Requirement-backed administrative subscription records.
+- **Platform presentation:** Desktop-only.
+
+## Goal
+
+Show Provider subscription records for both Service Provider and Product Provider and provide access to the authorized manual activation/renewal confirmation flow.
+
+## Subscription record
+
+May display:
+
+- Provider;
+- Provider Type;
+- Subscription Status;
+- StartDate;
+- EndDate.
+
+Supported conceptual status values include:
+
+- `PendingConfirmation`;
+- `Active`;
+- `Expired`.
+
+## Primary interaction
+
+A record requiring authorized activation/renewal confirmation opens:
+
+`ADM-07 Subscription Confirmation`.
+
+The screen may also expose current/history record context according to authorized access.
+
+## Open commercial/operational details
+
+Do not present as finalized facts:
+
+- final monthly price;
+- specific bank/wallet/account;
+- final payment-proof procedure;
+- multiple plan names or plan tiers.
+
+`SUB-PLAN-Q01` and `SUB-PAY-Q01` remain open.
+
+---
+
+# ADM-07 — Subscription Confirmation
+
+- **Contract status:** `APPROVED UI CONTRACT — 2026-09-18`
+- **Primary actor:** Authorized Subscription Administrator / authorized Admin.
+- **Related sources:** `FR-SUB-02..06`; `FR-015`; `DEC-042/043/086`; Provider Subscription Model; Screen Inventory `ADM-07`.
+- **Classification:** Requirement-backed manual/external subscription confirmation; payment-proof procedure remains open.
+- **Platform presentation:** Desktop-only.
+
+## Goal
+
+Allow an authorized staff member to confirm Provider subscription activation or renewal after operational verification of external payment.
+
+## Required context
+
+Show:
+
+- Provider;
+- Provider Type;
+- current Subscription Status;
+- previous/current StartDate and EndDate when applicable;
+- external-payment verification context only to the extent supported by the final operational procedure.
+
+## Main action
+
+According to context:
+
+- `تأكيد التفعيل`; or
+- `تأكيد التجديد`.
+
+After authorized confirmation:
+
+- Subscription becomes `Active`;
+- the current MVP subscription period is **30 days** from the activation/renewal start date under the approved model.
+
+## Manual/external payment boundary
+
+- YADD has no subscription Payment Gateway in MVP.
+- activation/renewal is not triggered automatically by an in-platform payment event;
+- confirmation is a human administrative action after external payment verification.
+
+## No invented rejection state
+
+Do not add a formal `RejectedPayment` / `PaymentRejected` Subscription lifecycle state because it is not part of the current approved lifecycle.
+
+If external payment verification fails, the operational handling must follow the later approved payment-confirmation procedure rather than inventing a new Subscription state.
+
+## Open / Needs Verification
+
+Do not freeze fields for:
+
+- receipt upload;
+- transfer reference;
+- bank/wallet account;
+- payment method;
+- payment-proof format;
+
+until `SUB-PAY-Q01` is resolved.
+
+---
+
+## Administration-package shared constraints — ADM-01..07
+
+- **Desktop-only presentation baseline:** Administration UI is designed for Desktop in the current MVP design package; no Admin mobile wireframes or Mobile Bottom Navigation are required.
+- Administration still uses the same shared YADD visual system: RTL, Tajawal/Inter, shared color tokens, shared 52px Button component baseline, shared inputs/cards/radius/spacing/icon family, and shared UI states.
+- Specialized administrative roles/permissions remain authorization-sensitive; a unified shell must not imply universal access.
+- Government-ID Verification administration applies to Service Provider only in MVP.
+- Sensitive Verification, Report, Flag, Audit, Subscription, Transaction, and Invoice administrative data is not public Guest data.
+- AI/automated checks support human review; high-impact final decisions remain human.
+- Report/Flag does not itself prove a violation.
+- Administrative complaint review is not financial/commercial arbitration.
+- Subscription collection remains external/manual in MVP.
+- Do not invent analytics, moderation thresholds, appeal flow, verification-retention period, subscription price, payment method, or payment-proof procedure.
 
 ---
 
