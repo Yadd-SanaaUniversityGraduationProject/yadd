@@ -1,6 +1,6 @@
 # UC-07 — Rate Provider Sequence Diagram
 
-> **Status:** `REVIEW DRAFT — NOT BASELINED`
+> **Status:** `REVIEW DRAFT — SYNCHRONIZED 2026-09-18 — NOT BASELINED`
 >
 > **Purpose:** Sequence Diagram مشتق من `UC-07 — Rate Provider` فقط. يمثل التقييم الإلزامي للمقدم بعد اكتمال Transaction، باعتباره Post-Transaction operation مستقلة.
 
@@ -23,27 +23,50 @@ sequenceDiagram
     participant UI as RatingUI «boundary»
     participant C as RatingController «control»
     participant T as Transaction «entity»
+    participant PP as ProviderProfile «entity»
     participant R as ProviderRating «entity»
 
     Note over B,T: Precondition: Transaction Completed + final invoice approved
-    Note over B,UI: Beneficiary may choose Later; reminder after 24h and completion required before a new Transaction
 
     UI-->>B: promptRequiredProviderRating(transactionId)
-    B->>UI: submitProviderRating(stars, optionalComment)
-    UI->>C: submitProviderRating(transactionId, stars, comment)
-    C->>T: verifyCompletedTransaction(transactionId, Beneficiary)
-    T-->>C: ratingEligibility
 
-    alt Eligible + stars from 1 to 5
-        C->>R: createProviderRating(transactionId, stars, comment)
-        R-->>C: ratingSaved(ratingId)
-        C-->>UI: ratingSubmitted(ratingId)
-        UI-->>B: showRatingConfirmation()
-    else Not eligible or invalid required rating
-        C-->>UI: ratingRejected(reason)
-        UI-->>B: showRatingError()
+    alt Beneficiary rates now
+        B->>UI: openProviderRating(transactionId)
+        UI->>C: getProviderRatingForm(transactionId)
+        C->>T: verifyCompletedTransaction(transactionId, Beneficiary)
+        T-->>C: ratingEligibility
+
+        alt Eligible
+            C->>PP: getProviderType(providerId)
+            PP-->>C: SERVICE or PRODUCT
+            C-->>UI: ratingFormForProviderType()
+
+            Note over B,UI: Required: Overall Stars 1-5 + five Structured Criteria appropriate to Provider Type
+            Note over B,UI: Optional: text Comment
+
+            B->>UI: submitProviderRating(overallStars, structuredCriteria, optionalComment)
+            UI->>C: submitProviderRating(transactionId, ratingData)
+            C->>R: createProviderRating(transactionId, ratingData)
+            R-->>C: ratingSaved(ratingId)
+            C-->>UI: ratingSubmitted(ratingId)
+            UI-->>B: showRatingConfirmation()
+        else Not eligible
+            C-->>UI: ratingRejected(reason)
+            UI-->>B: showRatingError()
+        end
+
+    else Beneficiary chooses Later
+        B->>UI: chooseLater()
+        UI->>C: deferRequiredProviderRating(transactionId)
+        C-->>UI: ratingRemainsOutstanding()
+        UI-->>B: continueWithoutRatingNow()
+
+        Note over B,UI: After 24h, YADD sends a reminder while the rating remains outstanding
+        Note over B,C: Before starting a new Transaction, any previous required Provider Rating must be completed
     end
 
+    Note over B,PP: SERVICE criteria: Service Quality / Punctuality / Adherence to Agreement / Communication-Responsiveness / Professional Conduct
+    Note over B,PP: PRODUCT criteria: Matches Description / Product Quality / Readiness-Agreed Timing / Communication-Responsiveness / Adherence to Agreement
     Note over T,R: Transaction remains COMPLETED — rating is Post-Transaction
 ```
 
@@ -68,9 +91,9 @@ sequenceDiagram
 عند نجاح الإرسال:
 
 - ترتبط Provider Rating بالـCompleted Transaction نفسها.
-- تحفظ درجة 1–5، والتعليق إن أضيف.
+- تحفظ Overall Stars 1–5 + Structured Criteria المناسبة لنوع Provider، والتعليق إن أضيف.
 - تبقى `Transaction.status = Completed`.
 
 ## Modeling note
 
-فرع رفض التقييم يمثل حماية تنفيذية مشتقة من شروط الأهلية ومن إلزامية قيمة النجوم 1–5. لا يضيف عقوبة أو حالة Transaction جديدة.
+التحقق من أهلية Transaction والحقول الإلزامية يمثل حماية تنفيذية مشتقة من المتطلبات المعتمدة. اختيار `Later` لا يلغي الالتزام؛ يبقى التقييم مطلوبًا مع Reminder بعد 24h وقيد إكماله قبل بدء Transaction جديدة.
