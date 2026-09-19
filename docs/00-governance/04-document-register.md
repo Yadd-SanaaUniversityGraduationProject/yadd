@@ -52,7 +52,7 @@
 | Chapter Two v1 | الفصل الثاني | `v1.1 — TEXT SYNCHRONIZED — CORE SOURCES VERIFIED — REVIEW OPEN` | final research/reference closure pending؛ DEC-077 قرار منتج ولا يغير الأدلة البحثية التاريخية |
 | Chapter Three v1 | الفصل الثالث | `v1.3 — WORKING DRAFT — TEXT SYNCHRONIZED THROUGH DEC-090` | Requirements Closure integrated; final diagrams/export pending |
 | DFD | تدفقات البيانات | `DRAFT FOR PRELIMINARY DEFENSE — CORE SYNCHRONIZED THROUGH DEC-091` | Logical AI/stack boundary + current eligibility flows synchronized; standard visual redraw/export pending |
-| UML | Use Case/Activity/Sequence/Class | `DRAFT FOR PRELIMINARY DEFENSE — SEMANTICS SYNCHRONIZED THROUGH DEC-091` | affected use-case/activity/sequence/class sources updated; final academic redraw/Visual/A4 review remains open |
+| UML | Use Case/Activity/Sequence/Class | `DRAFT FOR PRELIMINARY DEFENSE — SEMANTICS SYNCHRONIZED THROUGH DEC-091` | 5 Use Case views + 16 Activity diagrams + 20 rendered Sequence diagrams synchronized; final academic export/Visual/A4 review remains open |
 | ERD | النموذج المفاهيمي | `DRAFT FOR PRELIMINARY DEFENSE — CORE SYNCHRONIZED THROUGH DEC-091` | Conceptual model unchanged by stack; eligibility boundary synchronized; final visual review pending |
 | Traceability Matrix | تتبع المتطلبات للمخططات | `CORE TRACEABILITY SYNCHRONIZED THROUGH DEC-091 — DESIGN TRACEABILITY PARTIAL` | new account/profile/request/notification and changed verification/rating rules traced; final design closure before baseline |
 | Class Diagram Package | النموذج الكائني التفصيلي | `SEMANTICALLY VERIFIED — TEAM APPROVED — SYNCHRONIZED THROUGH DEC-091 — NOT BASELINED` | User fields/TradeName/hybrid rating/service verification/unblock/notifications updated; Visual/A4 finalization pending |

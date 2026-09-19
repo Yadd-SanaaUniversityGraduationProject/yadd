@@ -90,7 +90,7 @@ sequenceDiagram
     end
 
     Note over B,R: Republish never reopens the old Expired Request
-    Note over B,R: Old responses remain inactive; the republished Request has a new identity and editable copied data
+    Note over B,R: Old responses remain inactive, and the republished Request has a new identity and editable copied data
     Note over B,R: Closing an Open Request is not Transaction Cancellation
 ```
 

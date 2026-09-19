@@ -38,7 +38,7 @@ sequenceDiagram
     P->>UI: submitProviderResponse(responseData)
     UI->>C: submitProviderResponse(requestId, responseData)
     C->>C: validateResponseEligibility(providerId)
-    Note over C: SERVICE = Identity Verified + eligible profile; PRODUCT = eligible account/profile; both require Active Subscription
+    Note over C: SERVICE requires verified identity and eligible profile. PRODUCT requires eligible account and profile. Both require Active Subscription
     C->>RQ: checkRequestStillOpen(requestId)
     RQ-->>C: requestState
     C->>PR: findActiveResponse(providerId, requestId)

@@ -39,7 +39,7 @@ diagrams/
 └── 03-analysis/
     └── uml/
         ├── activity/
-        │   └── activity-*.md
+        │   └── NN-activity-name.md
         ├── sequence/
         │   ├── uc-*-sequence.md
         │   └── seq-*-sequence.md
@@ -64,11 +64,24 @@ diagrams/
 
 ### Activity
 
-- `03-analysis/uml/activity/activity-published-request-route.md`
-- `03-analysis/uml/activity/activity-direct-search-route.md`
-- `03-analysis/uml/activity/activity-final-invoice-dispute.md`
-- `03-analysis/uml/activity/activity-provider-verification.md`
-- `03-analysis/uml/activity/activity-report-administrative-review.md`
+- `03-analysis/uml/activity/01-account-registration-initial-portal.md`
+- `03-analysis/uml/activity/02-direct-search-inquiry.md`
+- `03-analysis/uml/activity/03-create-request.md`
+- `03-analysis/uml/activity/04-provider-response-to-request.md`
+- `03-analysis/uml/activity/05-select-provider-from-request.md`
+- `03-analysis/uml/activity/06-direct-transaction-start.md`
+- `03-analysis/uml/activity/07-cancel-transaction.md`
+- `03-analysis/uml/activity/08-final-invoice-revision-approval.md`
+- `03-analysis/uml/activity/09-transaction-complaint.md`
+- `03-analysis/uml/activity/10-post-transaction-ratings.md`
+- `03-analysis/uml/activity/11-provider-onboarding-eligibility.md`
+- `03-analysis/uml/activity/12-service-provider-identity-verification.md`
+- `03-analysis/uml/activity/13-manage-portfolio-catalog.md`
+- `03-analysis/uml/activity/14-block-unblock-report.md`
+- `03-analysis/uml/activity/15-administrative-report-review.md`
+- `03-analysis/uml/activity/16-provider-subscription-renewal.md`
+
+The Activity package contains 16 numbered standalone diagrams. They replace the older five bundled route-level files and preserve the same approved semantics at a reviewable, scenario-focused granularity.
 
 ### Sequence
 

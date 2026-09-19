@@ -29,7 +29,7 @@
 
 ## Modeling
 - [ ] Main Use Case Diagram بصيغة UML قياسية نهائية + Specifications مراجعة؛ Working semantic model يشمل Guest وAuthentication boundary، لكن إعادة الرسم الأكاديمي النهائية ما تزال مطلوبة.
-- [ ] Activity/Sequence بصيغها النهائية للمناقشة؛ Working semantic sources متزامنة، وSequence package تحتوي الآن 20 rendered diagrams بما فيها Guest auth-gate وAuthentication/Portal وAccount management وOpen Request lifecycle؛ ما يزال Visual/A4 review والتصدير الأكاديمي النهائي مطلوبين.
+- [ ] Activity/Sequence بصيغها النهائية للمناقشة؛ Working semantic sources متزامنة، وحزمة Activity تحتوي 16 مخططًا مرقمًا وحزمة Sequence تحتوي 20 rendered diagrams؛ ما يزال Visual/A4 review والتصدير الأكاديمي النهائي مطلوبين.
 - [x] Class Diagram package مشتق ومزامن دلاليًا مع ERD والقرارات حتى `DEC-091`؛ يشمل TradeName/Hybrid Rating/Service Identity Verification/Notification؛ يبقى التصدير/المراجعة البصرية النهائية مفتوحًا.
 - [ ] DFD Context + Level 0 بصيغة نهائية قابلة للطباعة وفق `DEC-060`؛ Working semantics synchronized through DEC-091; final standard-notation/A4 redraw remains open.
 - [ ] ERD متتبع إلى المتطلبات ومراجع بصريًا للنسخة المقدمة؛ بنيويًا متزامن حتى DEC-091 ولا يحتوي Guest entity؛ DEC-091 لم يغير الـConceptual ERD.

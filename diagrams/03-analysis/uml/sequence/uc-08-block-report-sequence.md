@@ -35,14 +35,14 @@ sequenceDiagram
     SC-->>UI: blockApplied()
     UI-->>U: showBlockConfirmation()
 
-    Note over U,SC: New direct interaction is stopped; any Active Transaction remains accessible with its required actions/system notifications
+    Note over U,SC: New direct interaction is stopped. Any Active Transaction remains accessible with required actions and system notifications
 
     opt User later unblocks the same target
         U->>UI: unblockUser(targetUserId)
         UI->>SC: unblockUser(userId, targetUserId)
         SC-->>UI: unblockApplied()
         UI-->>U: showUnblockConfirmation()
-        Note over U,SC: Unblock restores future interaction only; it does not reopen ended Requests/Transactions or cancel an existing Report
+        Note over U,SC: Unblock restores future interaction only. It does not reopen ended Requests or Transactions or cancel an existing Report
     end
 ```
 
@@ -92,8 +92,8 @@ sequenceDiagram
     MC-->>AUI: reviewRecorded()
     AUI-->>A: showReviewConfirmation()
 
-    Note over A,MC: Allowed outcomes: No Violation / Warning / Content Removal / Temporary Restriction / Account Suspension / Permanent Ban — human authorization required
-    Note over A,MC: Temporary Restriction duration follows approved policy; no universal duration is hard-coded here
+    Note over A,MC: Allowed outcomes are No Violation, Warning, Content Removal, Temporary Restriction, Account Suspension, or Permanent Ban. Human authorization is required
+    Note over A,MC: Temporary Restriction duration follows approved policy. No universal duration is hard-coded here
 ```
 
 ## Scope boundary

@@ -38,7 +38,7 @@ sequenceDiagram
     DC-->>BUI: searchResults
     BUI-->>B: showProviders()
 
-    Note over B,DC: Neighborhood is user-facing; District is derived internally and is not a separate search field
+    Note over B,DC: Neighborhood is user-facing, while District is derived internally and is not a separate search field
 
     B->>BUI: openProviderProfile(providerId)
     BUI->>DC: getProviderProfile(providerId)
