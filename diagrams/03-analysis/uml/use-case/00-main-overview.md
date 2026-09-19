@@ -69,11 +69,8 @@ flowchart LR
 
     B --- MANAGE_ACC
     B --- SWITCH
-    B --- MANAGE_ACCOUNT
-    B --- SWITCH_PORTAL
     B --- UC01
     B --- UC02
-    B --- REPUBLISH
     B --- REPUBLISH
     B --- UC04
     B --- UC05
@@ -84,8 +81,6 @@ flowchart LR
 
     MANAGE_ACC --- P
     SWITCH --- P
-    MANAGE_ACCOUNT --- P
-    SWITCH_PORTAL --- P
     UC01 --- P
     UC03 --- P
     UC05 --- P

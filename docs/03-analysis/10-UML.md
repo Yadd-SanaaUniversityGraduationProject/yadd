@@ -1,8 +1,8 @@
 # نماذج UML — YADD Preliminary Defense
 
-> **الحالة:** `DRAFT FOR PRELIMINARY DEFENSE — SYNCHRONIZED THROUGH DEC-090 — CLASS PACKAGE SEMANTICALLY VERIFIED`
+> **الحالة:** `DRAFT FOR PRELIMINARY DEFENSE — SYNCHRONIZED THROUGH DEC-091 — UML WORKING SOURCES RENDER-VERIFIED`
 >
-> **المراجع الحاكمة:** DEC-046/047/048/050/051/053/054/063/064/066/067/068/069/070/071/072/073/074/075/076/077/078..090 + `05-SRS.md` + `06-business-rules.md` + `07-lifecycles.md` + `08-use-cases.md` + `11-ERD.md`.
+> **المراجع الحاكمة:** DEC-046/047/048/050/051/053/054/063/064/066/067/068/069/070/071/072/073/074/075/076/077/078..091 + `05-SRS.md` + `06-business-rules.md` + `07-lifecycles.md` + `08-use-cases.md` + `11-ERD.md`.
 >
 > يستخدم YADD كلًا من DFD وUML وفق `DEC-060`. يجب أن تكون جميع التسميات داخل المخططات الأكاديمية النهائية باللغة الإنجليزية وفق `DEC-072`.
 
@@ -46,10 +46,8 @@ flowchart LR
         UC1([Manage / Deactivate Account])
         UCL([Log In])
         UCR([Create Account])
-        UCF([Recover Password])
         UCS([Switch Portal])
         UCF([Forgot / Reset Password])
-        UCS([Switch Portal])
 
         UC2([Search Providers])
         UC3([View Provider Profile])
@@ -57,7 +55,6 @@ flowchart LR
         UC4([Create Request])
         UC5([Close Open Request])
         UCRP([Republish Expired Request])
-        UC5R([Republish Expired Request])
         UC6([Compare Provider Responses])
         UC7([Communicate / Inquire])
         UC8([Select Provider])
@@ -104,7 +101,6 @@ flowchart LR
     G --- UCL
     G --- UCR
     G --- UCF
-    G --- UCF
 
     B --- UC1
     B --- UCS
@@ -113,7 +109,7 @@ flowchart LR
     B --- UCP
     B --- UC4
     B --- UC5
-    B --- UC5R
+    B --- UCRP
     B --- UC6
     B --- UC7
     B --- UC8
@@ -147,7 +143,6 @@ flowchart LR
     P --- UC31
     P --- UC32
     P --- UC36
-    P --- UC36
 
     SP -. specializes .-> P
     PP -. specializes .-> P
@@ -177,7 +172,7 @@ flowchart LR
 
     classDef usecase fill:#ADD8E6,stroke:#9ABFCB,stroke-width:1px,color:#1F2933;
     classDef actor fill:#FFFFFF,stroke:#FFFFFF,color:#222222,font-weight:bold;
-    class UC0,UC1,UCL,UCR,UCF,UCS,UC2,UC3,UCP,UC4,UC5,UC5R,UC6,UC7,UC8,UC9,UC10,UC11,UC12,UC13,UC14,UC15,UC16,UC17,UC18,UC19,UC20,UC21,UC22,UC23,UC24,UC25,UC26,UC27,UC28,UC29,UC30,UC31,UC32,UC33,UC34,UC35,UC36,UC37 usecase;
+    class UC0,UC1,UCL,UCR,UCF,UCS,UC2,UC3,UCP,UC4,UC5,UCRP,UC6,UC7,UC8,UC9,UC10,UC11,UC12,UC13,UC14,UC15,UC16,UC17,UC18,UC19,UC20,UC21,UC22,UC23,UC24,UC25,UC26,UC27,UC28,UC29,UC30,UC31,UC32,UC33,UC34,UC35,UC36,UC37 usecase;
     style YADD fill:#FFFFFF,stroke:#B7B7B7,stroke-width:1.5px,color:#222222;
 ```
 
@@ -185,7 +180,7 @@ flowchart LR
 
 1. `Guest` معتمد وفق `DEC-077` للتصفح العام: `Browse Public Content`, `Search Providers`, `View Provider Profile`, و`View Portfolio / Catalog`، ويمكنه اختيار `Log In` أو `Create Account`.
 2. لا يرتبط Guest مباشرة بـ`Create Request`, `Communicate / Inquire`, Transaction, Ratings, Block/Report أو أي protected Use Case. ظهور CTA له لا يعني منحه الصلاحية؛ الضغط يوجّه إلى Authentication.
-3. `Log In`/`Create Account` لا يمثلان `<<include>>` داخل كل protected Use Case؛ Authentication هو Precondition للـauthenticated actor goals. `Recover Password` يستخدم Phone OTP أساسًا مع Verified Email كقناة إضافية ممكنة، ولا يوجد Username مستقل. `Forgot / Reset Password` يستخدم الهاتف الموثق كأساس وVerified Email كخيار إضافي، دون Username مستقل.
+3. `Log In`/`Create Account` لا يمثلان `<<include>>` داخل كل protected Use Case؛ Authentication هو Precondition للـauthenticated actor goals. `Forgot / Reset Password` يستخدم Phone OTP أساسًا مع Verified Email كقناة إضافية ممكنة، ولا يوجد Username مستقل.
 4. `Service Provider` و`Product Provider` تخصصان من `Provider` وفق `DEC-067/074`. يظهران هنا فقط لأن `Submit Service Provider Verification` خاص بالـService Provider وفق DEC-085؛ بقية أهداف Provider العامة موروثة مفاهيميًا من Actor العام.
 5. لا توجد Use Case/Entity باسم `Agreement`; المسار القياسي في الطلب هو `Request → Provider Response → Selection → Transaction`.
 6. `View Provider Profile <<extend>> Search Providers` لأن البحث قد ينتهي دون فتح ملف بعينه.
@@ -221,19 +216,30 @@ flowchart LR
 
 ---
 
-## 3. Activity Diagram Package — Standalone Review Drafts
+## 3. Activity Diagram Package — 16 Standalone Review Drafts
 
-> **Synchronization correction — 2026-09-11:** أصبحت ملفات Activity المستقلة تحت `diagrams/03-analysis/uml/activity/` هي Working Semantic Source لمسارات النشاط. لا نكرر المخططات كاملة هنا لتقليل خطر Divergence بين نسختين.
+> **Synchronization correction — 2026-09-19:** الملفات المستقلة تحت `diagrams/03-analysis/uml/activity/` هي Working Semantic Source المعتمدة للمراجعة. استبدلت الحزمة القديمة المجمعة بخمسة مسارات بحزمة تفصيلية من 16 Activity Diagram لتتوافق مع العمل الأكاديمي المنجز وتبقى قابلة للتتبع إلى Use Cases والقرارات الحاكمة.
 
-| Workflow | Standalone working file | Current status |
-|---|---|---|
-| Published Request Route | `diagrams/03-analysis/uml/activity/activity-published-request-route.md` | `REVIEW DRAFT — NOT BASELINED` |
-| Direct Search Route | `diagrams/03-analysis/uml/activity/activity-direct-search-route.md` | `REVIEW DRAFT — NOT BASELINED` |
-| Final Invoice, Revision and Dispute | `diagrams/03-analysis/uml/activity/activity-final-invoice-dispute.md` | `REVIEW DRAFT — NOT BASELINED` |
-| Provider Verification and Activation | `diagrams/03-analysis/uml/activity/activity-provider-verification.md` | `REVIEW DRAFT — NOT BASELINED` |
-| Report and Administrative Review | `diagrams/03-analysis/uml/activity/activity-report-administrative-review.md` | `REVIEW DRAFT — NOT BASELINED` |
+| # | Activity | Standalone working file |
+|---:|---|---|
+| 01 | Account Registration & Initial Portal Selection | `diagrams/03-analysis/uml/activity/01-account-registration-initial-portal.md` |
+| 02 | Direct Search & Inquiry | `diagrams/03-analysis/uml/activity/02-direct-search-inquiry.md` |
+| 03 | Create Request | `diagrams/03-analysis/uml/activity/03-create-request.md` |
+| 04 | Provider Response to Request | `diagrams/03-analysis/uml/activity/04-provider-response-to-request.md` |
+| 05 | Select Provider from Request | `diagrams/03-analysis/uml/activity/05-select-provider-from-request.md` |
+| 06 | Direct Transaction Start | `diagrams/03-analysis/uml/activity/06-direct-transaction-start.md` |
+| 07 | Cancel Transaction | `diagrams/03-analysis/uml/activity/07-cancel-transaction.md` |
+| 08 | Final Invoice, Revision & Approval | `diagrams/03-analysis/uml/activity/08-final-invoice-revision-approval.md` |
+| 09 | Transaction Complaint | `diagrams/03-analysis/uml/activity/09-transaction-complaint.md` |
+| 10 | Post-Transaction Ratings | `diagrams/03-analysis/uml/activity/10-post-transaction-ratings.md` |
+| 11 | Provider Onboarding & Eligibility | `diagrams/03-analysis/uml/activity/11-provider-onboarding-eligibility.md` |
+| 12 | Service Provider Identity Verification | `diagrams/03-analysis/uml/activity/12-service-provider-identity-verification.md` |
+| 13 | Manage Portfolio / Catalog | `diagrams/03-analysis/uml/activity/13-manage-portfolio-catalog.md` |
+| 14 | Block / Unblock & Report | `diagrams/03-analysis/uml/activity/14-block-unblock-report.md` |
+| 15 | Administrative Report Review | `diagrams/03-analysis/uml/activity/15-administrative-report-review.md` |
+| 16 | Provider Subscription & Renewal | `diagrams/03-analysis/uml/activity/16-provider-subscription-renewal.md` |
 
-هذه الحزمة Route/Decision-focused ولا تعني أن لكل Use Case مخطط Activity مستقل. إضافة Guest لا تغير Core Transaction Activities الحالية؛ أي Activity خاصة بـ`Guest attempts protected action → Authentication` يمكن إضافتها عند الحاجة للتوثيق البصري ولا تنشئ Domain state جديدًا. التغييرات في الحالات يجب أن تبقى متسقة مع `07-lifecycles.md`، بينما تفاصيل الرسائل بين المشاركين تبقى في Sequence Package.
+كل ملف يمثل Activity واحدة ولا ينشئ Requirement جديدة. التغييرات في الحالات تبقى متسقة مع `07-lifecycles.md` والنماذج المركزة، بينما تفاصيل الرسائل بين المشاركين تبقى في Sequence Package.
 
 ---
 
@@ -337,7 +343,7 @@ Package index: `diagrams/03-analysis/uml/class/README.md`.
 - [x] `<<include>>` يستخدم فقط للسلوك الإلزامي داخل الـBase Use Case.
 - [x] `<<extend>>` يستخدم فقط للسلوك الشرطي/الاختياري.
 - [x] Authentication والتبعيات الزمنية/الحالية مثل Ratings after Completed ممثلة كـPreconditions/Postconditions، لا include/extend مصطنع.
-- [x] Activity package منظمة كمسارات مستقلة قابلة للتتبع بدل تكرار Activity لكل UC.
+- [x] Activity package متزامنة كـ16 أنشطة مستقلة مرقمة وقابلة للتتبع.
 - [x] Sequence package مفككة إلى Scenarios مستقلة قابلة للتتبع بدل Giant Route Sequence.
 - [x] أسماء UI/Controller في Sequence Diagrams موسومة كـDerived modeling roles وليست Implementation Classes معتمدة.
 - [x] Class package تحتوي Integrated Master + ثلاث Detailed Subject-Area Views لنفس النموذج.
@@ -355,4 +361,5 @@ Package index: `diagrams/03-analysis/uml/class/README.md`.
 - [x] تقييم `Beneficiary→Provider` إلزامي؛ وتقييم `Provider→Beneficiary` اختياري.
 - [x] `Block User` و`Report User / Content` منفصلتان في الرسم الرئيسي.
 - [ ] ما يزال مطلوبًا إعادة بناء/تصدير Use Case Diagrams بصريًا وفق النموذج الأكاديمي المرجعي الجديد ومراجعة A4.
-- [ ] ما يزال مطلوبًا اختبار Render لبقية Mermaid standalone files ومراجعة Visual/A4 قبل الـbaseline.
+- [x] جميع Mermaid working sources في حزم Use Case/Activity/Sequence/Class اجتازت Render validation بتاريخ 2026-09-19.
+- [ ] ما تزال المراجعة البصرية النهائية وقابلية الطباعة A4 والتصدير الأكاديمي مطلوبة قبل الـbaseline.

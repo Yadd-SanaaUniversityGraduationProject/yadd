@@ -112,7 +112,7 @@ sequenceDiagram
         end
     end
 
-    Note over U,DB: One User account serves both portals; portal switching is not logout into another account
+    Note over U,DB: One User account serves both portals, and portal switching is not login to another account
     Note over U,DB: Expired subscription may limit new Provider interactions but does not itself remove Provider Portal access
 ```
 

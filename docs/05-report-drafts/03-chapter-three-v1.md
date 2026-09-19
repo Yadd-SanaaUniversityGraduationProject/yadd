@@ -504,8 +504,8 @@ YADD لا يدير أي حركة مالية بين Beneficiary وProvider.
 **الحالة الحالية:**
 
 - `09-DFD.md`: Working Context + Level 0 semantics متزامنة حتى DEC-090 وتشمل Guest كExternal Entity؛ final standard redraw/export pending.
-- `10-UML.md`: Working Use Case/Class semantics متزامنة حتى DEC-090؛ النسخة البصرية النهائية تحتاج مراجعة/تصدير A4.
-- Activity/Sequence core protected flows تبقى صالحة بافتراض actor authenticated؛ يمكن إضافة Guest auth-gate scenario عند الحاجة الأكاديمية دون تغيير Domain semantics.
+- `10-UML.md`: حزمة UML العاملة متزامنة حتى DEC-091: خمس Use Case views، وستة عشر Activity Diagram، وعشرون Sequence Diagram، إضافة إلى Class package؛ النسخة الأكاديمية النهائية تحتاج مراجعة/تصدير A4.
+- Activity/Sequence sources تمثل Guest authentication gate والمسارات المحمية ودورات الطلب/المعاملة دون إنشاء Domain semantics جديدة.
 - Class package: Detailed Analysis Class Model واحد مع Integrated Master + ثلاث Detailed Views؛ Guest لا يضيف Class.
 - `11-ERD.md`: Core Conceptual ERD يبقى صحيحًا بنيويًا؛ Guest لا يضيف Entity لمجرد التصفح العام، ويلزم فقط إبقاء public/private visibility في التصميم.
 
