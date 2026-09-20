@@ -1,6 +1,6 @@
 # بوابة الجاهزية قبل اعتماد الفصول الأربعة للمناقشة الأولية
 
-> **الحالة:** `ACTIVE — SYNCHRONIZED 2026-09-18 THROUGH DEC-091`
+> **الحالة:** `ACTIVE — SYNCHRONIZED 2026-09-20 THROUGH DEC-091`
 >
 > وجود مسودة فصل أو مخطط لا يعني اجتياز هذه البوابة. تستخدم القائمة لمنع اعتبار التحليل/التصميم نهائيًا أو جاهزًا للتسليم قبل تحقق البنود فعليًا.
 
@@ -29,7 +29,7 @@
 
 ## Modeling
 - [ ] Main Use Case Diagram بصيغة UML قياسية نهائية + Specifications مراجعة؛ Working semantic model يشمل Guest وAuthentication boundary، لكن إعادة الرسم الأكاديمي النهائية ما تزال مطلوبة.
-- [ ] Activity/Sequence بصيغها النهائية للمناقشة؛ Working semantic sources متزامنة، وحزمة Activity تحتوي 16 مخططًا مرقمًا وحزمة Sequence تحتوي 20 rendered diagrams؛ ما يزال Visual/A4 review والتصدير الأكاديمي النهائي مطلوبين.
+- [ ] Activity/Sequence بصيغها النهائية للمناقشة؛ Working semantic sources متزامنة، وحزمة Activity تحتوي 20 مخططًا مرقمًا وحزمة Sequence تحتوي 20 rendered diagrams؛ ما يزال Visual/A4 review والتصدير الأكاديمي النهائي مطلوبين.
 - [x] Class Diagram package مشتق ومزامن دلاليًا مع ERD والقرارات حتى `DEC-091`؛ يشمل TradeName/Hybrid Rating/Service Identity Verification/Notification؛ يبقى التصدير/المراجعة البصرية النهائية مفتوحًا.
 - [ ] DFD Context + Level 0 بصيغة نهائية قابلة للطباعة وفق `DEC-060`؛ Working semantics synchronized through DEC-091; final standard-notation/A4 redraw remains open.
 - [ ] ERD متتبع إلى المتطلبات ومراجع بصريًا للنسخة المقدمة؛ بنيويًا متزامن حتى DEC-091 ولا يحتوي Guest entity؛ DEC-091 لم يغير الـConceptual ERD.
@@ -53,7 +53,7 @@
 - [ ] لا توجد ميزة في التصميم غير موجودة في SRS/قرار حاكم.
 - [ ] لا يوجد كيان ERD/Relation Schema بلا حاجة موثقة.
 - [ ] لا توجد حالات Lifecycle متعارضة بين الوثائق الحالية.
-- [x] حالة الوثائق المتأثرة بـDEC-078..091 محدثة في Document Register بعد مزامنة 2026-09-18.
+- [x] حالة الوثائق المتأثرة بـDEC-078..091 محدثة في Document Register بعد مزامنة 2026-09-20.
 - [x] Chapter Three derived draft متزامن نصيًا عبر DEC-090 Requirements Closure؛ مخططات DFD/UML/ERD working sources أصبحت موثقة عبر DEC-091 دون إدخال تفاصيل الـstack داخل التحليل المنطقي؛ يلزم تحديث الفصل المشتق عند التجميع النهائي ثم redraw/export.
 - [ ] الفصول المشتقة النهائية تشير إلى النسخ الحالية ولا تتغلب على Sources of Truth.
 
