@@ -1,6 +1,6 @@
 # System Interface Design
 
-> **الحالة:** `DRAFT FOR PRELIMINARY DEFENSE — SYNCHRONIZED THROUGH DEC-090 — 2026-09-18`
+> **الحالة:** `DRAFT FOR PRELIMINARY DEFENSE — SYNCHRONIZED THROUGH DEC-091 + 32-TABLE DATA MAPPING — 2026-09-20`
 >
 > هذه الوثيقة تصميم مشتق من SRS/Use Cases الحالية. لا تجعل أي شاشة Feature جديدة ولا تثبت UI نهائيًا قبل المراجعة/Usability validation.
 
@@ -147,3 +147,8 @@ flowchart TD
 - Request UI communicates 24h/48h reminders and 72h expiry; expired request offers Republish as new.
 - Invoice UI communicates 24h/48h reminders and Overdue at 72h without Auto-Approval.
 - Block UI must preserve active-transaction actions; moderation admin UI supports the DEC-089 outcomes.
+
+
+## 32-table physical mapping note — 2026-09-20
+
+واجهة المستخدم لا تتغير بسبب تثبيت الجداول الفيزيائية. الصور/المرفقات في Request/Message/Invoice/Report ترتبط الآن صراحة بجداول `RequestImage`, `MessageAttachment`, `InvoiceImage`, `ReportAttachment`، وأحداث حدود المعاملة داخل Conversation ترتبط بـ`SystemEvent`. هذه mapping تخزينية ولا تنشئ شاشات أو Actor goals جديدة.
