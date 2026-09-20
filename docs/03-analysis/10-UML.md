@@ -216,9 +216,9 @@ flowchart LR
 
 ---
 
-## 3. Activity Diagram Package — 16 Standalone Review Drafts
+## 3. Activity Diagram Package — 20 Standalone Review Drafts
 
-> **Synchronization correction — 2026-09-19:** الملفات المستقلة تحت `diagrams/03-analysis/uml/activity/` هي Working Semantic Source المعتمدة للمراجعة. استبدلت الحزمة القديمة المجمعة بخمسة مسارات بحزمة تفصيلية من 16 Activity Diagram لتتوافق مع العمل الأكاديمي المنجز وتبقى قابلة للتتبع إلى Use Cases والقرارات الحاكمة.
+> **Synchronization correction — 2026-09-20:** الملفات المستقلة تحت `diagrams/03-analysis/uml/activity/` هي Working Semantic Source المعتمدة للمراجعة. استبدلت الحزمة القديمة المجمعة بخمسة مسارات بحزمة تفصيلية من 20 Activity Diagram لتتوافق مع العمل الأكاديمي المنجز وتبقى قابلة للتتبع إلى Use Cases والقرارات الحاكمة.
 
 | # | Activity | Standalone working file |
 |---:|---|---|
@@ -238,6 +238,10 @@ flowchart LR
 | 14 | Block / Unblock & Report | `diagrams/03-analysis/uml/activity/14-block-unblock-report.md` |
 | 15 | Administrative Report Review | `diagrams/03-analysis/uml/activity/15-administrative-report-review.md` |
 | 16 | Provider Subscription & Renewal | `diagrams/03-analysis/uml/activity/16-provider-subscription-renewal.md` |
+| 17 | Guest Public Browsing & Protected Action Gate | `diagrams/03-analysis/uml/activity/17-guest-public-browsing-protected-action-gate.md` |
+| 18 | Authentication & Portal Access | `diagrams/03-analysis/uml/activity/18-authentication-portal-access.md` |
+| 19 | Manage Account, Deactivation & Reactivation | `diagrams/03-analysis/uml/activity/19-manage-account-deactivation-reactivation.md` |
+| 20 | Open Request Closure, Inactivity, Expiry & Republish | `diagrams/03-analysis/uml/activity/20-open-request-closure-inactivity-expiry-republish.md` |
 
 كل ملف يمثل Activity واحدة ولا ينشئ Requirement جديدة. التغييرات في الحالات تبقى متسقة مع `07-lifecycles.md` والنماذج المركزة، بينما تفاصيل الرسائل بين المشاركين تبقى في Sequence Package.
 
@@ -343,7 +347,7 @@ Package index: `diagrams/03-analysis/uml/class/README.md`.
 - [x] `<<include>>` يستخدم فقط للسلوك الإلزامي داخل الـBase Use Case.
 - [x] `<<extend>>` يستخدم فقط للسلوك الشرطي/الاختياري.
 - [x] Authentication والتبعيات الزمنية/الحالية مثل Ratings after Completed ممثلة كـPreconditions/Postconditions، لا include/extend مصطنع.
-- [x] Activity package متزامنة كـ16 أنشطة مستقلة مرقمة وقابلة للتتبع.
+- [x] Activity package متزامنة كـ20 نشاطًا مستقلًا مرقمًا وقابلًا للتتبع.
 - [x] Sequence package مفككة إلى Scenarios مستقلة قابلة للتتبع بدل Giant Route Sequence.
 - [x] أسماء UI/Controller في Sequence Diagrams موسومة كـDerived modeling roles وليست Implementation Classes معتمدة.
 - [x] Class package تحتوي Integrated Master + ثلاث Detailed Subject-Area Views لنفس النموذج.
