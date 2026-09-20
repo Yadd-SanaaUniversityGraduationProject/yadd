@@ -1,502 +1,160 @@
-# Conceptual ERD — YADD Preliminary Defense
+# ERD — YADD Preliminary Defense
 
-> **الحالة:** `DRAFT FOR PRELIMINARY DEFENSE — CORE SYNCHRONIZED 2026-09-19 THROUGH DEC-091`
+> **الحالة:** `DRAFT FOR PRELIMINARY DEFENSE — SEMANTIC + 32-TABLE PHYSICAL ALIGNMENT SYNCHRONIZED 2026-09-20 THROUGH DEC-091 — NOT BASELINED`
 >
-> هذا ERD **مفاهيمي للفصل الثالث** وليس Relation Schema أو Database Design نهائيًا. الأنواع الفيزيائية، PK/FK التفصيلية، الفهارس، القيود التنفيذية وأسماء الجداول النهائية تنتقل إلى Chapter Four.
+> **المراجع الحاكمة:** Decision Register through DEC-091 + `05-SRS.md` + `06-business-rules.md` + `07-lifecycles.md` + `08-use-cases.md`.
 >
-> **المراجع الحاكمة:** DEC-008..016/018/019/021/023..025/030..043/046..056/063..091 + `05-SRS.md` + `06-business-rules.md` + `07-lifecycles.md` + `08-use-cases.md`.
->
-> جميع التسميات داخل الرسم النهائي تكون باللغة الإنجليزية وفق DEC-072.
+> **مزامنة 2026-09-20:** اعتمد الفريق Working Physical Database Model من **32 جدولًا**. هذا لا يغير Actor goals أو Business Rules؛ بل يثبت mapping الفيزيائي الحالي ويضيف جداول الدعم/المرفقات اللازمة. مفهوم `USER` في التحليل يُنفذ في Chapter Four كـ `ApplicationUser` باستخدام ASP.NET Core Identity.
 
----
+## 1. Modeling Boundary
 
-## 1. مبادئ النمذجة الحالية
+- `Guest` Actor فقط ولا يملك جدولًا لمجرد التصفح العام.
+- يوجد حساب واحد للشخص؛ Beneficiary هو دور استخدام، وProvider هو الحساب نفسه مع optional `ProviderProfile`.
+- `ApplicationUser` هو التنفيذ الفيزيائي لمفهوم `USER` وليس Domain Actor جديدًا.
+- لا يوجد `Agreement`, `Payment`, `Wallet`, `Escrow`, `Refund` أو `Settlement` entity داخل MVP.
+- `RequiresDeposit` يبقى Boolean داخل `ProviderResponse`.
+- Conversation واحدة مستمرة لكل Beneficiary–Provider pair ويمكن أن تضم عدة Transactions.
+- Ratings لا تُفتح إلا بعد `Transaction = Completed`; لا Ratings لـCancelled/Disputed.
+- Service Provider فقط يحتاج Government-ID Verification في MVP.
+- الأنواع/الأطوال أدناه موثقة في Chapter Four؛ هذا الملف يحافظ على ERD وعلاقاته.
 
-1. `Guest` في DEC-077 Actor خارجي غير authenticated للتصفح العام، وليس Domain Entity؛ لا ينشأ `GUEST` record لمجرد التصفح. عندما ينشئ الشخص حسابًا/يسجل الدخول يطبق نموذج `USER` الحالي.
-2. يوجد `USER` واحد للشخص؛ Beneficiary وProvider ليسا حسابين منفصلين.
-3. يصبح المستخدم Provider عندما يمتلك `PROVIDER_PROFILE` مستوفيًا شروط التفعيل.
-4. في MVP يكون كل Provider Profile من نوع واحد فقط: `SERVICE` أو `PRODUCT`، ولا يجمع النوعين معًا — DEC-074.
-5. يمكن لـProvider Profile اختيار تصنيف واحد أو أكثر داخل نوعه عبر `PROVIDER_ACTIVITY`; يسمح Draft مؤقتًا بصفر Activities، لكن أهلية وظائف التقديم تتطلب Activity واحدة على الأقل، وكل Category يجب أن تتوافق مع Provider Type — DEC-076.
-6. يستخدم مسار الطلب النموذج `REQUEST → PROVIDER_RESPONSE → SELECTION → TRANSACTION` ولا يوجد `AGREEMENT` مستقل.
-7. البحث المباشر يمكن أن ينشئ `TRANSACTION` دون `REQUEST` أو `PROVIDER_RESPONSE`، لكن فقط بعد `Request Transaction Start` وتأكيد الطرف الآخر.
-8. الخدمة والمنتج يستخدمان Core Transaction واحدًا؛ الاختلاف يمثل عبر نوع المقدم/الطلب والبيانات المرتبطة به.
-9. العربون لا يمثل كيانًا ماليًا؛ يوجد فقط `requires_deposit` ضمن Provider Response.
-10. تقييم Beneficiary للمقدم وتقييم Provider للمستفيد نموذجان مختلفان في الحقول والقواعد، لذلك يمثَّلان ككيانين منفصلين مفاهيميًا.
-11. Portfolio/Catalog يمثلان مفهوم عرض موحدًا عبر `SHOWCASE_ITEM` مع اختلاف العرض حسب Provider Type.
-12. `Completed` هي النهاية الناجحة للTransaction ولا توجد حالة Transaction باسم `Closed`.
-13. `Disputed` نهاية غير ناجحة للTransaction عند استمرار خلاف الفاتورة قبل الاعتماد دون اتفاق؛ لا تفتح Ratings — DEC-073.
-14. لكل Provider استجابة فعالة واحدة فقط لكل Request؛ يمكن تعديلها أو سحبها قبل الاختيار وفق DEC-070.
-15. Request واحد يمكن أن ينتج **صفر أو Transaction واحدة فقط**؛ لأن اختيار Provider واحد يغلق Request أمام الاستجابات الجديدة.
-16. بين نفس Beneficiary ونفس Provider توجد Conversation واحدة مستمرة يمكن أن ترتبط بعدة Transactions عبر الزمن، مع فواصل/أحداث واضحة داخل المحادثة — DEC-075.
-17. مراجعة النزاع إداريًا تستخدم `REPORT`/complaint context ولا تنشئ كيان Payment/Refund/Compensation أو سلطة تسوية مالية داخل YADD.
-18. علاقات الأحياء المجاورة مفهوم معتمد ومُدار داخل YADD؛ يمثلها `AREA_ADJACENCY` دون افتراض GPS Radius.
-19. `Block User` و`Report` مفهومان مستقلان؛ يمثل `USER_BLOCK` علاقة الحظر المباشر ولا يعني إنشاء Report أو إدانة الطرف الآخر.
-20. عند Transaction Cancellation يجب الاحتفاظ بالطرف الذي ألغى والسبب والتوقيت؛ تبقى طريقة التخزين الفيزيائية قرار تصميم لاحق.
-21. `SAFETY_FLAG` و`ADMIN_AUDIT_RECORD` مفهومان داعمان معتمدان من Trust & Safety / D8؛ تمثيلهما هنا مفاهيمي فقط، بينما schema التخزين والاحتفاظ والـthresholds تبقى قرارات تصميم/سياسة مفتوحة.
-22. يجب أن يحفظ `SAFETY_FLAG` سبب/فئة الاشتباه بما يكفي للمراجعة البشرية؛ قائمة الفئات وقيم المخاطر والعتبات التفصيلية لا تزال مفتوحة.
-23. وجود `USER.phone` في النموذج لا يعني أنه حقل عام؛ وفق DEC-077 لا يعرض رقم الهاتف ضمن Public Provider Profile للGuest.
-24. DEC-091 يثبت Stack التنفيذ لكنه لا يغير الـConceptual ERD: `USER` هنا Domain concept وليس تصريحًا بأن جدول Identity الفيزيائي مطابق له، وMapping إلى ASP.NET Core Identity/EF Core/SQL Server يبقى Chapter Four. كما أن External AI API لا يضيف Entity مفاهيمية بحد ذاته ما لم يعتمد Requirement تخزين مستقل.
+## 2. Adopted 32-Table Model
 
----
+1. `ApplicationUser`
+2. `ProviderProfile`
+3. `Category`
+4. `ProviderActivity`
+5. `Area`
+6. `ProviderServiceArea`
+7. `AreaAdjacency`
+8. `ShowcaseItem`
+9. `Request`
+10. `RequestImage`
+11. `ProviderResponse`
+12. `Conversation`
+13. `Message`
+14. `MessageAttachment`
+15. `SystemEvent`
+16. `TransactionStartRequest`
+17. `Transaction`
+18. `InvoiceVersion`
+19. `InvoiceItem`
+20. `InvoiceImage`
+21. `ProviderRating`
+22. `ProviderRatingCriterion`
+23. `BeneficiaryRating`
+24. `VerificationCase`
+25. `VerificationArtifact`
+26. `Subscription`
+27. `UserBlock`
+28. `Report`
+29. `ReportAttachment`
+30. `SafetyFlag`
+31. `AdminAuditRecord`
+32. `Notification`
 
-## 2. Core Conceptual ERD
+الخمسة التي أضيفت إلى النموذج الفيزيائي مقارنة بالحزمة المنطقية الأقدم هي: `RequestImage`, `MessageAttachment`, `SystemEvent`, `InvoiceImage`, `ReportAttachment`. كما أن `USER` يُنفذ باسم `ApplicationUser`.
+
+## 3. Single ERD Relationship Map
 
 ```mermaid
 erDiagram
-    USER ||--o| PROVIDER_PROFILE : may_have
+    APPLICATION_USER ||--o| PROVIDER_PROFILE : has
+    APPLICATION_USER ||--o{ REQUEST : creates
+    APPLICATION_USER ||--o{ CONVERSATION : beneficiary_party
+    APPLICATION_USER ||--o{ MESSAGE : sends
+    APPLICATION_USER ||--o{ TRANSACTION_START_REQUEST : requests_start
+    APPLICATION_USER ||--o{ TRANSACTION : beneficiary_party
+    APPLICATION_USER ||--o{ PROVIDER_RATING : writes
+    APPLICATION_USER ||--o{ BENEFICIARY_RATING : receives
+    APPLICATION_USER ||--o{ USER_BLOCK : creates
+    APPLICATION_USER ||--o{ USER_BLOCK : is_blocked
+    APPLICATION_USER ||--o{ REPORT : submits
+    APPLICATION_USER ||--o{ NOTIFICATION : receives
+    APPLICATION_USER ||--o{ ADMIN_AUDIT_RECORD : performs
 
     PROVIDER_PROFILE ||--o{ PROVIDER_ACTIVITY : defines
     CATEGORY ||--o{ PROVIDER_ACTIVITY : classifies
-
     PROVIDER_PROFILE ||--o{ PROVIDER_SERVICE_AREA : serves
     AREA ||--o{ PROVIDER_SERVICE_AREA : covered_by
-    AREA ||--o{ AREA_ADJACENCY : source_area
-    AREA ||--o{ AREA_ADJACENCY : adjacent_area
+    AREA ||--o{ AREA_ADJACENCY : source
+    AREA ||--o{ AREA_ADJACENCY : adjacent
+    AREA o|--o{ AREA : parent_of
 
     PROVIDER_PROFILE ||--o{ SHOWCASE_ITEM : publishes
-
-    USER ||--o{ REQUEST : creates
     CATEGORY ||--o{ REQUEST : classifies
     AREA ||--o{ REQUEST : locates
-
+    REQUEST ||--o{ REQUEST_IMAGE : has
     REQUEST ||--o{ PROVIDER_RESPONSE : receives
     PROVIDER_PROFILE ||--o{ PROVIDER_RESPONSE : submits
 
-    USER ||--o{ CONVERSATION : beneficiary_party
     PROVIDER_PROFILE ||--o{ CONVERSATION : provider_party
     CONVERSATION ||--o{ MESSAGE : contains
-    USER ||--o{ MESSAGE : sends
+    MESSAGE ||--o{ MESSAGE_ATTACHMENT : has
+    CONVERSATION ||--o{ SYSTEM_EVENT : records
     CONVERSATION ||--o{ TRANSACTION_START_REQUEST : receives
 
-    USER ||--o{ TRANSACTION : beneficiary_party
     PROVIDER_PROFILE ||--o{ TRANSACTION : provider_party
+    CONVERSATION ||--o{ TRANSACTION : groups
     REQUEST o|--o| TRANSACTION : may_origin
     PROVIDER_RESPONSE o|--o| TRANSACTION : may_start
-    CONVERSATION ||--o{ TRANSACTION : groups
+    TRANSACTION o|--o{ SYSTEM_EVENT : contextualizes
 
     TRANSACTION ||--o{ INVOICE_VERSION : has
     INVOICE_VERSION ||--|{ INVOICE_ITEM : contains
+    INVOICE_VERSION ||--o{ INVOICE_IMAGE : has
 
     TRANSACTION ||--o| PROVIDER_RATING : provider_rating
-    USER ||--o{ PROVIDER_RATING : writes
     PROVIDER_PROFILE ||--o{ PROVIDER_RATING : receives
     PROVIDER_RATING ||--|{ PROVIDER_RATING_CRITERION : contains
 
     TRANSACTION ||--o| BENEFICIARY_RATING : beneficiary_rating
     PROVIDER_PROFILE ||--o{ BENEFICIARY_RATING : writes
-    USER ||--o{ BENEFICIARY_RATING : receives
-
-    USER {
-      identifier user_id PK
-      string account_status
-      string first_name
-      string father_name
-      string grandfather_name
-      string family_name
-      string phone
-      datetime phone_verified_at
-      string email
-      datetime email_verified_at
-      string last_portal
-      string profile_photo_reference
-      datetime deactivated_at
-    }
-
-    PROVIDER_PROFILE {
-      identifier provider_profile_id PK
-      identifier user_id FK
-      string provider_type
-      string trade_name
-      string description
-      string profile_image_reference
-      string identity_verification_status
-      string profile_status
-    }
-
-    PROVIDER_ACTIVITY {
-      identifier provider_activity_id PK
-      identifier provider_profile_id FK
-      identifier category_id FK
-      string status
-    }
-
-    CATEGORY {
-      identifier category_id PK
-      string name
-      string category_type
-    }
-
-    AREA {
-      identifier area_id PK
-      identifier parent_area_id FK
-      string name
-      string area_type
-    }
-
-    PROVIDER_SERVICE_AREA {
-      identifier provider_profile_id FK
-      identifier area_id FK
-    }
-
-    AREA_ADJACENCY {
-      identifier source_area_id FK
-      identifier adjacent_area_id FK
-    }
-
-    SHOWCASE_ITEM {
-      identifier showcase_item_id PK
-      identifier provider_profile_id FK
-      string item_type
-      string description
-      string original_media_reference
-      string display_media_reference
-      string status
-    }
-
-    REQUEST {
-      identifier request_id PK
-      identifier beneficiary_user_id FK
-      identifier category_id FK
-      identifier area_id FK
-      string request_type
-      string description
-      decimal indicative_price
-      string status
-    }
-
-    PROVIDER_RESPONSE {
-      identifier response_id PK
-      identifier request_id FK
-      identifier provider_profile_id FK
-      decimal proposed_price
-      boolean requires_deposit
-      string note
-      string status
-    }
-
-    CONVERSATION {
-      identifier conversation_id PK
-      identifier beneficiary_user_id FK
-      identifier provider_profile_id FK
-      string status
-    }
-
-    MESSAGE {
-      identifier message_id PK
-      identifier conversation_id FK
-      identifier sender_user_id FK
-      string message_type
-      datetime sent_at
-    }
-
-    TRANSACTION_START_REQUEST {
-      identifier transaction_start_request_id PK
-      identifier conversation_id FK
-      identifier requested_by_user_id FK
-      string status
-      datetime requested_at
-      datetime expires_at
-      datetime responded_at
-    }
-
-    TRANSACTION {
-      identifier transaction_id PK
-      identifier beneficiary_user_id FK
-      identifier provider_profile_id FK
-      identifier conversation_id FK
-      identifier request_id FK_optional
-      identifier selected_response_id FK_optional
-      string origin_type
-      string status
-      string cancellation_actor_role
-      string cancellation_reason
-      datetime cancelled_at
-    }
-
-    INVOICE_VERSION {
-      identifier invoice_version_id PK
-      identifier transaction_id FK
-      int version_number
-      string status
-      decimal total_amount
-      string revision_note
-    }
-
-    INVOICE_ITEM {
-      identifier invoice_item_id PK
-      identifier invoice_version_id FK
-      string description
-      decimal quantity
-      decimal unit_price
-      decimal line_total
-    }
-
-    PROVIDER_RATING {
-      identifier provider_rating_id PK
-      identifier transaction_id FK
-      identifier beneficiary_user_id FK
-      identifier provider_profile_id FK
-      int overall_stars
-      string workflow_status
-      string comment
-    }
-
-    PROVIDER_RATING_CRITERION {
-      identifier provider_rating_criterion_id PK
-      identifier provider_rating_id FK
-      string criterion_type
-      string textual_value
-    }
-
-    BENEFICIARY_RATING {
-      identifier beneficiary_rating_id PK
-      identifier transaction_id FK
-      identifier provider_profile_id FK
-      identifier beneficiary_user_id FK
-      int request_communication_score
-      int agreement_commitment_score
-      int cooperation_score
-      string comment
-    }
-```
-
----
-
-## 3. Core Entity Semantics
-
-### USER
-يمثل حساب الشخص الواحد في YADD بعد إنشاء/استخدام الحساب. يمكن أن يعمل الشخص كمستفيد مباشرة، ويمكنه امتلاك Provider Profile واحد كحد أقصى. `Guest` لا يمثل USER قبل Authentication/Create Account لمجرد التصفح العام. USER يحتفظ بالاسم في أربعة حقول (first/father/grandfather/family)، وPhone موثق بـOTP، وEmail اختياري مع حالة تحقق؛ هذه بيانات حساب وليست Public Provider Profile fields وفق DEC-077/078.
-
-### PROVIDER_PROFILE
-يمثل هوية Provider داخل الحساب نفسه. يحتوي Product Provider على `trade_name` اختياري كاسم عرض عام، بينما تبقى الهوية القانونية في USER. يحدد `provider_type` نوعًا واحدًا فقط في MVP: `SERVICE` أو `PRODUCT` وفق DEC-074. قد يرتبط به Identity Verification عندما يكون النوع `SERVICE`، وترتبط به الأنشطة/التصنيفات، مناطق الخدمة، Portfolio/Catalog والاشتراك. Product Provider لا يحتاج Government-ID Verification في MVP. سياسة تغيير النوع بعد اختياره لم تعتمد بعد.
-
-### PROVIDER_ACTIVITY
-يمثل ارتباط Provider Profile بتصنيف داخل نوعه المختار. يمكن للملف أن يمتلك عدة Provider Activities، لكن يجب أن تتوافق جميع Categories مع `provider_type`. يسمح Draft بصفر Activities مؤقتًا، بينما أهلية وظائف التقديم تتطلب Activity واحدة على الأقل وفق DEC-076.
-
-### CATEGORY / AREA / PROVIDER_SERVICE_AREA / AREA_ADJACENCY
-- `CATEGORY` تصنيف النشاط/الطلب، وله `category_type` يجب أن يتوافق مع نوع Provider Profile عند استخدامه في ProviderActivity.
-- `AREA` تمثل District/Neighborhood بصورة مفاهيمية parent-child.
-- وفق Approved UI Convention، واجهات discovery/request/provider-location/service-area تعرض/تختار Neighborhood فقط؛ District يظل في نموذج البيانات ويُشتق داخليًا من Neighborhood.
-- `PROVIDER_SERVICE_AREA` تمثل المناطق التي يخدمها Provider.
-- `AREA_ADJACENCY` تمثل قائمة الجوار المُدارة بين الأحياء وفق DEC-033؛ العلاقة المنطقية جوار متبادل، بينما طريقة فرض symmetry/uniqueness في قاعدة البيانات تؤجل إلى Chapter Four.
-- الموقع الدقيق/GPS ليس بيانات عامة في هذا النموذج.
-
-### SHOWCASE_ITEM
-يوحد Portfolio وCatalog مفاهيميًا. إذا كان Provider Type = SERVICE يعرض كPortfolio، وإذا كان PRODUCT يعرض كProduct Catalog. يحتوي مرجعًا للأصل غير العام ومرجعًا لنسخة العرض ذات العلامة المائية. يمكن عرض نسخة العرض العامة للGuest وفق DEC-077، بينما الأصل يبقى غير عام.
-
-### REQUEST
-يمثل طلب Service أو Product. يجب أن يتوافق `request_type` مع نوع Provider المؤهل، ويجب أن يملك Provider تصنيف الطلب ضمن Provider Activities. يحتوي التصنيف والمنطقة والوصف والسعر الاسترشادي الاختياري. إنشاء Request يتطلب authenticated User؛ Guest لا ينشئ Request قبل Authentication.
-
-### PROVIDER_RESPONSE
-المصطلح القياسي بدل `OFFER`.
-
-- يرتبط بـRequest واحد وProvider Profile واحد.
-- يجب أن يكون نوع Provider Profile متوافقًا مع نوع Request، وأن يكون Provider مؤهلًا لتصنيف الطلب.
-- يمكن أن يحتوي proposed price وملاحظة و`requires_deposit`.
-- لا يوجد DepositAmount أو PaymentStatus أو Refund Entity.
-- لكل Provider Response فعالة واحدة لكل Request.
-- إنشاء Provider Response جديدة يتطلب أهلية النوع الحالية + `Active Subscription`: SERVICE يحتاج Identity Verified + ملف مؤهل، وPRODUCT يحتاج Account/Profile eligible دون Government-ID verification — DEC-085/086.
-- يجوز تعديلها أو سحبها فقط ما دام Request Open ولم يتم اختيار Provider.
-
-### CONVERSATION / MESSAGE
-المحادثة يمكن أن تبدأ قبل Transaction من Direct Search أو Request context للمستخدم authenticated. Guest لا ينشئ Message/Conversation خاصة قبل Authentication. Chat وحدها لا تنشئ Transaction. في Direct Search يبدأ Transaction فقط بعد طلب بدء صريح وتأكيد الطرف الآخر.
-
-وفق DEC-075، تبقى Conversation واحدة مستمرة بين نفس Beneficiary ونفس Provider، ويمكن أن تضم صفرًا أو عدة Transactions عبر الزمن. يجب أن تظهر داخلها فواصل/أحداث نظام واضحة لبدء وانتهاء كل Transaction.
-
-القيد المفاهيمي هو **`{unique Conversation per Beneficiary–Provider pair}`**. طريقة فرض uniqueness فعليًا، وكذلك ربط Message/System Event بمعاملة محددة، تؤجل إلى Chapter Four.
-
-> لا يفرض Core ERD علاقة مباشرة بين `REQUEST` و`CONVERSATION`: قد تبدأ أو تستمر المحادثة في سياق Request، لكن نفس Conversation المستمرة قد تمر بعدة Request contexts عبر الزمن. طريقة تمثيل وربط تلك السياقات تؤجل إلى Physical/Interaction Design في Chapter Four دون كسر القرار المفاهيمي أعلاه.
-
-### TRANSACTION_START_REQUEST
-يمثل طلب بدء Transaction في Direct Search قبل إنشاء Transaction الفعلية. يبقى `Pending` لمدة 12 ساعة فقط، ويسمح بطلب Pending واحد بين نفس الطرفين في الوقت نفسه؛ يمكن أن ينتهي `Confirmed` أو `Rejected` أو `Expired` دون إغلاق Conversation — DEC-082.
-
-### TRANSACTION
-هو الكيان المركزي بعد بدء التعامل الرسمي.
-
-يمكن أن ينشأ:
-1. من Provider Response مختارة في Request Route.
-2. مباشرة في Direct Search Route بعد Mutual Start Confirmation **ومع بقاء Provider مؤهلًا لبدء تعامل جديد، بما في ذلك Active Subscription** — DEC-086.
-
-كل Transaction ترتبط بالمحادثة المستمرة بين الطرفين. `request_id` و`selected_response_id` اختياريان مفاهيميًا، بينما Beneficiary وProvider وConversation إلزاميون.
-
-الحالات النهائية بحسب المسار تشمل:
-- `Completed` للنجاح بعد اعتماد الفاتورة.
-- `Cancelled` عند الإلغاء وفق القواعد.
-- `Disputed` عند استمرار الخلاف قبل اعتماد الفاتورة وعدم الوصول إلى اتفاق — DEC-073.
-
-عند الإلغاء يسجل YADD الطرف الذي ألغى والسبب والتوقيت وفق DEC-048/BR-019.
-
-### INVOICE_VERSION / INVOICE_ITEM
-يمثلان الاحتفاظ بتاريخ نسخ الفاتورة بدل الكتابة فوق نسخة واحدة.
-
-### PROVIDER_RATING / PROVIDER_RATING_CRITERION
-تقييم Beneficiary للمقدم بعد Transaction Completed بنموذج Hybrid: `overall_stars` من 1–5 + خمسة Structured Textual Criteria تختلف تسمياتها حسب Provider Type + `comment` اختياري. يمكن تأجيل التقييم (`Later`) مع Reminder بعد 24h، ويجب إكمال التقييم المطلوب قبل بدء Transaction جديدة. بحد أقصى تقييم Provider واحد لكل Transaction، ولا ينشئه Guest. العرض العام لهوية المقيّم يقتصر على First Name مع دلالة Verified Transaction Review وفق DEC-087.
-
-### BENEFICIARY_RATING
-تقييم Provider للمستفيد بعد Transaction Completed: optional، ثلاثة مؤشرات 1–5، comment optional، وبحد أقصى تقييم واحد لكل Transaction. سجل التفاعل ليس Public Guest data.
-
----
-
-### NOTIFICATION
-مفهوم مشتق لدعم DEC-090: إشعار مرتبط بـUSER مع channel/status/timestamps؛ In-App افتراضي، SMS للأمان/OTP، Email موثق اختياري. لا يثبت هذا التصميم مزود رسائل بعينه.
-
-## 4. Supporting Trust / Administration ERD
-
-```mermaid
-erDiagram
-    USER ||--o| PROVIDER_PROFILE : may_have
 
     PROVIDER_PROFILE ||--o{ VERIFICATION_CASE : submits
-    VERIFICATION_CASE ||--|{ VERIFICATION_ARTIFACT : includes
-
+    VERIFICATION_CASE ||--o{ VERIFICATION_ARTIFACT : includes
     PROVIDER_PROFILE ||--o{ SUBSCRIPTION : has
 
-    USER ||--o{ USER_BLOCK : creates
-    USER ||--o{ USER_BLOCK : is_target_of
-
-    USER ||--o{ REPORT : submits
-    USER ||--o{ NOTIFICATION : receives
-    USER o|--o{ REPORT : may_target_user
-    PROVIDER_PROFILE o|--o{ REPORT : may_target_provider
-    SHOWCASE_ITEM o|--o{ REPORT : may_target_content
-    CONVERSATION o|--o{ REPORT : may_contextualize
-    TRANSACTION o|--o{ REPORT : may_contextualize
-
-    VERIFICATION_CASE {
-      identifier verification_case_id PK
-      identifier provider_profile_id FK
-      string status
-      string review_note
-      datetime submitted_at
-      datetime reviewed_at
-    }
-
-    VERIFICATION_ARTIFACT {
-      identifier artifact_id PK
-      identifier verification_case_id FK
-      string artifact_type
-      string private_media_reference
-      string review_status
-    }
-
-    SUBSCRIPTION {
-      identifier subscription_id PK
-      identifier provider_profile_id FK
-      string status
-      date start_date
-      date end_date
-    }
-
-    USER_BLOCK {
-      identifier block_id PK
-      identifier blocker_user_id FK
-      identifier blocked_user_id FK
-      string status
-      datetime blocked_at
-      datetime unblocked_at
-    }
-
-    REPORT {
-      identifier report_id PK
-      identifier reporter_user_id FK
-      string target_type
-      identifier target_reference
-      string reason
-      string description
-      string status
-      datetime created_at
-    }
-
-    SAFETY_FLAG {
-      identifier flag_id PK
-      string target_type
-      identifier target_reference
-      string risk_level
-      string reason_category
-    }
-
-    ADMIN_AUDIT_RECORD {
-      identifier audit_record_id PK
-      string subject_type
-      identifier subject_reference
-      string event_type
-      string decision_outcome
-      string reason
-      datetime recorded_at
-    }
-
-    NOTIFICATION {
-      identifier notification_id PK
-      identifier user_id FK
-      string type
-      string channel
-      string status
-      datetime created_at
-      datetime read_at
-    }
+    REPORT ||--o{ REPORT_ATTACHMENT : has
+    REPORT o|--o{ SAFETY_FLAG : may_flag
+    SAFETY_FLAG o|--o{ ADMIN_AUDIT_RECORD : audited
 ```
 
-### Supporting-model notes
+## 4. Key Cardinality / Integrity Decisions
 
-- `USER_BLOCK` يمثل Block كعلاقة حماية مباشرة مستقلة عن `REPORT` ويدعم Unblock. Block يمنع التفاعل الجديد لكنه لا يكسر Active Transaction ولا يمنع إجراءاتها الأساسية/System Notifications — DEC-088.
-- `REPORT.target_reference` تمثيل مفاهيمي polymorphic؛ التنفيذ الفيزيائي قد يفصله إلى علاقات أكثر صرامة.
-- في Generic Report يكون `reason` مطلوبًا، بينما `description` ليست إلزامية عالميًا لكل بلاغ. Transaction Complaint تتطلب `reason + description` والمرفقات اختيارية وفق DEC-084؛ القيود الفيزيائية المناسبة حسب النوع تحسم في Chapter Four.
-- `VERIFICATION_CASE.review_note` يمثل الملاحظة/السبب عند طلب إعادة التقديم أو الرفض.
-- `SAFETY_FLAG.reason_category` يمثل سبب/فئة الاشتباه المطلوبة للمراجعة البشرية؛ taxonomy والـthresholds لم تعتمد بعد.
-- `SAFETY_FLAG` و`ADMIN_AUDIT_RECORD` مفاهيم تحليلية؛ schema/retention/thresholds لم تعتمد بعد. عدم رسم target associations ثابتة لهما مقصود لتجنب اختراع polymorphic physical mapping قبل Chapter Four.
-- Verification, Subscription, Reports, Flags and Audit are not public Guest data.
-- `NOTIFICATION` يدعم In-App كقناة افتراضية، SMS للأمان/OTP والإجراءات الحرجة، والبريد الموثق اختيارياً — DEC-090.
+1. `ApplicationUser ↔ ProviderProfile`: صفر أو ملف مقدم واحد لكل حساب.
+2. `ProviderProfile.ProviderType`: نوع واحد فقط `SERVICE` أو `PRODUCT`.
+3. Provider may have multiple valid categories through `ProviderActivity`.
+4. `ProviderServiceArea` and `AreaAdjacency` use composite-key candidates.
+5. Request واحد يمكن أن ينتج صفر أو Transaction واحدة فقط في Request Route.
+6. Direct Search Transaction may have no Request/SelectedResponse and requires confirmed `TransactionStartRequest`.
+7. Conversation واحدة مستمرة بين نفس Beneficiary وProvider؛ pair uniqueness remains an enforced design constraint.
+8. `SystemEvent` records conversation boundaries and can reference a Transaction in the adopted physical model.
+9. Invoice history is preserved through `InvoiceVersion`; items and optional images belong to a version.
+10. ProviderRating and BeneficiaryRating are separate models and each is limited to at most one rating of its kind per completed Transaction.
+11. `Report`, `SafetyFlag`, and `AdminAuditRecord` use explicit target/reference columns in the adopted physical design.
+12. Public/private projection remains governed by DEC-077; Identity/security fields, private media, verification, chat, transactions, invoices, reports and audit data are not public Guest data.
 
----
+## 5. Physical Mapping Notes
 
-## 5. Removed Legacy Concepts
+- Conceptual `USER` → physical `ApplicationUser`.
+- ASP.NET Core Identity fields (`NormalizedUserName`, `SecurityStamp`, `ConcurrencyStamp`, lockout and 2FA fields) are implementation fields and do not create new business concepts.
+- Supporting persistence tables (`RequestImage`, `MessageAttachment`, `InvoiceImage`, `ReportAttachment`) store repeated media references rather than inflating parent rows.
+- `SystemEvent` is now an explicit table, resolving the earlier open persistence question for conversation/transaction boundary events.
+- Exact nullability, named constraints, cascade rules and indexes still require final SQL migration review; field names and SQL Server types are now synchronized in `docs/04-design/01-database-design.md` and `02-data-dictionary.md`.
 
-| Legacy Concept | Current Model |
+## 6. Removed Legacy Concepts
+
+| Legacy | Current |
 |---|---|
-| `ROLE / USER_ROLE` لتمييز Beneficiary/Provider | لا يستخدم لهذا الغرض؛ User واحد + optional Provider Profile. |
-| `SERVICE_REQUEST` | `REQUEST` يغطي Service وProduct. |
-| `OFFER` | `PROVIDER_RESPONSE`. |
-| `AGREEMENT` | غير موجود كEntity مستقل في MVP. |
-| Single mutable `INVOICE` | Invoice history محفوظ مفاهيميًا عبر versions/revisions. |
-| Generic `REVIEW` | `PROVIDER_RATING` + `BENEFICIARY_RATING`. |
-| `PORTFOLIO_ITEM` فقط | `SHOWCASE_ITEM` يدعم Portfolio/Catalog وفق Provider Type. |
-| Service + Product active together on one Provider Profile | غير مسموح في MVP وفق DEC-074. |
-| `GUEST` ككيان بيانات لمجرد anonymous browsing | غير مطلوب؛ Guest Actor فقط حتى Create Account/Authentication — DEC-077. |
+| `GUEST` table | No table; Guest is an unauthenticated actor |
+| `ROLE/USER_ROLE` for Beneficiary/Provider | One ApplicationUser + optional ProviderProfile |
+| `SERVICE_REQUEST` | `Request` |
+| `OFFER` | `ProviderResponse` |
+| `AGREEMENT` | No standalone entity |
+| Generic `REVIEW` | `ProviderRating` + `BeneficiaryRating` |
+| Single mutable invoice | `InvoiceVersion` + `InvoiceItem` + optional `InvoiceImage` |
 
----
+## 7. Gate
 
-## 6. Cardinality / Constraint Decisions for Chapter Four
-
-1. `USER ↔ PROVIDER_PROFILE`: User يمتلك صفر أو Provider Profile واحدًا.
-2. Provider Profile له نوع واحد فقط `SERVICE` أو `PRODUCT` — DEC-074.
-3. Draft Provider Profile يمكن أن يمتلك صفر أو عدة Provider Activities، لكن أهلية وظائف التقديم تتطلب Provider Activity واحدة على الأقل — DEC-076.
-4. يمكن لـProvider Profile امتلاك عدة Provider Activities/تصنيفات داخل نوعه، وكل Provider Activity ترتبط بـCategory واحدة متوافقة مع Provider Type — DEC-076.
-5. كل `REQUEST` ينشئه Beneficiary واحد ويرتبط بتصنيف ومنطقة عامة واحدة.
-6. كل `PROVIDER_RESPONSE` ترتبط بـRequest واحد وProvider Profile واحد ويجب أن يتوافق نوعهما وتصنيفهما.
-7. لكل Provider استجابة فعالة واحدة فقط لكل Request — DEC-070.
-8. في Request Route تصبح Provider Response واحدة فقط `Selected`.
-9. Request واحد ينتج صفر أو Transaction واحدة فقط.
-10. كل `TRANSACTION` لها Beneficiary واحد وProvider واحد وConversation واحدة.
-11. Conversation واحدة بين نفس الطرفين يمكن أن ترتبط بعدة Transactions عبر الزمن — DEC-075.
-12. يجب أن يكون زوج `(beneficiary_user_id, provider_profile_id)` فريدًا مفاهيميًا داخل `CONVERSATION`; آلية فرضه الفيزيائية تحسم في Chapter Four.
-13. Direct Search Transaction قد تكون بلا Request/Provider Response — DEC-066/069.
-14. `TRANSACTION_START_REQUEST` في Direct Search يبقى Pending حتى 12 ساعة، وبحد أقصى Pending واحد لكل Conversation/طرفين؛ Confirmed فقط ينشئ Transaction — DEC-082.
-15. كل Invoice Version تنتمي إلى Transaction واحدة وتحتوي بندًا واحدًا على الأقل.
-16. Transaction `Completed` تسمح Provider Rating واحدة بحد أقصى من Beneficiary، وتحتوي Overall Stars + خمسة Structured Textual Criteria + Optional Comment — DEC-087.
-17. Transaction `Completed` تسمح Beneficiary Rating واحدة بحد أقصى من Provider، وهي اختيارية.
-18. Transaction `Disputed` لا تسمح Ratings — DEC-073.
-19. `AREA_ADJACENCY` يمثل علاقة جوار مُدارة بين الأحياء.
-20. `USER_BLOCK` و`REPORT` مستقلان؛ Unblock مدعوم، والحظر لا يكسر Active Transaction — DEC-053/088.
-21. Transaction Cancellation تسجل Actor/Reason/Time — DEC-048 / BR-019.
-22. DEC-077 لا يضيف جدول/كيان Guest؛ يجب أن تراعى public/private field exposure في API/query/interface design بدل اختراع persistence غير مطلوب.
-
----
-
-## 7. Remaining Design Decisions / Needs Verification
-
-- Provider Type switching policy after initial selection.
-- Retention period for verification data, conversations and AI flags.
-- Final subscription price/payment-proof details and public-search visibility when Expired.
-- AI provider/threshold/storage model and final reason-category taxonomy.
-- Physical enforcement of Conversation pair uniqueness and Message/SystemEvent↔Transaction mapping.
-- Exact technical implementation of public Provider Profile projection and authentication continuation after a protected Guest CTA; the semantic boundary is already fixed by DEC-077.
+The 32-table working physical model is synchronized with the current analysis semantics through DEC-091. It is still **not baselined** until final PK/FK/Unique/Check names, nullability, indexes, cascade behavior, retention policies, and migration review are approved.
