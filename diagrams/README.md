@@ -1,6 +1,6 @@
 # YADD Diagrams — Working Sources and Governance
 
-> **Diagram drafting status:** `WORKING PACKAGE SYNCHRONIZED 2026-09-19 THROUGH DEC-091`
+> **Diagram drafting status:** `WORKING PACKAGE SYNCHRONIZED 2026-09-20 THROUGH DEC-091`
 >
 > هذه الصفحة تحدد مصادر السلطة، بنية ملفات الرسم، وقواعد التصدير حتى لا تختلط Semantic Models مع Editable Diagram Sources أو Generated Exports.
 
@@ -80,8 +80,12 @@ diagrams/
 - `03-analysis/uml/activity/14-block-unblock-report.md`
 - `03-analysis/uml/activity/15-administrative-report-review.md`
 - `03-analysis/uml/activity/16-provider-subscription-renewal.md`
+- `03-analysis/uml/activity/17-guest-public-browsing-protected-action-gate.md`
+- `03-analysis/uml/activity/18-authentication-portal-access.md`
+- `03-analysis/uml/activity/19-manage-account-deactivation-reactivation.md`
+- `03-analysis/uml/activity/20-open-request-closure-inactivity-expiry-republish.md`
 
-The Activity package contains 16 numbered standalone diagrams. They replace the older five bundled route-level files and preserve the same approved semantics at a reviewable, scenario-focused granularity.
+The Activity package contains 20 numbered standalone diagrams. They replace the older five bundled route-level files and preserve the same approved semantics at a reviewable, scenario-focused granularity.
 
 ### Sequence
 
