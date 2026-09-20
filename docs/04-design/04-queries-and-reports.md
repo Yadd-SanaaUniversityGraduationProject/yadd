@@ -1,6 +1,6 @@
 # System Queries & Reports
 
-> **الحالة:** `DRAFT FOR PRELIMINARY DEFENSE — REQUIREMENTS-ALIGNED 2026-09-05`
+> **الحالة:** `DRAFT FOR PRELIMINARY DEFENSE — REQUIREMENTS + 32-TABLE SCHEMA ALIGNED 2026-09-20`
 >
 > هيكل 1447 يطلب System Query وSystem Reports. هذه الوثيقة تحدد احتياجات استعلام قابلة للتتبع إلى المتطلبات الحالية؛ لا تنشئ Dashboard/KPI أو Report جديدًا دون حاجة موثقة.
 
@@ -41,8 +41,8 @@
 
 ## Before SQL / Final Report Design
 
-1. تثبيت Relation Schema وData Dictionary.
+1. Relation Schema وData Dictionary متزامنان الآن مع Working Physical Model ذي 32 جدولًا.
 2. تحديد Authorization لكل Query حساس.
 3. عدم إضافة Query/Report بلا Requirement أو Admin need موثق.
-4. تحديد SQL الفعلي فقط بعد تثبيت أسماء العلاقات والأنواع الفيزيائية.
+4. كتابة SQL الفعلي بعد مراجعة nullability/indexes/final constraints على النموذج الفيزيائي الحالي.
 5. مراجعة متطلبات Chapter Four مع المشرف في النسخة المقدمة.

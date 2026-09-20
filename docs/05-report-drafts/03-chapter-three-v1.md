@@ -507,7 +507,7 @@ YADD لا يدير أي حركة مالية بين Beneficiary وProvider.
 - `10-UML.md`: حزمة UML العاملة متزامنة حتى DEC-091: خمس Use Case views، وعشرون Activity Diagram، وعشرون Sequence Diagram، إضافة إلى Class package؛ النسخة الأكاديمية النهائية تحتاج مراجعة/تصدير A4.
 - Activity/Sequence sources تمثل Guest authentication gate والمسارات المحمية ودورات الطلب/المعاملة دون إنشاء Domain semantics جديدة.
 - Class package: Detailed Analysis Class Model واحد مع Integrated Master + ثلاث Detailed Views؛ Guest لا يضيف Class.
-- `11-ERD.md`: Core Conceptual ERD يبقى صحيحًا بنيويًا؛ Guest لا يضيف Entity لمجرد التصفح العام، ويلزم فقط إبقاء public/private visibility في التصميم.
+- `11-ERD.md`: Core ERD semantics بقيت صحيحة؛ تمت مزامنتها في 2026-09-20 مع Working Physical Model ذي 32 جدولًا في Chapter Four، مع بقاء Guest Actor دون Entity واستمرار public/private visibility boundary.
 
 جميع التسميات داخل الرسم النهائي باللغة الإنجليزية وفق DEC-072.
 
@@ -538,7 +538,7 @@ YADD لا يدير أي حركة مالية بين Beneficiary وProvider.
 
 وجود Requirement داخل SRS لا يعني تلقائيًا أنه Approved Requirement. البنود التي تعتمد على قيم تشغيلية غير محسومة تبقى Needs Verification حتى يتم إثباتها أو اعتمادها.
 
-Core Traceability الحالية متزامنة حتى `DEC-090`، وتشمل UR-GST-* وربطها بـUC-00 وDFD/UI/public-private boundary. Design Traceability لChapter Four والمخططات النهائية ما يزال مطلوبًا قبل Freeze/Baseline.
+Core Traceability الحالية متزامنة حتى `DEC-091`، وتشمل UR-GST-* وربطها بـUC-00 وDFD/UI/public-private boundary. كما تمت مزامنة Design Traceability مع Working Physical Model ذي 32 جدولًا؛ تبقى تفاصيل القيود/الفهارس/المigrations والمخططات النهائية قبل Freeze/Baseline.
 
 ---
 
