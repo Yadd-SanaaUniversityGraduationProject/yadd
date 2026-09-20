@@ -1,6 +1,6 @@
 # Requirements Traceability Matrix — Core Diagram Model
 
-> **الحالة:** `CORE TRACEABILITY SYNCHRONIZED 2026-09-19 THROUGH DEC-091 — DESIGN TRACEABILITY PARTIAL`
+> **الحالة:** `CORE + 32-TABLE DESIGN TRACEABILITY SYNCHRONIZED 2026-09-20 THROUGH DEC-091 — FINAL CONSTRAINT/INDEX TRACEABILITY PARTIAL`
 >
 > الغرض من هذه النسخة هو منع اعتماد المخططات على FR/Entities تاريخية. المرجع الأعلى يبقى Decision Register ثم SRS وBusiness Rules.
 >
@@ -21,11 +21,11 @@
 | UR-VER-01 | DEC-035/085 | BR-060/061 | UC-09 → Service Provider Identity Verification / Review | 6.0 | VERIFICATION_CASE, VERIFICATION_ARTIFACT, ADMIN_AUDIT_RECORD; Product Provider has no government-ID case | `ANALYZED_APPROVED` |
 | UR-DIS-01 | DEC-012/031..033/077 | BR-001/031/044 | UC-00/01 → Search Providers / View Provider Profile | 2.0 | CATEGORY, AREA, AREA_ADJACENCY, PROVIDER_SERVICE_AREA, PROVIDER_PROFILE | `ANALYZED_APPROVED` |
 | UR-PORT-01 | DEC-064/077 | BR-035/036/044 | UC-00/01/10 → View Provider Profile / View Portfolio-Catalog / Manage Portfolio-Catalog | 1.0 / 2.0 | SHOWCASE_ITEM | `ANALYZED_APPROVED` |
-| UR-REQ-01 | DEC-012/077 | BR-001/045 | UC-02 → Create Request; Authentication precondition | 2.0 | REQUEST | `ANALYZED_APPROVED` |
+| UR-REQ-01 | DEC-012/077 | BR-001/045 | UC-02 → Create Request; Authentication precondition | 2.0 | REQUEST + REQUEST_IMAGE (optional media) | `ANALYZED_APPROVED` |
 | UR-REQ-02 | DEC-013 | BR-002/003 | UC-02 → Create Request | 2.0 | REQUEST | `ANALYZED_APPROVED` |
 | UR-REQ-03 | DEC-048 | BR-018/020 | UC-02 alternative → Close Open Request | 2.0 | REQUEST | `ANALYZED_APPROVED` |
 | UR-REQ-04 | DEC-081 | BR-052/053 | Create Request lifecycle → reminder/expiry/republish | 2.0 | REQUEST timestamps/status + new Request on republish | `ANALYZED_APPROVED` |
-| UR-COM-01 | DEC-046/077 | BR-005/008/045/047 | UC-01 / UC-03 / UC-04 → Communicate / Inquire; Authentication precondition | 3.0 | CONVERSATION, MESSAGE | `ANALYZED_APPROVED` |
+| UR-COM-01 | DEC-046/077 | BR-005/008/045/047 | UC-01 / UC-03 / UC-04 → Communicate / Inquire; Authentication precondition | 3.0 | CONVERSATION, MESSAGE, MESSAGE_ATTACHMENT | `ANALYZED_APPROVED` |
 | UR-COM-02 | DEC-075 | BR-042 / In-App Communication Model | UC-01 / UC-03 / UC-04 communication context; persistent conversation invariant | 3.0 / 4.0 | CONVERSATION, SYSTEM_EVENT, TRANSACTION context | `DERIVED_FROM_APPROVED_DECISION` |
 | UR-OFF-01 | DEC-013/041 | BR-003/033 | UC-03 → Submit Provider Response | 3.0 | PROVIDER_RESPONSE | `ANALYZED_APPROVED` |
 | UR-OFF-02 | DEC-014/047 | BR-004/006 | UC-04 → Compare Provider Responses / Select Provider / Create Active Transaction | 3.0 / 4.0 | REQUEST, PROVIDER_RESPONSE, TRANSACTION | `ANALYZED_APPROVED` |
@@ -34,8 +34,8 @@
 | UR-TX-02 | DEC-056 | BR-023 | Transaction management / Cancel Transaction | 4.0 | TRANSACTION (including cancellation actor/reason/time concept) | `ANALYZED_APPROVED` |
 | UR-TX-03 | DEC-071 | BR-010/016 | UC-06 → Approve Final Invoice / Complete Transaction; UC-07/07B post-transaction ratings | 4.0 / 5.0 | TRANSACTION | `ANALYZED_APPROVED` |
 | UR-TX-04 | DEC-073 | BR-040 | UC-06 dispute branch → Raise Transaction Complaint / Review Transaction Complaint | 4.0 / 6.0 | TRANSACTION, REPORT / complaint record | `ANALYZED_APPROVED` |
-| UR-INV-01 | DEC-015/025/050/071/083 | BR-057/058 | UC-06 → Create/Review/Approve/Revise Final Invoice | 4.0 | INVOICE_VERSION, INVOICE_ITEM, TRANSACTION + reminder/overdue state | `ANALYZED_APPROVED` |
-| UR-DSP-01 | DEC-073/084 | BR-059 | UC-06 dispute branch → Raise Transaction Complaint / Review Transaction Complaint | 4.0 / 6.0 | complaint record/evidence, TRANSACTION, ADMIN_AUDIT_RECORD | `ANALYZED_APPROVED` |
+| UR-INV-01 | DEC-015/025/050/071/083 | BR-057/058 | UC-06 → Create/Review/Approve/Revise Final Invoice | 4.0 | INVOICE_VERSION, INVOICE_ITEM, INVOICE_IMAGE, TRANSACTION + reminder/overdue state | `ANALYZED_APPROVED` |
+| UR-DSP-01 | DEC-073/084 | BR-059 | UC-06 dispute branch → Raise Transaction Complaint / Review Transaction Complaint | 4.0 / 6.0 | REPORT, REPORT_ATTACHMENT, TRANSACTION, ADMIN_AUDIT_RECORD | `ANALYZED_APPROVED` |
 | UR-REV-01 | DEC-051/087 | BR-063/064 | UC-07 → Rate Provider; Completed precondition + Later/Reminder/Hybrid criteria | 5.0 | PROVIDER_RATING + structured criteria | `ANALYZED_APPROVED` |
 | UR-REV-02 | DEC-063 | BR-015/016 | UC-07B → Rate Beneficiary; Precondition: Transaction Completed | 5.0 | BENEFICIARY_RATING | `ANALYZED_APPROVED` |
 | UR-REP-01 | DEC-063 | BR-034 | UC-07B / provider interaction context | 5.0 | BENEFICIARY_RATING / interaction record | `ANALYZED_APPROVED` |
@@ -103,8 +103,9 @@ The following must remain consistent across Use Case, DFD, Activity, Sequence, E
 30. Request inactivity: 24h/48h reminders, 72h Expired; meaningful Beneficiary activity resets the clock, Provider Response alone does not; Republish creates a new Request.
 31. Subscription Expired preserves login/Provider Portal and existing Active Transactions while blocking new Provider Responses and new Direct Search Transactions until renewal.
 32. Public-search visibility of an Expired Provider remains open; diagrams must not infer hidden/visible from the interaction-eligibility rule.
-33. DEC-091 does not alter logical DFD/ERD entities/processes; AI remains a logical capability in analysis while implementation uses External APIs behind an Integration/Service Layer. ASP.NET Core/EF Core/SQL Server/Identity mapping belongs to Chapter Four.
+33. DEC-091 does not alter logical actor goals/process semantics; Chapter Four now maps conceptual USER to ASP.NET Core Identity `ApplicationUser` and adopts a synchronized 32-table physical model without introducing new business requirements.
 34. Generic Report requires Reason; Description is not universally mandatory, while Transaction Complaint requires Reason + Description.
+35. The adopted physical model contains exactly 32 tables; RequestImage, MessageAttachment, SystemEvent, InvoiceImage and ReportAttachment are supporting persistence tables traceable to existing media/event/evidence requirements, not new actor goals.
 
 ## Open Items and Traceability Scope
 
@@ -122,4 +123,4 @@ Still open:
 - Provider Type switching after initial selection remains unresolved and must not be inferred from class operations.
 - Physical enforcement of Conversation pair uniqueness and linking messages/system events to a specific Transaction remains Chapter Four work.
 
-Chapter Four design columns (Relation Schema, final PK/FK/Constraints, Data Dictionary, interface IDs, query IDs) are intentionally deferred until the design work is produced; this does not make the core analysis traceability provisional.
+Chapter Four relation schema and Data Dictionary are now synchronized to the 32-table working physical model. Final named constraints, nullability, indexes, cascade rules, migrations, interface IDs and query IDs remain open before Baseline.
