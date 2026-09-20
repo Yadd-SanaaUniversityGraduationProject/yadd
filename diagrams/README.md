@@ -15,7 +15,7 @@
 5. `docs/03-analysis/08-use-cases.md` — current use-case behavior.
 6. `docs/03-analysis/09-DFD.md` — working DFD model.
 7. `docs/03-analysis/10-UML.md` — working UML index, semantics and relationship rules.
-8. `docs/03-analysis/11-ERD.md` — current conceptual ERD.
+8. `docs/03-analysis/11-ERD.md` — current ERD semantics + synchronized 32-table physical mapping notes.
 9. `docs/03-analysis/12-process-data-specifications.md` — current process/data-flow/store semantics.
 10. `docs/03-analysis/13-traceability-matrix.md` — core cross-model consistency check.
 
@@ -153,7 +153,7 @@ Every current diagram must preserve these rules:
 - Direct Search: `Request Transaction Start → Other Party Confirmation → Active Transaction`.
 - Chat alone never creates Transaction.
 - Between the same Beneficiary and Provider, one continuing Conversation may contain multiple Transactions over time — DEC-075.
-- Transaction boundaries inside that Conversation must be represented by clear system events/separators; physical message-to-transaction linking is a Chapter Four decision.
+- Transaction boundaries inside that Conversation must be represented by clear system events/separators; the adopted Chapter Four physical model now includes `SystemEvent(ConversationId, TransactionId, EventType, OccurredAt)` for persisted event/transaction context.
 - `RequiresDeposit` is Yes/No data inside Provider Response only; no deposit amount/payment/refund state.
 - Invoice approval makes Transaction `Completed`.
 - `Completed` is the successful terminal Transaction state; there is no Transaction state named `Closed`.
@@ -171,6 +171,10 @@ Every current diagram must preserve these rules:
 - Transaction cancellation records actor, reason and time.
 - No Beneficiary↔Provider Payment/Escrow/Refund/Settlement process/entity inside YADD.
 
+### Physical database synchronization
+
+As of 2026-09-20, Chapter Four adopts a 32-table working physical model. The five explicit support tables added beyond the older logical relation set are `RequestImage`, `MessageAttachment`, `SystemEvent`, `InvoiceImage`, and `ReportAttachment`; conceptual `USER` maps to physical `ApplicationUser` backed by ASP.NET Core Identity. This is a design mapping and does not add new Use Cases or Business Rules.
+
 ## 6. Open Items That Must Not Be Invented
 
 Open policy/detail questions do not block the core diagrams, but their unresolved values must not be invented. Examples:
@@ -182,7 +186,7 @@ Open policy/detail questions do not block the core diagrams, but their unresolve
 - final subscription price/payment-proof procedure and public-search visibility when Expired;
 - any numeric cap on concurrent Transactions;
 - Provider Type switching after initial selection;
-- physical linking of Message/System Event records to specific Transactions within the continuing Conversation;
+- exact policy for whether ordinary Message rows also require direct Transaction linkage beyond the adopted SystemEvent transaction context;
 - exact UI continuation behavior after Guest authenticates from a protected CTA.
 
 Represent the approved concept generically or omit the unresolved numeric/policy detail.
